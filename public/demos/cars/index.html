@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ماشین‌نما | نمایشگاه خودرو، مشخصات فنی و مقایسه</title>
+<meta name="description" content="ماشین‌نما — نمایشگاه خودرو با جست‌وجو و فیلتر کلاس بدنه، مشخصات فنی کامل هر مدل، مقایسه‌ی خودروها کنار هم و درخواست مشاوره. قیمت‌ها به تومان.">
+<link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+<a class="skip-link" href="#main">پرش به محتوای اصلی</a>
+
+<header class="site-header">
+  <div class="wrap header-inner">
+    <a class="wordmark" href="#top" aria-label="ماشین‌نما — صفحه‌ی اصلی">
+      <svg class="logo-mark" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <path d="M2.6 15.4 4.3 10a3.2 3.2 0 0 1 3-2.1h9.4a3.2 3.2 0 0 1 2.9 1.9l1.8 5.6"/>
+        <path d="M2.6 15.4h18.8v3.1h-2.9v-1.3H5.5v1.3H2.6z"/>
+        <circle cx="7.2" cy="12.6" r="1.1"/><circle cx="16.8" cy="12.6" r="1.1"/>
+      </svg>
+      <span class="wordmark-text">ماشین‌نما<em>نمایشگاه خودرو</em></span>
+    </a>
+
+    <nav class="main-nav" aria-label="ناوبری اصلی">
+      <ul class="nav-list">
+        <li><a href="#top">خانه</a></li>
+        <li><a href="#fleet">خودروها</a></li>
+        <li><a href="#compare">مقایسه</a></li>
+        <li><a href="#services">خدمات</a></li>
+        <li><a href="#consult" class="nav-cta">درخواست مشاوره</a></li>
+      </ul>
+    </nav>
+
+    <button class="menu-toggle" id="menu-toggle" type="button" aria-expanded="false" aria-controls="nav-drawer">
+      <span class="sr-only">باز و بسته کردن فهرست</span>
+      <span class="menu-bar" aria-hidden="true"></span>
+      <span class="menu-bar" aria-hidden="true"></span>
+      <span class="menu-bar" aria-hidden="true"></span>
+    </button>
+  </div>
+  <nav class="nav-drawer" id="nav-drawer" aria-label="فهرست موبایل" hidden>
+    <ul>
+      <li><a href="#top">خانه</a></li>
+      <li><a href="#fleet">خودروها</a></li>
+      <li><a href="#compare">مقایسه</a></li>
+      <li><a href="#services">خدمات</a></li>
+      <li><a href="#consult">درخواست مشاوره</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main id="main">
+
+  <!-- ===== بخش آغازین ===== -->
+  <section class="hero" id="top">
+    <div class="hero-media">
+      <img src="./assets/img/hero.webp" alt="سوپراسپرت سفیدرنگ با رینگ مشکی، پارک‌شده در حاشیه‌ی یک خیابان شهری" width="1800" height="1000" fetchpriority="high">
+    </div>
+    <div class="hero-scrim" aria-hidden="true"></div>
+    <div class="wrap hero-inner">
+      <p class="eyebrow">نمایشگاه خودرو · تهران</p>
+      <h1 class="hero-title">خودروی بعدی‌تان را<br>همین‌جا انتخاب کنید</h1>
+      <p class="hero-lead">
+        فیلتر بر اساس کلاس بدنه، مشخصات فنی کامل هر مدل، مقایسه‌ی دو یا سه خودرو کنار هم
+        و مشاوره‌ای که سؤال‌هایتان را بی‌پاسخ نمی‌گذارد. قیمت‌ها همه به تومان.
+      </p>
+      <div class="hero-actions">
+        <a class="btn btn--primary" href="#fleet">دیدن خودروها</a>
+        <a class="btn btn--ghost" href="#compare">مقایسه‌ی خودروها</a>
+      </div>
+      <dl class="hero-stats">
+        <div><dt>خودروی منتخب</dt><dd id="stat-fleet">۹</dd></div>
+        <div><dt>کلاس بدنه</dt><dd>۵</dd></div>
+        <div><dt>در مقایسه</dt><dd>تا ۳</dd></div>
+        <div><dt>پاسخ مشاوره</dt><dd><span class="num">۲۴</span> ساعت</dd></div>
+      </dl>
+    </div>
+  </section>
+
+  <p class="wrap demo-note">
+    <span class="demo-note__tag">نمونه‌ی نمایشی</span>
+    این وب‌سایت نمونه‌ی نمایشی است؛ خودروها، قیمت‌ها و فرم مشاوره واقعی نیستند و هیچ سفارشی ثبت نمی‌شود.
+  </p>
+
+  <!-- ===== خودروها ===== -->
+  <section class="section" id="fleet" aria-labelledby="fleet-title">
+    <div class="wrap">
+      <div class="section-head">
+        <h2 id="fleet-title">خودروهای منتخب</h2>
+        <p>نام خودرو را بنویسید یا کلاس بدنه را انتخاب کنید. هر دو با هم کار می‌کنند.</p>
+      </div>
+
+      <div class="toolbar">
+        <div class="field field--search">
+          <label class="sr-only" for="car-search">جست‌وجوی خودرو</label>
+          <svg class="field__icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <circle cx="11" cy="11" r="6.5" fill="none" stroke="currentColor" stroke-width="1.8"/>
+            <path d="m16 16 4.5 4.5" stroke="currentColor" stroke-width="1.8" fill="none"/>
+          </svg>
+          <input class="input" id="car-search" type="search" placeholder="مثلاً: پورشه، تایکان، شاسی‌بلند" autocomplete="off">
+          <button class="field__clear" id="search-clear" type="button" hidden>
+            <span class="sr-only">پاک کردن جست‌وجو</span>
+            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 6 12 12M18 6 6 18" stroke="currentColor" stroke-width="1.9" fill="none"/></svg>
+          </button>
+        </div>
+
+        <div class="field field--sort">
+          <label class="sr-only" for="car-sort">مرتب‌سازی</label>
+          <select class="input" id="car-sort">
+            <option value="featured">منتخب نمایشگاه</option>
+            <option value="price-asc">ارزان‌ترین</option>
+            <option value="price-desc">گران‌ترین</option>
+            <option value="power">بیشترین قدرت</option>
+            <option value="accel">شتاب بهتر</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="chips" role="group" aria-label="فیلتر کلاس بدنه" id="class-chips"></div>
+
+      <p class="result-count" id="result-count" role="status" aria-live="polite"></p>
+      <p class="cmp-notice" id="compare-notice" role="status" aria-live="polite" hidden></p>
+
+      <div class="grid" id="car-grid"></div>
+
+      <div class="empty" id="fleet-empty" hidden>
+        <svg viewBox="0 0 64 64" aria-hidden="true" focusable="false">
+          <path d="M8 40h48M12 40l6-14a6 6 0 0 1 5.5-3.6h17A6 6 0 0 1 46 26l6 14v8H12z" fill="none" stroke="currentColor" stroke-width="2.4"/>
+          <circle cx="20" cy="48" r="4" fill="none" stroke="currentColor" stroke-width="2.4"/>
+          <circle cx="44" cy="48" r="4" fill="none" stroke="currentColor" stroke-width="2.4"/>
+          <path d="M30 14h8" stroke="currentColor" stroke-width="2.4"/>
+        </svg>
+        <h3>خودرویی با این مشخصات پیدا نشد</h3>
+        <p>شاید نام را کامل ننوشته‌اید یا این کلاس بدنه در فهرست نیست.</p>
+        <button class="btn btn--primary" id="empty-reset" type="button">نمایش همه‌ی خودروها</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== مقایسه ===== -->
+  <section class="section section--alt" id="compare" aria-labelledby="compare-title">
+    <div class="wrap">
+      <div class="section-head">
+        <h2 id="compare-title">مقایسه‌ی خودروها</h2>
+        <p>تا سه خودرو را از کارت‌ها انتخاب کنید تا مشخصاتشان را کنار هم ببینید.</p>
+      </div>
+      <div class="compare-bar" id="compare-bar"></div>
+      <div class="compare-body" id="compare-body"></div>
+    </div>
+  </section>
+
+  <!-- ===== خدمات ===== -->
+  <section class="section" id="services" aria-labelledby="services-title">
+    <div class="wrap">
+      <div class="section-head">
+        <h2 id="services-title">خدمات نمایشگاه</h2>
+        <p>از انتخاب تا تحویل؛ هر مرحله آدم و مسئول خودش را دارد.</p>
+      </div>
+      <div class="services">
+        <article class="service">
+          <span class="service__idx num">۰۱</span>
+          <h3>مشاوره‌ی تخصصی</h3>
+          <p>بر اساس بودجه، مسیر روزانه و خانواده‌تان سه گزینه‌ی واقعی پیشنهاد می‌دهیم، نه ده گزینه.</p>
+        </article>
+        <article class="service">
+          <span class="service__idx num">۰۲</span>
+          <h3>آزمون رانندگی</h3>
+          <p>پیش از تصمیم، خودرو را در ترافیک واقعی شهر رانندگی کنید؛ بدون تعهد و بدون کاغذبازی.</p>
+        </article>
+        <article class="service">
+          <span class="service__idx num">۰۳</span>
+          <h3>بیمه و لیزینگ</h3>
+          <p>محاسبه‌ی قسط ماهانه و بیمه‌ی بدنه در همان جلسه، با اعداد شفاف و بدون کارمزد پنهان.</p>
+        </article>
+        <article class="service">
+          <span class="service__idx num">۰۴</span>
+          <h3>خدمات پس از تحویل</h3>
+          <p>نوبت سرویس دوره‌ای، یادآوری معاینه فنی و پاسخ به سؤالات فنی تا پایان گارانتی.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== فرم مشاوره ===== -->
+  <section class="section section--alt" id="consult" aria-labelledby="consult-title">
+    <div class="wrap consult">
+      <div class="consult__intro">
+        <h2 id="consult-title">درخواست مشاوره</h2>
+        <p>فرم را پر کنید؛ کارشناس همان خودرو با شما تماس می‌گیرد. زمان تماس را خودتان انتخاب می‌کنید.</p>
+        <ul class="consult__list">
+          <li>پاسخ در کمتر از <span class="num">۲۴</span> ساعت کاری</li>
+          <li>بدون هزینه و بدون تعهد خرید</li>
+          <li>امکان هماهنگی آزمون رانندگی</li>
+        </ul>
+      </div>
+
+      <form class="form" id="consult-form" novalidate>
+        <div class="form__row">
+          <div class="form__group">
+            <label for="f-name">نام و نام خانوادگی</label>
+            <input class="input" id="f-name" name="name" type="text" autocomplete="name" placeholder="مثلاً سارا محمدی">
+            <p class="form__error" id="e-name" hidden></p>
+          </div>
+          <div class="form__group">
+            <label for="f-phone">شماره‌ی تماس</label>
+            <input class="input" id="f-phone" name="phone" type="tel" inputmode="numeric" autocomplete="tel" placeholder="۰۹۲۳۴۵۶۷۸۹" dir="ltr">
+            <p class="form__error" id="e-phone" hidden></p>
+          </div>
+        </div>
+
+        <div class="form__row">
+          <div class="form__group">
+            <label for="f-car">خودروی موردنظر</label>
+            <select class="input" id="f-car" name="car"><option value="">فرقی نمی‌کند / هنوز انتخاب نکرده‌ام</option></select>
+            <p class="form__error" id="e-car" hidden></p>
+          </div>
+          <div class="form__group">
+            <label for="f-time">زمان ترجیحی تماس</label>
+            <select class="input" id="f-time" name="time">
+              <option value="morning">صبح (۹ تا ۱۲)</option>
+              <option value="afternoon">بعدازظهر (۱۲ تا ۱۷)</option>
+              <option value="evening">عصر (۱۷ تا ۲۰)</option>
+              <option value="any">هر زمانی</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form__group">
+          <label for="f-note">سؤال یا توضیح شما <span class="muted">(اختیاری)</span></label>
+          <textarea class="input" id="f-note" name="note" rows="3" placeholder="مثلاً: تفاوت مصرف سوخت این دو خودرو در ترافیک شهری چقدر است؟"></textarea>
+        </div>
+
+        <div class="form__foot">
+          <button class="btn btn--primary" type="submit">ارسال درخواست</button>
+          <p class="form__hint">اطلاعات فقط در همین مرورگر می‌ماند و جایی ارسال نمی‌شود.</p>
+        </div>
+
+        <p class="form__done" id="form-done" role="status" hidden></p>
+      </form>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap footer-inner">
+    <div>
+      <p class="footer-brand">ماشین‌نما</p>
+      <p class="footer-tag">نمایشگاه خودرو · نمونه‌کار طراحی وب</p>
+    </div>
+    <nav aria-label="پیوندهای پاورقی">
+      <ul class="footer-links">
+        <li><a href="#fleet">خودروها</a></li>
+        <li><a href="#compare">مقایسه</a></li>
+        <li><a href="#services">خدمات</a></li>
+        <li><a href="#consult">مشاوره</a></li>
+      </ul>
+    </nav>
+  </div>
+  <div class="wrap footer-base">
+    <p class="num">© <span id="year">۱۴۰۵</span> ماشین‌نما — تمام حقوق محفوظ است.</p>
+    <p class="footer-credit">تصاویر: Wikimedia Commons با مجوزهای آزاد</p>
+  </div>
+</footer>
+
+<dialog id="car-dialog" aria-labelledby="dialog-title">
+  <div class="dialog" id="dialog-body"></div>
+  <button class="dialog__close" id="dialog-close" type="button">
+    <span class="sr-only">بستن</span>
+    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 6 12 12M18 6 6 18" stroke="currentColor" stroke-width="1.9" fill="none"/></svg>
+  </button>
+</dialog>
+
+<script src="./app.js"></script>
+</body>
+</html>

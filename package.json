@@ -1,0 +1,30 @@
+{
+  "name": "namune-showcase",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "گالری نمونه‌کارهای فرانت‌اند به زبان فارسی با چهار دوی مستقل",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit -p tsconfig.app.json && vite build && node scripts/postbuild.mjs",
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit -p tsconfig.app.json",
+    "fetch:images": "node scripts/fetch-images.mjs build",
+    "search:images": "node scripts/fetch-images.mjs search",
+    "sync:images": "node scripts/sync-images.mjs",
+    "check:site": "node scripts/check-site.mjs"
+  },
+  "dependencies": {
+    "@fontsource-variable/vazirmatn": "^5.3.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
+    "@vitejs/plugin-react": "^4.3.4",
+    "sharp": "^0.33.5",
+    "typescript": "^5.6.3",
+    "vite": "^5.4.11"
+  }
+}

@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>لوازم | فروشگاه آنلاین لوازم خانه و زندگی</title>
+<meta name="description" content="لوازم؛ فروشگاه نمونه‌ی نمایشی محصولات دیجیتال، خانه و آشپزخانه، نور و دکور و اکسسوری.">
+<link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+<a class="skip-link" href="#products">پرش به محصولات</a>
+
+<header class="site-header" id="top">
+  <div class="container header-inner">
+    <a class="wordmark" href="#top" aria-label="لوازم — صفحه‌ی اصلی">لوازم<span class="wordmark-dot" aria-hidden="true">.</span></a>
+
+    <nav class="main-nav" aria-label="ناوبری اصلی">
+      <ul>
+        <li><a href="#top">خانه</a></li>
+        <li><a href="#products">محصولات</a></li>
+        <li><a href="#categories">دسته‌بندی‌ها</a></li>
+        <li><a href="#about">درباره‌ی فروشگاه</a></li>
+        <li><a href="#support">پشتیبانی</a></li>
+      </ul>
+    </nav>
+
+    <div class="header-actions">
+      <div class="header-search">
+        <label class="visually-hidden" for="header-search-input">جست‌وجوی محصول</label>
+        <input type="search" id="header-search-input" placeholder="جست‌وجو در لوازم…" autocomplete="off">
+      </div>
+      <button type="button" class="cart-button" id="cart-open" aria-expanded="false" aria-controls="cart-drawer">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="9" cy="20" r="1.6"/><circle cx="18" cy="20" r="1.6"/><path d="M2.5 3.5h3l2.6 12h10.4l2-8.5H7"/></svg>
+        <span class="cart-label">سبد</span>
+        <span class="cart-badge" id="cart-count" aria-hidden="true">۰</span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+  <!-- Hero -->
+  <section class="hero" aria-label="معرفی فروشگاه">
+    <div class="container hero-inner">
+      <div class="hero-text">
+        <p class="hero-kicker">لوازم؛ فروشگاهِ وسایلِ روزمره</p>
+        <h1>هر آنچه خانه‌ی شما را کامل می‌کند؛ از گجت تا دکور</h1>
+        <p class="hero-sub">از هدفون و اسپیکر تا ماگ، چراغ مطالعه و کوله‌پشتی؛ انتخاب‌های ساده و روزمره، با قیمتِ شفاف و به تومان.</p>
+        <a class="btn btn-primary" href="#products" id="hero-cta">خرید را شروع کنید</a>
+      </div>
+      <div class="hero-media">
+        <img src="./assets/img/hero-01.webp" alt="جعبه‌ی هدیه‌ی باز با شمع معطر و گل خشک روی میز" width="1600" height="1000">
+      </div>
+    </div>
+    <div class="container trust-row" aria-label="تضمین‌های فروشگاه">
+      <div class="trust-item"><span class="trust-ico" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M1.5 6.5h12v9h-12z"/><path d="M13.5 9.5h4.2l2.8 3v3h-7z"/><circle cx="6" cy="17.5" r="1.9"/><circle cx="16.5" cy="17.5" r="1.9"/></svg></span><div><strong>ارسال سریع</strong><span>تحویل ۲ تا ۴ روزه در تهران و کرج</span></div></div>
+      <div class="trust-item"><span class="trust-ico" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 9.5h8v-4l5 5.5-5 5.5v-4h-9a4.5 4.5 0 0 1-4-3.5z" transform="translate(1.5 1)"/></svg></span><div><strong>۷ روز بازگشت کالا</strong><span>بی‌دلیل و بدون پرسش</span></div></div>
+      <div class="trust-item"><span class="trust-ico" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="6" width="19" height="12" rx="2.5"/><circle cx="12" cy="12" r="2.6"/><path d="M6 12h.01M18 12h.01"/></svg></span><div><strong>پرداخت در محل</strong><span>نقد هنگام تحویل، یا پرداخت آنلاین</span></div></div>
+    </div>
+  </section>
+
+  <!-- Categories -->
+  <section class="section" id="categories" aria-labelledby="categories-title">
+    <div class="container">
+      <h2 id="categories-title">دسته‌بندی‌ها</h2>
+      <p class="section-sub">روی هر دسته بزنید تا محصولاتش را ببینید.</p>
+      <div class="cat-grid">
+        <button type="button" class="cat-tile" data-cat="digital">
+          <img src="./assets/img/headphones-01.webp" alt="هدفون مشکی روی تنه‌ی درخت در نور روز" width="900" height="900">
+          <span class="cat-name">دیجیتال</span><span class="cat-count"></span>
+        </button>
+        <button type="button" class="cat-tile" data-cat="home">
+          <img src="./assets/img/mug-01.webp" alt="ماگ‌های سرامیکی نارنجی با طرح قلب" width="900" height="900">
+          <span class="cat-name">خانه و آشپزخانه</span><span class="cat-count"></span>
+        </button>
+        <button type="button" class="cat-tile" data-cat="decor">
+          <img src="./assets/img/lamp-01.webp" alt="چراغ مطالعه‌ی رومیزی سفید روشن روی پیشخوان" width="900" height="900">
+          <span class="cat-name">نور و دکور</span><span class="cat-count"></span>
+        </button>
+        <button type="button" class="cat-tile" data-cat="acc">
+          <img src="./assets/img/watch-01.webp" alt="ساعت مچی کلاسیک با قاب طلایی و بند چرمی مشکی" width="900" height="900">
+          <span class="cat-name">اکسسوری</span><span class="cat-count"></span>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Products -->
+  <section class="section" id="products" aria-labelledby="products-title">
+    <div class="container">
+      <h2 id="products-title">محصولات</h2>
+
+      <div class="toolbar" role="search">
+        <div class="toolbar-search">
+          <label class="visually-hidden" for="search-input">جست‌وجوی نام یا توضیح محصول</label>
+          <input type="search" id="search-input" placeholder="مثلاً: هدفون، چراغ، ماگ…" autocomplete="off">
+        </div>
+        <div class="chips" role="group" aria-label="فیلتر دسته‌بندی">
+          <button type="button" class="chip is-active" data-cat="all" aria-pressed="true">همه</button>
+          <button type="button" class="chip" data-cat="digital" aria-pressed="false">دیجیتال</button>
+          <button type="button" class="chip" data-cat="home" aria-pressed="false">خانه و آشپزخانه</button>
+          <button type="button" class="chip" data-cat="decor" aria-pressed="false">نور و دکور</button>
+          <button type="button" class="chip" data-cat="acc" aria-pressed="false">اکسسوری</button>
+        </div>
+        <div class="toolbar-end">
+          <label class="visually-hidden" for="sort-select">مرتب‌سازی</label>
+          <select id="sort-select">
+            <option value="newest">جدیدترین</option>
+            <option value="cheap">ارزان‌ترین</option>
+            <option value="expensive">گران‌ترین</option>
+            <option value="popular">محبوب‌ترین</option>
+          </select>
+          <p class="result-count" id="result-count" aria-live="polite" role="status"></p>
+        </div>
+      </div>
+
+      <div class="grid" id="product-grid"></div>
+
+      <div class="empty-state" id="empty-state" hidden>
+        <p class="empty-ico" aria-hidden="true"><svg viewBox="0 0 24 24" width="34" height="34" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m15.6 15.6 4.4 4.4"/><path d="M8.2 10.5h4.6"/></svg></p>
+        <h3>چیزی پیدا نشد</h3>
+        <p>شاید املا فرق کند یا فیلترها سخت‌گیرانه باشند. واژه‌ی دیگری را امتحان کنید.</p>
+        <button type="button" class="btn btn-ghost" id="reset-filters">پاک کردن فیلترها</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- About -->
+  <section class="section section-alt" id="about" aria-labelledby="about-title">
+    <div class="container about-inner">
+      <h2 id="about-title">درباره‌ی لوازم</h2>
+      <p>«لوازم» فروشگاهِ وسایلِ روزمره‌ی زندگی است: گجت‌های کوچک، لوازم آشپزخانه، چراغ و دکور و اکسسوری. تمرکز ما روی کالای کاربردی و عکسِ خودِ محصول است، نه تبلیغات پرزور. این صفحه نمونه‌ی نمایشی است و سفارش یا پرداخت واقعی در آن انجام نمی‌شود.</p>
+    </div>
+  </section>
+
+  <!-- Support -->
+  <section class="section" id="support" aria-labelledby="support-title">
+    <div class="container">
+      <h2 id="support-title">پشتیبانی</h2>
+      <div class="faq">
+        <details open>
+          <summary>آیا این فروشگاه واقعی است؟</summary>
+          <p>خیر. این یک نمونه‌ی نمایشی است؛ سبد خرید و تسویه‌حساب فقط شبیه‌سازی می‌شوند و هیچ وجهی دریافت نمی‌شود.</p>
+        </details>
+        <details>
+          <summary>قیمت‌ها به چه صورت است؟</summary>
+          <p>همه‌ی قیمت‌ها به تومان و با ارقام فارسی نمایش داده می‌شوند و صرفاً برای نمایش رابط کاربری هستند.</p>
+        </details>
+        <details>
+          <summary>عکس محصولات متعلق به کیست؟</summary>
+          <p>از بایگانی آزاد ویکی‌مدیا کامنز با مجوزهای کریتیو کامنز استفاده شده و هر اثر به سازنده‌ی خودش نسبت داده می‌شود.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="container footer-grid">
+    <div class="footer-brand">
+      <p class="wordmark footer-wordmark">لوازم<span class="wordmark-dot" aria-hidden="true">.</span></p>
+      <p>وسایل خوب، برای زندگیِ ساده‌ی روزمره.</p>
+    </div>
+    <nav aria-label="دسترسی سریع">
+      <h3>دسترسی سریع</h3>
+      <ul>
+        <li><a href="#products">محصولات</a></li>
+        <li><a href="#categories">دسته‌بندی‌ها</a></li>
+        <li><a href="#about">درباره‌ی فروشگاه</a></li>
+        <li><a href="#support">پشتیبانی</a></li>
+      </ul>
+    </nav>
+    <nav aria-label="دسته‌بندی‌ها">
+      <h3>دسته‌بندی‌ها</h3>
+      <ul>
+        <li><a href="#products" data-cat-link="digital">دیجیتال</a></li>
+        <li><a href="#products" data-cat-link="home">خانه و آشپزخانه</a></li>
+        <li><a href="#products" data-cat-link="decor">نور و دکور</a></li>
+        <li><a href="#products" data-cat-link="acc">اکسسوری</a></li>
+      </ul>
+    </nav>
+    <nav aria-label="راهنمای خرید">
+      <h3>راهنمای خرید</h3>
+      <ul>
+        <li><a href="#support">پرسش‌های متداول</a></li>
+        <li><a href="#support">شرایط بازگشت کالا</a></li>
+        <li><a href="/">بازگشت به گالری نمونه‌کده</a></li>
+      </ul>
+    </nav>
+  </div>
+  <div class="container footer-bottom">
+    <p>© ۱۴۰۵ لوازم — همه‌ی حقوق محفوظ است.</p>
+  </div>
+</footer>
+
+<!-- Cart drawer -->
+<div class="drawer-backdrop" id="drawer-backdrop" hidden></div>
+<aside class="cart-drawer" id="cart-drawer" role="dialog" aria-modal="true" aria-labelledby="cart-title" hidden>
+  <header class="drawer-head">
+    <h2 id="cart-title">سبد خرید</h2>
+    <button type="button" class="icon-btn" id="cart-close" aria-label="بستن سبد خرید">✕</button>
+  </header>
+  <div class="drawer-body" id="drawer-body"><!-- views injected --></div>
+  <footer class="drawer-foot" id="drawer-foot"></footer>
+</aside>
+
+<!-- Quick view -->
+<div class="modal-backdrop" id="modal-backdrop" hidden>
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="qv-title" id="quick-view">
+    <button type="button" class="icon-btn modal-close" id="qv-close" aria-label="بستن پنجره‌ی محصول">✕</button>
+    <div class="qv-grid" id="qv-body"><!-- injected --></div>
+  </div>
+</div>
+
+<!-- Toasts -->
+<div class="toast-region" id="toast-region" aria-live="polite" role="status"></div>
+
+<script src="./app.js"></script>
+</body>
+</html>

@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>باشگاه ورزشی و تناسب اندام پیکان | قدرت، حرکت، پیشرفت</title>
+<meta name="description" content="باشگاه ورزشی پیکان — تمرینات قدرتی، استقامتی، تیمی و رزمی با مربیان حرفه‌ای، برنامه‌های تمرینی شخصی‌سازی‌شده و برنامه‌ی هفتگی کامل.">
+<link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+<a class="skip-link" href="#main">پرش به محتوای اصلی</a>
+
+<header class="site-header" id="top">
+  <div class="container header-inner">
+    <a class="wordmark" href="#top" aria-label="پیکان — صفحه‌ی اصلی">
+      <svg class="logo-mark" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M2 22 12 2l10 20-10-6z"/></svg>
+      <span class="wordmark-text">پیکان<em>باشگاه ورزشی</em></span>
+    </a>
+    <nav class="main-nav" aria-label="ناوبری اصلی">
+      <ul class="nav-list" id="nav-list">
+        <li><a href="#top">خانه</a></li>
+        <li><a href="#sports">رشته‌ها</a></li>
+        <li><a href="#programs">برنامه‌ها</a></li>
+        <li><a href="#timetable">برنامه‌ی هفتگی</a></li>
+        <li><a href="#athletes">قهرمانان</a></li>
+        <li><a href="#events">مسابقات</a></li>
+        <li><a href="#register" class="nav-cta">ثبت‌نام</a></li>
+      </ul>
+    </nav>
+    <button class="menu-toggle" id="menu-toggle" type="button" aria-expanded="false" aria-controls="nav-drawer">
+      <span class="sr-only">باز و بسته کردن فهرست</span>
+      <span class="menu-bar" aria-hidden="true"></span>
+      <span class="menu-bar" aria-hidden="true"></span>
+      <span class="menu-bar" aria-hidden="true"></span>
+    </button>
+  </div>
+  <nav class="nav-drawer" id="nav-drawer" aria-label="فهرست موبایل" hidden>
+    <ul>
+      <li><a href="#top">خانه</a></li>
+      <li><a href="#sports">رشته‌ها</a></li>
+      <li><a href="#programs">برنامه‌ها</a></li>
+      <li><a href="#timetable">برنامه‌ی هفتگی</a></li>
+      <li><a href="#athletes">قهرمانان</a></li>
+      <li><a href="#events">مسابقات</a></li>
+      <li><a href="#register">ثبت‌نام</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main id="main">
+
+  <!-- Hero -->
+  <section class="hero" aria-labelledby="hero-title">
+    <div class="hero-media">
+      <img src="./assets/img/hero-01.webp" alt="ورزشکاری در حال نگه‌داشتن هالتر روی شانه در رقابت‌های قدرتی" width="1600" height="1000" fetchpriority="high">
+      <div class="hero-shade" aria-hidden="true"></div>
+    </div>
+    <div class="container hero-content">
+      <p class="hero-kicker">باشگاه ورزشی و تناسب اندام پیکان</p>
+      <h1 id="hero-title">قدرت، حرکت،<br><span class="accent">پیشرفت</span></h1>
+      <p class="hero-lead">شش رشته‌ی ورزشی، مربیان حرفه‌ای و برنامه‌های تمرینی که دقیقاً برای بدن شما نوشته شده‌اند. امروز شروع کنید؛ قدم‌به‌قدم همراه شما هستیم.</p>
+      <div class="hero-actions">
+        <a class="btn btn-primary" href="#register">شروع تمرین</a>
+        <a class="btn btn-ghost" href="#sports">دیدن رشته‌ها</a>
+      </div>
+      <p class="hero-note" aria-hidden="true">هفته‌ی اول رایگان — بدون کارت عضویت</p>
+    </div>
+  </section>
+
+  <!-- Stats strip -->
+  <section class="stats" aria-label="پیکان در یک نگاه">
+    <div class="container stats-grid">
+      <div class="stat reveal">
+        <span class="stat-num" data-count="6" data-suffix="">۰</span>
+        <span class="stat-label">رشته‌ی ورزشی</span>
+      </div>
+      <div class="stat reveal">
+        <span class="stat-num" data-count="48" data-suffix="">۰</span>
+        <span class="stat-label">مربی حرفه‌ای</span>
+      </div>
+      <div class="stat reveal">
+        <span class="stat-num" data-count="2300" data-suffix="+">۰</span>
+        <span class="stat-label">عضو فعال</span>
+      </div>
+      <div class="stat reveal">
+        <span class="stat-num" data-count="15" data-suffix="">۰</span>
+        <span class="stat-label">سال سابقه</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Sports -->
+  <section class="section sports-section" id="sports" aria-labelledby="sports-title">
+    <div class="container">
+      <div class="section-head reveal">
+        <p class="section-kicker">رشته‌های ورزشی</p>
+        <h2 id="sports-title">رشته‌ی خود را انتخاب کنید</h2>
+        <p class="section-sub">از تمرینات قدرتی تا مسابقه‌های تیمی؛ هر رشته در پیکان کلاس‌های مجزا، مربی متخصص و سطح‌بندی مشخص دارد.</p>
+      </div>
+
+      <div class="filter-bar" role="group" aria-label="فیلتر رشته‌ها بر پایه‌ی دسته">
+        <button class="chip is-active" type="button" data-filter="all" aria-pressed="true">همه</button>
+        <button class="chip" type="button" data-filter="strength" aria-pressed="false">قدرتی</button>
+        <button class="chip" type="button" data-filter="endurance" aria-pressed="false">استقامتی</button>
+        <button class="chip" type="button" data-filter="team" aria-pressed="false">تیمی</button>
+        <button class="chip" type="button" data-filter="combat" aria-pressed="false">رزمی</button>
+      </div>
+      <p class="filter-status sr-only" role="status" aria-live="polite"></p>
+
+      <ul class="cards-grid" id="sports-grid">
+        <li class="sport-card reveal" data-cat="strength">
+          <div class="card-media">
+            <img src="./assets/img/sport-01.webp" alt="پوشیدن هالتر در بخش تمرینات قدرتی سالن پیکان" width="640" height="480" loading="lazy">
+            <span class="card-badge">قدرتی</span>
+          </div>
+          <div class="card-body">
+            <h3>بدنسازی و پاورلیفتینگ</h3>
+            <p>تمرینات هدفمند با هالتر و دمبل برای افزایش قدرت و عضله‌سازی، همراه با پایش دوره‌ی ترکیب بدنی.</p>
+            <p class="intensity">شدت تمرین: <strong>متوسط تا بالا</strong></p>
+          </div>
+        </li>
+        <li class="sport-card reveal" data-cat="endurance">
+          <div class="card-media">
+            <img src="./assets/img/sport-02.webp" alt="دوندگان در لحظه‌ی شروع دو روی پیست مسابقه" width="640" height="480" loading="lazy">
+            <span class="card-badge">استقامتی</span>
+          </div>
+          <div class="card-body">
+            <h3>دو و میدانی</h3>
+            <p>دوهای سرعت، استقامت و نیم‌ماراتون روی پیست استاندارد، با تحلیل گام و تنفس.</p>
+            <p class="intensity">شدت تمرین: <strong>متوسط</strong></p>
+          </div>
+        </li>
+        <li class="sport-card reveal" data-cat="endurance">
+          <div class="card-media">
+            <img src="./assets/img/sport-03.webp" alt="شناگر در حال مسابقه‌ی شنای کرال روی در استخر" width="640" height="480" loading="lazy">
+            <span class="card-badge">استقامتی</span>
+          </div>
+          <div class="card-body">
+            <h3>شنا</h3>
+            <p>کلاس‌های شنا از سطح مبتدی تا قهرمانی در استخر نیمه‌المپی، با برنامه‌ی تمرینی هر هفته.</p>
+            <p class="intensity">شدت تمرین: <strong>متوسط</strong></p>
+          </div>
+        </li>
+        <li class="sport-card reveal" data-cat="team">
+          <div class="card-media">
+            <img src="./assets/img/sport-04.webp" alt="بازیکنان فوتبال در حال رقابت برای توپ در زمین چمن" width="640" height="480" loading="lazy">
+            <span class="card-badge">تیمی</span>
+          </div>
+          <div class="card-body">
+            <h3>فوتبال</h3>
+            <p>تمرینات تاکتیکی و مسابقه‌های هفتگی در زمین چمن طبیعی؛ تیم‌های باشگاهی پیکان در لیگ‌های رده‌های پایه استان.</p>
+            <p class="intensity">شدت تمرین: <strong>بالا</strong></p>
+          </div>
+        </li>
+        <li class="sport-card reveal" data-cat="team">
+          <div class="card-media">
+            <img src="./assets/img/sport-05.webp" alt="بازیکن والیبال در حال اسپک روی تور" width="640" height="480" loading="lazy">
+            <span class="card-badge">تیمی</span>
+          </div>
+          <div class="card-body">
+            <h3>والیبال</h3>
+            <p>تمرین دفاع، سرویس و اسپک در سالن سرپوشیده با تیم‌های دختران و پسران در رده‌های سنی مختلف.</p>
+            <p class="intensity">شدت تمرین: <strong>متوسط</strong></p>
+          </div>
+        </li>
+        <li class="sport-card reveal" data-cat="combat">
+          <div class="card-media">
+            <img src="./assets/img/sport-06.webp" alt="مشت‌زن در حال تمرین با کیسه بوکس" width="640" height="480" loading="lazy">
+            <span class="card-badge">رزمی</span>
+          </div>
+          <div class="card-body">
+            <h3>بوکس</h3>
+            <p>تکنیک ضربات، کار پا و مسابقه‌های تمرینی کنترل‌شده در رینگ اختصاصی با مربیان دارای درجه‌ی داوری.</p>
+            <p class="intensity">شدت تمرین: <strong>بالا</strong></p>
+          </div>
+        </li>
+      </ul>
+      <p class="empty-state" id="sports-empty" hidden>هیچ رشته‌ای در این دسته پیدا نشد. «همه» را انتخاب کنید.</p>
+    </div>
+  </section>
+
+  <!-- Programs -->
+  <section class="section programs-section" id="programs" aria-labelledby="programs-title">
+    <div class="container">
+      <div class="section-head reveal">
+        <p class="section-kicker">برنامه‌های تمرینی</p>
+        <h2 id="programs-title">مسیرتان را مشخص کنید</h2>
+        <p class="section-sub">یکی از برنامه‌ها را انتخاب کنید؛ انتخاب شما به‌طور خودکار در فرم ثبت‌نام پر می‌شود.</p>
+      </div>
+      <div class="programs-grid" id="programs-grid">
+        <article class="program-card reveal" tabindex="0" role="button" aria-pressed="false" data-program="چربی‌سوزی ۸ هفته‌ای">
+          <h3>چربی‌سوزی ۸ هفته‌ای</h3>
+          <p class="program-desc">ترکیب تمرینات دایره‌ای، اینتروال و شنا برای کاهش درصد چربی بدون از دست دادن عضله.</p>
+          <dl class="program-facts">
+            <div><dt>مدت</dt><dd>۸ هفته</dd></div>
+            <div><dt>جلسات در هفته</dt><dd>۴ جلسه</dd></div>
+            <div><dt>سطح</dt><dd>مبتدی تا متوسط</dd></div>
+          </dl>
+          <p class="program-price">۱٬۲۸۰٬۰۰۰ <span>تومان / ماه</span></p>
+          <span class="program-select">انتخاب این برنامه</span>
+        </article>
+        <article class="program-card reveal" tabindex="0" role="button" aria-pressed="false" data-program="قدرت و حجم">
+          <h3>قدرت و حجم</h3>
+          <p class="program-desc">سیستم تمرینی هالتریِ سه‌حرکتی با پیشرفت هفتگیِ ثبت‌شده و راهنمای تغذیه.</p>
+          <dl class="program-facts">
+            <div><dt>مدت</dt><dd>۱۲ هفته</dd></div>
+            <div><dt>جلسات در هفته</dt><dd>۵ جلسه</dd></div>
+            <div><dt>سطح</dt><dd>متوسط تا پیشرفته</dd></div>
+          </dl>
+          <p class="program-price">۱٬۶۵۰٬۰۰۰ <span>تومان / ماه</span></p>
+          <span class="program-select">انتخاب این برنامه</span>
+        </article>
+        <article class="program-card reveal" tabindex="0" role="button" aria-pressed="false" data-program="آماده‌سازی نیم‌ماراتون">
+          <h3>آماده‌سازی دوی نیم‌ماراتون</h3>
+          <p class="program-desc">برنامه‌ی ده هفته‌ای با افزایش تدریجی کیلومتر، تمرینات تقویتی و شبیه‌سازی مسابقه.</p>
+          <dl class="program-facts">
+            <div><dt>مدت</dt><dd>۱۰ هفته</dd></div>
+            <div><dt>جلسات در هفته</dt><dd>۴ جلسه</dd></div>
+            <div><dt>سطح</dt><dd>همه‌ی سطوح</dd></div>
+          </dl>
+          <p class="program-price">۹۸۰٬۰۰۰ <span>تومان / ماه</span></p>
+          <span class="program-select">انتخاب این برنامه</span>
+        </article>
+      </div>
+      <p class="program-live sr-only" role="status" aria-live="polite"></p>
+    </div>
+  </section>
+
+  <!-- Weekly timetable -->
+  <section class="section timetable-section" id="timetable" aria-labelledby="timetable-title">
+    <div class="container">
+      <div class="section-head reveal">
+        <p class="section-kicker">برنامه‌ی هفتگی</p>
+        <h2 id="timetable-title">کلاس‌های هفته</h2>
+        <p class="section-sub">روی هر روز بزنید تا کلاس‌های آن روز را با ساعت و مربی ببینید.</p>
+      </div>
+
+      <div class="tabs" role="tablist" aria-label="روزهای هفته">
+        <button role="tab" id="tab-shanbe" aria-controls="panel-shanbe" aria-selected="true" tabindex="0">شنبه</button>
+        <button role="tab" id="tab-yekshanbe" aria-controls="panel-yekshanbe" aria-selected="false" tabindex="-1">یکشنبه</button>
+        <button role="tab" id="tab-doshanbe" aria-controls="panel-doshanbe" aria-selected="false" tabindex="-1">دوشنبه</button>
+        <button role="tab" id="tab-seshanbe" aria-controls="panel-seshanbe" aria-selected="false" tabindex="-1">سه‌شنبه</button>
+        <button role="tab" id="tab-chaharshanbe" aria-controls="panel-chaharshanbe" aria-selected="false" tabindex="-1">چهارشنبه</button>
+        <button role="tab" id="tab-panjshanbe" aria-controls="panel-panjshanbe" aria-selected="false" tabindex="-1">پنجشنبه</button>
+      </div>
+
+      <div id="panel-shanbe" role="tabpanel" aria-labelledby="tab-shanbe" class="day-panel" aria-live="polite">
+        <ul class="session-list">
+          <li><span class="s-time">۰۷:۰۰</span><span class="s-class">قدرتی صبحگاهی</span><span class="s-coach">مربی: رضایی</span></li>
+          <li><span class="s-time">۱۰:۰۰</span><span class="s-class">شنا — سطح مبتدی</span><span class="s-coach">مربی: کاظمی</span></li>
+          <li><span class="s-time">۱۷:۰۰</span><span class="s-class">فوتبال — تمرین تیم باشگاهی</span><span class="s-coach">مربی: مرادی</span></li>
+          <li><span class="s-time">۱۹:۳۰</span><span class="s-class">بوکس — کار با کیسه</span><span class="s-coach">مربی: فرهادی</span></li>
+        </ul>
+      </div>
+      <div id="panel-yekshanbe" role="tabpanel" aria-labelledby="tab-yekshanbe" class="day-panel" aria-live="polite" hidden>
+        <ul class="session-list">
+          <li><span class="s-time">۰۸:۰۰</span><span class="s-class">اینتروال چربی‌سوزی</span><span class="s-coach">مربی: شریفی</span></li>
+          <li><span class="s-time">۱۶:۰۰</span><span class="s-class">والیبال — دختران</span><span class="s-coach">مربی: نوری</span></li>
+          <li><span class="s-time">۱۸:۰۰</span><span class="s-class">دو و میدانی — پیست</span><span class="s-coach">مربی: آذری</span></li>
+          <li><span class="s-time">۲۰:۰۰</span><span class="s-class">قدرت و حجم — پیشرفته</span><span class="s-coach">مربی: رضایی</span></li>
+        </ul>
+      </div>
+      <div id="panel-doshanbe" role="tabpanel" aria-labelledby="tab-doshanbe" class="day-panel" aria-live="polite" hidden>
+        <ul class="session-list">
+          <li><span class="s-time">۰۷:۰۰</span><span class="s-class">شنای سرعتی</span><span class="s-coach">مربی: کاظمی</span></li>
+          <li><span class="s-time">۱۵:۰۰</span><span class="s-class">بدنسازی نوجوانان</span><span class="s-coach">مربی: قاسمی</span></li>
+          <li><span class="s-time">۱۷:۳۰</span><span class="s-class">بوکس — اسپارینگ کنترل‌شده</span><span class="s-coach">مربی: فرهادی</span></li>
+          <li><span class="s-time">۱۹:۰۰</span><span class="s-class">چربی‌سوزی دایره‌ای</span><span class="s-coach">مربی: شریفی</span></li>
+        </ul>
+      </div>
+      <div id="panel-seshanbe" role="tabpanel" aria-labelledby="tab-seshanbe" class="day-panel" aria-live="polite" hidden>
+        <ul class="session-list">
+          <li><span class="s-time">۰۹:۰۰</span><span class="s-class">والیبال — پاس و دفاع</span><span class="s-coach">مربی: نوری</span></li>
+          <li><span class="s-time">۱۶:۳۰</span><span class="s-class">آماده‌سازی نیم‌ماراتون</span><span class="s-coach">مربی: آذری</span></li>
+          <li><span class="s-time">۱۸:۳۰</span><span class="s-class">پاورلیفتینگ — سه حرکت اصلی</span><span class="s-coach">مربی: رضایی</span></li>
+          <li><span class="s-time">۲۰:۰۰</span><span class="s-class">شنا — کرال پشت</span><span class="s-coach">مربی: کاظمی</span></li>
+        </ul>
+      </div>
+      <div id="panel-chaharshanbe" role="tabpanel" aria-labelledby="tab-chaharshanbe" class="day-panel" aria-live="polite" hidden>
+        <ul class="session-list">
+          <li><span class="s-time">۰۷:۰۰</span><span class="s-class">قدرتی صبحگاهی</span><span class="s-coach">مربی: قاسمی</span></li>
+          <li><span class="s-time">۱۷:۰۰</span><span class="s-class">فوتبال — بازی تدارکاتی</span><span class="s-coach">مربی: مرادی</span></li>
+          <li><span class="s-time">۱۸:۰۰</span><span class="s-class">بوکس — تکنیک با پد</span><span class="s-coach">مربی: فرهادی</span></li>
+          <li><span class="s-time">۱۹:۳۰</span><span class="s-class">اینتروال روی تردمیل</span><span class="s-coach">مربی: شریفی</span></li>
+        </ul>
+      </div>
+      <div id="panel-panjshanbe" role="tabpanel" aria-labelledby="tab-panjshanbe" class="day-panel" aria-live="polite" hidden>
+        <ul class="session-list">
+          <li><span class="s-time">۰۸:۰۰</span><span class="s-class">دو استقامت — مسیر کوهستانی</span><span class="s-coach">مربی: آذری</span></li>
+          <li><span class="s-time">۱۰:۰۰</span><span class="s-class">والیبال — تور باز</span><span class="s-coach">مربی: نوری</span></li>
+          <li><span class="s-time">۱۶:۰۰</span><span class="s-class">شنا — آب‌های آزاد</span><span class="s-coach">مربی: کاظمی</span></li>
+          <li><span class="s-time">۱۸:۳۰</span><span class="s-class">مسابقه‌ی داخلی بوکس</span><span class="s-coach">مربی: فرهادی</span></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- Athletes -->
+  <section class="section athletes-section" id="athletes" aria-labelledby="athletes-title">
+    <div class="container">
+      <div class="section-head reveal">
+        <p class="section-kicker">قهرمانان امروز</p>
+        <h2 id="athletes-title">عضوهای افتخار پیکان</h2>
+        <p class="section-sub">مسیر این چهار ورزشکار از همین سالن‌ها شروع شد؛ امروز مدال‌آور و الگوی نسل بعدی‌اند.</p>
+      </div>
+      <ul class="athletes-grid">
+        <li class="athlete-card reveal">
+          <img src="./assets/img/athlete-01.webp" alt="نیلوفر احمدی، شناگر آب‌های آزاد تیم پیکان، با کلاه شنا در حال آماده‌سازی" width="480" height="560" loading="lazy">
+          <div class="athlete-body">
+            <h3>نیلوفر احمدی</h3>
+            <p class="athlete-disc">شنا — آب‌های آزاد</p>
+            <ul class="medals">
+              <li>مدال طلای ۵ کیلومتر آب‌های آزاد قهرمانی شنا کشور ۱۴۰۴</li>
+              <li>رتبه‌ی دوم رده‌بندی شنای آزاد بانوان استان در سال ۱۴۰۳</li>
+            </ul>
+          </div>
+        </li>
+        <li class="athlete-card reveal">
+          <img src="./assets/img/athlete-02.webp" alt="ترانه صادقی، وزنه‌بردار تیم پیکان، در حال ددلیفت هالتر" width="480" height="560" loading="lazy">
+          <div class="athlete-body">
+            <h3>ترانه صادقی</h3>
+            <p class="athlete-disc">وزنه‌برداری — ۷۶ کیلوگرم</p>
+            <ul class="medals">
+              <li>مدال برنز مسابقات قهرمانی جوانان کشور ۱۴۰۳</li>
+              <li>دارنده‌ی عنوان برترین ددلیفت‌زن جوانان لیگ باشگاهی</li>
+            </ul>
+          </div>
+        </li>
+        <li class="athlete-card reveal">
+          <img src="./assets/img/athlete-03.webp" alt="پویا نادری، دوندۀ سرعت تیم پیکان، در کنار بلوک شروع روی پیست" width="480" height="560" loading="lazy">
+          <div class="athlete-body">
+            <h3>پویا نادری</h3>
+            <p class="athlete-disc">دو و میدانی — ۱۰۰ متر</p>
+            <ul class="medals">
+              <li>مدال طلای دو ۱۰۰ متر بازی‌های مناطق غرب آسیا ۱۴۰۴</li>
+              <li>۱۲ بار ملی‌پوش رده‌ی امید</li>
+            </ul>
+          </div>
+        </li>
+        <li class="athlete-card reveal">
+          <img src="./assets/img/athlete-04.webp" alt="کیان مرادی، بوکسور تیم پیکان، با دست‌بند تمرینی" width="480" height="560" loading="lazy">
+          <div class="athlete-body">
+            <h3>کیان مرادی</h3>
+            <p class="athlete-disc">بوکس — فوق سنگین</p>
+            <ul class="medals">
+              <li>قهرمان لیگ بوکس باشگاه‌های کشور ۱۴۰۴</li>
+              <li>مدال نقره‌ی مسابقات بین‌المللی فجر</li>
+            </ul>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- Events -->
+  <section class="section events-section" id="events" aria-labelledby="events-title">
+    <div class="container">
+      <div class="section-head reveal">
+        <p class="section-kicker">مسابقات و رویدادها</p>
+        <h2 id="events-title">تقویم رویدادهای پیش‌رو</h2>
+        <p class="section-sub">برای هر رویداد می‌توانید اطلاع‌رسانی را فعال کنید؛ وضعیت دکمه فقط در همین صفحه می‌ماند.</p>
+      </div>
+      <ul class="events-list">
+        <li class="event-row reveal">
+          <div class="event-date" aria-hidden="true"><span class="e-day">۱۸</span><span class="e-month">آبان</span><span class="e-year">۱۴۰۵</span></div>
+          <div class="event-info">
+            <h3>پیکان کاپ — مسابقه‌ی فوتبال دوستانه</h3>
+            <p>تیم فوتبال پیکان میزبان یکی از تیم‌های استان است. ورود تماشاگران آزاد.</p>
+            <p class="event-venue">محل: زمین چمن شماره‌ی ۲ مجموعه‌ی آزادی، تهران — ساعت ۱۷:۰۰</p>
+          </div>
+          <button class="notify-btn" type="button" aria-pressed="false">اطلاع‌رسانی</button>
+        </li>
+        <li class="event-row reveal">
+          <div class="event-date" aria-hidden="true"><span class="e-day">۲۷</span><span class="e-month">آبان</span><span class="e-year">۱۴۰۵</span></div>
+          <div class="event-info">
+            <h3>دوی کوهستان توچال — پیکان ۱۰ کیلومتر</h3>
+            <p>مسیر ۱۰ کیلومتری با ۳۵۰ متر صعود؛ به‌ویژه مناسب شرکت‌کنندگان برنامه‌ی نیم‌ماراتون.</p>
+            <p class="event-venue">محل: پیست اسکی توچال، تهران — ساعت ۰۸:۰۰</p>
+          </div>
+          <button class="notify-btn" type="button" aria-pressed="false">اطلاع‌رسانی</button>
+        </li>
+        <li class="event-row reveal">
+          <div class="event-date" aria-hidden="true"><span class="e-day">۵</span><span class="e-month">آذر</span><span class="e-year">۱۴۰۵</span></div>
+          <div class="event-info">
+            <h3>مسابقات شنای سرعتی یادواره‌ی پیکان</h3>
+            <p>رکوردهای ۵۰ و ۱۰۰ متر در چهار مواد شنایی، با داوری رسمی فدراسیون.</p>
+            <p class="event-venue">محل: استخر سرپوشیده‌ی مجموعه‌ی آزادی، تهران — ساعت ۰۹:۳۰</p>
+          </div>
+          <button class="notify-btn" type="button" aria-pressed="false">اطلاع‌رسانی</button>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- Registration -->
+  <section class="section register-section" id="register" aria-labelledby="register-title">
+    <div class="container register-wrap">
+      <div class="section-head reveal">
+        <p class="section-kicker">ثبت‌نام</p>
+        <h2 id="register-title">فرم درخواست عضویت</h2>
+        <p class="section-sub">اطلاعاتتان را کامل کنید تا کارشناسان پیکان برای رزرو جلسه‌ی اول با شما تماس بگیرند.</p>
+      </div>
+
+      <form class="reg-form reveal" id="reg-form" novalidate>
+        <div class="field">
+          <label for="f-name">نام و نام خانوادگی</label>
+          <input id="f-name" name="name" type="text" autocomplete="name" placeholder="مثلاً: زهرا کریمی" aria-describedby="e-name">
+          <p class="field-error" id="e-name" hidden></p>
+        </div>
+        <div class="field">
+          <label for="f-phone">شمارهٔ همراه</label>
+          <input id="f-phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="۰۹۱۲۳۴۵۶۷۸۹" aria-describedby="e-phone">
+          <p class="field-error" id="e-phone" hidden></p>
+        </div>
+        <div class="field">
+          <label for="f-sport">رشته‌ی مورد علاقه</label>
+          <select id="f-sport" name="sport" aria-describedby="e-sport">
+            <option value="">انتخاب کنید…</option>
+            <option>بدنسازی و پاورلیفتینگ</option>
+            <option>دو و میدانی</option>
+            <option>شنا</option>
+            <option>فوتبال</option>
+            <option>والیبال</option>
+            <option>بوکس</option>
+          </select>
+          <p class="field-error" id="e-sport" hidden></p>
+        </div>
+        <div class="field">
+          <label for="f-program">برنامه‌ی تمرینی دلخواه <span class="opt">اختیاری</span></label>
+          <input id="f-program" name="program" type="text" placeholder="از بخش برنامه‌ها انتخاب شده یا بنویس…" aria-describedby="e-program">
+          <p class="field-error" id="e-program" hidden></p>
+        </div>
+        <div class="field">
+          <label for="f-slot">روز و ساعت تمرین</label>
+          <select id="f-slot" name="slot" aria-describedby="e-slot">
+            <option value="">انتخاب کنید…</option>
+            <option>شنبه — ۰۷:۰۰</option>
+            <option>یکشنبه — ۰۸:۰۰</option>
+            <option>دوشنبه — ۱۵:۰۰</option>
+            <option>سه‌شنبه — ۱۸:۳۰</option>
+            <option>چهارشنبه — ۱۷:۰۰</option>
+            <option>پنجشنبه — ۱۰:۰۰</option>
+          </select>
+          <p class="field-error" id="e-slot" hidden></p>
+        </div>
+        <div class="field field-check">
+          <label class="check-label" for="f-terms">
+            <input id="f-terms" name="terms" type="checkbox" aria-describedby="e-terms">
+            <span>با <a href="#register" class="inline-link">شرایط عضویت باشگاه پیکان</a> موافقم.</span>
+          </label>
+          <p class="field-error" id="e-terms" hidden></p>
+        </div>
+        <button class="btn btn-primary btn-wide" type="submit">ارسال درخواست عضویت</button>
+      </form>
+
+      <div class="form-status" id="form-status" role="status" aria-live="polite"></div>
+      <p class="demo-note">این فرم صرفاً نمونه‌ی نمایشی است و هیچ اطلاعاتی به جایی ارسال یا ذخیره نمی‌شود.</p>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="container footer-grid">
+    <div class="footer-brand">
+      <a class="wordmark" href="#top" aria-label="پیکان — بازگشت به بالای صفحه">
+        <svg class="logo-mark" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M2 22 12 2l10 20-10-6z"/></svg>
+        <span class="wordmark-text">پیکان<em>باشگاه ورزشی</em></span>
+      </a>
+      <p>قدرت، حرکت، پیشرفت. باشگاه ورزشی و تناسب اندام پیکان از سال ۱۳۹۰ در خدمت ورزش‌دوستان تهران است.</p>
+    </div>
+    <nav class="footer-col" aria-label="ستون‌های ناوبری">
+      <div>
+        <h4>رشته‌ها</h4>
+        <ul>
+          <li><a href="#sports">بدنسازی</a></li>
+          <li><a href="#sports">شنا</a></li>
+          <li><a href="#sports">فوتبال</a></li>
+          <li><a href="#sports">بوکس</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>باشگاه</h4>
+        <ul>
+          <li><a href="#programs">برنامه‌های تمرینی</a></li>
+          <li><a href="#timetable">برنامه‌ی هفتگی</a></li>
+          <li><a href="#athletes">قهرمانان</a></li>
+          <li><a href="#events">مسابقات</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>تماس</h4>
+        <ul>
+          <li>تهران، خیابان آزادی، نبش کوچه‌ی ورزش</li>
+          <li>تلفن: ۰۲۱۹۱۰۰۲۲۳۳</li>
+          <li>شنبه تا پنجشنبه، ۰۶:۳۰ تا ۲۲:۰۰</li>
+        </ul>
+      </div>
+    </nav>
+  </div>
+  <div class="container footer-bottom">
+    <p>© ۱۴۰۵ پیکان — همه‌ی حقوق محفوظ است.</p>
+    <a class="gallery-link" href="/">بازگشت به گالری نمونه‌کده</a>
+  </div>
+</footer>
+
+<script src="./app.js"></script>
+</body>
+</html>

@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>آینه | خانه‌ی مد و استایل</title>
+<meta name="description" content="آینه؛ مجله‌ی دیجیتال مد و استایل — مجموعه‌های فصلی، نگاه‌بان خیابانی، مدل‌های منتخب و ژورنال.">
+<link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+<a class="skip-link" href="#main">پرش به محتوا</a>
+
+<header class="site-header" id="siteHeader">
+  <div class="header-inner">
+    <a class="wordmark" href="#hero" aria-label="آینه، خانه‌ی مد و استایل">
+      <span class="wordmark-fa">آینه</span>
+      <span class="wordmark-sub">خانه‌ی مد و استایل</span>
+    </a>
+    <nav class="main-nav" aria-label="ناوبری اصلی">
+      <ul id="navList">
+        <li><a href="#hero" class="nav-link is-active">خانه</a></li>
+        <li><a href="#collections" class="nav-link">مجموعه‌ها</a></li>
+        <li><a href="#lookbook" class="nav-link">نگاه‌بان</a></li>
+        <li><a href="#models" class="nav-link">مدل‌ها</a></li>
+        <li><a href="#journal" class="nav-link">ژورنال</a></li>
+        <li><a href="#newsletter" class="nav-link">عضویت</a></li>
+      </ul>
+    </nav>
+    <button class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="mobileNav" aria-label="باز کردن منو">
+      <span class="bar"></span><span class="bar"></span><span class="bar"></span>
+    </button>
+  </div>
+  <nav class="mobile-nav" id="mobileNav" aria-label="ناوبری موبایل" hidden>
+    <ul>
+      <li><a href="#hero" class="mobile-link">خانه</a></li>
+      <li><a href="#collections" class="mobile-link">مجموعه‌ها</a></li>
+      <li><a href="#lookbook" class="mobile-link">نگاه‌بان</a></li>
+      <li><a href="#models" class="mobile-link">مدل‌ها</a></li>
+      <li><a href="#journal" class="mobile-link">ژورنال</a></li>
+      <li><a href="#newsletter" class="mobile-link">عضویت</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main id="main">
+
+  <!-- ۰۱ -->
+  <section class="hero" id="hero" aria-labelledby="heroTitle">
+    <div class="hero-grid">
+      <div class="hero-text reveal">
+        <p class="issue-line">شماره‌ی ۱۲ &bull; پاییز ۱۴۰۵</p>
+        <h1 id="heroTitle" class="hero-title">مد،<br><span class="thin">آینه‌ی</span> ماست.</h1>
+        <p class="hero-lead">در «آینه» هر فصل روایتی است از پارچه، رنگ و خیابان؛ روایتِ استایلِ شما. مجموعه‌های فصلی، نگاه‌بانِ استایل شهری و ژورنالِ تخصصِ مد.</p>
+        <div class="hero-actions">
+          <a class="btn btn-solid" href="#collections">دیدن مجموعه‌ها</a>
+          <a class="btn btn-ghost" href="#lookbook">نگاه‌بان</a>
+        </div>
+      </div>
+      <figure class="hero-figure reveal">
+        <img src="./assets/img/hero-01.webp" width="1100" height="1400" alt="زن جوان در پالتوی شتری‌رنگ با شال ابریشمی رنگارنگ و عینک آفتابی، در خیابانی از تهران پاییزی" fetchpriority="high">
+        <figcaption class="photo-caption">عکس: استراستایل تهران، پاییز &bull; نگارخانه‌ی آینه</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <div class="marquee" aria-hidden="true">
+    <div class="marquee-track">
+      <span>مینیمال</span><span>&bull;</span><span>استایل پاییزی</span><span>&bull;</span><span>فشن‌ویک</span><span>&bull;</span><span>ادیتوریال</span><span>&bull;</span><span>کمد کپسولی</span><span>&bull;</span><span>ترندِ ۱۴۰۵</span><span>&bull;</span><span>استراستایل</span><span>&bull;</span><span>پالت خنثی</span><span>&bull;</span><span>اکسسوری</span><span>&bull;</span><span>دوختِ تمیز</span><span>&bull;</span>
+      <span>مینیمال</span><span>&bull;</span><span>استایل پاییزی</span><span>&bull;</span><span>فشن‌ویک</span><span>&bull;</span><span>ادیتوریال</span><span>&bull;</span><span>کمد کپسولی</span><span>&bull;</span><span>ترندِ ۱۴۰۵</span><span>&bull;</span><span>استراستایل</span><span>&bull;</span><span>پالت خنثی</span><span>&bull;</span><span>اکسسوری</span><span>&bull;</span><span>دوختِ تمیز</span><span>&bull;</span>
+    </div>
+  </div>
+
+  <!-- ۰۲ -->
+  <section class="section collections" id="collections" aria-labelledby="collectionsTitle">
+    <div class="section-head reveal">
+      <span class="section-num" aria-hidden="true">۰۲</span>
+      <h2 id="collectionsTitle" class="section-title">مجموعه‌های <span class="thin">فصلی</span></h2>
+      <p class="section-lead">چهار مجموعه، چهار خلق‌وخو. فصلِ خودتان را انتخاب کنید.</p>
+    </div>
+    <div class="filter-bar reveal" role="group" aria-label="فیلتر فصل مجموعه‌ها">
+      <button class="chip is-active" data-season="all" aria-pressed="true">همه</button>
+      <button class="chip" data-season="paeez" aria-pressed="false">پاییز</button>
+      <button class="chip" data-season="bahar" aria-pressed="false">بهار</button>
+      <button class="chip" data-season="zemestan" aria-pressed="false">زمستان</button>
+    </div>
+    <div class="collection-grid" id="collectionGrid">
+      <article class="collection-card reveal" data-season="paeez">
+        <div class="card-media">
+          <img src="./assets/img/coll-01.webp" width="800" height="1000" loading="lazy" alt="پالتوی کرمِ کمربنددار روی بالاتنه‌ی سفید، با کیف دوشی زنجیردار در جمعیتِ هفته‌ی مد">
+        </div>
+        <div class="card-body">
+          <p class="card-season">پاییز ۱۴۰۵</p>
+          <h3 class="card-title">پالتوی شتری، بازگشتِ کلاسیک</h3>
+          <p class="card-desc">پالتوهای بلند، بافت‌های گرم و رنگ‌های خاکی؛ پاییزِ امسال به شیوه‌ی بی‌آلایش می‌رسد.</p>
+          <button class="card-link" data-lightbox="./assets/img/coll-01.webp" data-caption="پالتوی کرم و کیف زنجیردار — مجموعه پاییز ۱۴۰۵">مشاهده مجموعه</button>
+        </div>
+      </article>
+      <article class="collection-card reveal" data-season="bahar">
+        <div class="card-media">
+          <img src="./assets/img/coll-02.webp" width="800" height="1000" loading="lazy" alt="مدل روی بومِ ران‌وی با پیراهن سفید ساده و دامن مشکیِ میدی">
+        </div>
+        <div class="card-body">
+          <p class="card-season">بهار ۱۴۰۶</p>
+          <h3 class="card-title">کپسول مینیمال</h3>
+          <p class="card-desc">کمد کپسولی با ده تکه‌ی کاربردی؛ خطوطِ پاک، رنگ‌های خنثی، دوختِ دقیق.</p>
+          <button class="card-link" data-lightbox="./assets/img/coll-02.webp" data-caption="پیراهن سفید و دامن مشکی — کپسول مینیمالِ بهاره">مشاهده مجموعه</button>
+        </div>
+      </article>
+      <article class="collection-card reveal" data-season="zemestan">
+        <div class="card-media">
+          <img src="./assets/img/coll-03.webp" width="800" height="1000" loading="lazy" alt="پیراهن بلندِ مجلسی با گلدوزیِ گل‌های درشتِ رنگی، در ویترینِ موزه‌ی مد">
+        </div>
+        <div class="card-body">
+          <p class="card-season">زمستان ۱۴۰۵</p>
+          <h3 class="card-title">شب و مراسم</h3>
+          <p class="card-desc">پارچه‌های براق و گل‌های درشت برای شب‌های بلندِ زمستان و مراسمِ رسمی.</p>
+          <button class="card-link" data-lightbox="./assets/img/coll-03.webp" data-caption="پیراهن مجلسیِ گلدوزی‌شده — مجموعه شب و مراسم">مشاهده مجموعه</button>
+        </div>
+      </article>
+      <article class="collection-card reveal" data-season="paeez">
+        <div class="card-media">
+          <img src="./assets/img/coll-04.webp" width="800" height="1000" loading="lazy" alt="استایل خیابانی با ستِ چرم مشکی، کاپشنِ کوتاه و کفشِ اسپرت در نورِ روز">
+        </div>
+        <div class="card-body">
+          <p class="card-season">پاییز ۱۴۰۵</p>
+          <h3 class="card-title">روزمره‌ی شهری</h3>
+          <p class="card-desc">چرم و کتان در ترکیبِ روزمره؛ استراستایلِ شهر برای پیاده‌روی‌های سریع.</p>
+          <button class="card-link" data-lightbox="./assets/img/coll-04.webp" data-caption="ست چرم مشکی در خیابان — مجموعه روزمره‌ی شهری">مشاهده مجموعه</button>
+        </div>
+      </article>
+    </div>
+    <p class="filter-empty" id="filterEmpty" hidden>مجموعه‌ای در این فصل یافت نشد.</p>
+  </section>
+
+  <!-- ۰۳ -->
+  <section class="section lookbook" id="lookbook" aria-labelledby="lookbookTitle">
+    <div class="section-head reveal">
+      <span class="section-num" aria-hidden="true">۰۳</span>
+      <h2 id="lookbookTitle" class="section-title">نگاه‌بان <span class="thin">ادیتوریال</span></h2>
+      <p class="section-lead"> قاب‌هایی از بومِ ران‌وی تا پیاده‌روِ شهر. برای دیدنِ بزرگ‌نمایی، روی هر قاب کلیک کنید.</p>
+    </div>
+    <div class="masonry" id="masonry">
+      <figure class="look-item reveal">
+        <button class="look-btn" data-lightbox="./assets/img/look-01.webp" data-caption="پالتوی طوسی و شال مشکی — خیابان ولیعصر، تهران">
+          <img src="./assets/img/look-01.webp" width="720" height="990" loading="lazy" alt="زن جوان با پالتوی طوسی و شال مشکی از پشت سر، کنار حصارِ سنگیِ خیابانی در تهران">
+        </button>
+        <figcaption class="look-cap">پالتوی طوسی، شال مشکی — تهران</figcaption>
+      </figure>
+      <figure class="look-item reveal">
+        <button class="look-btn" data-lightbox="./assets/img/look-02.webp" data-caption="جلیقه‌ی چرم روی بافتِ روشن — استراستایل پاییزی">
+          <img src="./assets/img/look-02.webp" width="720" height="900" loading="lazy" alt="زن جوان با کلاه مشکی، جلیقه‌ی چرم روی پیراهن بافتِ طوسی و شلوار چرم، در کنار خودروهای خیابان">
+        </button>
+        <figcaption class="look-cap">جلیقه‌ی چرم روی بافتِ روشن</figcaption>
+      </figure>
+      <figure class="look-item reveal">
+        <button class="look-btn" data-lightbox="./assets/img/look-03.webp" data-caption="کلاه سبز و شلوار راه‌راه — حاشیه‌ی هفته‌ی مد لندن">
+          <img src="./assets/img/look-03.webp" width="720" height="1035" loading="lazy" alt="زنی مسن‌تر با کلاه پارچه‌ای سبز، کت مشکی و شلوار راه‌راه سفید، کیف قرمز دوشی، در خیابانی بارانیِ لندن">
+        </button>
+        <figcaption class="look-cap">کلاه سبز و شلوار راه‌راه — لندن</figcaption>
+      </figure>
+      <figure class="look-item reveal">
+        <button class="look-btn" data-lightbox="./assets/img/look-04.webp" data-caption="خطای قرمز روی بومِ بارسلون — هفتۀ مد بارسلون">
+          <img src="./assets/img/look-04.webp" width="800" height="1000" loading="lazy" alt="مدل روی بومِ ران‌وی با تونیک راه‌راه سفید و قرمز و گردنبندِ نخِ قرمز">
+        </button>
+        <figcaption class="look-cap">خطای قرمز — بارسلون</figcaption>
+      </figure>
+      <figure class="look-item reveal">
+        <button class="look-btn" data-lightbox="./assets/img/look-05.webp" data-caption="یک‌شانه‌ی آبی با کمربندِ طلایی — ران‌ویِ تابستانه">
+          <img src="./assets/img/look-05.webp" width="800" height="1150" loading="lazy" alt="مدل با موهای بافته‌شده و لباسِ یک‌شانه‌ی آبیِ براق با کمربندِ طلایی، روی بومِ ران‌وی">
+        </button>
+        <figcaption class="look-cap">یک‌شانه‌ی آبی — ران‌وی</figcaption>
+      </figure>
+      <figure class="look-item reveal">
+        <button class="look-btn" data-lightbox="./assets/img/look-06.webp" data-caption="ویترینِ پاشنه‌بلندها — اکسسوریِ فصل">
+          <img src="./assets/img/look-06.webp" width="800" height="1000" loading="lazy" alt="قفسه‌ی ویترینِ کفش‌فروشی با کفش‌های پاشنه‌بلندِ مشکی، کرم و قهوه‌ای">
+        </button>
+        <figcaption class="look-cap">ویترینِ پاشنه‌بلندها</figcaption>
+      </figure>
+      <figure class="look-item reveal">
+        <button class="look-btn" data-lightbox="./assets/img/look-07.webp" data-caption="شنلِ مخمل و کتِ قهوه‌ای — نمایشگاهِ موزه‌ی مد">
+          <img src="./assets/img/look-07.webp" width="800" height="1050" loading="lazy" alt="دو مانکن در پس‌زمینه‌ی صورتی؛ یکی شنلِ مخملِ قهوه‌ای و دیگری کت‌وشلوارِ قهوه‌ایِ طرح‌دار">
+        </button>
+        <figcaption class="look-cap">شنلِ مخمل — موزه‌ی مد</figcaption>
+      </figure>
+      <figure class="look-item reveal">
+        <button class="look-btn" data-lightbox="./assets/img/look-08.webp" data-caption="پیراهن سفید در حاشیه‌ی پاریس — هفتۀ مد">
+          <img src="./assets/img/look-08.webp" width="800" height="1000" loading="lazy" alt="مدل جوان با پیراهن سفیدِ مردانه و موهای گره‌خورده، در میان جمعیتِ حاشیه‌ی هفته‌ی مد پاریس">
+        </button>
+        <figcaption class="look-cap">پیراهن سفید — پاریس</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- ۰۴ -->
+  <section class="section models" id="models" aria-labelledby="modelsTitle">
+    <div class="section-head reveal">
+      <span class="section-num" aria-hidden="true">۰۴</span>
+      <h2 id="modelsTitle" class="section-title">مدل‌های <span class="thin">منتخب</span></h2>
+      <p class="section-lead">چهره‌هایی که این فصل قاب‌ها را رقم زدند. برای دیدنِ پرونده، نشانگر را روی کارت ببرید.</p>
+    </div>
+    <ul class="model-grid">
+      <li class="model-card reveal" tabindex="0">
+        <img src="./assets/img/model-01.webp" width="700" height="900" loading="lazy" alt="پرتره‌ی مدل جوان با موهای کوتاهِ بلوند و بالاتنه‌ی چرمِ مشکیِ براق، در پس‌زمینه‌ی طوسی">
+        <div class="model-info">
+          <h3 class="model-name">لارا ورثینگتون</h3>
+          <dl class="model-data">
+            <div><dt>قد</dt><dd>۱۷۸ سانتی‌متر</dd></div>
+            <div><dt>شهر</dt><dd>سیدنی، استرالیا</dd></div>
+            <div><dt>زمینه</dt><dd>ادیتوریال و ران‌وی</dd></div>
+          </dl>
+        </div>
+      </li>
+      <li class="model-card reveal" tabindex="0">
+        <img src="./assets/img/model-02.webp" width="700" height="900" loading="lazy" alt="پرتره‌ی نزدیک از مدل جوان با موهای تیرهِ چتری‌دار و گوشواره‌ی صدفی، در نورِ طلاییِ غروب">
+        <div class="model-info">
+          <h3 class="model-name">چارلی فریزر</h3>
+          <dl class="model-data">
+            <div><dt>قد</dt><dd>۱۸۰ سانتی‌متر</dd></div>
+            <div><dt>شهر</dt><dd>پرت، استرالیا</dd></div>
+            <div><dt>زمینه</dt><dd>کمپین و ادیتوریال</dd></div>
+          </dl>
+        </div>
+      </li>
+      <li class="model-card reveal" tabindex="0">
+        <img src="./assets/img/model-03.webp" width="700" height="900" loading="lazy" alt="مدل با موهای دم‌اسبی و پیراهن آبیِ کم‌رنگِ چین‌دار، کیفِ زنجیردارِ مشکی دوشی، در نورِ روز">
+        <div class="model-info">
+          <h3 class="model-name">ارین هالند</h3>
+          <dl class="model-data">
+            <div><dt>قد</dt><dd>۱۷۵ سانتی‌متر</dd></div>
+            <div><dt>شهر</dt><dd>ملبورن، استرالیا</dd></div>
+            <div><dt>زمینه</dt><dd>استایل خیابانی</dd></div>
+          </dl>
+        </div>
+      </li>
+      <li class="model-card reveal" tabindex="0">
+        <img src="./assets/img/model-04.webp" width="700" height="900" loading="lazy" alt="پرتره‌ی مدل جوان با موهای بلوندِ باز و لباسِ سفید و قرمز، در حاشیه‌ی هفته‌ی مد لندن">
+        <div class="model-info">
+          <h3 class="model-name">کارا دلوین</h3>
+          <dl class="model-data">
+            <div><dt>قد</dt><dd>۱۷۶ سانتی‌متر</dd></div>
+            <div><dt>شهر</dt><dd>لندن، بریتانیا</dd></div>
+            <div><dt>زمینه</dt><dd>ادیتوریال و برندها</dd></div>
+          </dl>
+        </div>
+      </li>
+    </ul>
+  </section>
+
+  <!-- ۰۵ -->
+  <section class="section styles" id="styles" aria-labelledby="stylesTitle">
+    <div class="section-head reveal">
+      <span class="section-num" aria-hidden="true">۰۵</span>
+      <h2 id="stylesTitle" class="section-title">استایل‌های <span class="thin">پیشنهادی</span></h2>
+      <p class="section-lead">سه فرمولِ ساده برای سه حال‌وهوای مختلفِ هفته.</p>
+    </div>
+    <div class="style-grid">
+      <article class="style-card reveal">
+        <img src="./assets/img/style-01.webp" width="800" height="1000" loading="lazy" alt="زن جوان با تیشرت اسپرتِ مشکی، شلوار جینِ کوتاهِ آبی، کمربندِ چرمی قهوه‌ای و کتِ رنگیِ اورسایز روی شانه">
+        <div class="style-body">
+          <h3>کژال شهری</h3>
+          <p class="style-note">برای آخر هفته‌ی شهر: تیشرتِ اسپرت، شلوار جینِ کوتاه، کتِ رنگیِ اورسایز و کمربندِ چرمِ قهوه‌ای.</p>
+        </div>
+      </article>
+      <article class="style-card reveal">
+        <img src="./assets/img/style-02.webp" width="800" height="1000" loading="lazy" alt="بانوی جوان با پیراهن بلندِ رسمیِ قرمزِ دامن‌پفکی، روی سنِ مراسمِ فرشِ قرمز">
+        <div class="style-body">
+          <h3>رسمیِ شب</h3>
+          <p class="style-note">برای مراسم و فرشِ قرمز: پیراهنِ بلندِ ساتنِ قرمز، موی جمع، گوشواره‌ی مینیمال و کفشِ پاشنه‌بلندِ مشکی.</p>
+        </div>
+      </article>
+      <article class="style-card reveal">
+        <img src="./assets/img/style-03.webp" width="800" height="1000" loading="lazy" alt="زن جوان با کلاه مشکی، تیشرت سفید و دامن میدیِ قهوه‌ای، در کنار دریا با بازوهای حلقه‌شده">
+        <div class="style-body">
+          <h3>مینیمال خنثی</h3>
+          <p class="style-note">قانونِ سه رنگ: تیشرتِ سفیدِ ساده، دامن میدیِ قهوه‌ای، کلاه مشکی. بقیه‌ی جزئیات را به سلیقه‌ی خودتان بسپارید.</p>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- ۰۶ -->
+  <section class="section journal" id="journal" aria-labelledby="journalTitle">
+    <div class="section-head reveal">
+      <span class="section-num" aria-hidden="true">۰۶</span>
+      <h2 id="journalTitle" class="section-title">ژورنال <span class="thin">آینه</span></h2>
+      <p class="section-lead">یادداشت‌های کوتاهِ دنیای مد، به قلمِ تحریریه.</p>
+    </div>
+    <div class="journal-grid">
+      <article class="journal-card reveal">
+        <p class="journal-meta"><time datetime="2026-10-04">۱۲ مهر ۱۴۰۵</time> &bull; ۶ دقیقه مطالعه</p>
+        <h3 class="journal-title">چرا پالتوی شتری دوباره مد شد؟</h3>
+        <p class="journal-excerpt">چهار دهه پس از نخستین اوجش، پالتوی شتری بار دیگر به ویترین‌ها برگشته؛ روایتِ بازگشتِ کلاسیک‌ها در فصلِ سرد.</p>
+      </article>
+      <article class="journal-card reveal">
+        <p class="journal-meta"><time datetime="2026-09-28">۶ مهر ۱۴۰۵</time> &bull; ۴ دقیقه مطالعه</p>
+        <h3 class="journal-title">کمد کپسولی: ده تکه، صد استایل</h3>
+        <p class="journal-excerpt">با ده تکه‌ی درست، هر هفته استایلِ تازه دارید. راهنمای عملیِ چیدنِ کمد کپسولی برای آپارتمان‌های کوچکِ شهر.</p>
+      </article>
+      <article class="journal-card reveal">
+        <p class="journal-meta"><time datetime="2026-09-21">۳۰ شهریور ۱۴۰۵</time> &bull; ۵ دقیقه مطالعه</p>
+        <h3 class="journal-title">هفتۀ مد در قابِ خیابان</h3>
+        <p class="journal-excerpt">دوربین‌ها از ران‌وی به پیاده‌رو کوچ کرده‌اند؛ نگاهی به استراستایل‌هایی که این فصل، ترندها را ساختند.</p>
+      </article>
+    </div>
+  </section>
+
+  <!-- ۰۷ -->
+  <section class="section newsletter" id="newsletter" aria-labelledby="newsletterTitle">
+    <div class="newsletter-inner">
+      <div class="section-head reveal">
+        <span class="section-num" aria-hidden="true">۰۷</span>
+        <h2 id="newsletterTitle" class="section-title">عضویت در <span class="thin">نامه‌ی فصلی</span></h2>
+        <p class="section-lead">هر فصل، یک نامه: مجموعه‌های تازه، پرونده‌ی مدل‌ها و پیشنهادِ استایل. بدونِ تبلیغِ مزاحم.</p>
+      </div>
+      <form class="news-form reveal" id="newsForm" novalidate>
+        <div class="field">
+          <label for="fName">نام و نام خانوادگی</label>
+          <input type="text" id="fName" name="name" autocomplete="name" aria-describedby="fNameErr" required>
+          <p class="field-err" id="fNameErr"></p>
+        </div>
+        <div class="field">
+          <label for="fEmail">رایانامه</label>
+          <input type="email" id="fEmail" name="email" autocomplete="email" dir="ltr" placeholder="name@example.com" aria-describedby="fEmailErr" required>
+          <p class="field-err" id="fEmailErr"></p>
+        </div>
+        <button type="submit" class="btn btn-solid btn-full">عضو می‌شوم</button>
+        <p class="form-status" id="formStatus" role="status" aria-live="polite"></p>
+        <p class="form-note">این فرم صرفاً نمونه‌ی نمایشی است و هیچ اطلاعاتی ارسال یا ذخیره نمی‌شود.</p>
+      </form>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <p class="footer-wordmark">آینه</p>
+      <p class="footer-tag">خانه‌ی مد و استایل؛ روایتِ فصلیِ پوشاک از ران‌وی تا خیابان.</p>
+    </div>
+    <nav class="footer-col" aria-label="فصل‌نامه">
+      <h3>فصل‌نامه</h3>
+      <ul>
+        <li><a href="#collections">مجموعه‌ها</a></li>
+        <li><a href="#lookbook">نگاه‌بان</a></li>
+        <li><a href="#models">مدل‌ها</a></li>
+        <li><a href="#journal">ژورنال</a></li>
+      </ul>
+    </nav>
+    <nav class="footer-col" aria-label="دسترسی">
+      <h3>دسترسی</h3>
+      <ul>
+        <li><a href="#newsletter">عضویت در نامه‌ی فصلی</a></li>
+        <li><a href="#hero">صفحه‌ی نخست</a></li>
+      </ul>
+    </nav>
+    <div class="footer-col">
+      <h3>شماره‌ی جاری</h3>
+      <p class="footer-issue">شماره‌ی ۱۲<br>پاییز ۱۴۰۵</p>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© ۱۴۰۵ آینه — همه‌ی حقوق محفوظ است.</p>
+    <a class="back-link" href="/">بازگشت به گالری نمونه‌کده</a>
+  </div>
+</footer>
+
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="نمایش بزرگ تصویر" hidden>
+  <button class="lb-close" id="lbClose" aria-label="بستن نمایشگر">&times;</button>
+  <button class="lb-nav lb-prev" id="lbPrev" aria-label="تصویر قبلی">&#8250;</button>
+  <figure class="lb-stage">
+    <img id="lbImg" src="" alt="">
+    <figcaption class="lb-caption" id="lbCaption"></figcaption>
+    <p class="lb-counter" id="lbCounter"></p>
+  </figure>
+  <button class="lb-nav lb-next" id="lbNext" aria-label="تصویر بعدی">&#8249;</button>
+</div>
+
+<script src="./app.js"></script>
+</body>
+</html>
