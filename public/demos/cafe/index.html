@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>بخار | کافه و صبحانه، منوی فصلی و رزرو میز</title>
+<meta name="description" content="بخار — کافه و صبحانه در تهران؛ منوی نوشیدنی و صبحانه با قیمت، پیشنهاد امشب، رُستری دانه و رزرو میزی که با تعداد نفرات و پرشدن جا کم‌وفراوان می‌شود.">
+<link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+<a class="skip-link" href="#main">پرش به محتوای اصلی</a>
+
+<header class="site-header">
+  <div class="wrap header-inner">
+    <a class="wordmark" href="#top" aria-label="بخار — صفحه‌ی اصلی">
+      <svg class="logo-mark" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <path d="M5 11h11v4.2A4.2 4.2 0 0 1 11.8 19.4H9.2A4.2 4.2 0 0 1 5 15.2z"/>
+        <path d="M16 12.1h1.6a2.2 2.2 0 0 1 0 4.4H16"/>
+        <path d="M8 7.6c0-1.2 1.2-1.4 1.2-2.6M11.6 7.6c0-1.2 1.2-1.4 1.2-2.6"/>
+      </svg>
+      <span class="wordmark-text">بخار<em>کافه و صبحانه</em></span>
+    </a>
+
+    <nav class="main-nav" aria-label="ناوبری اصلی">
+      <ul class="nav-list">
+        <li><a href="#top">خانه</a></li>
+        <li><a href="#menu">منو</a></li>
+        <li><a href="#space">فضای کافه</a></li>
+        <li><a href="#roast">رُستری</a></li>
+        <li><a href="#table" class="nav-cta">رزرو میز</a></li>
+      </ul>
+    </nav>
+
+    <button class="menu-toggle" id="menu-toggle" type="button" aria-expanded="false" aria-controls="nav-drawer">
+      <span class="sr-only">باز و بسته کردن فهرست</span>
+      <span class="menu-bar" aria-hidden="true"></span>
+      <span class="menu-bar" aria-hidden="true"></span>
+      <span class="menu-bar" aria-hidden="true"></span>
+    </button>
+  </div>
+  <nav class="nav-drawer" id="nav-drawer" aria-label="فهرست موبایل" hidden>
+    <ul>
+      <li><a href="#top">خانه</a></li>
+      <li><a href="#menu">منو</a></li>
+      <li><a href="#table">رزرو میز</a></li>
+      <li><a href="#space">فضای کافه</a></li>
+      <li><a href="#roast">رُستری</a></li>
+      <li><a href="#visit">ساعت و نشانی</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main id="main">
+
+  <!-- ===== بخش آغازین ===== -->
+  <section class="hero" id="top">
+    <div class="hero-media">
+      <img src="./assets/img/hero-01.webp" alt="پشت پیشانی کافه؛ دستگاه اسپرسو در بخار و دست باریستا که پرتافیلتر را می‌گیرد" width="1600" height="1000" fetchpriority="high">
+    </div>
+    <div class="hero-scrim" aria-hidden="true"></div>
+    <div class="wrap hero-inner">
+      <p class="eyebrow">کافه و صبحانه · تهران</p>
+      <h1 class="hero-title">بخارِ قهوه،<br><span class="hero-accent">تا دیروقت</span></h1>
+      <p class="hero-lead">
+        صبحانه‌ی گرم تا پیش از ظهر، دانه‌ای که خودمان رُست می‌کنیم، و میزی که پیش از آمدن
+        رزرو می‌کنید. اگر جا نباشد، همان‌جا صادقانه می‌گوییم.
+      </p>
+      <div class="hero-actions">
+        <a class="btn btn--primary" href="#table">رزرو میز</a>
+        <a class="btn btn--ghost" href="#menu">دیدن منو</a>
+      </div>
+      <p class="hero-status" id="open-status">
+        <span class="status-dot" aria-hidden="true"></span>
+        <span id="open-status-text">در حال بررسی ساعت کاری…</span>
+      </p>
+    </div>
+    <aside class="hero-card" aria-label="دانه‌ی این هفته">
+      <p class="hero-card__kicker">دانه‌ی این هفته</p>
+      <p class="hero-card__name">یرگاچیف · اتیوپی</p>
+      <p class="hero-card__note">رُست روشن · یادِ به و گل محمدی</p>
+    </aside>
+  </section>
+
+  <p class="wrap demo-note">
+    <span class="demo-note__tag">نمونه‌ی نمایشی</span>
+    این وب‌سایت نمونه‌ی نمایشی است؛ منو، قیمت‌ها و رزرو میز واقعی نیستند و هیچ رزروی جایی ثبت نمی‌شود.
+  </p>
+
+  <!-- ===== منو ===== -->
+  <section class="section" id="menu" aria-labelledby="menu-title">
+    <div class="wrap">
+      <div class="section-head">
+        <div>
+          <p class="section-kicker">خوراکی‌ها و نوشیدنی‌ها</p>
+          <h2 id="menu-title">منوی بخار</h2>
+        </div>
+        <p class="section-lead">
+          قیمت‌ها به تومان و با مالیات است. با فیلترها سریع‌تر می‌رسید؛
+          اگر گیاه‌خوار باشید، «فقط گیاهی» کافی است.
+        </p>
+      </div>
+
+      <div class="menu-tools">
+        <div class="chips" role="group" aria-label="فیلتر بخش منو">
+          <button class="chip is-active" type="button" data-course="all" aria-pressed="true">همه</button>
+          <button class="chip" type="button" data-course="drink" aria-pressed="false">نوشیدنی</button>
+          <button class="chip" type="button" data-course="breakfast" aria-pressed="false">صبحانه</button>
+          <button class="chip" type="button" data-course="sweet" aria-pressed="false">شیرینی</button>
+          <button class="chip" type="button" data-course="salty" aria-pressed="false">میان‌وعده</button>
+        </div>
+        <label class="switch">
+          <input type="checkbox" id="veg-only">
+          <span class="switch__track" aria-hidden="true"></span>
+          <span class="switch__label">فقط گیاهی</span>
+        </label>
+        <p class="menu-count" id="menu-count" aria-live="polite"></p>
+      </div>
+
+      <div class="board" id="menu-board"></div>
+
+      <p class="board-empty" id="menu-empty" hidden>
+        با این فیلترها چیزی در منو نیست. «فقط گیاهی» را بردارید یا بخش دیگری را انتخاب کنید.
+      </p>
+    </div>
+  </section>
+
+  <!-- ===== بار و ویترین ===== -->
+  <section class="section section--tight" aria-labelledby="bar-title">
+    <div class="wrap">
+      <h2 id="bar-title" class="sr-only">نوشیدنی‌ها و شیرینی‌های بار</h2>
+      <ul class="strip" role="list">
+        <li class="strip__item">
+          <img src="./assets/img/menu-espresso.webp" alt="فنجان اسپرسوی دبل با کِرِما روی نعلبکی سیاه و سفید" width="1000" height="667" loading="lazy">
+          <p class="strip__name">اسپرسو دبل</p>
+          <p class="strip__note">دو شات، تلخی تمیز، بدون شکر</p>
+        </li>
+        <li class="strip__item">
+          <img src="./assets/img/menu-latte.webp" alt="فنجان لاته با نقش گل روی کف شیر، در دست باریستا" width="1000" height="750" loading="lazy">
+          <p class="strip__name">لاته هنری</p>
+          <p class="strip__note">شیر کامل یا جو، نقشِ دستِ همان لحظه</p>
+        </li>
+        <li class="strip__item">
+          <img src="./assets/img/menu-tea.webp" alt="استکان چای با نوارهای طلایی، روی نعلبکی گل‌دار آبی و فرش قرمز" width="1000" height="1333" loading="lazy">
+          <p class="strip__name">چای زعفرانی</p>
+          <p class="strip__note">دم‌کشِ غلیظ، با نبات و خرمای مضافتی</p>
+        </li>
+        <li class="strip__item">
+          <img src="./assets/img/menu-pastry.webp" alt="شیرینی لایه‌ای با رویه‌ی صورتی و گلبرگ و توت خشک" width="1000" height="750" loading="lazy">
+          <p class="strip__name">شیرینی توت و گل</p>
+          <p class="strip__note">لایه‌های کره‌ای، خامه‌ی گلاب، توت خشک</p>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ===== پیشنهاد امشب ===== -->
+  <section class="section section--tight" aria-labelledby="tonight-title">
+    <div class="wrap">
+      <div class="section-head section-head--plain">
+        <div>
+          <p class="section-kicker">تا ساعت ۱۲ ظهر</p>
+          <h2 id="tonight-title">پیشنهاد امروز</h2>
+        </div>
+        <p class="section-lead">چهار چیزی که بیشتر از همه سفارش داده می‌شود.</p>
+      </div>
+      <ul class="strip strip--dishes" role="list">
+        <li class="strip__item">
+          <img src="./assets/img/menu-omelette.webp" alt="املت سبزی در بشقاب سفید، کنار سالاد خیار و گوجه و یک لیوان آب‌پرتقال" width="1000" height="1333" loading="lazy">
+          <p class="strip__name">املت سبزی</p>
+          <p class="strip__note">سه تخم‌مرغ، شوید و تره، پنیر محلی</p>
+          <p class="strip__price">۲۴۵٬۰۰۰ تومان</p>
+        </li>
+        <li class="strip__item">
+          <img src="./assets/img/menu-pancake.webp" alt="برج پنکیک با کارامل، حلقه‌های موز و توت‌فرنگی روی بشقاب کرم‌رنگ" width="1000" height="667" loading="lazy">
+          <p class="strip__name">پنکی کارامل موز</p>
+          <p class="strip__note">سه لایه پنکیک، کارامل نمکی، موز رسیده</p>
+          <p class="strip__price">۲۳۰٬۰۰۰ تومان</p>
+        </li>
+        <li class="strip__item">
+          <img src="./assets/img/menu-toast.webp" alt="دو توست آووکادو با کنجد و فلفل روی بشقاب حاشیه‌سیاه" width="1000" height="1000" loading="lazy">
+          <p class="strip__name">تست آووکادو</p>
+          <p class="strip__note">نان خمیرترش، آووکادوی له‌شده، کنجد بوداده</p>
+          <p class="strip__price">۲۸۵٬۰۰۰ تومان</p>
+        </li>
+        <li class="strip__item">
+          <img src="./assets/img/menu-cake.webp" alt="برش کیک شکلات سه‌لایه با پودر کاکائو و سس شکلات روی بشقاب سفید" width="1000" height="667" loading="lazy">
+          <p class="strip__name">کیک شکلات سه‌لایه</p>
+          <p class="strip__note">اسفنج کاکائو، موس شیری، سس تلخ</p>
+          <p class="strip__price">۱۶۵٬۰۰۰ تومان</p>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ===== رزرو میز ===== -->
+  <section class="section section--alt" id="table" aria-labelledby="table-title">
+    <div class="wrap">
+      <div class="section-head">
+        <div>
+          <p class="section-kicker">جا را از دست ندهید</p>
+          <h2 id="table-title">میزتان را رزرو کنید</h2>
+        </div>
+        <p class="section-lead">
+          تعداد نفرات و روز را که انتخاب کنید، ساعت‌ها بر اساس جای خالی همان شب کم‌وفراوان می‌شوند.
+        </p>
+      </div>
+
+      <div class="booking">
+        <div class="booking__step">
+          <p class="step-label"><span aria-hidden="true">۱</span> چند نفر؟</p>
+          <div class="party" role="group" aria-label="تعداد نفرات">
+            <button class="party__btn" type="button" id="party-minus" aria-label="یک نفر کم">−</button>
+            <p class="party__value"><span id="party-count">۲</span><em>نفر</em></p>
+            <button class="party__btn" type="button" id="party-plus" aria-label="یک نفر اضافه">+</button>
+          </div>
+          <p class="step-hint" id="party-hint">برای بیشتر از هفت نفر <a href="tel:+982188001234">تماس بگیرید</a>؛ میز درازِ انتهای سالن برای دورهمی است.</p>
+        </div>
+
+        <div class="booking__step">
+          <p class="step-label"><span aria-hidden="true">۲</span> کدام شب؟</p>
+          <div class="days" id="day-strip" role="group" aria-label="انتخاب شب"></div>
+        </div>
+
+        <div class="booking__step booking__step--wide">
+          <p class="step-label"><span aria-hidden="true">۳</span> کدام ساعت؟</p>
+          <div class="slots" id="slot-list" role="group" aria-label="ساعت‌های خالی"></div>
+          <p class="step-hint" id="slot-note"></p>
+        </div>
+
+        <div class="booking__form" id="booking-form-wrap" hidden>
+          <h3 id="formTitle">تکمیل رزرو</h3>
+          <p class="form-summary" id="formSummary"></p>
+          <form id="booking-form" novalidate>
+            <div class="field">
+              <label for="b-name">نام شما</label>
+              <input id="b-name" name="name" type="text" autocomplete="name" placeholder="مثلاً مریم" aria-describedby="e-name">
+              <p class="error" id="e-name" role="alert" hidden>لطفاً نامتان را بنویسید.</p>
+            </div>
+            <div class="field">
+              <label for="b-phone">شماره همراه</label>
+              <input id="b-phone" name="phone" type="tel" inputmode="numeric" autocomplete="tel" placeholder="۰۹۱۲۳۴۵۶۷۸۹" aria-describedby="e-phone">
+              <p class="error" id="e-phone" role="alert" hidden>شماره‌ی ۱۱ رقمی و با ۰۹ شروع شود.</p>
+            </div>
+            <div class="field">
+              <label for="b-occasion">مناسبت <span class="opt">اختیاری</span></label>
+              <select id="b-occasion" name="occasion">
+                <option value="">فقط یک شب معمولی</option>
+                <option value="تولد">تولد</option>
+                <option value="کاری">گفت‌وگوی کاری</option>
+                <option value="دونفره">شام دونفره</option>
+                <option value="دورهمی">دورهمی دوستان</option>
+              </select>
+            </div>
+            <div class="field field--full">
+              <label for="b-note">توضیح کوتاه <span class="opt">اختیاری</span></label>
+              <textarea id="b-note" name="note" rows="2" maxlength="160" placeholder="مثلاً کنار پنجره باشد، یا به شیرینی حساسیت داریم."></textarea>
+            </div>
+            <button class="btn btn--primary btn--wide" type="submit" id="booking-submit">رزرو میز</button>
+            <p class="form-foot">با رزرو، ساعت آمدنتان را نگه می‌داریم؛ بیست دقیقه بعد از ساعت رزرو، میز آزاد می‌شود.</p>
+          </form>
+        </div>
+
+        <div class="booking__done" id="booking-done" hidden></div>
+      </div>
+      <p class="sr-only" id="booking-live" aria-live="polite"></p>
+    </div>
+  </section>
+
+  <!-- ===== فضای کافه ===== -->
+  <section class="section" id="space" aria-labelledby="space-title">
+    <div class="wrap">
+      <div class="section-head">
+        <div>
+          <p class="section-kicker">دو طبقه، حیاط کوچک</p>
+          <h2 id="space-title">فضای کافه</h2>
+        </div>
+        <p class="section-lead">
+          نشیمنِ بلندِ زیر طاق‌ها، میزِ درازِ وسط برای کار، و حیاطی که شب‌ها چراغانی می‌شود.
+        </p>
+      </div>
+
+      <div class="mosaic">
+        <figure class="mosaic__big">
+          <img src="./assets/img/space-01.webp" alt="سالن کافه با طاق‌های مشبک، میزهای چوبی بلند و زمین معرق ستاره‌ای" width="1400" height="2100" loading="lazy">
+          <figcaption>تالار اصلی — میزهای چوبی و طاق‌های مشبک</figcaption>
+        </figure>
+        <div class="mosaic__side">
+          <figure class="mosaic__cell">
+            <img src="./assets/img/evening.webp" alt="فنجان چای خردلی روی میز سیاه، با چراغ‌های رنگی تار در پس‌زمینه" width="1400" height="2100" loading="lazy">
+            <figcaption>شب‌های بخار تا ساعت ۲۳</figcaption>
+          </figure>
+          <figure class="mosaic__cell">
+            <img src="./assets/img/pair.webp" alt="دو فنجان لاته با نقش قلب و یک برش تارت شکلاتی روی میز چوبی" width="1200" height="900" loading="lazy">
+            <figcaption>عصرانه‌ی دونفره</figcaption>
+          </figure>
+        </div>
+      </div>
+
+      <dl class="facts">
+        <div><dt>میزها</dt><dd>۱۴ میز · ۵۲ صندلی</dd></div>
+        <div><dt>برای کار</dt><dd>پریز روی همه‌ی میزها · وای‌فای رایگان</dd></div>
+        <div><dt>دود و سیگار</dt><dd>حیاط باز، سالن بدون دود</dd></div>
+        <div><dt>ورود</dt><dd>پله دارد؛ آسانسور نیست</dd></div>
+      </dl>
+    </div>
+  </section>
+
+  <!-- ===== رُستری ===== -->
+  <section class="section section--alt" id="roast" aria-labelledby="roast-title">
+    <div class="wrap roast-grid">
+      <figure class="roast-figure">
+        <img src="./assets/img/brew-roast.webp" alt="مقدار زیادی دانه‌ی قهوه‌ی رُست‌شده در سینی خنک‌کن دستگاه رُست، با بازوی فلزی" width="1200" height="1600" loading="lazy">
+        <figcaption>سینی خنک‌کن، درست بعد از رُست</figcaption>
+      </figure>
+      <div>
+        <p class="section-kicker">هر دوشنبه، صبح</p>
+        <h2 id="roast-title">دانه را خودمان رُست می‌کنیم</h2>
+        <p class="section-lead section-lead--flush">
+          سه منشا در گردش داریم؛ هر کدام را در حدِ همان پروفایل بو می‌دهیم. اگر بپرسید،
+          می‌گویم امروز کدام‌شان تازه‌تر است.
+        </p>
+        <ul class="beans" role="list" id="bean-list"></ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== تیم ===== -->
+  <section class="section" id="team" aria-labelledby="team-title">
+    <div class="wrap">
+      <div class="section-head">
+        <div>
+          <p class="section-kicker">پشت پیشانی</p>
+          <h2 id="team-title">دست‌های بخار</h2>
+        </div>
+        <p class="section-lead">سه نفر که هر روز همین‌جا هستند؛ اگر اسمی خواستید، بپرسید.</p>
+      </div>
+      <ul class="team" role="list">
+        <li class="team__card">
+          <img src="./assets/img/counter.webp" alt="دست‌های باریستا که تمپر را روی پرتافیلتر اسپرسو فشار می‌دهد" width="1200" height="800" loading="lazy">
+          <p class="team__name">سهیل رستگار</p>
+          <p class="team__role">سربار · هفت سال است این‌جا</p>
+        </li>
+        <li class="team__card">
+          <img src="./assets/img/bar-people.webp" alt="دو نفر از تیم پشت دستگاه اسپرسو، در حال کار در شلوغی صبح" width="1000" height="667" loading="lazy">
+          <p class="team__name">نازنین قاسمی</p>
+          <p class="team__role">آشپز صبحانه · مسئول املت و پنکیک</p>
+        </li>
+        <li class="team__card">
+          <img src="./assets/img/brew-pourover.webp" alt="دم‌آوری سرامیکی روی فنجان، با فیلتر کاغذی و قهوه‌ی خیس‌خورده" width="1000" height="1778" loading="lazy">
+          <p class="team__name">آرش مؤمنی</p>
+          <p class="team__role">دم‌آوری و رُست · مسئول دانه‌ی هفته</p>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ===== ساعت و نشانی ===== -->
+  <section class="section section--alt" id="visit" aria-labelledby="visit-title">
+    <div class="wrap visit-grid">
+      <div>
+        <p class="section-kicker">کی بیاییم؟</p>
+        <h2 id="visit-title">ساعت کاری و نشانی</h2>
+        <table class="hours" id="hours-table">
+          <caption class="sr-only">ساعت کاری بخار در هفته</caption>
+          <tbody></tbody>
+        </table>
+        <p class="hours-note">صبحانه فقط تا ساعت ۱۲ سرو می‌شود.</p>
+      </div>
+      <div class="visit-card">
+        <h3>نشانی و تماس</h3>
+        <p class="visit-address">تهران، خیابان کریم‌خان زند، کوچه‌ی مهرشهر، پلاک ۱۲، طبقه‌ی همکف</p>
+        <p><a class="visit-tel" href="tel:+982188001234">۰۲۱ ۸۸۰ ۱۲۳۴</a></p>
+        <p class="visit-mesh">شنبه تا چهارشنبه ۹ تا ۲۳ · پنجشنبه و جمعه ۹ تا ۲۴</p>
+        <a class="btn btn--ghost btn--wide" href="#table">رزرو میز</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap footer-inner">
+    <div class="footer-brand">
+      <p class="footer-name">بخار</p>
+      <p class="footer-tag">کافه و صبحانه · کریم‌خان، تهران</p>
+    </div>
+    <nav class="footer-nav" aria-label="پیوندهای پاورقی">
+      <ul>
+        <li><a href="#menu">منو</a></li>
+        <li><a href="#table">رزرو میز</a></li>
+        <li><a href="#space">فضای کافه</a></li>
+        <li><a href="#roast">رُستری</a></li>
+        <li><a href="#visit">ساعت و نشانی</a></li>
+      </ul>
+    </nav>
+  </div>
+  <div class="wrap footer-base">
+    <p>© <span id="year">۱۴۰۵</span> بخار — همه‌ی حقوق برای این کافه است.</p>
+    <a href="/">بازگشت به گالری نمونه‌کده</a>
+  </div>
+</footer>
+
+<script src="./app.js"></script>
+</body>
+</html>

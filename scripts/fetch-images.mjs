@@ -6,6 +6,8 @@
  *
  * جست‌وجو گزینه‌های معتبر با مجوز آزاد را نشان می‌دهد؛ build فایل‌های
  * انتخاب‌شده در scripts/image-manifest.mjs را دانلود و اعتبارسنجی می‌کند.
+ * اگر آرگومان دوم بدهید، فقط رکوردهایی که مسیرشان آن رشته را دارد دانلود می‌شوند:
+ *   node scripts/fetch-images.mjs build public/demos/cafe/
  */
 import { writeFile, mkdir, readFile } from 'node:fs/promises';
 import { dirname, join, resolve } from 'node:path';
@@ -15,6 +17,7 @@ import { searchCommons, imageInfo } from './lib/commons.mjs';
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const UA = 'namooneh-kade/1.0 (portfolio site; image download for local hosting)';
+const sleep = (ms) => new Promise((done) => setTimeout(done, ms));
 
 async function download(url) {
   const res = await fetch(url, { headers: { 'User-Agent': UA } });
@@ -39,6 +42,7 @@ async function cmdBuild(manifest) {
   const report = [];
   for (const slot of manifest) {
     const target = join(ROOT, slot.out);
+    await sleep(900); // فاصله‌ی ملایم بین درخواست‌ها
     const info = await imageInfo(slot.title, slot.width ?? 1600);
     if (!info?.thumburl) {
       console.error(`✖ ${slot.title}: اطلاعات تصویر پیدا نشد`);
@@ -100,7 +104,13 @@ if (command === 'search') {
   await cmdSearch(args.join(' '), Number(limit));
 } else if (command === 'build') {
   const { manifest } = await import('./image-manifest.mjs');
-  await cmdBuild(manifest);
+  const only = args[0];
+  const slots = only ? manifest.filter((slot) => slot.out.includes(only)) : manifest;
+  if (!slots.length) {
+    console.error(`✖ هیچ رکورد مانیفست با «${only}» مطابقت نداشت`);
+    process.exit(1);
+  }
+  await cmdBuild(slots);
 } else {
   console.log('usage: node scripts/fetch-images.mjs <search|build> [...]');
 }

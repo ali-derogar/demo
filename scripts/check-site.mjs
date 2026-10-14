@@ -15,10 +15,11 @@ import { readFile, readdir, stat } from 'node:fs/promises';
 import { join, resolve, dirname, extname, basename } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import sharp from 'sharp';
+import { demoIds } from './lib/demos.mjs';
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const PUBLIC = join(ROOT, 'public');
-const DEMOS = ['fashion', 'sports', 'cars', 'store'];
+const DEMOS = await demoIds(ROOT);
 const IMAGE_EXT = /\.(webp|jpe?g|png|avif|gif|svg)$/i;
 const errors = [];
 const warnings = [];

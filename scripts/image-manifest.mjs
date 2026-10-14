@@ -5,6 +5,134 @@
  */
 export const manifest = [
   {
+    "out": "public/demos/cafe/assets/img/bar-people.webp",
+    "title": "File:Distracted Barista (100034379).jpeg",
+    "width": 1000,
+    "format": "webp",
+    "cover": true,
+    "quality": 80
+  },
+  {
+    "out": "public/demos/cafe/assets/img/brew-pourover.webp",
+    "title": "File:Coffee pour over using Hario cone.jpg",
+    "width": 1200,
+    "format": "webp",
+    "cover": true,
+    "quality": 80
+  },
+  {
+    "out": "public/demos/cafe/assets/img/brew-roast.webp",
+    "title": "File:Coffee Beans in a Cooling Tray.JPG",
+    "width": 1200,
+    "format": "webp",
+    "cover": true,
+    "quality": 80
+  },
+  {
+    "out": "public/demos/cafe/assets/img/counter.webp",
+    "title": "File:Barista prepares espresso at coffee shop.jpg",
+    "width": 1200,
+    "format": "webp",
+    "cover": true,
+    "quality": 80
+  },
+  {
+    "out": "public/demos/cafe/assets/img/evening.webp",
+    "title": "File:20231223 una tazza di bokeh PD104696 1.jpg",
+    "width": 1400,
+    "format": "webp",
+    "cover": true,
+    "quality": 80
+  },
+  {
+    "out": "public/demos/cafe/assets/img/hero-01.webp",
+    "title": "File:Coffee preparation in a modern cafe with steaming equipment and skilled barista at work during the morning rush hour.jpg",
+    "width": 1600,
+    "format": "webp",
+    "cover": true,
+    "quality": 80
+  },
+  {
+    "out": "public/demos/cafe/assets/img/menu-cake.webp",
+    "title": "File:Piece of chocolate cake on a white plate decorated with chocolate sauce.jpg",
+    "width": 1000,
+    "format": "webp",
+    "cover": true,
+    "quality": 80
+  },
+  {
+    "out": "public/demos/cafe/assets/img/menu-espresso.webp",
+    "title": "File:Espresso Coffee 01.jpg",
+    "width": 1000,
+    "format": "webp",
+    "cover": true,
+    "quality": 80
+  },
+  {
+    "out": "public/demos/cafe/assets/img/menu-latte.webp",
+    "title": "File:Latte art at Balzac's.jpg",
+    "width": 1000,
+    "format": "webp",
+    "cover": true,
+    "quality": 80
+  },
+  {
+    "out": "public/demos/cafe/assets/img/menu-omelette.webp",
+    "title": "File:Liat Portal for Foodie Disorder - Herb Omelette with Israeli Salad and Orange Juice.jpg",
+    "width": 1000,
+    "format": "webp",
+    "cover": true,
+    "quality": 80
+  },
+  {
+    "out": "public/demos/cafe/assets/img/menu-pancake.webp",
+    "title": "File:Pancake Breakfast (Unsplash).jpg",
+    "width": 1000,
+    "format": "webp",
+    "cover": true,
+    "quality": 80
+  },
+  {
+    "out": "public/demos/cafe/assets/img/menu-pastry.webp",
+    "title": "File:20231022 101836 Croissant suprême.jpg",
+    "width": 1000,
+    "format": "webp",
+    "cover": true,
+    "quality": 80
+  },
+  {
+    "out": "public/demos/cafe/assets/img/menu-tea.webp",
+    "title": "File:Persian tea glass.JPG",
+    "width": 1000,
+    "format": "webp",
+    "cover": true,
+    "quality": 80
+  },
+  {
+    "out": "public/demos/cafe/assets/img/menu-toast.webp",
+    "title": "File:Avocado toast with sesame seeds.jpg",
+    "width": 1000,
+    "format": "webp",
+    "cover": true,
+    "quality": 80
+  },
+  {
+    "out": "public/demos/cafe/assets/img/pair.webp",
+    "title": "File:Cake and coffee.jpg",
+    "width": 1200,
+    "format": "webp",
+    "cover": true,
+    "quality": 80
+  },
+  {
+    "out": "public/demos/cafe/assets/img/space-01.webp",
+    "title": "File:Modern cafe interior design with empty tables and stylish decor located in an urban area.jpg",
+    "width": 1400,
+    "format": "webp",
+    "cover": true,
+    "quality": 80
+  },
+  {
     "out": "public/demos/cars/assets/img/audi-a8-alt.webp",
     "title": "File:2018 Audi A8 55 TFSi Quattro Rear.jpg",
     "width": 820,
@@ -536,6 +664,14 @@ export const manifest = [
     "out": "public/demos/store/assets/assets/img/watch-01.webp",
     "title": "1961 Enicar Ultrasonic gold-plated \"Cioccolatone\" design.jpg",
     "width": null,
+    "format": "webp",
+    "cover": true,
+    "quality": 80
+  },
+  {
+    "out": "public/images/previews/cafe.webp",
+    "title": "پیش‌نمایش گالری از File:Coffee preparation in a modern cafe with steaming equipment and skilled barista at work during the morning rush hour.jpg",
+    "width": 1200,
     "format": "webp",
     "cover": true,
     "quality": 80

@@ -1,13 +1,14 @@
 #!/usr/bin/env node
 /**
- * بررسی خروجی build: وجود چهار دمو، تصاویر پیش‌نمایش و سلامت فایل‌ها.
+ * بررسی خروجی build: وجود همه‌ی دموهای ثبت‌شده، تصاویر پیش‌نمایش و سلامت فایل‌ها.
  */
 import { readFile, access, stat, readdir } from 'node:fs/promises';
 import { join, resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { demoIds } from './lib/demos.mjs';
 
 const DIST = resolve(dirname(fileURLToPath(import.meta.url)), '..', 'dist');
-const DEMOS = ['fashion', 'sports', 'cars', 'store'];
+const DEMOS = await demoIds();
 const PREVIEW_SLOTS = DEMOS;
 
 const problems = [];
@@ -33,7 +34,7 @@ async function countImages(dir) {
 // ۱) صفحه‌ی گالری
 if (!(await exists(join(DIST, 'index.html')))) problems.push('dist/index.html یافت نشد');
 
-// ۲) هر چهار دمو باید index.html داشته باشند
+// ۲) هر دمو باید index.html داشته باشد
 const demoReport = [];
 for (const slug of DEMOS) {
   const dir = join(DIST, 'demos', slug);

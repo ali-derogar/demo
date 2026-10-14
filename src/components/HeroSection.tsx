@@ -53,7 +53,7 @@ export function HeroSection() {
 
         <div className="hero__collage" aria-hidden="true">
           {projects.map((project, index) => (
-            <figure className={`collage-card collage-card--${index + 1}`} key={project.id}>
+            <figure className="collage-card" key={project.id}>
               <img src={project.preview} alt="" loading={index === 0 ? 'eager' : 'lazy'} />
               <figcaption>{project.categoryLabel}</figcaption>
             </figure>

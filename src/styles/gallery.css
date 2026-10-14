@@ -406,20 +406,21 @@ input {
 }
 
 .hero__collage {
-  position: relative;
-  aspect-ratio: 1 / 1.02;
-  max-block-size: 520px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.75rem;
+  align-content: start;
+  max-inline-size: 520px;
+  margin-inline-start: auto;
 }
 
 .collage-card {
-  position: absolute;
-  inline-size: 52%;
   margin: 0;
   overflow: hidden;
   border: 1px solid var(--line);
-  border-radius: 18px;
+  border-radius: 16px;
   background: var(--ink-3);
-  box-shadow: 0 26px 60px rgba(0, 0, 0, 0.55);
+  box-shadow: 0 20px 44px rgba(0, 0, 0, 0.5);
   transition: transform 0.5s var(--ease), box-shadow 0.5s var(--ease);
 }
 
@@ -431,49 +432,39 @@ input {
 }
 
 .collage-card figcaption {
-  padding: 0.5rem 0.8rem;
-  font-size: 0.8rem;
+  padding: 0.4rem 0.6rem;
+  font-size: 0.72rem;
   font-weight: 700;
   color: var(--muted);
   background: var(--ink-2);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-.collage-card--1 {
-  inset-block-start: 2%;
-  inset-inline-start: 0;
-  transform: rotate(-6deg);
+/* چیدمان پراکنده — با هر تعداد نمونه کار می‌کند */
+.collage-card:nth-child(3n + 1) {
+  transform: rotate(-2deg) translateY(6px);
 }
 
-.collage-card--2 {
-  inset-block-start: 26%;
-  inset-inline-end: 0;
-  transform: rotate(5deg);
+.collage-card:nth-child(3n + 2) {
+  transform: rotate(1.4deg);
 }
 
-.collage-card--3 {
-  inset-block-end: 16%;
-  inset-inline-start: 6%;
-  transform: rotate(3deg);
-}
-
-.collage-card--4 {
-  inset-block-end: 0;
-  inset-inline-end: 8%;
-  inline-size: 44%;
-  transform: rotate(-4deg);
+.collage-card:nth-child(3n) {
+  transform: rotate(2.4deg) translateY(-4px);
 }
 
 .collage-card:hover {
-  transform: rotate(0deg) translateY(-8px) scale(1.04);
+  transform: rotate(0deg) translateY(-6px) scale(1.05);
   z-index: 3;
-  box-shadow: 0 34px 70px rgba(0, 0, 0, 0.6);
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6);
 }
 
 .collage-note {
-  position: absolute;
-  inset-block-end: -8%;
-  inset-inline-start: 0;
-  max-inline-size: 24ch;
+  grid-column: 1 / -1;
+  margin-block-start: 0.4rem;
+  max-inline-size: 28ch;
   font-size: 0.8rem;
   color: var(--muted-2);
 }
@@ -982,25 +973,10 @@ input {
   }
 
   .hero__collage {
-    max-block-size: none;
-    aspect-ratio: auto;
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 1rem;
-    margin-block-start: 1rem;
-  }
-
-  .collage-card {
-    position: static;
-    inline-size: auto;
-    transform: none !important;
-  }
-
-  .collage-note {
-    grid-column: 1 / -1;
-    position: static;
-    margin-block-start: 0.5rem;
     max-inline-size: none;
+    margin-inline-start: 0;
+    margin-block-start: 1.5rem;
+    gap: 0.85rem;
   }
 
   .gallery__tools {
@@ -1053,9 +1029,17 @@ input {
     text-align: center;
   }
 
-  .cards,
-  .hero__collage {
+  .cards {
     grid-template-columns: 1fr;
+  }
+
+  /* کلاژ تزئینی است و همان تصویرها پایین‌تر در کارت‌ها هست؛ روی گوشی کوتاه می‌ماند */
+  .hero__collage {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .collage-card:nth-child(n + 5) {
+    display: none;
   }
 
   .gallery__head {

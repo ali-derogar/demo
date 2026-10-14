@@ -7,9 +7,18 @@ async function api(params) {
   const url = new URL(API);
   for (const [key, value] of Object.entries(params)) url.searchParams.set(key, value);
   url.searchParams.set('format', 'json');
-  const res = await fetch(url, { headers: { 'User-Agent': UA } });
-  if (!res.ok) throw new Error(`Commons API HTTP ${res.status}`);
-  return res.json();
+
+  // مشترک‌زوم به درخواست‌های پشت‌سرهم پاسخ ۴۲۹ می‌دهد؛ با پس‌نشست دوباره تلاش می‌کنیم
+  const waits = [0, 3000, 9000, 20000];
+  let lastError = null;
+  for (let attempt = 0; attempt < waits.length; attempt += 1) {
+    if (waits[attempt]) await new Promise((done) => setTimeout(done, waits[attempt]));
+    const res = await fetch(url, { headers: { 'User-Agent': UA } });
+    if (res.ok) return res.json();
+    lastError = new Error(`Commons API HTTP ${res.status}`);
+    if (res.status !== 429) break;
+  }
+  throw lastError;
 }
 
 function pick(imageinfo) {
@@ -19,7 +28,7 @@ function pick(imageinfo) {
     mime: imageinfo.mime,
     thumburl: imageinfo.thumburl || imageinfo.url,
     url: imageinfo.url,
-    descriptionUrl: md.UsageTerms?.value ?? imageinfo.descriptionurl ?? '',
+    descriptionUrl: imageinfo.descriptionurl || md.UsageTerms?.value || '',
     license: clean(md.LicenseShortName?.value) || 'نامعلوم',
     artist: clean(md.Artist?.value) || 'نامعلوم',
     description: clean(md.ImageDescription?.value),

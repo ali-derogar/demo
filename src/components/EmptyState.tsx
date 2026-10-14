@@ -1,7 +1,21 @@
+import { projects } from '../data/projects';
+
 interface Props {
   query: string;
   categoryLabel: string;
   onReset: () => void;
+}
+
+/** سه نمونه از کلیدواژه‌های ثبت‌شده، تا راهنما با فهرست تازه بماند */
+function hintList(): string {
+  const picks = [
+    projects[0]?.keywords[0],
+    projects[Math.floor(projects.length / 2)]?.keywords[0],
+    projects[projects.length - 1]?.keywords[0],
+  ].filter((word, i, arr): word is string => Boolean(word) && arr.indexOf(word) === i);
+
+  if (picks.length < 2) return picks.join('');
+  return `${picks.slice(0, -1).join('، ')} یا ${picks[picks.length - 1]}`;
 }
 
 export function EmptyState({ query, categoryLabel, onReset }: Props) {
@@ -19,7 +33,7 @@ export function EmptyState({ query, categoryLabel, onReset }: Props) {
           <>
             برای «<strong>{query.trim()}</strong>»
             {filtered ? <> در دسته‌ی «{categoryLabel}»</> : null} چیزی مطابق نیست. املا را وارسی کنید یا
-            واژه‌ی دیگری امتحان کنید؛ مثلاً نام یک حوزه: مد، خودرو، تناسب اندام یا فروشگاه.
+            واژه‌ی دیگری امتحان کنید؛ مثلاً: {hintList()}.
           </>
         ) : (
           <>

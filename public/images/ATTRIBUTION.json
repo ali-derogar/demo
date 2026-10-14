@@ -1,5 +1,149 @@
 [
   {
+    "out": "public/demos/cafe/assets/img/bar-people.webp",
+    "title": "File:Distracted Barista (100034379).jpeg",
+    "license": "CC BY-SA 3.0",
+    "artist": "Luis Ezcurdia",
+    "source": "https://commons.wikimedia.org/wiki/File:Distracted_Barista_(100034379).jpeg",
+    "bytes": 47504,
+    "px": "46KB"
+  },
+  {
+    "out": "public/demos/cafe/assets/img/brew-pourover.webp",
+    "title": "File:Coffee pour over using Hario cone.jpg",
+    "license": "CC BY-SA 1.0",
+    "artist": "User:GorillaWarfare",
+    "source": "https://commons.wikimedia.org/wiki/File:Coffee_pour_over_using_Hario_cone.jpg",
+    "bytes": 176430,
+    "px": "172KB"
+  },
+  {
+    "out": "public/demos/cafe/assets/img/brew-roast.webp",
+    "title": "File:Coffee Beans in a Cooling Tray.JPG",
+    "license": "CC BY-SA 3.0",
+    "artist": "Jkafader",
+    "source": "https://commons.wikimedia.org/wiki/File:Coffee_Beans_in_a_Cooling_Tray.JPG",
+    "bytes": 194128,
+    "px": "190KB"
+  },
+  {
+    "out": "public/demos/cafe/assets/img/counter.webp",
+    "title": "File:Barista prepares espresso at coffee shop.jpg",
+    "license": "CC BY 2.0",
+    "artist": "Shixart1985",
+    "source": "https://commons.wikimedia.org/wiki/File:Barista_prepares_espresso_at_coffee_shop.jpg",
+    "bytes": 64920,
+    "px": "63KB"
+  },
+  {
+    "out": "public/demos/cafe/assets/img/evening.webp",
+    "title": "File:20231223 una tazza di bokeh PD104696 1.jpg",
+    "license": "CC BY-SA 4.0",
+    "artist": "Paul Danese",
+    "source": "https://commons.wikimedia.org/wiki/File:20231223_una_tazza_di_bokeh_PD104696_1.jpg",
+    "bytes": 37792,
+    "px": "37KB"
+  },
+  {
+    "out": "public/demos/cafe/assets/img/hero-01.webp",
+    "title": "File:Coffee preparation in a modern cafe with steaming equipment and skilled barista at work during the morning rush hour.jpg",
+    "license": "CC BY 2.0",
+    "artist": "Shixart1985",
+    "source": "https://commons.wikimedia.org/wiki/File:Coffee_preparation_in_a_modern_cafe_with_steaming_equipment_and_skilled_barista_at_work_during_the_morning_rush_hour.jpg",
+    "bytes": 85480,
+    "px": "83KB"
+  },
+  {
+    "out": "public/demos/cafe/assets/img/menu-cake.webp",
+    "title": "File:Piece of chocolate cake on a white plate decorated with chocolate sauce.jpg",
+    "license": "CC0",
+    "artist": "Daria YakovlevaMinor edits made by Subsidiary account",
+    "source": "https://commons.wikimedia.org/wiki/File:Piece_of_chocolate_cake_on_a_white_plate_decorated_with_chocolate_sauce.jpg",
+    "bytes": 78536,
+    "px": "77KB"
+  },
+  {
+    "out": "public/demos/cafe/assets/img/menu-espresso.webp",
+    "title": "File:Espresso Coffee 01.jpg",
+    "license": "CC0",
+    "artist": "Jubair1985",
+    "source": "https://commons.wikimedia.org/wiki/File:Espresso_Coffee_01.jpg",
+    "bytes": 100240,
+    "px": "98KB"
+  },
+  {
+    "out": "public/demos/cafe/assets/img/menu-latte.webp",
+    "title": "File:Latte art at Balzac's.jpg",
+    "license": "CC BY 2.0",
+    "artist": "Linda N. from Chicago, USA",
+    "source": "https://commons.wikimedia.org/wiki/File:Latte_art_at_Balzac%27s.jpg",
+    "bytes": 51922,
+    "px": "51KB"
+  },
+  {
+    "out": "public/demos/cafe/assets/img/menu-omelette.webp",
+    "title": "File:Liat Portal for Foodie Disorder - Herb Omelette with Israeli Salad and Orange Juice.jpg",
+    "license": "CC BY-SA 4.0",
+    "artist": "HaJunkiyada",
+    "source": "https://commons.wikimedia.org/wiki/File:Liat_Portal_for_Foodie_Disorder_-_Herb_Omelette_with_Israeli_Salad_and_Orange_Juice.jpg",
+    "bytes": 151234,
+    "px": "148KB"
+  },
+  {
+    "out": "public/demos/cafe/assets/img/menu-pancake.webp",
+    "title": "File:Pancake Breakfast (Unsplash).jpg",
+    "license": "CC0",
+    "artist": "Toa Heftiba heftiba",
+    "source": "https://commons.wikimedia.org/wiki/File:Pancake_Breakfast_(Unsplash).jpg",
+    "bytes": 49744,
+    "px": "49KB"
+  },
+  {
+    "out": "public/demos/cafe/assets/img/menu-pastry.webp",
+    "title": "File:20231022 101836 Croissant suprême.jpg",
+    "license": "CC BY-SA 4.0",
+    "artist": "Dwxn",
+    "source": "https://commons.wikimedia.org/wiki/File:20231022_101836_Croissant_supr%C3%AAme.jpg",
+    "bytes": 129316,
+    "px": "126KB"
+  },
+  {
+    "out": "public/demos/cafe/assets/img/menu-tea.webp",
+    "title": "File:Persian tea glass.JPG",
+    "license": "Public domain",
+    "artist": "me.",
+    "source": "https://commons.wikimedia.org/wiki/File:Persian_tea_glass.JPG",
+    "bytes": 204688,
+    "px": "200KB"
+  },
+  {
+    "out": "public/demos/cafe/assets/img/menu-toast.webp",
+    "title": "File:Avocado toast with sesame seeds.jpg",
+    "license": "CC BY-SA 4.0",
+    "artist": "Jami430",
+    "source": "https://commons.wikimedia.org/wiki/File:Avocado_toast_with_sesame_seeds.jpg",
+    "bytes": 136690,
+    "px": "133KB"
+  },
+  {
+    "out": "public/demos/cafe/assets/img/pair.webp",
+    "title": "File:Cake and coffee.jpg",
+    "license": "CC BY-SA 4.0",
+    "artist": "TGar21",
+    "source": "https://commons.wikimedia.org/wiki/File:Cake_and_coffee.jpg",
+    "bytes": 80580,
+    "px": "79KB"
+  },
+  {
+    "out": "public/demos/cafe/assets/img/space-01.webp",
+    "title": "File:Modern cafe interior design with empty tables and stylish decor located in an urban area.jpg",
+    "license": "CC BY 2.0",
+    "artist": "Shixart1985",
+    "source": "https://commons.wikimedia.org/wiki/File:Modern_cafe_interior_design_with_empty_tables_and_stylish_decor_located_in_an_urban_area.jpg",
+    "bytes": 292434,
+    "px": "286KB"
+  },
+  {
     "out": "public/demos/cars/assets/img/audi-a8-alt.webp",
     "file": "audi-a8-alt.webp",
     "demo": "cars",
@@ -869,6 +1013,19 @@
     "height": null,
     "bytes": null,
     "format": null
+  },
+  {
+    "out": "public/images/previews/cafe.webp",
+    "file": "cafe.webp",
+    "demo": "cafe",
+    "title": "پیش‌نمایش گالری از File:Coffee preparation in a modern cafe with steaming equipment and skilled barista at work during the morning rush hour.jpg",
+    "artist": "Shixart1985",
+    "license": "CC BY 2.0",
+    "source": "Creative Commons Attribution 2.0",
+    "derivedFrom": "public/demos/cafe/assets/img/hero-01.webp",
+    "width": 1200,
+    "height": 800,
+    "format": "webp"
   },
   {
     "out": "public/images/previews/cars.webp",

@@ -10,9 +10,10 @@ import { readFile, writeFile, readdir } from 'node:fs/promises';
 import { join, resolve, dirname, basename } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import sharp from 'sharp';
+import { demoIds } from './lib/demos.mjs';
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
-const DEMOS = ['fashion', 'sports', 'cars', 'store'];
+const DEMOS = await demoIds(ROOT);
 const rows = [];
 
 for (const slug of DEMOS) {
