@@ -27,23 +27,22 @@ export function EmptyState({ query, categoryLabel, onReset }: Props) {
         <span />
         <span />
       </div>
-      <h3 className="empty__title">{query.trim() ? 'نمونه‌ای با این جست‌وجو پیدا نشد' : 'در این دسته نمونه‌ای نیست'}</h3>
+      <h3 className="empty__title">{query.trim() ? 'چیزی پیدا نشد' : 'اینجا هنوز نمونه‌ای ندارم'}</h3>
       <p className="empty__text">
         {query.trim() ? (
           <>
             برای «<strong>{query.trim()}</strong>»
-            {filtered ? <> در دسته‌ی «{categoryLabel}»</> : null} چیزی مطابق نیست. املا را وارسی کنید یا
-            واژه‌ی دیگری امتحان کنید؛ مثلاً: {hintList()}.
+            {filtered ? <> در دسته‌ی «{categoryLabel}»</> : null} نمونه‌ای پیدا نشد. یه کلمه‌ی دیگه
+            امتحان کنید؛ مثلاً {hintList()}.
           </>
         ) : (
           <>
-            در دسته‌ی «{categoryLabel}» هنوز وب‌سایتی نداریم. دسته‌ی دیگری را انتخاب کنید یا فهرست را
-            پاک کنید.
+            برای «{categoryLabel}» هنوز نمونه‌ای نذاشتم. می‌تونید بقیه‌ی کارهام رو ببینید.
           </>
         )}
       </p>
       <button type="button" className="btn btn--primary" onClick={onReset}>
-        نمایش همه‌ی نمونه‌ها
+        دیدن همه‌ی کارها
       </button>
     </div>
   );

@@ -1,0 +1,236 @@
+/* Touch, safe-area and small-screen refinements shared by the independent demos. */
+html { -webkit-text-size-adjust: 100%; scroll-padding-block-start: 92px; }
+button, a, summary, label.switch { touch-action: manipulation; }
+button, a { -webkit-tap-highlight-color: transparent; }
+.sheet-controls { display: contents; }
+.toast-region { pointer-events: none; }
+.mobile-menu-backdrop {
+  display: block; position: fixed; inset: 64px 0 0; border: 0; padding: 0; background: #0008;
+}
+body[data-demo] :is(.nav-drawer, .mobile-nav) {
+  position: absolute; inset-block-start: calc(100% + 8px); inset-inline: 12px;
+  max-block-size: calc(100dvh - 100px - env(safe-area-inset-top)); overflow-y: auto;
+  overscroll-behavior: contain; border: 1px solid var(--line, var(--hairline)); border-radius: 18px;
+  padding: .5rem; box-shadow: 0 20px 55px #0004;
+}
+[data-demo="store"] .menu-toggle { display: none; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; }
+[data-demo="store"] .menu-bar { background: var(--ink); transition: transform .25s, opacity .25s; }
+
+@media (max-width: 760px) {
+  body[data-demo] {
+    padding-block-end: env(safe-area-inset-bottom);
+    overflow-x: clip;
+  }
+  html { scroll-padding-block-start: calc(82px + env(safe-area-inset-top)); }
+  body[data-demo] .container, body[data-demo] .wrap {
+    inline-size: min(calc(100% - max(16px, env(safe-area-inset-left)) - max(16px, env(safe-area-inset-right))), var(--wrap, 1180px));
+    min-inline-size: 0;
+  }
+  body[data-demo] .site-header {
+    padding-block-start: env(safe-area-inset-top);
+    -webkit-backdrop-filter: blur(14px);
+  }
+  body[data-demo] .header-inner { min-block-size: 64px; block-size: 64px; gap: .65rem; }
+  body[data-demo] .header-inner > * { position: relative; z-index: 2; }
+  body[data-demo] .menu-toggle, body[data-demo] .nav-toggle {
+    flex: 0 0 44px; inline-size: 44px; block-size: 44px; min-block-size: 44px;
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 5px; padding: 10px;
+  }
+  body[data-demo] .menu-bar, body[data-demo] .nav-toggle .bar {
+    inline-size: 20px; block-size: 2px; margin: 0; flex: 0 0 2px; opacity: 1; transform: none;
+  }
+  body[data-demo] [aria-expanded="true"] :is(.menu-bar, .bar):nth-last-child(3) { transform: translateY(7px) rotate(45deg); }
+  body[data-demo] [aria-expanded="true"] :is(.menu-bar, .bar):nth-last-child(2) { opacity: 0; }
+  body[data-demo] [aria-expanded="true"] :is(.menu-bar, .bar):last-child { transform: translateY(-7px) rotate(-45deg); }
+  body[data-demo] .nav-drawer, body[data-demo] .mobile-nav {
+    position: absolute; inset-block-start: calc(100% + 8px); inset-inline: 12px; z-index: 3;
+    max-block-size: calc(100dvh - 90px - env(safe-area-inset-top)); overflow-y: auto;
+    overscroll-behavior: contain; border: 1px solid var(--line, var(--hairline)); border-radius: 18px;
+    padding: .5rem; box-shadow: 0 20px 55px #0004;
+  }
+  body[data-demo] :is(.nav-drawer, .mobile-nav) ul { margin: 0; padding: 0; }
+  body[data-demo] :is(.nav-drawer, .mobile-nav) a { min-block-size: 48px; padding: .65rem .9rem; border-radius: 10px; }
+  body[data-demo] .mobile-menu-backdrop {
+    display: block; position: fixed; inset: calc(64px + env(safe-area-inset-top)) 0 0;
+    z-index: 0; inline-size: 100%; border: 0; padding: 0; background: #0008;
+  }
+  body[data-demo] input:not([type="checkbox"]):not([type="radio"]),
+  body[data-demo] select, body[data-demo] textarea {
+    font-size: 16px; min-inline-size: 0; max-inline-size: 100%; min-block-size: 48px;
+  }
+  body[data-demo] :is(.field, .form__field, .form__row, .booking__step, .booking__form, .qv-info, .card-body) { min-inline-size: 0; }
+  body[data-demo] .section { padding-block: 2.5rem; }
+  body[data-demo] .section-head { margin-block-end: 1.4rem; }
+  body[data-demo] :is(.btn, .chip, .add-btn, .card-link, .remove-btn, .field__clear, #dialog-close) { min-block-size: 44px; }
+  body[data-demo] .sheet-controls {
+    display: flex; align-items: center; justify-content: flex-end; position: sticky; inset-block-start: 0;
+    z-index: 5; min-block-size: 60px; padding: .5rem .75rem; background: var(--bg-2, var(--bg));
+    border-block-end: 1px solid var(--line); border-radius: 22px 22px 0 0;
+  }
+  body[data-demo] .sheet-controls :is(#dialog-close, #qv-close) { position: static; }
+  body[data-demo] .field__clear { inline-size: 44px; inset-inline-end: .35rem; }
+  body[data-demo] :is(.chips, .filter-bar, .tabs) {
+    flex-wrap: nowrap; max-inline-size: 100%; min-inline-size: 0; overflow-x: auto;
+    overscroll-behavior-inline: contain; scrollbar-width: none; padding-block: 4px;
+  }
+  body[data-demo] :is(.chips, .filter-bar, .tabs)::-webkit-scrollbar { display: none; }
+  body[data-demo] :is(.chips, .filter-bar, .tabs) > button { flex: 0 0 auto; white-space: nowrap; }
+  body[data-demo] .site-footer { padding-block-end: max(24px, env(safe-area-inset-bottom)); }
+  body[data-demo] :is(.footer-links a, .footer-nav a, .footer-col a, .visit-tel) {
+    display: inline-flex; align-items: center; min-block-size: 44px;
+  }
+
+  /* Fashion: shorter editorial rhythm, visible model details and a roomy viewer. */
+  [data-demo="fashion"] .header-inner { padding-inline: 18px; }
+  [data-demo="fashion"] .hero { padding: 30px 18px 28px; }
+  [data-demo="fashion"] .hero-grid { gap: 28px; }
+  [data-demo="fashion"] .hero-title { font-size: clamp(2.65rem, 12vw, 4rem); margin-block-end: 16px; }
+  [data-demo="fashion"] .hero-lead { font-size: .95rem; margin-block-end: 22px; }
+  [data-demo="fashion"] .hero-actions { display: grid; grid-template-columns: 1.25fr 1fr; gap: 10px; }
+  [data-demo="fashion"] .hero-actions .btn { padding-inline: 10px; font-size: .86rem; }
+  [data-demo="fashion"] .hero-figure img { aspect-ratio: 4/3; object-position: center top; }
+  [data-demo="fashion"] .hero-figure::after { inset: 10px -8px -8px 8px; }
+  [data-demo="fashion"] .section { padding: 48px 18px; }
+  [data-demo="fashion"] .section-title { font-size: clamp(1.65rem, 8vw, 2.4rem); }
+  [data-demo="fashion"] .filter-bar { margin-block-end: 20px; }
+  [data-demo="fashion"] .collection-grid { gap: 22px; }
+  [data-demo="fashion"] .collection-card .card-media img { aspect-ratio: 4/3; }
+  [data-demo="fashion"] .model-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+  [data-demo="fashion"] .model-card img { aspect-ratio: 3/5; }
+  [data-demo="fashion"] .model-info { padding: 50px 10px 12px; background: linear-gradient(transparent, #1c1812eb 35%); }
+  [data-demo="fashion"] .model-name { font-size: .95rem; }
+  [data-demo="fashion"] .model-data { max-block-size: 140px; opacity: 1; font-size: .7rem; }
+  [data-demo="fashion"] .model-data div { gap: 4px; flex-wrap: wrap; }
+  [data-demo="fashion"] .model-data dt { min-inline-size: 32px; }
+  [data-demo="fashion"] .style-card img { aspect-ratio: 4/3; }
+  [data-demo="fashion"] .journal-card { padding: 24px 8px; }
+  [data-demo="fashion"] .news-form { padding: 22px 18px; }
+  [data-demo="fashion"] .lightbox { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; align-content: center; padding: 64px 16px 24px; }
+  [data-demo="fashion"] .lb-stage { grid-column: 1/-1; grid-row: 1; min-inline-size: 0; max-inline-size: 100%; }
+  [data-demo="fashion"] .lb-stage img { inline-size: 100%; block-size: auto; max-block-size: calc(100dvh - 240px); }
+  [data-demo="fashion"] .lb-caption { font-size: .8rem; }
+  [data-demo="fashion"] .lb-nav { inline-size: 48px; block-size: 48px; justify-self: center; }
+  [data-demo="fashion"] .lb-close { inset-block-start: max(12px, env(safe-area-inset-top)); }
+  [data-demo="fashion"] .site-footer { padding: 40px 18px 24px; }
+  [data-demo="fashion"] .footer-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px 16px; }
+  [data-demo="fashion"] .footer-brand { grid-column: 1/-1; }
+
+  /* Sports: compact cards and a single swipeable row of weekdays. */
+  [data-demo="sports"] .hero { min-block-size: min(610px, calc(100svh - 64px)); }
+  [data-demo="sports"] .hero-content { padding-block: 2.5rem 2rem; }
+  [data-demo="sports"] .hero h1 { font-size: clamp(2.3rem, 11vw, 3.4rem); }
+  [data-demo="sports"] .hero-lead { font-size: .95rem; }
+  [data-demo="sports"] .hero-actions { display: grid; grid-template-columns: 1fr 1fr; gap: .6rem; }
+  [data-demo="sports"] .hero-actions .btn { padding-inline: .6rem; font-size: .9rem; }
+  [data-demo="sports"] .stats-grid { gap: 1.1rem; }
+  [data-demo="sports"] .athletes-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .8rem; }
+  [data-demo="sports"] .athlete-card img { block-size: 200px; }
+  [data-demo="sports"] .athlete-body { padding: .9rem; }
+  [data-demo="sports"] .athlete-body h3 { font-size: .95rem; }
+  [data-demo="sports"] .athlete-disc { font-size: .76rem; }
+  [data-demo="sports"] .tabs [role="tab"] { padding-inline: 1rem; min-block-size: 44px; }
+  [data-demo="sports"] .session-list li { padding: .85rem .9rem; }
+
+  /* Cars: full-width actions and sheets that stay inside the visible viewport. */
+  [data-demo="cars"] .hero-inner { padding-block: 2.5rem 2rem; }
+  [data-demo="cars"] .hero-stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .7rem; margin-block-start: 1.7rem; padding-block-start: 1rem; }
+  [data-demo="cars"] .hero-stats dt { font-size: .7rem; }
+  [data-demo="cars"] .hero-stats dd { font-size: 1.3rem; }
+  [data-demo="cars"] .hero-actions { display: grid; grid-template-columns: 1fr 1fr; gap: .6rem; }
+  [data-demo="cars"] .hero-actions .btn { padding-inline: .6rem; font-size: .85rem; }
+  [data-demo="cars"] .car__body { padding: 1rem; }
+  [data-demo="cars"] .car__actions { display: grid; grid-template-columns: 1fr 1fr; }
+  [data-demo="cars"] .car__actions .btn { padding-inline: .5rem; }
+  [data-demo="cars"] .services { grid-template-columns: minmax(0, 1fr); }
+  [data-demo="cars"] .compare-scroll { overscroll-behavior-inline: contain; }
+  [data-demo="cars"] table.compare tbody th { position: sticky; inset-inline-start: 0; z-index: 1; background: var(--panel-2); }
+  [data-demo="cars"] .pick button { inline-size: 44px; block-size: 44px; }
+  [data-demo="cars"] dialog#car-dialog { inline-size: calc(100% - 16px); max-inline-size: none; max-block-size: calc(100dvh - 24px - env(safe-area-inset-top) - env(safe-area-inset-bottom)); border-radius: 22px; }
+  [data-demo="cars"] .dialog { padding: 1rem 1rem 1.2rem; }
+  [data-demo="cars"] #dialog-close { inline-size: 44px; block-size: 44px; inset-block-start: .65rem; }
+  [data-demo="cars"] .dl-grid { grid-template-columns: minmax(0, 1fr); }
+  [data-demo="cars"] .dl-thumbs { overflow-x: auto; padding-block: 3px; }
+  [data-demo="cars"] .dl-thumbs button { flex-shrink: 0; min-block-size: 44px; }
+  [data-demo="cars"] .dl-actions { inline-size: 100%; }
+  [data-demo="cars"] .dl-actions .btn { flex: 1; padding-inline: .6rem; }
+
+  /* Store: no clipped prices, a compact header and scrollable product sheets. */
+  [data-demo="store"] .header-inner { flex-wrap: nowrap; }
+  [data-demo="store"] .main-nav, [data-demo="store"] .header-search { display: none; }
+  [data-demo="store"] .header-actions { margin-inline-start: auto; gap: .5rem; }
+  [data-demo="store"] .nav-drawer { background: var(--surface); }
+  [data-demo="store"] .nav-drawer ul { list-style: none; }
+  [data-demo="store"] .nav-drawer a { display: flex; align-items: center; color: var(--ink); text-decoration: none; }
+  [data-demo="store"] .cart-button { padding-inline: .65rem; }
+  [data-demo="store"] .hero { padding-block-start: 1.25rem; }
+  [data-demo="store"] .hero-inner { gap: 1.2rem; }
+  [data-demo="store"] .hero-media img { aspect-ratio: 16/9; }
+  [data-demo="store"] .hero-sub { font-size: .93rem; }
+  [data-demo="store"] .trust-row { grid-template-columns: minmax(0, 1fr); padding: 1rem; gap: .8rem; }
+  [data-demo="store"] .cat-grid { gap: .75rem; }
+  [data-demo="store"] .toolbar { display: grid; grid-template-columns: minmax(0, 1fr); gap: .65rem; }
+  [data-demo="store"] .toolbar-search, [data-demo="store"] .toolbar-search input { inline-size: 100%; }
+  [data-demo="store"] .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .75rem; }
+  [data-demo="store"] .card { border-radius: 16px; }
+  [data-demo="store"] .card-body { padding: .75rem .65rem; }
+  [data-demo="store"] .card-name { font-size: .9rem; min-block-size: 44px; }
+  [data-demo="store"] .card-desc { font-size: .76rem; }
+  [data-demo="store"] .price-row { flex-wrap: wrap; gap: .15rem .4rem; }
+  [data-demo="store"] .price { font-size: .95rem; flex-basis: 100%; }
+  [data-demo="store"] .old-price { font-size: .75rem; }
+  [data-demo="store"] .save-chip { font-size: .68rem; }
+  [data-demo="store"] .add-btn { font-size: .8rem; }
+  [data-demo="store"] .cart-drawer { max-block-size: 100dvh; padding-block-start: env(safe-area-inset-top); }
+  [data-demo="store"] .drawer-head, [data-demo="store"] .drawer-foot { flex-shrink: 0; }
+  [data-demo="store"] .drawer-body { min-block-size: 0; overscroll-behavior: contain; padding-inline: 1rem; }
+  [data-demo="store"] .drawer-foot { padding-block-end: max(1rem, env(safe-area-inset-bottom)); }
+  [data-demo="store"] .cl-actions { flex-wrap: wrap; }
+  [data-demo="store"] .modal-backdrop { align-items: flex-end; padding: 12px 8px max(8px, env(safe-area-inset-bottom)); }
+  [data-demo="store"] .modal { max-block-size: calc(100dvh - 24px - env(safe-area-inset-top) - env(safe-area-inset-bottom)); border-radius: 22px; overscroll-behavior: contain; }
+  [data-demo="store"] .qv-grid { padding: 1rem; gap: 1rem; }
+  [data-demo="store"] .qv-media img { aspect-ratio: 4/3; }
+  [data-demo="store"] .qv-buy .btn { inline-size: 100%; }
+  [data-demo="store"] .toast-region { inset-inline: 16px; inset-block-start: calc(76px + env(safe-area-inset-top)); inset-block-end: auto; }
+  [data-demo="store"] .toast { overflow-wrap: anywhere; }
+  [data-demo="store"] .footer-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.5rem 1rem; }
+  [data-demo="store"] .footer-brand { grid-column: 1/-1; }
+
+  /* Cafe: keep menu prices, reservation dates and time slots easy to scan. */
+  [data-demo="cafe"] .hero { padding-block: 2.5rem 1.5rem; }
+  [data-demo="cafe"] .hero-actions { display: grid; grid-template-columns: 1fr 1fr; gap: .6rem; }
+  [data-demo="cafe"] .hero-actions .btn { padding-inline: .5rem; }
+  [data-demo="cafe"] .hero-card { inline-size: calc(100% - 32px); margin-inline: auto; padding: 1rem; }
+  [data-demo="cafe"] .menu-tools { gap: .65rem; }
+  [data-demo="cafe"] .menu-tools .chips { flex-basis: 100%; }
+  [data-demo="cafe"] .switch { min-block-size: 44px; }
+  [data-demo="cafe"] .menu-count { inline-size: auto; margin-inline-start: auto; }
+  [data-demo="cafe"] .item__name { flex: 1 1 auto; min-inline-size: 0; max-inline-size: none; font-size: .95rem; }
+  [data-demo="cafe"] .item__leader { display: none; }
+  [data-demo="cafe"] .item__price { font-size: .9rem; }
+  [data-demo="cafe"] .booking__step, [data-demo="cafe"] .booking__form, [data-demo="cafe"] .booking__done { padding: 1rem; }
+  [data-demo="cafe"] .days { display: flex; overflow-x: auto; gap: .5rem; padding-block: 4px; scroll-snap-type: inline proximity; overscroll-behavior-inline: contain; }
+  [data-demo="cafe"] .day { flex: 0 0 100px; scroll-snap-align: start; }
+  [data-demo="cafe"] .slots { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  [data-demo="cafe"] .slot { min-inline-size: 0; padding-inline: .4rem; }
+  [data-demo="cafe"] .mosaic__big img, [data-demo="cafe"] .roast-figure img { aspect-ratio: 4/3; border-radius: 22px; }
+  [data-demo="cafe"] .team { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .7rem; }
+  [data-demo="cafe"] .team__name { font-size: .95rem; margin-inline: .7rem; }
+  [data-demo="cafe"] .team__role { font-size: .75rem; margin-inline: .7rem; }
+}
+
+@media (max-width: 359px) {
+  [data-demo="store"] .grid, [data-demo="fashion"] .model-grid, [data-demo="cafe"] .team { grid-template-columns: minmax(0, 1fr); }
+  [data-demo="sports"] .athletes-grid { grid-template-columns: minmax(0, 1fr); }
+  [data-demo="fashion"] .model-card img { aspect-ratio: 4/5; }
+}
+
+@media (hover: none) {
+  body[data-demo] :is(.card, .car, .sport-card, .athlete-card, .program-card, .service, .btn, .chip, .day, .slot, .cat-tile):hover { transform: none; }
+  body[data-demo] :is(.car, .model-card):hover img { transform: none; }
+  [data-demo="fashion"] .model-data { max-block-size: 140px; opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  body[data-demo] *, body[data-demo] *::before, body[data-demo] *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+}

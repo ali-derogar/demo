@@ -31,16 +31,16 @@
 
   const MENU = [
     { n: 'املت سبزی', c: 'breakfast', p: 245000, v: true, d: 'سه تخم‌مرغ، شوید و تره‌ی تازه، پنیر محلی', t: ['پرفروش'] },
-    { n: 'پنکی کارامل موز', c: 'breakfast', p: 230000, v: true, d: 'سه لایه پنکیک، کارامل نمکی، موز رسیده', t: ['پرفروش'] },
+    { n: 'پنکیک کارامل موز', c: 'breakfast', p: 230000, v: true, d: 'سه لایه پنکیک، کارامل نمکی، موز رسیده', t: ['پرفروش'] },
     { n: 'تست آووکادو', c: 'breakfast', p: 285000, v: true, d: 'نان خمیرترش، آووکادوی له‌شده، کنجد بوداده، لیمو' },
     { n: 'نیمرو با گوجه‌های کبابی', c: 'breakfast', p: 210000, v: true, d: 'دو تخم‌مرغ محلی، گوجه‌ی آتیشی، نان گرم' },
     { n: 'حلیم بادمجان', c: 'breakfast', p: 198000, v: false, d: 'بادمجون کبابی، گردو، رب انار، نعنا داغ' },
     { n: 'پنیر و گردو و نان خمیرترش', c: 'breakfast', p: 165000, v: true, d: 'پنیر لیقوان، گردوی تازه، سبزی خوردن' },
-    { n: 'اسپرسو دبل', c: 'drink', p: 115000, v: true, d: 'دو شات، تلخی تمیز، کِرِمای گود' },
-    { n: 'کاپوچینو', c: 'drink', p: 145000, v: true, d: 'شیر بخاردیده، پودر کاکائو' },
-    { n: 'لاته هنری', c: 'drink', p: 158000, v: true, d: 'شیر کامل یا جو؛ نقش را باریستا می‌زند' },
-    { n: 'دم‌آوری یرگاچیف', c: 'drink', p: 172000, v: true, d: 'فیلتر کاغذی، یادِ به و گل محمدی', t: ['تازه'] },
-    { n: 'چای زعفرانی', c: 'drink', p: 95000, v: true, d: 'دم‌کشِ غلیظ با نبات و خرمای مضافتی' },
+    { n: 'اسپرسو دبل', c: 'drink', p: 115000, v: true, d: 'دو شات اسپرسو با کرمای غلیظ' },
+    { n: 'کاپوچینو', c: 'drink', p: 145000, v: true, d: 'شیر بخار داده‌شده و پودر کاکائو' },
+    { n: 'لاته هنری', c: 'drink', p: 158000, v: true, d: 'با شیر معمولی یا شیر جو دوسر و طرح روی کف شیر' },
+    { n: 'دم‌آوری یرگاچیف', c: 'drink', p: 172000, v: true, d: 'با فیلتر کاغذی و عطر به و گل محمدی', t: ['تازه'] },
+    { n: 'چای زعفرانی', c: 'drink', p: 95000, v: true, d: 'چای پررنگ با نبات و خرمای مضافتی' },
     { n: 'شکلات داغ', c: 'drink', p: 162000, v: true, d: 'شکلات ۵۵٪، شیر گرم، خامه‌ی زده‌نشده' },
     { n: 'آب‌پرتقال تازه', c: 'drink', p: 128000, v: true, d: 'پرتقال تامسون، همان لحظه گرفته می‌شود' },
     { n: 'ساندویچ بوقلمون دودی', c: 'salty', p: 235000, v: false, d: 'نان باگت، کاهو، پنیر، سس خردل عسلی' },
@@ -50,13 +50,13 @@
     { n: 'کیک شکلات سه‌لایه', c: 'sweet', p: 165000, v: true, d: 'اسفنج کاکائو، موس شیری، سس تلخ' },
     { n: 'تارت توت‌فرنگی', c: 'sweet', p: 172000, v: true, d: 'خمیر کره‌ای، کرم قنادی، توت تازه' },
     { n: 'شیرینی توت و گل', c: 'sweet', p: 148000, v: true, d: 'لایه‌های کره‌ای، خامه‌ی گلاب، توت خشک', t: ['فصلی'] },
-    { n: 'باقلای پسته', c: 'sweet', p: 132000, v: true, d: 'پسته‌ی اکبری، شربت گلاب، یک برش کوچک' },
+    { n: 'باقلوای پسته‌ای', c: 'sweet', p: 132000, v: true, d: 'پسته‌ی اکبری، شربت گلاب، یک برش کوچک' },
   ];
 
   const BEANS = [
-    { n: 'یرگاچیف · اتیوپی', r: 2, p: 320000, d: 'رُست روشن · یادِ به، گل محمدی، چای سیاه' },
-    { n: 'سیرادو · کلمبیا', r: 3, p: 295000, d: 'رُست میان · کارامل، گردو، پرتقال' },
-    { n: 'منت‌گن · برزیل', r: 4, p: 268000, d: 'رُست تیره · شکلات تلخ، فندق، بدنه‌ی سنگین' },
+    { n: 'یرگاچیف · اتیوپی', r: 2, p: 320000, d: 'رُست روشن · عطر به، گل محمدی و چای سیاه' },
+    { n: 'سیرادو · کلمبیا', r: 3, p: 295000, d: 'رُست متوسط · طعم کارامل، گردو و پرتقال' },
+    { n: 'منت‌گن · برزیل', r: 4, p: 268000, d: 'رُست تیره · طعم شکلات تلخ و فندق' },
   ];
 
   // بازه‌های رزرو (عصر و شام) — دقیقه‌ها برای محاسبه
@@ -284,19 +284,19 @@
     const weekHours = week.reduce((sum, d) => sum + dayLoad(d).hours, 0);
     if (weekHours === 0) {
       slotNote.textContent = '';
-      slotNote.append(`برای ${toFa(state.party)} نفر در این هفته جایی نمانده. `);
+      slotNote.append(`این هفته برای ${toFa(state.party)} نفر میز خالی نداریم. `);
       const tel = document.createElement('a');
       tel.href = 'tel:+982188001234';
       tel.textContent = 'تماس بگیرید';
-      slotNote.append(tel, ' تا میز بزرگ‌تر یا شب بعدی را برایتان نگه داریم.');
+      slotNote.append(tel, ' تا برای یه روز دیگه یا میز بزرگ‌تر هماهنگ کنیم.');
     } else if (open === 0) {
       slotNote.textContent =
-        `برای ${toFa(state.party)} نفر در ${longDate.format(day.date)} جایی نمانده؛ یکی از شب‌های روشن‌تر را انتخاب کنید.`;
+        `برای ${toFa(state.party)} نفر در ${longDate.format(day.date)} میز خالی نداریم. یه روز دیگه رو انتخاب کنید.`;
     } else if (state.slot === -1) {
       slotNote.textContent =
-        `${toFa(open)} ساعت در این شب جا دارد. عددی که زیر هر ساعت می‌بینید، تعداد میزهای خالی همان ساعت است.`;
+        `${toFa(open)} ساعت برای رزرو خالیه. تعداد میزهای خالی رو زیر هر ساعت می‌بینید.`;
     } else {
-      slotNote.textContent = 'ساعت را انتخاب کردید؛ حالا نام و شماره‌تان را بنویسید.';
+      slotNote.textContent = 'حالا اسمتون و شماره موبایلتون رو بنویسید.';
     }
   }
 
@@ -366,7 +366,7 @@
     const code = toFa(String(seed(name + phone + day.key + time) % 9000 + 1000));
 
     doneBox.innerHTML =
-      '<p class="done-head"><span class="done-mark" aria-hidden="true">✓</span><span>میزتان نگه داشته شد</span></p>' +
+      '<p class="done-head"><span class="done-mark" aria-hidden="true">✓</span><span>رزرو آزمایشی انجام شد</span></p>' +
       `<dl class="done-grid">
         <div><dt>به نام</dt><dd data-k="name"></dd></div>
         <div><dt>شب</dt><dd data-k="day"></dd></div>
@@ -375,8 +375,8 @@
         ${occasion ? `<div><dt>مناسبت</dt><dd data-k="occ"></dd></div>` : ''}
       </dl>` +
       `<p class="done-note">کد پیگیری: <span class="done-code">بخار–${code}</span></p>` +
-      '<p class="done-note">این نمونه‌ی نمایشی است؛ رزرو جایی ثبت نشد و تماسی گرفته نمی‌شود.</p>' +
-      '<button class="btn btn--ghost" type="button" id="again">یک رزرو دیگر</button>';
+      '<p class="done-note">این رزرو آزمایشی بود. میز واقعی رزرو نشده و تماسی هم گرفته نمی‌شه.</p>' +
+      '<button class="btn btn--ghost" type="button" id="again">امتحان دوباره</button>';
 
     const set = (k, value) => { doneBox.querySelector(`[data-k="${k}"]`).textContent = value; };
     set('name', name);
@@ -395,7 +395,7 @@
 
     formWrap.hidden = true;
     doneBox.hidden = false;
-    live.textContent = `رزرو ${name} برای ${toFa(state.party)} نفر، ${longDate.format(day.date)} ساعت ${time} ثبت شد.`;
+    live.textContent = `رزرو ${name} برای ${toFa(state.party)} نفر، ${longDate.format(day.date)} ساعت ${time} به‌صورت آزمایشی ثبت شد.`;
     doneBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
   });
 
@@ -423,14 +423,14 @@
   if (hourNow >= openAt && hourNow < closeAt) {
     status.classList.add('is-open');
     statusText.textContent = hourNow >= 11
-      ? `الان باز است — تا ساعت ${toFa(closeAt)} · صبحانه تمام شده`
-      : `الان باز است — صبحانه تا ساعت ۱۲ سرو می‌شود`;
+      ? `الان بازیم، تا ساعت ${toFa(closeAt)} · سرو صبحانه تموم شده`
+      : `الان بازیم · صبحانه تا ساعت ۱۲`;
   } else if (hourNow < openAt) {
     status.classList.add('is-closed');
-    statusText.textContent = `الان بسته است — امروز ساعت ${toFa(openAt)} باز می‌شود`;
+    statusText.textContent = `الان بسته‌ایم؛ امروز ساعت ${toFa(openAt)} باز می‌کنیم`;
   } else {
     status.classList.add('is-closed');
-    statusText.textContent = 'امروز بسته شد — فردا ساعت ' + toFa(openAt) + ' دوباره اینجا هستیم';
+    statusText.textContent = 'برای امروز تعطیل کردیم؛ فردا ساعت ' + toFa(openAt) + ' دوباره اینجا هستیم';
   }
 
   /* ===== دانه‌ها ===== */

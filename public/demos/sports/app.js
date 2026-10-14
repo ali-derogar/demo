@@ -174,8 +174,8 @@
     {
       id: 'f-name',
       error: function (v) {
-        if (!v) return 'لطفاً نام و نام خانوادگی خود را وارد کنید.';
-        if (v.trim().length < 3 || !v.trim().includes(' ')) return 'نام کامل را بنویسید (نام و نام خانوادگی، حداقل ۳ حرف).';
+        if (!v) return 'لطفاً اسم و نام خانوادگی‌تون رو بنویسید.';
+        if (v.trim().length < 3 || !v.trim().includes(' ')) return 'اسم و نام خانوادگی رو با هم بنویسید؛ حداقل ۳ حرف.';
         return '';
       }
     },
@@ -183,13 +183,13 @@
       id: 'f-phone',
       error: function (v) {
         var digits = v.replace(/[۰-۹]/g, function (d) { return String(FA.indexOf(d)); }).replace(/[\s-]/g, '');
-        if (!digits) return 'شماره همراه را وارد کنید.';
-        if (!/^09\d{9}$/.test(digits)) return 'شماره همراه باید با ۰۹ شروع شود و ۱۱ رقم باشد (مثلاً ۰۹۱۲۱۲۳۴۵۶۷).';
+        if (!digits) return 'لطفاً شماره موبایلتون رو بنویسید.';
+        if (!/^09\d{9}$/.test(digits)) return 'شماره موبایل باید ۱۱ رقم باشه و با ۰۹ شروع بشه؛ مثل ۰۹۱۲۱۲۳۴۵۶۷.';
         return '';
       }
     },
-    { id: 'f-sport', error: function (v) { return v ? '' : 'یک رشته برای تمرین انتخاب کنید.'; } },
-    { id: 'f-slot', error: function (v) { return v ? '' : 'روز و ساعت تمرین را مشخص کنید.'; } }
+    { id: 'f-sport', error: function (v) { return v ? '' : 'لطفاً یه رشته انتخاب کنید.'; } },
+    { id: 'f-slot', error: function (v) { return v ? '' : 'روز و ساعت تمرینتون رو انتخاب کنید.'; } }
   ];
 
   function fieldError(id) { return document.getElementById('e-' + id.slice(2)); }
@@ -227,7 +227,7 @@
       termsErr.textContent = ''; termsErr.hidden = true;
     } else {
       terms.setAttribute('aria-invalid', 'true');
-      termsErr.textContent = 'برای ادامه، پذیرش شرایط عضویت ضروری است.';
+      termsErr.textContent = 'برای ادامه، گزینه‌ی موافقت با شرایط رو تیک بزنید.';
       termsErr.hidden = false;
     }
     return ok;
@@ -245,18 +245,18 @@
 
     statusBox.classList.remove('is-success', 'is-error');
     if (firstInvalid) {
-      statusBox.innerHTML = '<h3>لطفاً ایرادهای فرم را برطرف کنید</h3><p>پیام خطا زیر فیلدهای ناقص نمایش داده شده است.</p>';
+      statusBox.innerHTML = '<h3>چند تا از اطلاعات رو کامل نکردید</h3><p>پیام زیر هر قسمت رو بخونید و اطلاعاتش رو تکمیل کنید.</p>';
       statusBox.classList.add('is-error');
       firstInvalid.focus();
       return;
     }
     var name = document.getElementById('f-name').value.trim().split(/\s+/)[0];
     statusBox.innerHTML =
-      '<h3>' + name + ' عزیز، درخواست شما ثبت شد</h3>' +
-      '<p>کارشناسان پیکان برای هماهنگی جلسه‌ی اول با شماره‌ی ' +
-      toFa(document.getElementById('f-phone').value.replace(/[^\d۰-۹]/g, '')) + ' با شما تماس می‌گیرند.</p>' +
-      '<p>این فرم صرفاً نمونه‌ی نمایشی است و هیچ اطلاعاتی به جایی ارسال یا ذخیره نمی‌شود.</p>' +
-      '<button class="again-btn" type="button">ثبت دیگر</button>';
+      '<h3>' + name + '، درخواست آزمایشی‌تون ثبت شد</h3>' +
+      '<p>شماره‌ای که وارد کردید: ' +
+      toFa(document.getElementById('f-phone').value.replace(/[^\d۰-۹]/g, '')) + '.</p>' +
+      '<p>این فرم برای امتحان کردنه. اطلاعاتتون ارسال یا ذخیره نمی‌شه و تماسی هم نمی‌گیریم.</p>' +
+      '<button class="again-btn" type="button">امتحان دوباره</button>';
     statusBox.classList.add('is-success');
     statusBox.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'center' });
     var again = statusBox.querySelector('.again-btn');

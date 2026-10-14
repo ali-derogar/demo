@@ -23,6 +23,7 @@ export function DemoCard({ project, priority = false }: Props) {
 
         <div className="card__content">
           <p className="card__category">{project.categoryLabel}</p>
+          <span className="card__live"><span aria-hidden="true" />قابل امتحان</span>
           <h3 className="card__title">
             <a className="card__link" href={project.url}>
               {project.title}
@@ -41,7 +42,7 @@ export function DemoCard({ project, priority = false }: Props) {
           <div className="card__foot">
             <p className="card__tech">{project.technologies.join(' • ')}</p>
             <a className="card__action" href={project.url}>
-              مشاهده وب‌سایت
+              باز کردن سایت
               <span aria-hidden="true">
                 {' '}
                 ←

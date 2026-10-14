@@ -1,5 +1,5 @@
 import { projects } from '../data/projects';
-import { faDigit, faYear } from '../lib/fa';
+import { faYear } from '../lib/fa';
 
 export function SiteFooter() {
   return (
@@ -13,8 +13,7 @@ export function SiteFooter() {
             <span className="wordmark__text">نمونه‌کده</span>
           </a>
           <p>
-            گالری نمونه‌کارهای طراحی و توسعه‌ی وب؛ {faDigit(projects.length)} وب‌سایت کامل فارسی که
-            می‌توانید با آن‌ها کار کنید.
+            اینجا نمونه‌های طراحی سایت من رو می‌بینید. هر کدوم رو باز کنید تا با جزئیاتش آشنا بشید.
           </p>
         </div>
 
@@ -39,7 +38,7 @@ export function SiteFooter() {
               <a href="#demos">نمونه‌ها</a>
             </li>
             <li>
-              <a href="#about">درباره ما</a>
+              <a href="#about">درباره من</a>
             </li>
           </ul>
         </nav>
@@ -47,7 +46,7 @@ export function SiteFooter() {
 
       <div className="shell site-footer__base">
         <p>© {faYear()} نمونه‌کده — همه‌ی حقوق محفوظ است.</p>
-        <p className="site-footer__meta">طراحی‌شده برای کسب‌وکارهای ایرانی</p>
+        <p className="site-footer__meta">نمونه‌کارهای طراحی سایت من</p>
       </div>
     </footer>
   );

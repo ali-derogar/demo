@@ -39,16 +39,16 @@ export function DemoGallery() {
         <div className="gallery__head">
           <div>
             <p className="eyebrow">نمونه‌ها</p>
-            <h2 id="gallery-title">هر کارت، یک وب‌سایت تمام‌وکمال</h2>
+            <h2 id="gallery-title">سایت‌هایی که طراحی کردم</h2>
             <p className="gallery__intro">
-              حوزه‌ی کاری‌تان را انتخاب کنید یا نام نمونه را جست‌وجو کنید. با کلیک روی هر کارت، همان
-              وب‌سایت برایتان باز می‌شود.
+              هر نمونه‌ای که دوست داشتید باز کنید. برای پیدا کردنش هم می‌تونید از جست‌وجو یا
+              دسته‌بندی‌ها کمک بگیرید.
             </p>
           </div>
           <p className="gallery__count" role="status" aria-live="polite">
             {visible.length === projects.length
-              ? `${faDigit(projects.length)} وب‌سایت نمایش داده می‌شود`
-              : `${faDigit(visible.length)} نمونه از ${faDigit(projects.length)} وب‌سایت`}
+              ? `${faDigit(projects.length)} نمونه‌کار`
+              : `${faDigit(visible.length)} نمونه از ${faDigit(projects.length)}`}
           </p>
         </div>
 
@@ -91,7 +91,10 @@ export function DemoGallery() {
                   type="button"
                   className={`chip${active ? ' is-active' : ''}`}
                   aria-pressed={active}
-                  onClick={() => setCategory(item.value)}
+                  onClick={(event) => {
+                    setCategory(item.value);
+                    event.currentTarget.scrollIntoView({ block: 'nearest', inline: 'nearest', behavior: 'auto' });
+                  }}
                 >
                   {item.label}
                 </button>

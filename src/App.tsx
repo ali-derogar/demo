@@ -4,6 +4,7 @@ import { HeroSection } from './components/HeroSection';
 import { DemoGallery } from './components/DemoGallery';
 import { AboutSection } from './components/AboutSection';
 import { SiteFooter } from './components/SiteFooter';
+import { MobileDock } from './components/MobileDock';
 
 export default function App() {
   useEffect(() => {
@@ -23,6 +24,7 @@ export default function App() {
         <AboutSection />
       </main>
       <SiteFooter />
+      <MobileDock />
     </>
   );
 }

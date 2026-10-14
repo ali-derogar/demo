@@ -2,12 +2,13 @@
 <html lang="fa" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>ماشین‌نما | نمایشگاه خودرو، مشخصات فنی و مقایسه</title>
 <meta name="description" content="ماشین‌نما — نمایشگاه خودرو با جست‌وجو و فیلتر کلاس بدنه، مشخصات فنی کامل هر مدل، مقایسه‌ی خودروها کنار هم و درخواست مشاوره. قیمت‌ها به تومان.">
 <link rel="stylesheet" href="./styles.css">
+<link rel="stylesheet" href="../shared/mobile.css">
 </head>
-<body>
+<body data-demo="cars">
 <a class="skip-link" href="#main">پرش به محتوای اصلی</a>
 
 <header class="site-header">
@@ -59,10 +60,9 @@
     <div class="hero-scrim" aria-hidden="true"></div>
     <div class="wrap hero-inner">
       <p class="eyebrow">نمایشگاه خودرو · تهران</p>
-      <h1 class="hero-title">خودروی بعدی‌تان را<br>همین‌جا انتخاب کنید</h1>
+      <h1 class="hero-title">ماشین بعدی‌تون رو<br>اینجا پیدا کنید</h1>
       <p class="hero-lead">
-        فیلتر بر اساس کلاس بدنه، مشخصات فنی کامل هر مدل، مقایسه‌ی دو یا سه خودرو کنار هم
-        و مشاوره‌ای که سؤال‌هایتان را بی‌پاسخ نمی‌گذارد. قیمت‌ها همه به تومان.
+        خودروها رو با عکس، قیمت و مشخصات اینجا گذاشتیم. می‌تونید چند مدل رو مقایسه کنید و اگه سؤالی داشتید، برای مشاوره درخواست بدید.
       </p>
       <div class="hero-actions">
         <a class="btn btn--primary" href="#fleet">دیدن خودروها</a>
@@ -79,7 +79,7 @@
 
   <p class="wrap demo-note">
     <span class="demo-note__tag">نمونه‌ی نمایشی</span>
-    این وب‌سایت نمونه‌ی نمایشی است؛ خودروها، قیمت‌ها و فرم مشاوره واقعی نیستند و هیچ سفارشی ثبت نمی‌شود.
+    این سایت نمونه‌کاره. قیمت‌ها برای نمایش هستن و سفارش یا درخواست مشاوره‌ای ارسال نمی‌شه.
   </p>
 
   <!-- ===== خودروها ===== -->
@@ -87,7 +87,7 @@
     <div class="wrap">
       <div class="section-head">
         <h2 id="fleet-title">خودروهای منتخب</h2>
-        <p>نام خودرو را بنویسید یا کلاس بدنه را انتخاب کنید. هر دو با هم کار می‌کنند.</p>
+        <p>اسم خودرو رو جست‌وجو کنید یا نوع بدنه رو از دسته‌بندی‌ها انتخاب کنید.</p>
       </div>
 
       <div class="toolbar">
@@ -131,7 +131,7 @@
           <path d="M30 14h8" stroke="currentColor" stroke-width="2.4"/>
         </svg>
         <h3>خودرویی با این مشخصات پیدا نشد</h3>
-        <p>شاید نام را کامل ننوشته‌اید یا این کلاس بدنه در فهرست نیست.</p>
+        <p>یه اسم دیگه امتحان کنید یا دسته‌بندی رو روی «همه» بذارید.</p>
         <button class="btn btn--primary" id="empty-reset" type="button">نمایش همه‌ی خودروها</button>
       </div>
     </div>
@@ -142,7 +142,7 @@
     <div class="wrap">
       <div class="section-head">
         <h2 id="compare-title">مقایسه‌ی خودروها</h2>
-        <p>تا سه خودرو را از کارت‌ها انتخاب کنید تا مشخصاتشان را کنار هم ببینید.</p>
+        <p>روی دکمه‌ی «مقایسه» بزنید تا مشخصات دو یا سه خودرو رو کنار هم ببینید.</p>
       </div>
       <div class="compare-bar" id="compare-bar"></div>
       <div class="compare-body" id="compare-body"></div>
@@ -154,28 +154,28 @@
     <div class="wrap">
       <div class="section-head">
         <h2 id="services-title">خدمات نمایشگاه</h2>
-        <p>از انتخاب تا تحویل؛ هر مرحله آدم و مسئول خودش را دارد.</p>
+        <p>برای انتخاب خودرو، تست رانندگی و کارهای تحویل می‌تونیم کمکتون کنیم.</p>
       </div>
       <div class="services">
         <article class="service">
           <span class="service__idx num">۰۱</span>
           <h3>مشاوره‌ی تخصصی</h3>
-          <p>بر اساس بودجه، مسیر روزانه و خانواده‌تان سه گزینه‌ی واقعی پیشنهاد می‌دهیم، نه ده گزینه.</p>
+          <p>بودجه و نیازتون رو بهمون بگید تا چند مدل مناسب بهتون پیشنهاد بدیم.</p>
         </article>
         <article class="service">
           <span class="service__idx num">۰۲</span>
           <h3>آزمون رانندگی</h3>
-          <p>پیش از تصمیم، خودرو را در ترافیک واقعی شهر رانندگی کنید؛ بدون تعهد و بدون کاغذبازی.</p>
+          <p>قبل از خرید، برای تست رانندگی وقت بگیرید و خودرو رو از نزدیک امتحان کنید.</p>
         </article>
         <article class="service">
           <span class="service__idx num">۰۳</span>
           <h3>بیمه و لیزینگ</h3>
-          <p>محاسبه‌ی قسط ماهانه و بیمه‌ی بدنه در همان جلسه، با اعداد شفاف و بدون کارمزد پنهان.</p>
+          <p>مبلغ قسط‌ها و هزینه‌ی بیمه رو با هم حساب می‌کنیم تا قبل از خرید بدونید چقدر باید پرداخت کنید.</p>
         </article>
         <article class="service">
           <span class="service__idx num">۰۴</span>
           <h3>خدمات پس از تحویل</h3>
-          <p>نوبت سرویس دوره‌ای، یادآوری معاینه فنی و پاسخ به سؤالات فنی تا پایان گارانتی.</p>
+          <p>برای وقت سرویس، معاینه فنی و سؤال‌های مربوط به گارانتی با ما تماس بگیرید.</p>
         </article>
       </div>
     </div>
@@ -186,7 +186,7 @@
     <div class="wrap consult">
       <div class="consult__intro">
         <h2 id="consult-title">درخواست مشاوره</h2>
-        <p>فرم را پر کنید؛ کارشناس همان خودرو با شما تماس می‌گیرد. زمان تماس را خودتان انتخاب می‌کنید.</p>
+        <p>شماره‌تون رو بنویسید و بگید درباره‌ی کدوم خودرو سؤال دارید. زمان مناسب تماس رو هم خودتون انتخاب کنید.</p>
         <ul class="consult__list">
           <li>پاسخ در کمتر از <span class="num">۲۴</span> ساعت کاری</li>
           <li>بدون هزینه و بدون تعهد خرید</li>
@@ -232,7 +232,7 @@
 
         <div class="form__foot">
           <button class="btn btn--primary" type="submit">ارسال درخواست</button>
-          <p class="form__hint">اطلاعات فقط در همین مرورگر می‌ماند و جایی ارسال نمی‌شود.</p>
+          <p class="form__hint">این فرم آزمایشیه و اطلاعاتتون جایی ارسال نمی‌شه.</p>
         </div>
 
         <p class="form__done" id="form-done" role="status" hidden></p>
@@ -245,7 +245,7 @@
   <div class="wrap footer-inner">
     <div>
       <p class="footer-brand">ماشین‌نما</p>
-      <p class="footer-tag">نمایشگاه خودرو · نمونه‌کار طراحی وب</p>
+      <p class="footer-tag">نمایشگاه خودرو · تهران</p>
     </div>
     <nav aria-label="پیوندهای پاورقی">
       <ul class="footer-links">
@@ -263,13 +263,16 @@
 </footer>
 
 <dialog id="car-dialog" aria-labelledby="dialog-title">
+  <div class="sheet-controls">
+    <button class="dialog__close" id="dialog-close" type="button">
+      <span class="sr-only">بستن</span>
+      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 6 12 12M18 6 6 18" stroke="currentColor" stroke-width="1.9" fill="none"/></svg>
+    </button>
+  </div>
   <div class="dialog" id="dialog-body"></div>
-  <button class="dialog__close" id="dialog-close" type="button">
-    <span class="sr-only">بستن</span>
-    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 6 12 12M18 6 6 18" stroke="currentColor" stroke-width="1.9" fill="none"/></svg>
-  </button>
 </dialog>
 
 <script src="./app.js"></script>
+<script src="../shared/mobile.js"></script>
 </body>
 </html>

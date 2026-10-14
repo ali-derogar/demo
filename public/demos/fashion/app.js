@@ -121,6 +121,7 @@
     lbCount.textContent = triggers.length > 1
       ? toFa(i + 1) + ' از ' + toFa(triggers.length)
       : '';
+    lbPrev.hidden = lbNext.hidden = triggers.length < 2;
   }
 
   function openLb(list, index) {
@@ -155,6 +156,19 @@
   lbClose.addEventListener('click', closeLb);
   lbPrev.addEventListener('click', function () { step(-1); });
   lbNext.addEventListener('click', function () { step(1); });
+  var swipeStart = null;
+  lbImg.style.touchAction = 'pan-y';
+  lbImg.addEventListener('pointerdown', function (event) {
+    if (event.pointerType === 'touch') swipeStart = { x: event.clientX, y: event.clientY };
+  });
+  lbImg.addEventListener('pointerup', function (event) {
+    if (!swipeStart) return;
+    var dx = event.clientX - swipeStart.x;
+    var dy = event.clientY - swipeStart.y;
+    swipeStart = null;
+    if (triggers.length > 1 && Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.3) step(dx < 0 ? 1 : -1);
+  });
+  lbImg.addEventListener('pointercancel', function () { swipeStart = null; });
   lb.addEventListener('click', function (e) {
     if (e.target === lb) closeLb();
   });
@@ -166,7 +180,7 @@
       if (e.key === 'ArrowRight') { step(-1); return; }
     }
     if (e.key === 'Tab') {
-      var focusables = [lbClose, lbPrev, lbNext];
+      var focusables = [lbClose, lbPrev, lbNext].filter(function (button) { return !button.hidden; });
       var first = focusables[0], last = focusables[focusables.length - 1];
       if (e.shiftKey && document.activeElement === first) {
         e.preventDefault(); last.focus();
@@ -192,16 +206,16 @@
 
   function validateName() {
     var v = nameInput.value.trim();
-    if (!v) { setError(nameInput, nameErr, 'نام خود را وارد کنید.'); return false; }
-    if (v.length < 3) { setError(nameInput, nameErr, 'نام باید دست‌کم سه حرف باشد.'); return false; }
+    if (!v) { setError(nameInput, nameErr, 'لطفاً اسمتون رو بنویسید.'); return false; }
+    if (v.length < 3) { setError(nameInput, nameErr, 'اسمتون رو کامل‌تر بنویسید؛ حداقل سه حرف.'); return false; }
     setError(nameInput, nameErr, '');
     return true;
   }
 
   function validateEmail() {
     var v = emailInput.value.trim();
-    if (!v) { setError(emailInput, emailErr, 'نشانی رایانامه را وارد کنید.'); return false; }
-    if (!EMAIL_RE.test(v)) { setError(emailInput, emailErr, 'قالب رایانامه درست نیست؛ نمونه: name@example.com'); return false; }
+    if (!v) { setError(emailInput, emailErr, 'لطفاً ایمیلتون رو بنویسید.'); return false; }
+    if (!EMAIL_RE.test(v)) { setError(emailInput, emailErr, 'ایمیل درست به نظر نمی‌رسه. مثل این بنویسید: name@example.com'); return false; }
     setError(emailInput, emailErr, '');
     return true;
   }
@@ -216,13 +230,13 @@
     var okName = validateName();
     var okEmail = validateEmail();
     if (!okName || !okEmail) {
-      status.textContent = 'لطفاً خطاهای فرم را برطرف کنید.';
+      status.textContent = 'لطفاً اسم و ایمیلتون رو دوباره چک کنید.';
       status.style.color = '#a2402f';
       (okName ? emailInput : nameInput).focus();
       return;
     }
     status.style.color = '';
-    status.textContent = 'عضویت شما ثبت شد. سپاس!';
+    status.textContent = 'ممنون! فرم رو امتحان کردید. این نمونه ایمیلی ارسال نمی‌کنه.';
     form.reset();
     setError(nameInput, nameErr, '');
     setError(emailInput, emailErr, '');
