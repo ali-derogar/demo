@@ -261,7 +261,7 @@
     if (checkoutMode) { renderCheckoutView(); return; }
     if (!ids.length) {
       drawerBody.innerHTML =
-        '<div class="cart-empty"><p aria-hidden="true">🛒</p>' +
+        '<div class="cart-empty"><p class="cart-empty-ico" aria-hidden="true"><svg viewBox="0 0 24 24" width="34" height="34" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2.6 3.5h2.9l2.4 11.2h9.9l2.2-8.1H6.4"/><circle cx="9.6" cy="19.3" r="1.6"/><circle cx="17.2" cy="19.3" r="1.6"/></svg></p>' +
         '<p>سبد خرید شما خالی است</p>' +
         '<button type="button" class="btn btn-primary" id="start-shopping">شروع خرید</button></div>';
       drawerFoot.innerHTML = '';
@@ -272,7 +272,7 @@
     drawerBody.innerHTML = ids.map(lineHTML).join('') +
       '<div class="demo-note" role="note">این سبد فقط نمایشی است؛ هیچ خرید یا پرداخت واقعی انجام نمی‌شود.</div>';
     drawerFoot.innerHTML =
-      '<div class="sum-row"><span>جمع کل (نمایشی)</span><span class="sum-total">' + money(cartTotal()) + ' تومان</span></div>' +
+      '<div class="sum-row"><span>جمع کل</span><span class="sum-total">' + money(cartTotal()) + ' تومان</span></div>' +
       '<button type="button" class="btn btn-primary btn-block" id="go-checkout">تسویه حساب</button>';
     $('#go-checkout').addEventListener('click', function () {
       checkoutMode = true; renderCartView();
@@ -288,7 +288,7 @@
     }).join('');
     drawerBody.innerHTML =
       '<button type="button" class="btn btn-ghost" id="back-to-cart" style="margin-bottom:1rem">→ بازگشت به سبد</button>' +
-      '<div class="demo-note" role="note">این فقط یک نمونه‌ی نمایشی است؛ هیچ خرید یا پرداختی انجام نشد و اطلاعاتی جایی فرستاده نمی‌شود.</div>' +
+      '<div class="demo-note" role="note">این نمونه‌ی نمایشی است؛ پرداختی انجام نمی‌شود و اطلاعاتی جایی فرستاده نمی‌شود.</div>' +
       '<form id="checkout-form" novalidate>' +
         '<div class="field"><label for="co-name">نام و نام خانوادگی</label>' +
           '<input id="co-name" name="name" autocomplete="name" aria-describedby="err-name">' +
@@ -299,9 +299,9 @@
         '<div class="field"><label for="co-postal">کد پستی (۱۰ رقم)</label>' +
           '<input id="co-postal" name="postal" inputmode="numeric" autocomplete="postal-code" placeholder="مثلاً ۱۴۵۹۸۷۶۵۴۳" aria-describedby="err-postal">' +
           '<p class="err" id="err-postal"></p></div>' +
-        '<div class="co-summary"><strong>خلاصه‌ی سفارش (نمایشی)</strong>' + lines +
+        '<div class="co-summary"><strong>خلاصه‌ی سفارش</strong>' + lines +
           '<div class="line" style="margin-top:.5rem;font-weight:900"><span>جمع کل</span><span>' + money(cartTotal()) + ' تومان</span></div></div>' +
-        '<button type="submit" class="btn btn-primary btn-block">ثبت سفارش نمایشی</button>' +
+        '<button type="submit" class="btn btn-primary btn-block">ثبت سفارش</button>' +
       '</form>';
     $('#back-to-cart').addEventListener('click', function () { checkoutMode = false; renderCartView(); });
     $('#checkout-form').addEventListener('submit', submitCheckout);
@@ -347,13 +347,13 @@
     cart = {};
     saveCart(); updateBadge();
     drawerBody.innerHTML =
-      '<div class="success-view"><p class="big" aria-hidden="true">🌿</p>' +
-      '<h3>ثبت شد، ' + escapeHtml(name) + '!</h3>' +
-      '<p>سفارش نمایشی شما با موفقیت «ثبت» شد و سبد خرید پاک گردید.</p>' +
-      '<div class="demo-note" role="note" style="text-align:start">این فقط یک نمونه‌ی نمایشی است؛ هیچ خرید یا پرداختی انجام نشد.</div>' +
+      '<div class="success-view"><p class="big" aria-hidden="true"><svg viewBox="0 0 24 24" width="38" height="38" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="m8 12.4 2.7 2.6L16.2 9"/></svg></p>' +
+      '<h3>' + escapeHtml(name) + ' عزیز، سفارش شما ثبت شد</h3>' +
+      '<p>سبد خرید پاک شد و آماده‌ی خرید بعدی هستید.</p>' +
+      '<div class="demo-note" role="note" style="text-align:start">این نمونه‌ی نمایشی است؛ هیچ خرید یا پرداختی انجام نشد.</div>' +
       '<button type="button" class="btn btn-primary" id="success-close">بازگشت به فروشگاه</button></div>';
     drawerFoot.innerHTML = '';
-    toast('سفارش نمایشی ثبت شد — پرداختی انجام نشد');
+    toast('سفارش نمونه ثبت شد؛ پرداختی انجام نشد');
     $('#success-close').addEventListener('click', closeDrawer);
     $('#success-close').focus();
   }

@@ -253,8 +253,8 @@
     var name = document.getElementById('f-name').value.trim().split(/\s+/)[0];
     statusBox.innerHTML =
       '<h3>' + name + ' عزیز، درخواست شما ثبت شد</h3>' +
-      '<p>در نسخه‌ی واقعی، کارشناسان پیکان برای هماهنگی جلسه‌ی اول با شماره‌ی ' +
-      toFa(document.getElementById('f-phone').value.replace(/[^\d۰-۹]/g, '')) + ' با تو تماس می‌گیرند.</p>' +
+      '<p>کارشناسان پیکان برای هماهنگی جلسه‌ی اول با شماره‌ی ' +
+      toFa(document.getElementById('f-phone').value.replace(/[^\d۰-۹]/g, '')) + ' با شما تماس می‌گیرند.</p>' +
       '<p>این فرم صرفاً نمونه‌ی نمایشی است و هیچ اطلاعاتی به جایی ارسال یا ذخیره نمی‌شود.</p>' +
       '<button class="again-btn" type="button">ثبت دیگر</button>';
     statusBox.classList.add('is-success');

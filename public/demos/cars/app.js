@@ -467,7 +467,7 @@
     var car = carId ? byId(carId) : null;
     var timeText = $('#f-time').options[$('#f-time').selectedIndex].textContent;
     done.textContent = 'درخواست شما برای ' + (car ? car.brand + ' ' + car.name : 'مشاوره‌ی عمومی')
-      + ' ثبت شد، ' + name + ' عزیز. بازهٔ تماس: ' + timeText
+      + ' ثبت شد، ' + name + ' عزیز. بازه‌ی تماس: ' + timeText
       + ' — این یک نمونه‌ی نمایشی است و تماسی گرفته نمی‌شود.';
     done.hidden = false;
     setError('#f-name', '#e-name', '');
