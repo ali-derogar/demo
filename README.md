@@ -14,7 +14,7 @@
 | دموها | HTML + CSS + JavaScript (بدون فریم‌ورک، بدون وابستگی) |
 | فونت | Vazirmatn (متغیر، woff2) — در گالری از طریق پکیج npm، در هر دمو به‌صورت فایل محلی |
 | تصاویر | فایل‌های محلی WebP داخل مخزن |
-| هاست | Cloudflare Pages (اتصال به گیت‌هاب، طرح رایگان) |
+| هاست | Cloudflare Workers Static Assets یا Cloudflare Pages (اتصال به گیت‌هاب) |
 
 ## ساختار پوشه‌ها
 
@@ -123,7 +123,7 @@ dist/
    توضیح، `category`، `preview`، `url: '/demos/<id>/'`، `technologies`، `keywords`،
    `highlights`، `accent`). فهرست دسته‌بندی‌ها خودکار از همین داده ساخته می‌شود.
 ۴. `npm run build` را اجرا کنید تا بررسی‌های ساختاری هم اجرا شوند.
-۵. Push کنید؛ Cloudflare Pages با اتصال گیت‌هاب خودش دوباره deploy می‌کند.
+۵. Push کنید؛ Cloudflare با اتصال گیت‌هاب خودش دوباره deploy می‌کند.
 
 کامپوننت‌های گالری داده‌محورند؛ برای دمو جدید نیازی به بازنویسی `App.tsx` یا کارت‌ها نیست.
 
@@ -167,7 +167,30 @@ node scripts/fetch-images.mjs build                     # دانلود طبق im
 اسکریپت با `sharp` تصویر را resize می‌کند، به WebP با کیفیت ۸۰ تبدیل می‌کند، فرمت خروجی را
 اعتبارسنجی می‌کند و اطلاعات لایسنس را در فایل attribution می‌نویسد.
 
-## استقرار روی Cloudflare Pages
+## استقرار روی Cloudflare Workers
+
+برای پروژه‌ی Worker با نام `demo`، تنظیمات ساخت متصل به گیت‌هاب:
+
+- **Build command:** `npm run build`
+- **Deploy command:** `npx wrangler deploy --assets ./dist`
+- **Root directory:** ریشه‌ی مخزن
+
+فایل `wrangler.jsonc` نام Worker را `demo`، تاریخ سازگاری را `2026-10-12` و پوشه‌ی
+فایل‌های ایستا را `./dist` تعیین می‌کند. نام Worker در داشبورد باید با `name` در این فایل
+یکی باشد. `not_found_handling: "404-page"` صفحه‌ی `dist/404.html` را برای مسیرهای ناموجود
+نمایش می‌دهد و هر دمو از `dist/demos/<id>/index.html` سرو می‌شود.
+
+برای بررسی تنظیمات استقرار بدون انتشار:
+
+```bash
+npm run build
+npx wrangler deploy --assets ./dist --dry-run
+```
+
+خطای `A compatibility_date is required` با همین فایل تنظیمات برطرف می‌شود؛ فرمان deploy
+فعلی نیازی به تغییر ندارد.
+
+## استقرار روی Cloudflare Pages (گزینه‌ی دیگر)
 
 1. مخزن را به Cloudflare Pages وصل کنید (**Workers & Pages → Create → Pages → Connect to Git**).
 2. تنظیمات پروژه:
