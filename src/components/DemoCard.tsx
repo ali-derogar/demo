@@ -23,7 +23,7 @@ export function DemoCard({ project, priority = false }: Props) {
 
         <div className="card__content">
           <p className="card__category">{project.categoryLabel}</p>
-          <span className="card__live"><span aria-hidden="true" />قابل امتحان</span>
+          <span className="card__live"><span aria-hidden="true" />پیش‌نمایش</span>
           <h3 className="card__title">
             <a className="card__link" href={project.url}>
               {project.title}

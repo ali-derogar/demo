@@ -17,8 +17,8 @@ export function HeroSection() {
             <span className="hero__accent">کارهای من</span>
           </h1>
           <p className="hero__lead">
-            چند تا نمونه از سایت‌هایی که طراحی کردم رو اینجا گذاشتم. می‌تونید هر کدوم رو باز کنید
-            و با بخش‌های مختلفش کار کنید.
+            اینجا چند تا از نمونه‌کارهام رو می‌بینید. هر سایتی که دوست داشتید باز کنید و بخش‌های
+            مختلفش رو امتحان کنید.
           </p>
 
           <div className="hero__actions">
@@ -39,7 +39,7 @@ export function HeroSection() {
               <dd>{faDigit(projects.length)}</dd>
             </div>
             <div>
-              <dt>موضوع متفاوت</dt>
+              <dt>نوع سایت</dt>
               <dd>{faDigit(new Set(projects.map((p) => p.category)).size)}</dd>
             </div>
             <div>

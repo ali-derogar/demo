@@ -236,7 +236,7 @@
       return;
     }
     status.style.color = '';
-    status.textContent = 'ممنون! فرم رو امتحان کردید. این نمونه ایمیلی ارسال نمی‌کنه.';
+    status.textContent = 'ممنون! این ثبت‌نام آزمایشی بود و ایمیلتون جایی ثبت نشد.';
     form.reset();
     setError(nameInput, nameErr, '');
     setError(emailInput, emailErr, '');

@@ -117,14 +117,14 @@
     });
     if (already) {
       programInput.value = '';
-      programLive.textContent = 'انتخاب برنامه لغو شد.';
+      programLive.textContent = 'دیگه برنامه‌ای انتخاب نیست.';
       return;
     }
     card.classList.add('is-selected');
     card.setAttribute('aria-pressed', 'true');
     var name = card.getAttribute('data-program');
     programInput.value = name;
-    programLive.textContent = 'برنامه‌ی «' + name + '» انتخاب شد و در فرم ثبت‌نام پر شد.';
+    programLive.textContent = 'برنامه‌ی «' + name + '» به فرم ثبت‌نام اضافه شد.';
   }
   programCards.forEach(function (card) {
     card.addEventListener('click', function () { selectProgram(card); });
@@ -157,12 +157,12 @@
     });
   });
 
-  /* ---------- دکمه‌های اطلاع‌رسانی رویداد ---------- */
+  /* ---------- دکمه‌های یادآوری رویداد ---------- */
   Array.prototype.forEach.call(document.querySelectorAll('.notify-btn'), function (btn) {
     btn.addEventListener('click', function () {
       var on = btn.getAttribute('aria-pressed') === 'true';
       btn.setAttribute('aria-pressed', String(!on));
-      btn.textContent = on ? 'اطلاع‌رسانی' : 'فعال شد';
+      btn.textContent = on ? 'یادآوری' : 'انتخاب شد';
     });
   });
 
@@ -245,7 +245,7 @@
 
     statusBox.classList.remove('is-success', 'is-error');
     if (firstInvalid) {
-      statusBox.innerHTML = '<h3>چند تا از اطلاعات رو کامل نکردید</h3><p>پیام زیر هر قسمت رو بخونید و اطلاعاتش رو تکمیل کنید.</p>';
+      statusBox.innerHTML = '<h3>چند قسمت از فرم هنوز کامل نیست</h3><p>پیام زیر هر قسمت رو بخونید و اطلاعاتش رو تکمیل کنید.</p>';
       statusBox.classList.add('is-error');
       firstInvalid.focus();
       return;

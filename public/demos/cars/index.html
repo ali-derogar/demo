@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>ماشین‌نما | نمایشگاه خودرو، مشخصات فنی و مقایسه</title>
-<meta name="description" content="ماشین‌نما — نمایشگاه خودرو با جست‌وجو و فیلتر کلاس بدنه، مشخصات فنی کامل هر مدل، مقایسه‌ی خودروها کنار هم و درخواست مشاوره. قیمت‌ها به تومان.">
+<meta name="description" content="ماشین‌نما — نمایشگاه خودرو با جست‌وجو و فیلتر نوع بدنه، مشخصات فنی کامل هر مدل، مقایسه‌ی خودروها کنار هم و درخواست مشاوره. قیمت‌ها به تومان.">
 <link rel="stylesheet" href="./styles.css">
 <link rel="stylesheet" href="../shared/mobile.css">
 </head>
@@ -69,8 +69,8 @@
         <a class="btn btn--ghost" href="#compare">مقایسه‌ی خودروها</a>
       </div>
       <dl class="hero-stats">
-        <div><dt>خودروی منتخب</dt><dd id="stat-fleet">۹</dd></div>
-        <div><dt>کلاس بدنه</dt><dd>۵</dd></div>
+        <div><dt>خودرو در نمایشگاه</dt><dd id="stat-fleet">۹</dd></div>
+        <div><dt>نوع بدنه</dt><dd>۵</dd></div>
         <div><dt>در مقایسه</dt><dd>تا ۳</dd></div>
         <div><dt>پاسخ مشاوره</dt><dd><span class="num">۲۴</span> ساعت</dd></div>
       </dl>
@@ -86,7 +86,7 @@
   <section class="section" id="fleet" aria-labelledby="fleet-title">
     <div class="wrap">
       <div class="section-head">
-        <h2 id="fleet-title">خودروهای منتخب</h2>
+        <h2 id="fleet-title">خودروهای نمایشگاه</h2>
         <p>اسم خودرو رو جست‌وجو کنید یا نوع بدنه رو از دسته‌بندی‌ها انتخاب کنید.</p>
       </div>
 
@@ -116,7 +116,7 @@
         </div>
       </div>
 
-      <div class="chips" role="group" aria-label="فیلتر کلاس بدنه" id="class-chips"></div>
+      <div class="chips" role="group" aria-label="فیلتر نوع بدنه" id="class-chips"></div>
 
       <p class="result-count" id="result-count" role="status" aria-live="polite"></p>
       <p class="cmp-notice" id="compare-notice" role="status" aria-live="polite" hidden></p>
@@ -164,7 +164,7 @@
         </article>
         <article class="service">
           <span class="service__idx num">۰۲</span>
-          <h3>آزمون رانندگی</h3>
+          <h3>تست رانندگی</h3>
           <p>قبل از خرید، برای تست رانندگی وقت بگیرید و خودرو رو از نزدیک امتحان کنید.</p>
         </article>
         <article class="service">
@@ -190,7 +190,7 @@
         <ul class="consult__list">
           <li>پاسخ در کمتر از <span class="num">۲۴</span> ساعت کاری</li>
           <li>بدون هزینه و بدون تعهد خرید</li>
-          <li>امکان هماهنگی آزمون رانندگی</li>
+          <li>امکان هماهنگی تست رانندگی</li>
         </ul>
       </div>
 
@@ -203,7 +203,7 @@
           </div>
           <div class="form__group">
             <label for="f-phone">شماره‌ی تماس</label>
-            <input class="input" id="f-phone" name="phone" type="tel" inputmode="numeric" autocomplete="tel" placeholder="۰۹۲۳۴۵۶۷۸۹" dir="ltr">
+            <input class="input" id="f-phone" name="phone" type="tel" inputmode="numeric" autocomplete="tel" placeholder="۰۹۱۲۳۴۵۶۷۸۹" dir="ltr">
             <p class="form__error" id="e-phone" hidden></p>
           </div>
         </div>
@@ -211,11 +211,11 @@
         <div class="form__row">
           <div class="form__group">
             <label for="f-car">خودروی موردنظر</label>
-            <select class="input" id="f-car" name="car"><option value="">فرقی نمی‌کند / هنوز انتخاب نکرده‌ام</option></select>
+            <select class="input" id="f-car" name="car"><option value="">هنوز انتخاب نکردم</option></select>
             <p class="form__error" id="e-car" hidden></p>
           </div>
           <div class="form__group">
-            <label for="f-time">زمان ترجیحی تماس</label>
+            <label for="f-time">چه ساعتی تماس بگیریم؟</label>
             <select class="input" id="f-time" name="time">
               <option value="morning">صبح (۹ تا ۱۲)</option>
               <option value="afternoon">بعدازظهر (۱۲ تا ۱۷)</option>
@@ -227,12 +227,12 @@
 
         <div class="form__group">
           <label for="f-note">سؤال یا توضیح شما <span class="muted">(اختیاری)</span></label>
-          <textarea class="input" id="f-note" name="note" rows="3" placeholder="مثلاً: تفاوت مصرف سوخت این دو خودرو در ترافیک شهری چقدر است؟"></textarea>
+          <textarea class="input" id="f-note" name="note" rows="3" placeholder="مثلاً: مصرف این ماشین توی شهر چقدره؟"></textarea>
         </div>
 
         <div class="form__foot">
           <button class="btn btn--primary" type="submit">ارسال درخواست</button>
-          <p class="form__hint">این فرم آزمایشیه و اطلاعاتتون جایی ارسال نمی‌شه.</p>
+          <p class="form__hint">این فرم نمونه‌ست. اطلاعاتتون ارسال نمی‌شه و کسی باهاتون تماس نمی‌گیره.</p>
         </div>
 
         <p class="form__done" id="form-done" role="status" hidden></p>
@@ -257,7 +257,7 @@
     </nav>
   </div>
   <div class="wrap footer-base">
-    <p class="num">© <span id="year">۱۴۰۵</span> ماشین‌نما — تمام حقوق محفوظ است.</p>
+    <p class="num">© <span id="year">۱۴۰۵</span> ماشین‌نما — همه‌ی حقوق محفوظ است.</p>
     <p class="footer-credit">تصاویر: Wikimedia Commons با مجوزهای آزاد</p>
   </div>
 </footer>
