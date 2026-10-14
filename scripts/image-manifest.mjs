@@ -453,14 +453,6 @@ export const manifest = [
     "quality": 80
   },
   {
-    "out": "public/demos/images/previews/store.webp",
-    "title": "Amor en tazas.jpg",
-    "width": null,
-    "format": "webp",
-    "cover": true,
-    "quality": 80
-  },
-  {
     "out": "public/demos/sports/assets/img/athlete-01.webp",
     "title": "File:Nadadora de águas abertas em Fernando de Noronha.jpg",
     "width": 480,

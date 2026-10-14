@@ -261,6 +261,7 @@ table{border-collapse:collapse;inline-size:100%}
 .mosaic__big img{inline-size:100%;block-size:100%;object-fit:cover;aspect-ratio:4/5;border-radius:var(--arch)}
 .mosaic__side{display:grid;gap:1rem}
 .mosaic__cell img{inline-size:100%;block-size:100%;object-fit:cover;aspect-ratio:16/10;border-radius:var(--radius)}
+.mosaic__cell--night img{aspect-ratio:4/3;object-position:center 78%}
 .mosaic figcaption{font-size:.84rem;color:var(--cream-3);margin-block-start:.5rem}
 
 .facts{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1rem;margin-block-start:2rem;

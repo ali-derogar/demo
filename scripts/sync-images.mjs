@@ -28,6 +28,10 @@ for (const slug of DEMOS) {
   for (const item of items) {
     const rel = String(item.file ?? item.out ?? '').replace(/^\.?\//, '');
     const localPath = rel.startsWith('public/') ? rel : join('public', 'demos', slug, 'assets', rel);
+    if (!localPath.startsWith(`public/demos/${slug}/assets/`)) {
+      console.warn(`  ⚠ ${slug}: رکوردی با مسیر بیرون از assets رد شد → ${item.file}`);
+      continue;
+    }
     const abs = join(ROOT, localPath);
     const meta = await sharp(abs).metadata().catch(() => null);
     rows.push({
