@@ -108,12 +108,12 @@ body[data-demo] :is(.nav-drawer, .mobile-nav) {
   [data-demo="fashion"] .style-card img { aspect-ratio: 4/3; }
   [data-demo="fashion"] .journal-card { padding: 24px 8px; }
   [data-demo="fashion"] .news-form { padding: 22px 18px; }
-  [data-demo="fashion"] .lightbox { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; align-content: center; padding: 64px 16px 24px; }
+  [data-demo="fashion"] .lightbox { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; align-content: center; padding: calc(var(--demo-return-height) + 56px) 16px 24px; }
   [data-demo="fashion"] .lb-stage { grid-column: 1/-1; grid-row: 1; min-inline-size: 0; max-inline-size: 100%; }
   [data-demo="fashion"] .lb-stage img { inline-size: 100%; block-size: auto; max-block-size: calc(100dvh - 240px); }
   [data-demo="fashion"] .lb-caption { font-size: .8rem; }
   [data-demo="fashion"] .lb-nav { inline-size: 48px; block-size: 48px; justify-self: center; }
-  [data-demo="fashion"] .lb-close { inset-block-start: max(12px, env(safe-area-inset-top)); }
+  [data-demo="fashion"] .lb-close { inset-block-start: calc(var(--demo-return-height) + 10px); }
   [data-demo="fashion"] .site-footer { padding: 40px 18px 24px; }
   [data-demo="fashion"] .footer-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px 16px; }
   [data-demo="fashion"] .footer-brand { grid-column: 1/-1; }

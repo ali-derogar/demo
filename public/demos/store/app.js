@@ -208,7 +208,9 @@
 
   /* ---------- سبد خرید ---------- */
   function updateBadge() {
-    cartCountEl.textContent = toFa(cartCount());
+    var n = cartCount();
+    cartCountEl.textContent = toFa(n);
+    cartCountEl.hidden = n === 0;
   }
 
   function addToCart(id, qty) {
