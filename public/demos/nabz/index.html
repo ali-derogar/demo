@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>نبض | فستیوال موسیقی و هنر دیجیتال</title>
+<meta name="description" content="سه شب، چهار صحنه، بیست‌و‌هفت ساعت موسیقی و نور. برنامه‌ی هر شب، هنرمندان و بلیت فستیوال نبض همین‌جا است.">
+<link rel="stylesheet" href="./styles.css">
+<link rel="stylesheet" href="../shared/mobile.css">
+<link rel="stylesheet" href="../shared/navigation.css">
+</head>
+<body data-demo="nabz">
+<a class="skip-link" href="#main">پرش به محتوای اصلی</a>
+
+<nav class="demo-return" aria-label="بازگشت به سایت اصلی">
+  <a class="demo-return__link" href="/#demos">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 12h14m-6-6 6 6-6 6"/></svg>
+    بازگشت به صفحه اصلی
+  </a>
+  <span class="demo-return__brand" dir="ltr">persianbotyar</span>
+</nav>
+
+<header class="site-header" id="site-header">
+  <div class="wrap header-inner">
+    <a class="wordmark" href="#top" aria-label="نبض — صفحه‌ی اصلی">
+      <span class="logo-pulse" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+      <span class="wordmark-text">نبض<em>فستیوال</em></span>
+    </a>
+
+    <nav class="main-nav" aria-label="ناوبری اصلی">
+      <ul class="nav-list">
+        <li><a href="#top">خانه</a></li>
+        <li><a href="#lineup">هنرمندان</a></li>
+        <li><a href="#stages">صحنه‌ها</a></li>
+        <li><a href="#passes">بلیت</a></li>
+        <li><a href="#contact" class="nav-cta">بلیت می‌خواهم</a></li>
+      </ul>
+    </nav>
+
+    <button class="menu-toggle" id="menu-toggle" type="button" aria-expanded="false" aria-controls="nav-drawer">
+      <span class="sr-only">باز و بسته کردن فهرست</span>
+      <span class="menu-bar" aria-hidden="true"></span>
+      <span class="menu-bar" aria-hidden="true"></span>
+    </button>
+  </div>
+  <nav class="nav-drawer" id="nav-drawer" aria-label="فهرست موبایل" hidden>
+    <ul>
+      <li><a href="#top">خانه</a></li>
+      <li><a href="#lineup">هنرمندان</a></li>
+      <li><a href="#stages">صحنه‌ها</a></li>
+      <li><a href="#timeline">خط زمان</a></li>
+      <li><a href="#art">نور و تصویر</a></li>
+      <li><a href="#passes">بلیت</a></li>
+      <li><a href="#faq">سؤال‌های پرتکرار</a></li>
+      <li><a href="#contact">تماس</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main id="main">
+
+  <!-- ===== سرصفحه ===== -->
+  <section class="hero" id="top">
+    <div class="hero__media" aria-hidden="true"></div>
+    <canvas class="hero__canvas" id="visualizer" width="1200" height="800" aria-hidden="true"></canvas>
+    <div class="hero__glow" id="hero-glow" aria-hidden="true"></div>
+    <div class="grain" aria-hidden="true">
+      <svg class="grain__svg" focusable="false" aria-hidden="true">
+        <filter id="grain-filter">
+          <feTurbulence type="fractalNoise" baseFrequency="0.82" numOctaves="3" stitchTiles="stitch"/>
+        </filter>
+        <rect width="100%" height="100%" filter="url(#grain-filter)"/>
+      </svg>
+    </div>
+
+    <div class="wrap hero__inner">
+      <div class="hero__col hero__col--main">
+      <p class="eyebrow reveal"><span class="dot" aria-hidden="true"></span> ۲۰ تا ۲۲ دی ۱۴۰۵ · دشت‌بازی آفتاب، تهران</p>
+
+      <h1 class="hero-title" id="hero-title">
+        <span class="ghost-word" aria-hidden="true">نبض</span>
+        <span class="line"><span class="w"><i>سه شب،</i></span></span>
+        <span class="line"><span class="w"><i>چهار صحنه،</i></span></span>
+        <span class="line line--accent"><span class="w"><i>بیست‌وهفت ساعت نور.</i></span></span>
+      </h1>
+
+      <p class="hero-lede reveal">نبض یک فستیوال موسیقی زنده است که نور، تصویر و صدا روی یک صحنه می‌آیند. هر شب یک حال‌وهوا دارد؛ برنامه‌ی کامل را همین‌جا می‌بینید، بلیت را برمی‌دارید و به لیست هنرمندان سر می‌زنید.</p>
+
+      <div class="hero-actions reveal">
+        <a class="btn btn--solid" href="#passes">تهیه‌ی بلیت</a>
+        <a class="btn btn--wire" href="#lineup">برنامه‌ی هنرمندان</a>
+      </div>
+
+      </div>
+
+      <div class="hero__col hero__col--side">
+      <ul class="hero-stats reveal">
+        <li><b>۹</b><span>هنرمند و دی‌جی</span></li>
+        <li><b>۴</b><span>صحنه‌ی فعال</span></li>
+        <li><b>۳</b><span>شب پیاپی</span></li>
+      </ul>
+
+      <div class="countdown reveal" id="countdown" role="group" aria-label="شمارش معکوس تا شروع فستیوال">
+        <p class="countdown__label">تا باز شدن درها</p>
+        <ul class="countdown__units">
+          <li><b id="cd-days">—</b><span>روز</span></li>
+          <li><b id="cd-hours">—</b><span>ساعت</span></li>
+          <li><b id="cd-mins">—</b><span>دقیقه</span></li>
+          <li><b id="cd-secs">—</b><span>ثانیه</span></li>
+        </ul>
+      </div>
+      </div>
+    </div>
+
+    <a class="scroll-hint" href="#lineup" aria-label="رفتن به برنامه‌ی هنرمندان">
+      <span class="scroll-hint__rail" aria-hidden="true"><span class="scroll-hint__bead"></span></span>
+      <span class="scroll-hint__text">اسکرول کنید</span>
+    </a>
+  </section>
+
+  <!-- ===== نوار متحرک ===== -->
+  <div class="marquee" aria-hidden="true">
+    <div class="marquee__track">
+      <span>سهیل مهرآیین</span><span>·</span><span>نیلوفر رستگار</span><span>·</span><span>ماهناز</span><span>·</span><span>آرش دلنوازان</span><span>·</span><span>بهرام کیمره</span><span>·</span><span>دی‌جی آرمان</span><span>·</span><span>کیوان ضرب</span><span>·</span><span>دی‌جی سروش</span><span>·</span><span>رجب حریر</span><span>·</span>
+      <span>سهیل مهرآیین</span><span>·</span><span>نیلوفر رستگار</span><span>·</span><span>ماهناز</span><span>·</span><span>آرش دلنوازان</span><span>·</span><span>بهرام کیمره</span><span>·</span><span>دی‌جی آرمان</span><span>·</span><span>کیوان ضرب</span><span>·</span><span>دی‌جی سروش</span><span>·</span><span>رجب حریر</span><span>·</span>
+    </div>
+  </div>
+
+  <!-- ===== هنرمندان ===== -->
+  <section class="section" id="lineup">
+    <div class="wrap">
+      <div class="section-head">
+        <div>
+          <p class="kicker">خط هنرمندان</p>
+          <h2>امشب چه کسی روی صحنه می‌رود؟</h2>
+        </div>
+        <p class="section-note">شب مورد نظرتان را انتخاب کنید؛ کارت‌ها جا به جا می‌شوند و فقط همان سه اجرا می‌ماند.</p>
+      </div>
+
+      <div class="day-tabs" role="group" aria-label="فیلتر بر پایه‌ی شب">
+        <button class="day-tab is-on" type="button" data-day="all" aria-pressed="true">هر سه شب<i>۹</i></button>
+        <button class="day-tab" type="button" data-day="n1" aria-pressed="false">شب اول<i>۳</i></button>
+        <button class="day-tab" type="button" data-day="n2" aria-pressed="false">شب دوم<i>۳</i></button>
+        <button class="day-tab" type="button" data-day="n3" aria-pressed="false">شب سوم<i>۳</i></button>
+      </div>
+
+      <ul class="artist-grid" id="artist-grid">
+        <li class="artist-card" data-day="n1" data-artist="soheil">
+          <div class="artist-card__media">
+            <img src="./assets/img/artist-setar2.webp" alt="نوازنده‌ی تار در حال اجرا روی صحنه" width="900" height="600" loading="lazy">
+          </div>
+          <div class="artist-card__body">
+            <p class="artist-card__time">شب اول · ۲۰:۳۰</p>
+            <h3>سهیل مهرآیین</h3>
+            <p class="artist-card__role">تار و بداهه‌نوازی</p>
+            <p class="artist-card__meta">صحنه‌ی پژواک · ۵۵ دقیقه</p>
+          </div>
+          <button class="artist-card__more" type="button" aria-haspopup="dialog">جزئیات اجرا</button>
+        </li>
+
+        <li class="artist-card" data-day="n1" data-artist="niloofar">
+          <div class="artist-card__media">
+            <img src="./assets/img/artist-violin.webp" alt="ویولونیست در حال نواختن جلوی ارکستر" width="960" height="640" loading="lazy">
+          </div>
+          <div class="artist-card__body">
+            <p class="artist-card__time">شب اول · ۲۲:۰۰</p>
+            <h3>نیلوفر رستگار</h3>
+            <p class="artist-card__role">ویولن با ارکستر زهی</p>
+            <p class="artist-card__meta">صحنه‌ی اصلی · ۷۰ دقیقه</p>
+          </div>
+          <button class="artist-card__more" type="button" aria-haspopup="dialog">جزئیات اجرا</button>
+        </li>
+
+        <li class="artist-card" data-day="n1" data-artist="mahnaz">
+          <div class="artist-card__media">
+            <img src="./assets/img/artist-vocal.webp" alt="خواننده جلوی میکروفون در اجرای زنده‌ی شبانه" width="960" height="639" loading="lazy">
+          </div>
+          <div class="artist-card__body">
+            <p class="artist-card__time">شب اول · ۲۳:۳۰</p>
+            <h3>ماهناز</h3>
+            <p class="artist-card__role">آواز و گیتار</p>
+            <p class="artist-card__meta">باغ‌صحنه · ۶۰ دقیقه</p>
+          </div>
+          <button class="artist-card__more" type="button" aria-haspopup="dialog">جزئیات اجرا</button>
+        </li>
+
+        <li class="artist-card" data-day="n2" data-artist="arash">
+          <div class="artist-card__media">
+            <img src="./assets/img/artist-santur.webp" alt="نوازنده‌ی سنتور در فضای باز" width="960" height="1280" loading="lazy">
+          </div>
+          <div class="artist-card__body">
+            <p class="artist-card__time">شب دوم · ۲۰:۱۵</p>
+            <h3>آرش دلنوازان</h3>
+            <p class="artist-card__role">سنتور و الکترونیک</p>
+            <p class="artist-card__meta">صحنه‌ی پژواک · ۵۰ دقیقه</p>
+          </div>
+          <button class="artist-card__more" type="button" aria-haspopup="dialog">جزئیات اجرا</button>
+        </li>
+
+        <li class="artist-card" data-day="n2" data-artist="bahram">
+          <div class="artist-card__media">
+            <img src="./assets/img/artist-keys.webp" alt="نزدیک دست‌های نوازنده روی سینتی‌سایزر زیر نور رنگی" width="960" height="640" loading="lazy">
+          </div>
+          <div class="artist-card__body">
+            <p class="artist-card__time">شب دوم · ۲۱:۴۵</p>
+            <h3>بهرام کیمره</h3>
+            <p class="artist-card__role">سینتی‌سایزر و لوپ استیشن</p>
+            <p class="artist-card__meta">سالن هولوگرام · ۶۵ دقیقه</p>
+          </div>
+          <button class="artist-card__more" type="button" aria-haspopup="dialog">جزئیات اجرا</button>
+        </li>
+
+        <li class="artist-card" data-day="n2" data-artist="arman">
+          <div class="artist-card__media">
+            <img src="./assets/img/artist-dj.webp" alt="دست‌های دی‌جی روی ریمیک و صفحه‌ی گرد در تاریکی" width="960" height="640" loading="lazy">
+          </div>
+          <div class="artist-card__body">
+            <p class="artist-card__time">شب دوم · ۰۰:۳۰</p>
+            <h3>دی‌جی آرمان</h3>
+            <p class="artist-card__role">ست دی‌جی پایانی</p>
+            <p class="artist-card__meta">سالن هولوگرام · ۹۰ دقیقه</p>
+          </div>
+          <button class="artist-card__more" type="button" aria-haspopup="dialog">جزئیات اجرا</button>
+        </li>
+
+        <li class="artist-card" data-day="n3" data-artist="kivan">
+          <div class="artist-card__media">
+            <img src="./assets/img/artist-drum.webp" alt="نوازنده‌ی پرکاشن روی صحنه با نورهای متحرک" width="960" height="639" loading="lazy">
+          </div>
+          <div class="artist-card__body">
+            <p class="artist-card__time">شب سوم · ۲۰:۴۵</p>
+            <h3>کیوان ضرب</h3>
+            <p class="artist-card__role">پرکاشن و گروه ریتم</p>
+            <p class="artist-card__meta">باغ‌صحنه · ۴۵ دقیقه</p>
+          </div>
+          <button class="artist-card__more" type="button" aria-haspopup="dialog">جزئیات اجرا</button>
+        </li>
+
+        <li class="artist-card" data-day="n3" data-artist="soroush">
+          <div class="artist-card__media">
+            <img src="./assets/img/artist-dj2.webp" alt="دی‌جی پشت میز میکس روی صحنه‌ی بزرگ" width="960" height="1440" loading="lazy">
+          </div>
+          <div class="artist-card__body">
+            <p class="artist-card__time">شب سوم · ۲۲:۱۵</p>
+            <h3>دی‌جی سروش</h3>
+            <p class="artist-card__role">صحنه‌ی اصلی، ست پایانی</p>
+            <p class="artist-card__meta">صحنه‌ی اصلی · ۱۰۰ دقیقه</p>
+          </div>
+          <button class="artist-card__more" type="button" aria-haspopup="dialog">جزئیات اجرا</button>
+        </li>
+
+        <li class="artist-card" data-day="n3" data-artist="rijab">
+          <div class="artist-card__media">
+            <img src="./assets/img/artist-reggae.webp" alt="خواننده‌ی مهمان در حال اجرا روی صحنه" width="960" height="1440" loading="lazy">
+          </div>
+          <div class="artist-card__body">
+            <p class="artist-card__time">شب سوم · ۰۱:۴۰</p>
+            <h3>رجب حریر</h3>
+            <p class="artist-card__role">خواننده‌ی مهمان</p>
+            <p class="artist-card__meta">صحنه‌ی تار · ۷۵ دقیقه</p>
+          </div>
+          <button class="artist-card__more" type="button" aria-haspopup="dialog">جزئیات اجرا</button>
+        </li>
+        <li class="artist-card artist-card--soon" data-day="soon">
+          <div class="artist-card__body">
+            <p class="artist-card__time">به‌زودی</p>
+            <h3>هنرمند پایانی شب سوم</h3>
+            <p class="artist-card__role">هفته‌ی آینده اعلام می‌شود. با خرید بلیت، لیست کامل را با پیامک می‌گیرید.</p>
+          </div>
+        </li>
+      </ul>
+
+      <p class="live-note" id="lineup-live" role="status" aria-live="polite">هر سه شب نمایش داده می‌شود — ۹ اجرا</p>
+    </div>
+  </section>
+
+  <!-- ===== صحنه‌ها ===== -->
+  <section class="section section--deep" id="stages">
+    <div class="wrap">
+      <div class="section-head">
+        <div>
+          <p class="kicker">چهار صحنه</p>
+          <h2>هر صدا جای خودش را دارد</h2>
+        </div>
+        <p class="section-note">از پوسته‌ی صوتی روباز تا سالن بسته‌ی لیزری. فاصله‌ی پیاده‌روی بین صحنه‌ها بیشتر از چهار دقیقه نیست.</p>
+      </div>
+
+      <ul class="stage-grid">
+        <li class="stage-card iris reveal">
+          <img src="./assets/img/stage-band.webp" alt="گروه موسیقی در حال اجرا روی صحنه‌ای با نورپردازی قرمز" width="1100" height="733" loading="lazy">
+          <div class="stage-card__veil" aria-hidden="true"></div>
+          <div class="stage-card__text">
+            <h3>صحنه‌ی اصلی</h3>
+            <p>۱۲٬۰۰۰ نفر · صداگذاری خط‌آویز · بزرگ‌ترین ست‌های هر شب</p>
+          </div>
+        </li>
+        <li class="stage-card iris reveal">
+          <img src="./assets/img/stage-amphi.webp" alt="باغ‌صحنه‌ی روباز با ردیف صندلی و سقف فلزی" width="1100" height="733" loading="lazy">
+          <div class="stage-card__veil" aria-hidden="true"></div>
+          <div class="stage-card__text">
+            <h3>باغ‌صحنه</h3>
+            <p>۴٬۵۰ نفر · چمن‌نشینی · اجراهای آکوستیک و خواننده‌ی تک</p>
+          </div>
+        </li>
+        <li class="stage-card iris reveal">
+          <img src="./assets/img/stage-shell.webp" alt="پوسته‌ی صوتی چوبی در فضای سبز" width="1100" height="825" loading="lazy">
+          <div class="stage-card__veil" aria-hidden="true"></div>
+          <div class="stage-card__text">
+            <h3>پوسته‌ی پژواک</h3>
+            <p>۱٬۸۰۰ نفر · بی‌صداییِ طبیعی · موسیقی دستگاهی و بداهه</p>
+          </div>
+        </li>
+        <li class="stage-card iris reveal">
+          <img src="./assets/img/stage-laser.webp" alt="نمایش لیزر سبزرنگ روی جمعیت در سالن بسته" width="1024" height="680" loading="lazy">
+          <div class="stage-card__veil" aria-hidden="true"></div>
+          <div class="stage-card__text">
+            <h3>سالن هولوگرام</h3>
+            <p>۹۰۰ نفر · سقف کوتاه · دی‌جی ست و تصویرنگاری سه‌بعدی</p>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ===== خط زمان ===== -->
+  <section class="section" id="timeline">
+    <div class="wrap">
+      <div class="section-head">
+        <div>
+          <p class="kicker">خط زمان</p>
+          <h2>شب‌به‌شب چه می‌گذرد</h2>
+        </div>
+        <p class="section-note">خط زمان را پایین بیایید؛ هر شب در مرکز صفحه روشن می‌شود.</p>
+      </div>
+    </div>
+
+    <div class="wrap">
+    <div class="nights" id="nights">
+      <div class="nights__rail" aria-hidden="true"><span id="nights-fill"></span></div>
+
+      <article class="night" data-night="n1">
+        <div class="night__media"><img src="./assets/img/crowd-01.webp" alt="جمعیت انبوه در جشنواره‌ی موسیقی" width="640" height="480" loading="lazy"></div>
+        <div class="night__text">
+          <p class="night__no">شب ۰۱</p>
+          <h3>آغاز — «ریشه»</h3>
+          <p class="night__body">ساعت ۱۸ درها باز می‌شود. سه اجرای اول روی سازهای ایرانی است و تا ساعت ۰۱ ادامه دارد؛ نورپردازی گرم و صحنه‌ی کم‌هیاهو.</p>
+          <p class="night__count">۳ اجرا · ۱۸۵ دقیقه موسیقی</p>
+        </div>
+      </article>
+
+      <article class="night" data-night="n2">
+        <div class="night__media"><img src="./assets/img/crowd-02.webp" alt="جمعیت با دست‌های بالا در پایان اجرا" width="800" height="533" loading="lazy"></div>
+        <div class="night__text">
+          <p class="night__no">شب ۰۲</p>
+          <h3>اوج — «مدار»</h3>
+          <p class="night__body">الکترونیک از ساعت ۲۱ سالن را پر می‌کند و ست پایانی دی‌جی آرمان تا نیمه‌ی شب دوم می‌کشد. لیزر و تصویرنگاری هم‌زمان با ضرب می‌آید.</p>
+          <p class="night__count">۳ اجرا · ۲۰۵ دقیقه موسیقی</p>
+        </div>
+      </article>
+
+      <article class="night" data-night="n3">
+        <div class="night__media"><img src="./assets/img/venue-01.webp" alt="نمای کلی باغ‌صحنه‌ی روباز در روشنایی روز" width="1200" height="506" loading="lazy"></div>
+        <div class="night__text">
+          <p class="night__no">شب ۰۳</p>
+          <h3>پایان — «بازگشت»</h3>
+          <p class="night__body">بعدازظهر بازارچه‌ی ساز و کارگاه آزاد است، غروب پرکاشن و نیمه‌شب خواننده‌ی مهمان. فستیوال با اجرای دسته‌جمعی بسته می‌شود.</p>
+          <p class="night__count">۳ اجرا و بازارچه · ۲۲۰ دقیقه موسیقی</p>
+        </div>
+      </article>
+    </div>
+    </div>
+
+  </section>
+
+  <!-- ===== نور و تصویر ===== -->
+  <section class="section section--art" id="art">
+    <div class="wrap">
+      <div class="section-head">
+        <div>
+          <p class="kicker">فراتر از صدا</p>
+          <h2>نور و تصویر، عضو سوم گروه</h2>
+        </div>
+        <p class="section-note">هر اجرا با یک اثر تصویرنگاری همراه است. دو اثر امسال در فضای باز باغ نصب می‌شود و تا صبح روشن می‌ماند.</p>
+      </div>
+
+      <div class="art-duo">
+        <figure class="art-card tilt">
+          <img src="./assets/img/art-projection.webp" alt="ویدئو پروژکشن روی دیوار با رنگ‌های تند" width="1280" height="1359" loading="lazy">
+          <figcaption>
+            <h3>«پوسته»</h3>
+            <p>ویدئو پروژکشن ۳۶۰ درجه روی دیوار سنگی · ۹۰ دقیقه چرخه</p>
+          </figcaption>
+        </figure>
+        <figure class="art-card tilt">
+          <img src="./assets/img/art-laser.webp" alt="نمای لیزر روی گنبد ساختمان تاریخی در شب" width="1280" height="960" loading="lazy">
+          <figcaption>
+            <h3>«نقش»</h3>
+            <p>نمای لیزری هم‌گام با صدا · هر شب ساعت ۲۳</p>
+          </figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== بلیت ===== -->
+  <section class="section section--deep" id="passes">
+    <div class="wrap">
+      <div class="section-head">
+        <div>
+          <p class="kicker">بلیت</p>
+          <h2>کدام شب، کدام راحتی؟</h2>
+        </div>
+        <p class="section-note">تعداد را کم و زیاد کنید؛ جمع کل همین‌جا حساب می‌شود و به فرم پایين می‌رود.</p>
+      </div>
+
+      <ul class="pass-grid">
+        <li class="pass-card">
+          <h3>تک‌شب</h3>
+          <p class="pass-card__price"><b data-price="1850000">۱٬۸۵۰٬۰۰۰</b><span>تومان</span></p>
+          <p class="pass-card__note">ورود به یک شب دلخواه · همه‌ی چهار صحنه</p>
+          <ul class="pass-card__list">
+            <li>نشست آزاد در باغ‌صحنه</li>
+            <li>نقشه‌ی صحنه‌ها روی موبایل</li>
+            <li>امکان تغییر شب تا ۴۸ ساعت قبل</li>
+          </ul>
+          <div class="stepper" data-pass="single">
+            <button type="button" class="stepper__btn" data-step="-1" aria-label="کم کردن بلیت تک‌شب">−</button>
+            <b class="stepper__n" id="n-single">۰</b>
+            <button type="button" class="stepper__btn" data-step="1" aria-label="زیاد کردن بلیت تک‌شب">+</button>
+          </div>
+        </li>
+
+        <li class="pass-card pass-card--hot">
+          <p class="pass-card__flag">پرفروش‌ترین</p>
+          <h3>هر سه شب</h3>
+          <p class="pass-card__price"><b data-price="4400000">۴٬۴۰۰٬۰۰۰</b><span>تومان</span></p>
+          <p class="pass-card__note">ورود پیوسته به ۲۰ تا ۲۲ دی · بدون نیاز به بلیت جدا</p>
+          <ul class="pass-card__list">
+            <li>راهروی اختصاصی ورودی</li>
+            <li>جای چادر در محوطه‌ی کمپ</li>
+            <li>دسترسی به کارگاه‌های روز سوم</li>
+          </ul>
+          <div class="stepper" data-pass="triple">
+            <button type="button" class="stepper__btn" data-step="-1" aria-label="کم کردن بلیت هر سه شب">−</button>
+            <b class="stepper__n" id="n-triple">۰</b>
+            <button type="button" class="stepper__btn" data-step="1" aria-label="زیاد کردن بلیت هر سه شب">+</button>
+          </div>
+        </li>
+
+        <li class="pass-card">
+          <h3>وی‌آی‌پی پژواک</h3>
+          <p class="pass-card__price"><b data-price="7900000">۷٬۹۰۰٬۰۰۰</b><span>تومان</span></p>
+          <p class="pass-card__note">هر سه شب · نشیمن مقابل پوسته‌ی پژواک</p>
+          <ul class="pass-card__list">
+            <li>پذیرایی و اتاق استراحت</li>
+            <li>پارکینگ سرپوشیده</li>
+            <li>دیدار بیست‌دقیقه‌ای با هنرمندان</li>
+          </ul>
+          <div class="stepper" data-pass="vip">
+            <button type="button" class="stepper__btn" data-step="-1" aria-label="کم کردن بلیت وی‌آی‌پی">−</button>
+            <b class="stepper__n" id="n-vip">۰</b>
+            <button type="button" class="stepper__btn" data-step="1" aria-label="زیاد کردن بلیت وی‌آی‌پی">+</button>
+          </div>
+        </li>
+      </ul>
+
+      <div class="order-bar" id="order-bar">
+        <div class="order-bar__sum">
+          <p class="order-bar__label">جمع سفارش</p>
+          <p class="order-bar__total"><b id="order-total">۰</b> <span>تومان</span></p>
+          <p class="order-bar__detail" id="order-detail">هنوز بلیتی انتخاب نشده است.</p>
+        </div>
+        <a class="btn btn--solid" href="#contact" id="order-go">ادامه‌ی ثبت‌نام</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== سؤال‌ها ===== -->
+  <section class="section" id="faq">
+    <div class="wrap narrow">
+      <div class="section-head section-head--single">
+        <p class="kicker">سؤال‌های پرتکرار</p>
+        <h2>قبل از خرید بدانید</h2>
+      </div>
+
+      <div class="faq-list">
+        <details class="faq-item" name="faq" open>
+          <summary>بلیت الکترونیکی است یا کاغذی؟</summary>
+          <p>پس از ثبت‌نام، یک کد شش‌رقمی با پیامک می‌آید. همان کد را جلوی در نشان می‌دهید؛ چاپ کاغذ لازم نیست.</p>
+        </details>
+        <details class="faq-item" name="faq">
+          <summary>کودکان بلیت می‌خواهند؟</summary>
+          <p>زیر شش سال با بلیت همراه رایگان است و ورودش فقط با یک همراه بزرگ ممکن می‌شود. از شش سال به بالا بلیت کامل حساب می‌شود.</p>
+        </details>
+        <details class="faq-item" name="faq">
+          <summary>اگر باران بیاید اجرا لغو می‌شود؟</summary>
+          <p>باغ‌صحنه و پوسته‌ی پژواک سرپوش دارند. فقط در هشدار جدیِ هواشناسی اجرا به شب بعد منتقل می‌شود و بلیت معتبر می‌ماند.</p>
+        </details>
+        <details class="faq-item" name="faq">
+          <summary>امکان مرجوعی هست؟</summary>
+          <p>تا هفت روز قبل از شروع، بدون کسر هزینه. بین هفت تا دو روز قبل، هفتاد درصد برمی‌گردد. بعد از آن منتقل نمی‌شود.</p>
+        </details>
+        <details class="faq-item" name="faq">
+          <summary>چطور به دشت‌بازی آفتاب برویم؟</summary>
+          <p>هر بیست دقیقه اتوبوس رایگان از میدان ونک حرکت می‌کند. پارکینگ ظرفیت محدود دارد؛ بهتر است با همان اتوبوس بیایید.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== تماس و ثبت‌نام ===== -->
+  <section class="section section--contact" id="contact">
+    <div class="wrap">
+      <div class="contact-grid">
+        <div class="contact-side">
+          <p class="kicker">ثبت‌نام</p>
+          <h2>جایتان را نگه می‌داریم</h2>
+          <p class="contact-copy">فرم را پر کنید؛ پشتیبانی نبض تا پایان روز کاری زنگ می‌زند، بلیت‌ها را قطعی می‌کند و کد ورود را می‌فرستد.</p>
+
+          <ul class="contact-lines">
+            <li>
+              <h3>دفتر فستیوال</h3>
+              <a class="tel" href="tel:02191007788">۰۲۱ ۹۱۰۰ ۷۷۸۸</a>
+              <p>شنبه تا چهارشنبه، ۱۰ تا ۱۸</p>
+            </li>
+            <li>
+              <h3>پشتیبانی روز اجرا</h3>
+              <a class="tel" href="tel:09120007788">۰۹۱۲ ۰۰۰ ۷۷۸۸</a>
+              <p>هر روز، ۹ تا ۲۴</p>
+            </li>
+          </ul>
+          <p class="addr">دشت‌بازی آفتاب، ورودی شمالی، خیابان گلستان · تهران</p>
+        </div>
+
+        <form class="book" id="book-form" novalidate>
+          <div class="field">
+            <label for="b-name">نام و نام خانوادگی</label>
+            <input id="b-name" name="name" type="text" autocomplete="name" aria-describedby="b-name-err">
+            <p class="err" id="b-name-err" hidden>نام‌تان را کامل بنویسید.</p>
+          </div>
+          <div class="field">
+            <label for="b-phone">شماره‌ی همراه</label>
+            <input id="b-phone" name="phone" type="tel" inputmode="numeric" placeholder="09xxxxxxxxx" autocomplete="tel" aria-describedby="b-phone-err">
+            <p class="err" id="b-phone-err" hidden>شماره‌ی ۱۱ رقمی و با ۰۹ شروع شود.</p>
+          </div>
+          <div class="field">
+            <label for="b-pass">نوع بلیت</label>
+            <select id="b-pass" name="pass"></select>
+          </div>
+          <div class="field">
+            <label for="b-count">تعداد</label>
+            <select id="b-count" name="count"></select>
+          </div>
+          <fieldset class="field">
+            <legend>شبی که می‌آیید</legend>
+            <div class="check-row" id="b-nights"></div>
+          </fieldset>
+          <div class="field">
+            <label for="b-note">یادداشت</label>
+            <textarea id="b-note" name="note" rows="3" placeholder="ویلچیر، غذای ویژه، یا آمدن با اتوبوس؟"></textarea>
+          </div>
+          <p class="book__sum" id="book-sum" aria-live="polite">جمع انتخاب‌های شما: ۰ تومان</p>
+          <button class="btn btn--solid btn--block" type="submit">ثبت درخواست بلیت</button>
+        </form>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap footer-grid">
+    <div class="footer-brand">
+      <span class="wordmark-text wordmark-text--light">نبض</span>
+      <p>فستیوال سه‌روزه‌ی موسیقی زنده، نور و تصویرنگاری — ۲۰ تا ۲۲ دی ۱۴۰۵، دشت‌بازی آفتاب تهران.</p>
+    </div>
+    <nav class="footer-nav" aria-label="پیوندهای پابرگ">
+      <ul>
+        <li><a href="#lineup">هنرمندان</a></li>
+        <li><a href="#stages">صحنه‌ها</a></li>
+        <li><a href="#timeline">خط زمان</a></li>
+        <li><a href="#passes">بلیت</a></li>
+      </ul>
+    </nav>
+    <div class="footer-contact">
+      <ul>
+        <li><a class="visit-tel" href="tel:02191007788">۰۲۱ ۹۱۰۰ ۷۷۸۸</a></li>
+        <li><a class="visit-tel" href="tel:09120007788">۰۹۱۲ ۰۰۰ ۷۷۸۸</a></li>
+        <li><a href="#contact">فرم ثبت‌نام</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="wrap footer-base">
+    <a class="demo-return-footer" href="/#demos">بازگشت به صفحه اصلی <bdi dir="ltr">persianbotyar</bdi></a>
+    <p>این یک نمونه‌کار است؛ نام هنرمندان، ظرفیت صحنه‌ها و قیمت‌ها ساختگی‌اند و تصاویر از کتابخانه‌ی عمومی ویکی‌انبار برداشته شده‌اند.</p>
+    <p class="copy">© ۱۴۰۵ نبض</p>
+  </div>
+</footer>
+
+<dialog class="sheet" id="artist-dialog" aria-labelledby="sheet-title">
+  <div class="sheet__inner">
+    <div class="sheet__head">
+      <h2 id="sheet-title">اجرا</h2>
+      <button class="sheet__close" id="sheet-close" type="button" aria-label="بستن">بستن</button>
+    </div>
+    <div class="sheet__body" id="sheet-body"></div>
+  </div>
+</dialog>
+
+<div id="toasts" aria-live="polite" aria-atomic="false"></div>
+
+<script src="./app.js"></script>
+</body>
+</html>

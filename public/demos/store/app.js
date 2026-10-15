@@ -243,7 +243,7 @@
         '<img src="./assets/img/' + p.img + '.webp" alt="' + p.alt + '" width="64" height="64">' +
         '<div>' +
           '<p class="cl-name">' + p.name + '</p>' +
-          '<p class="cl-price">' + money(p.price) + ' تومان هر عدد — جمع: ' + money(p.price * cart[id]) + ' تومان</p>' +
+          '<p class="cl-price"><span class="nowrap">' + money(p.price) + ' تومان</span> هر عدد — جمع: <span class="nowrap">' + money(p.price * cart[id]) + ' تومان</span></p>' +
           '<div class="cl-actions">' +
             '<span class="stepper" aria-label="تعداد ' + p.name + '">' +
               '<button type="button" data-dec="' + id + '" aria-label="کم کردن تعداد ' + p.name + '">−</button>' +
@@ -381,6 +381,7 @@
   var drawerKeyHandler = null;
   function openDrawer() {
     backdrop.hidden = false; drawer.hidden = false;
+    toastRegion.textContent = '';
     document.body.style.overflow = 'hidden';
     cartOpenBtn.setAttribute('aria-expanded', 'true');
     renderCartView();
@@ -438,6 +439,8 @@
 
   /* ---------- توست ---------- */
   function toast(msg) {
+    /* سبد باز است؛ پیام روی ردیف‌های سبد را نمی‌پوشاند، خودِ سبد نتیجه را نشان می‌دهد */
+    if (!drawer.hidden) return;
     var el = document.createElement('div');
     el.className = 'toast';
     el.textContent = msg;

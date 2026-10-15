@@ -549,6 +549,158 @@ export const manifest = [
     "quality": 80
   },
   {
+    "out": "public/demos/nabz/assets/img/art-laser.webp",
+    "title": "Berliner Dom, laser show.jpg",
+    "width": 1100,
+    "format": "webp",
+    "cover": true,
+    "quality": 80
+  },
+  {
+    "out": "public/demos/nabz/assets/img/art-projection.webp",
+    "title": "2023-05-06 11-46-51 ILCE-7C DSC16813 Kiri DxO.jpg",
+    "width": 1100,
+    "format": "webp",
+    "cover": true,
+    "quality": 80
+  },
+  {
+    "out": "public/demos/nabz/assets/img/artist-dj.webp",
+    "title": "Vagator, Goa, India, DJ playing music on turntable.jpg",
+    "width": 900,
+    "format": "webp",
+    "cover": true,
+    "quality": 80
+  },
+  {
+    "out": "public/demos/nabz/assets/img/artist-dj2.webp",
+    "title": "DJ Don PePe at 2026 Montreux Jazz Festival 01.jpg",
+    "width": 900,
+    "format": "webp",
+    "cover": true,
+    "quality": 80
+  },
+  {
+    "out": "public/demos/nabz/assets/img/artist-drum.webp",
+    "title": "Drummer performing on stage during a live music concert at night with dynamic lighting effects.jpg",
+    "width": 900,
+    "format": "webp",
+    "cover": true,
+    "quality": 80
+  },
+  {
+    "out": "public/demos/nabz/assets/img/artist-keys.webp",
+    "title": "DFC 5598 Close-up of a keyboardists hands playing a synthesizer under colorful stage lights during a live performance in Pattaya.jpg",
+    "width": 900,
+    "format": "webp",
+    "cover": true,
+    "quality": 80
+  },
+  {
+    "out": "public/demos/nabz/assets/img/artist-reggae.webp",
+    "title": "Ijahman Levi - 24 Ostróda Reggae Festival 2025, Scena Główna na stadionie - Red Stage, KsP 11620111.jpg",
+    "width": 900,
+    "format": "webp",
+    "cover": true,
+    "quality": 80
+  },
+  {
+    "out": "public/demos/nabz/assets/img/artist-santur.webp",
+    "title": "Santur Player @ Annecy (7898408658).jpg",
+    "width": 900,
+    "format": "webp",
+    "cover": true,
+    "quality": 80
+  },
+  {
+    "out": "public/demos/nabz/assets/img/artist-setar2.webp",
+    "title": "\"An Iranian setar player in northern Iran-Canon Photography-Photogrspher Mostafa Meraji\" 08.jpg",
+    "width": 900,
+    "format": "webp",
+    "cover": true,
+    "quality": 80
+  },
+  {
+    "out": "public/demos/nabz/assets/img/artist-violin.webp",
+    "title": "Violinist performing with The Grand Stars Orchestra.jpg",
+    "width": 900,
+    "format": "webp",
+    "cover": true,
+    "quality": 80
+  },
+  {
+    "out": "public/demos/nabz/assets/img/artist-vocal.webp",
+    "title": "Energetic live performance by a vocalist with a guitarist in the background at a concert in an outdoor venue during the night.jpg",
+    "width": 900,
+    "format": "webp",
+    "cover": true,
+    "quality": 80
+  },
+  {
+    "out": "public/demos/nabz/assets/img/crowd-01.webp",
+    "title": "Crowds at the Cornbury Music Festival - geograph.org.uk - 489442.jpg",
+    "width": 640,
+    "format": "webp",
+    "cover": true,
+    "quality": 80
+  },
+  {
+    "out": "public/demos/nabz/assets/img/crowd-02.webp",
+    "title": "Deine Stimme Gegen Armut P8 concert Audience during show finale (535303487).jpg",
+    "width": 800,
+    "format": "webp",
+    "cover": true,
+    "quality": 80
+  },
+  {
+    "out": "public/demos/nabz/assets/img/hero-01.webp",
+    "title": "Pretty Lights at the Aragon Ballroom - 8 November 2013 - Light show.jpg",
+    "width": 1600,
+    "format": "webp",
+    "cover": true,
+    "quality": 80
+  },
+  {
+    "out": "public/demos/nabz/assets/img/stage-amphi.webp",
+    "title": "North Island Credit Union Amphitheatre in 2024.jpg",
+    "width": 1100,
+    "format": "webp",
+    "cover": true,
+    "quality": 80
+  },
+  {
+    "out": "public/demos/nabz/assets/img/stage-band.webp",
+    "title": "Poparzeni Kawą Trzy, 62. Krajowy Festiwal Piosenki Polskiej w Opolu, 2025, KsP 146.jpg",
+    "width": 1100,
+    "format": "webp",
+    "cover": true,
+    "quality": 80
+  },
+  {
+    "out": "public/demos/nabz/assets/img/stage-laser.webp",
+    "title": "Laser show at Reading.jpg",
+    "width": 1024,
+    "format": "webp",
+    "cover": true,
+    "quality": 80
+  },
+  {
+    "out": "public/demos/nabz/assets/img/stage-shell.webp",
+    "title": "Concert shell in Ciechocinek (Amphitheatre), Aleksandrów County, Kuyavian-Pomeranian Voivodeship, Poland, August 2022.jpg",
+    "width": 1100,
+    "format": "webp",
+    "cover": true,
+    "quality": 80
+  },
+  {
+    "out": "public/demos/nabz/assets/img/venue-01.webp",
+    "title": "Cricket Wireless Amphitheatre in Chula Vista.jpg",
+    "width": 1200,
+    "format": "webp",
+    "cover": true,
+    "quality": 80
+  },
+  {
     "out": "public/demos/sports/assets/img/athlete-01.webp",
     "title": "File:Nadadora de águas abertas em Fernando de Noronha.jpg",
     "width": 480,
@@ -927,6 +1079,14 @@ export const manifest = [
   {
     "out": "public/images/previews/maktab.webp",
     "title": "پیش‌نمایش گالری از Sa'di's Bustan - Nasta'liq calligraphy style.jpg",
+    "width": 1200,
+    "format": "webp",
+    "cover": true,
+    "quality": 80
+  },
+  {
+    "out": "public/images/previews/nabz.webp",
+    "title": "پیش‌نمایش گالری از Pretty Lights at the Aragon Ballroom - 8 November 2013 - Light show.jpg",
     "width": 1200,
     "format": "webp",
     "cover": true,
