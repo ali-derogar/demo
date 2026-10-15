@@ -92,17 +92,20 @@
   let lastClock = 0;
   let dirty = new Set();
 
-  function tween(from, to, ms, apply) {
+  function tween(from, to, ms, apply, key) {
     if (REDUCED || ms <= 0 || !Number.isFinite(to)) { apply(to); return; }
-    tweens.push({ from, to, ms, t0: now(), apply });
+    /* یک عنصر نباید هم‌زمان دو tween داشته باشد؛ وگرنه قدیمی‌تر از همه آخر نوشته می‌شود */
+    if (key) for (let i = tweens.length - 1; i >= 0; i -= 1) if (tweens[i].key === key) tweens.splice(i, 1);
+    tweens.push({ from, to, ms, t0: now(), apply, key });
   }
   function stepTweens(t) {
-    for (let i = tweens.length - 1; i >= 0; i -= 1) {
+    /* از قدیمی به تازه بنویس تا آخرین نوشتن، تازه‌ترین هدف باشد */
+    for (let i = 0; i < tweens.length; i += 1) {
       const tw = tweens[i];
       const p = clamp((t - tw.t0) / tw.ms, 0, 1);
       tw.apply(tw.from + (tw.to - tw.from) * (1 - Math.pow(1 - p, 3)));
-      if (p >= 1) tweens.splice(i, 1);
     }
+    for (let i = tweens.length - 1; i >= 0; i -= 1) if ((t - tweens[i].t0) / tweens[i].ms >= 1) tweens.splice(i, 1);
   }
 
   function engineTick() {
@@ -379,7 +382,7 @@
     hero.label.textContent = `${s.row.fa} · فروش به شما`;
     const target = roundTo(s.market, s.row.step);
     const from = Number(toEn(hero.value.textContent.replace(/[^\d۰-۹]/g, ''))) || target;
-    tween(from, target, REDUCED ? 0 : 500, (v) => { hero.value.textContent = money(v, s.row.step); });
+    tween(from, target, REDUCED ? 0 : 500, (v) => { hero.value.textContent = money(v, s.row.step); }, 'hero');
     hero.buy.textContent = money(bidOf(s), s.row.step);
     hero.avg.textContent = money(s.base, s.row.step);
     paintChg(hero.chg, hero.chgNum, s.change);
@@ -763,15 +766,20 @@
     const rate = priceIn(conv.from.value, side) * (1 + (side === 'buy' ? sFrom.spread : 0));
     const base = q * rate / priceIn(conv.to.value, side === 'buy' ? 'sell' : 'buy');
     const fee = base * FEE;
-    const total = side === 'buy' ? base + fee : base - fee;
     /* خروجی همیشه تومان نیست؛ گاهی «تعداد» است و گردِ تابلو معنایی ندارد */
     const fmt = (v) => (conv.to.value === 'toman'
       ? money(v, 1000)
       : group(Math.abs(v) >= 100 ? Math.round(v) : v.toFixed(Math.abs(v) >= 1 ? 1 : 3)));
+    /* جمعِ دو سطرِ پایین باید دقیقاً با عددِ درشتِ جواب برابر باشد */
+    const snap = (v) => (conv.to.value === 'toman' ? roundTo(v, 1000)
+      : Math.abs(v) >= 100 ? Math.round(v) : Number(v.toFixed(Math.abs(v) >= 1 ? 1 : 3)));
+    const baseS = snap(base);
+    const feeS = snap(fee);
+    const total = side === 'buy' ? baseS + feeS : baseS - feeS;
     const from = Number(toEn(conv.total.textContent.replace(/[^\d۰-۹]/g, ''))) || 0;
-    tween(from, total, ms, (v) => { conv.total.textContent = fmt(v); });
-    conv.lines[0].textContent = fmt(base);
-    conv.lines[1].textContent = fmt(fee);
+    tween(from, total, ms, (v) => { conv.total.textContent = fmt(v); }, 'conv');
+    conv.lines[0].textContent = fmt(baseS);
+    conv.lines[1].textContent = fmt(feeS);
     conv.rate.innerHTML = conv.to.value === 'toman'
       ? `نرخِ تابلو <span class="num" dir="ltr">${money(rate, sFrom.step)}</span> · فردایی <span class="num" dir="ltr">${money(rate * 1.0085, sFrom.step)}</span>`
       : `هر ${sFrom.fa} = <span class="num" dir="ltr">${fmt(base / Math.max(q, 1e-9))}</span> ${unitLabel}`;
@@ -842,7 +850,7 @@
       ? `<b>نمونه با مشخصاتِ کارخانه می‌خواند</b>${near.name} · وزنِ استاندارد <span class="num" dir="ltr">${dec(near.w, 4)}</span> گرم · انحراف <span class="num" dir="ltr">${dec(diff * 1000, 1)}</span> صدم‌گرم · کدِ رهگیری <span class="num" dir="ltr">${toFa(String(h % 1_000_000).padStart(6, '0'))}</span>`
       : diff > near.w * 0.012
         ? `<b>وزن با ${near.name} نمی‌خواند</b>اختلاف <span class="num" dir="ltr">${dec(diff, 3)}</span> گرم؛ سکه را به ترازویِ مرجعِ شعبه بیاورید.`
-        : `<b>در پایورِ این سریال ثبت نشده</b>سریال <span class="num" dir="ltr">${toFa(serialRaw)}</span> در فهرستِ ضربِ این دوره نیست. معامله را تعلیق کنید.`;
+        : `<b>این سریال در پایگاه ثبت نشده</b>سریال <span class="num" dir="ltr">${toFa(serialRaw)}</span> در فهرستِ ضربِ این دوره نیست. معامله را تعلیق کنید.`;
   });
 
   /* ---------- سبد پیگیری ---------- */
@@ -905,7 +913,7 @@
       paintChg(cell.pnl, $('.num', cell.pnl), pnl);
     }
     const from = Number(toEn(totalEl.textContent.replace(/[^\d۰-۹]/g, ''))) || 0;
-    if (Math.abs(from - sum) > 1) tween(from, sum, REDUCED ? 0 : 500, (v) => { totalEl.textContent = money(v, 1000); });
+    if (Math.abs(from - sum) > 1) tween(from, sum, REDUCED ? 0 : 500, (v) => { totalEl.textContent = money(v, 1000); }, 'wallet');
     else totalEl.textContent = money(sum, 1000);
   }
   $('#rate-watch').addEventListener('click', () => {

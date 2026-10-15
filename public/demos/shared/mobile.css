@@ -310,7 +310,6 @@ body[data-demo] :is(.nav-drawer, .mobile-nav) {
   [data-demo="sekke"] .board__table :is(th, td) { padding: .7rem .55rem; }
   [data-demo="sekke"] .row__open { display: block; inline-size: 100%; min-block-size: 44px; }
   [data-demo="sekke"] :is(.tab, .pick) { min-block-size: 44px; }
-  [data-demo="sekke"] :is(.footer-links, .footer-contact) a { display: inline-flex; align-items: center; min-block-size: 44px; }
   [data-demo="sekke"] :is(.coin__u, .conv__u) { font-size: .82rem; }
   [data-demo="sekke"] .chart__frame { block-size: 300px; }
   [data-demo="sekke"] #toasts { inset-inline: .7rem; }

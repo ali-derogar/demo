@@ -99,7 +99,7 @@ table{border-collapse:collapse}
 .wordmark-text{display:flex;flex-direction:column;line-height:1.05;font-weight:800;font-size:1.3rem;letter-spacing:-.03em}
 .wordmark-text em{font-style:normal;font-size:.62rem;font-weight:600;letter-spacing:.26em;color:var(--muted)}
 .main-nav .nav-list{display:flex;align-items:center;gap:.3rem}
-.main-nav a{display:inline-block;padding:.5rem .85rem;border-radius:999px;color:var(--muted);font-size:.94rem;font-weight:600;
+.main-nav a{display:inline-flex;align-items:center;justify-content:center;min-block-size:44px;padding:.5rem .85rem;border-radius:999px;color:var(--muted);font-size:.94rem;font-weight:600;
   transition:color .2s,background-color .2s}
 .main-nav a:hover{color:var(--text);background:rgba(233,189,87,.1)}
 .main-nav a.nav-cta{background:var(--metal);color:var(--ink-on-gold);font-weight:800;margin-inline-start:.5rem}
@@ -450,7 +450,7 @@ dialog.sheet::backdrop{background:rgba(6,4,2,.78);backdrop-filter:blur(4px)}
 .footer-grid{display:grid;grid-template-columns:minmax(0,1.6fr) repeat(2,minmax(0,1fr));gap:1.8rem}
 .footer-brand p{color:var(--muted);font-size:.88rem;margin-block-start:.6rem;max-inline-size:44ch}
 .footer-nav ul,.footer-contact ul{display:grid;gap:.1rem}
-.footer-nav a,.footer-contact a{display:inline-block;padding-block:.26rem;color:var(--muted);font-size:.9rem}
+.footer-nav a,.footer-contact a{display:inline-flex;align-items:center;min-block-size:44px;padding-block:.26rem;color:var(--muted);font-size:.9rem}
 .footer-nav a:hover,.footer-contact a:hover{color:var(--text)}
 .footer-base{display:grid;gap:.6rem;margin-block-start:2rem;padding-block-start:1.2rem;border-block-start:1px solid var(--rule-soft)}
 .footer-base p{font-size:.8rem;color:rgba(168,155,131,.9)}
