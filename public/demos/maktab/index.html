@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>مکتب‌خانه | آموزش آنلاین هنرهای سنتی ایران</title>
+<meta name="description" content="خوشنویسی، نگارگری، موسیقی، ادبیات، نجوم و حساب را در کلاس‌های زنده بیاموزید. مشق‌تان شخصی تصحیح می‌شود و برنامه‌ی هفتگی‌تان همین‌جا است.">
+<link rel="stylesheet" href="./styles.css">
+<link rel="stylesheet" href="../shared/mobile.css">
+<link rel="stylesheet" href="../shared/navigation.css">
+</head>
+<body data-demo="maktab">
+<a class="skip-link" href="#main">پرش به محتوای اصلی</a>
+
+<nav class="demo-return" aria-label="بازگشت به سایت اصلی">
+  <a class="demo-return__link" href="/#demos">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 12h14m-6-6 6 6-6 6"/></svg>
+    بازگشت به صفحه اصلی
+  </a>
+  <span class="demo-return__brand" dir="ltr">persianbotyar</span>
+</nav>
+
+<header class="site-header">
+  <div class="wrap header-inner">
+    <a class="wordmark" href="#top" aria-label="مکتب‌خانه — صفحه‌ی اصلی">
+      <svg class="logo-mark" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <path d="M5 19.5 8.2 8.4 15.9 3l4.4 4.4-5.4 7.6-6.5 4.5z"/>
+        <path d="M8.2 8.4 13 13.2"/>
+      </svg>
+      <span class="wordmark-text">مکتب‌خانه<em>هنرهای سنتی</em></span>
+    </a>
+
+    <nav class="main-nav" aria-label="ناوبری اصلی">
+      <ul class="nav-list">
+        <li><a href="#top">خانه</a></li>
+        <li><a href="#courses">دوره‌ها</a></li>
+        <li><a href="#schedule">برنامه‌ی هفتگی</a></li>
+        <li><a href="#room">اتاق من</a></li>
+        <li><a href="#plans">اشتراک</a></li>
+        <li><a href="#contact" class="nav-cta">نام‌نویسی</a></li>
+      </ul>
+    </nav>
+
+    <button class="menu-toggle" id="menu-toggle" type="button" aria-expanded="false" aria-controls="nav-drawer">
+      <span class="sr-only">باز و بسته کردن فهرست</span>
+      <span class="menu-bar" aria-hidden="true"></span>
+      <span class="menu-bar" aria-hidden="true"></span>
+      <span class="menu-bar" aria-hidden="true"></span>
+    </button>
+  </div>
+  <nav class="nav-drawer" id="nav-drawer" aria-label="فهرست موبایل" hidden>
+    <ul>
+      <li><a href="#top">خانه</a></li>
+      <li><a href="#courses">دوره‌ها</a></li>
+      <li><a href="#schedule">برنامه‌ی هفتگی</a></li>
+      <li><a href="#room">اتاق من</a></li>
+      <li><a href="#teachers">استادها</a></li>
+      <li><a href="#plans">اشتراک</a></li>
+      <li><a href="#faq">سؤال‌های پرتکرار</a></li>
+      <li><a href="#contact">نام‌نویسی</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main id="main">
+
+  <!-- ===== آغازین ===== -->
+  <section class="hero" id="top">
+    <div class="wrap hero-inner">
+      <div class="hero-copy">
+        <p class="eyebrow"><span class="seal-dot" aria-hidden="true"></span> مکتب‌خانه‌ی هنرهای ایرانی · از سال ۱۳۹۲</p>
+        <h1 class="hero-title">مشق را<br><span class="tilted">شبیه استاد</span> بنویس</h1>
+        <p class="hero-lede">کلاس زنده، تصحیحِ شخصیِ مشق و برنامه‌ای که هفته‌به‌هفته جلو می‌رود. هفت دوره در خوشنویسی، نگارگری، موسیقی، ادبیات، شاهنامه، نجوم و حساب — با معلم‌هایی که سال‌هاست دفترشان باز است.</p>
+
+        <form class="finder" id="finder" novalidate>
+          <div class="finder__field">
+            <label for="level">سطح من</label>
+            <select id="level">
+              <option value="all">فرقی نمی‌کند</option>
+              <option value="novice">تازه‌کار</option>
+              <option value="middle">نیمه‌حرفه‌ای</option>
+              <option value="pro">پیشرفته</option>
+            </select>
+          </div>
+          <div class="finder__field">
+            <label for="craft">رشته‌ی مورد نظر</label>
+            <select id="craft">
+              <option value="all">همه‌ی رشته‌ها</option>
+              <option value="khat">خوشنویسی</option>
+              <option value="negar">نگارگری</option>
+              <option value="mosiqi">موسیقی</option>
+              <option value="adab">ادبیات</option>
+              <option value="hesab">حساب</option>
+              <option value="najom">نجوم</option>
+            </select>
+          </div>
+          <button class="btn btn--primary finder__go" type="submit">دوره‌ها را نشانم بده</button>
+        </form>
+
+        <p class="hero-note">مشاوره رایگان است و تا <strong>۲ جلسه‌ی اول</strong> هر دوره می‌توانید بیرون بکشید.</p>
+      </div>
+
+      <figure class="hero-sheet">
+        <div class="sheet-frame">
+          <img src="./assets/img/hero-01.webp" alt="صفحه‌ای از گلستان سعدی با خط نستعلیق و سرلوحه‌ی آراسته" width="1024" height="900" fetchpriority="high">
+        </div>
+        <figcaption>
+          <span class="cap-title">سرلوحه</span>
+          <span class="cap-text">صفحه‌ای از گلستان سعدی — خط نستعلیق</span>
+        </figcaption>
+        <div class="corner-seal" aria-hidden="true">
+          <svg viewBox="0 0 48 48" focusable="false"><circle cx="24" cy="24" r="21"/><circle cx="24" cy="24" r="14"/><path d="M24 10v28M10 24h28"/></svg>
+          <span>تصحیح‌شده</span>
+        </div>
+      </figure>
+    </div>
+  </section>
+
+  <!-- ===== خط مشق / تعهد‌ها ===== -->
+  <section class="promise" aria-label="ویژگی‌های مکتب">
+    <div class="wrap promise-grid">
+      <div class="promise__item">
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 5.5h16v13H4z"/><path d="M8 9.5h8M8 13h5"/></svg>
+        <h3>کلاس زنده، نه ویدیو</h3>
+        <p>حداکثر ۱۲ هنرجو در هر حوزه، تا صدای استاد به قلم شما برسد.</p>
+      </div>
+      <div class="promise__item">
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 18.5 18.5 5"/><path d="M14 5h5v5"/><path d="M5 12v7h7"/></svg>
+        <h3>مشق با حاشیه‌ی استاد</h3>
+        <p>ورق‌تان را اسکن می‌کنید؛ تصحیح را خط‌به‌خط روی همان ورق می‌بینید.</p>
+      </div>
+      <div class="promise__item">
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="9" r="5"/><path d="M8.5 13.5 7 21l5-2.4 5 2.4-1.5-7.5"/></svg>
+        <h3>اجازه‌ی پایان دوره</h3>
+        <p>در پایان، قطعه‌ی منتخب‌تان در نمایشگاه فصلی مکتب چاپ می‌شود.</p>
+      </div>
+      <div class="promise__item">
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 20h16"/><path d="M7 20v-5h5v5"/><path d="M12 15 19 5l1.6 1.7-7 9.6"/></svg>
+        <h3>ابزار از خود مکتب</h3>
+        <p>قلم، مرکب، کاغذ آهار و پاشکن را با تخفیف هنرجو از قلمدان می‌گیرید.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== دوره‌ها ===== -->
+  <section class="section" id="courses">
+    <div class="wrap">
+      <div class="section-head">
+        <h2>دوره‌ها</h2>
+        <p>رشته، سطح یا نام استاد را انتخاب کنید؛ فهرست همان‌جا فیلتر می‌شود.</p>
+      </div>
+
+      <div class="toolbar">
+        <div class="chips" id="craft-chips" role="group" aria-label="پالایش بر پایه‌ی رشته">
+          <button class="chip is-on" type="button" data-craft="all">همه</button>
+          <button class="chip" type="button" data-craft="khat">خوشنویسی</button>
+          <button class="chip" type="button" data-craft="negar">نگارگری</button>
+          <button class="chip" type="button" data-craft="mosiqi">موسیقی</button>
+          <button class="chip" type="button" data-craft="adab">ادبیات</button>
+          <button class="chip" type="button" data-craft="najom">نجوم</button>
+          <button class="chip" type="button" data-craft="hesab">حساب</button>
+        </div>
+        <div class="toolbar__tools">
+          <label class="sr-only" for="course-q">جست‌وجو در دوره‌ها</label>
+          <input id="course-q" class="search" type="search" placeholder="جست‌وجوی دوره، استاد یا ابزار…" autocomplete="off">
+          <label class="sr-only" for="course-level">سطح</label>
+          <select id="course-level" class="select">
+            <option value="all">همه‌ی سطوح</option>
+            <option value="novice">تازه‌کار</option>
+            <option value="middle">نیمه‌حرفه‌ای</option>
+            <option value="pro">پیشرفته</option>
+          </select>
+          <label class="sr-only" for="course-sort">ترتیب</label>
+          <select id="course-sort" class="select">
+            <option value="popular">پرطرفدارترین</option>
+            <option value="cheap">ارزان‌ترین شهریه</option>
+            <option value="long">بلندترین دوره</option>
+            <option value="soon">نزدیک‌ترین شروع</option>
+          </select>
+          <button class="btn btn--ghost" type="button" id="course-clear">پاک کردن</button>
+        </div>
+      </div>
+
+      <p class="result-line" id="course-count" role="status" aria-live="polite"></p>
+      <div class="course-grid" id="course-grid"></div>
+      <div class="empty" id="course-empty" hidden>
+        <p>دوره‌ای با این انتخاب‌ها پیدا نشد. چند فیلتر را بردارید.</p>
+        <button class="btn btn--primary" type="button" id="course-reset">نمایش همه‌ی دوره‌ها</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== نوار هندسه ===== -->
+  <section class="panorama" aria-label="مکتب در اعداد">
+    <img class="panorama__img" src="./assets/img/tile.webp" alt="کاشی‌کاری هندسی فیروزه‌ای زیر گنبد یک بنای تاریخی ایرانی" width="1600" height="620" loading="lazy">
+    <div class="panorama__veil" aria-hidden="true"></div>
+    <div class="wrap panorama__inner">
+      <p class="panorama__quote">«هر خطِ درست، اول در هندسه‌ی کاغذ شروع می‌شود؛ بعد در دست.»</p>
+      <dl class="panorama__stats">
+        <div><dt>هنرجوی فعال</dt><dd>۹۲۰</dd></div>
+        <div><dt>دوره‌ی جاری</dt><dd>۷</dd></div>
+        <div><dt>استاد همکار</dt><dd>۱۴</dd></div>
+        <div><dt>سال تدریس</dt><dd>۱۳</dd></div>
+      </dl>
+    </div>
+  </section>
+
+  <!-- ===== برنامه‌ی هفتگی ===== -->
+  <section class="section" id="schedule">
+    <div class="wrap">
+      <div class="section-head">
+        <h2>برنامه‌ی هفتگی</h2>
+        <p>روز را انتخاب کنید؛ ساعت، استاد و ظرفیت باقی‌مانده‌ی هر جلسه را ببینید.</p>
+      </div>
+      <div class="day-tabs" id="day-tabs" role="tablist" aria-label="روزهای هفته"></div>
+      <div class="schedule" id="schedule-list"></div>
+      <p class="schedule__note" id="schedule-note">ظرفیت‌ها لحظه‌ای است؛ رزرو نهایی در نام‌نویسی انجام می‌شود.</p>
+    </div>
+  </section>
+
+  <!-- ===== اتاق من ===== -->
+  <section class="section section--tinted" id="room">
+    <div class="wrap room-grid">
+      <div class="room-main">
+        <div class="section-head section-head--tight">
+          <h2>اتاق من</h2>
+          <p>این دفترچه‌ی کار شماست. تیک بزنید تا پیشرفتتان ذخیره شود؛ با تازه کردن صفحه هم می‌ماند.</p>
+        </div>
+
+        <div class="progress-card">
+          <div class="ring" aria-hidden="true">
+            <svg viewBox="0 0 120 120" focusable="false">
+              <circle class="ring__track" cx="60" cy="60" r="52"/>
+              <circle class="ring__bar" id="ring-bar" cx="60" cy="60" r="52"/>
+            </svg>
+            <span class="ring__value" id="ring-value">۰٪</span>
+          </div>
+          <div class="progress-copy">
+            <h3>مسیر این ترم</h3>
+            <p id="progress-line">هنوز مشقی علامت نزده‌اید.</p>
+            <ul class="mini-stats">
+              <li><span id="stat-done">۰</span> تکلیف انجام‌شده</li>
+              <li><span id="stat-left">۸</span> مانده به پایان</li>
+              <li><span id="stat-streak">۱۲</span> روز پیوسته</li>
+            </ul>
+          </div>
+        </div>
+
+        <ul class="task-list" id="task-list"></ul>
+
+        <div class="room-actions">
+          <button class="btn btn--ghost" type="button" id="task-check-all">علامت‌زدن همه</button>
+          <button class="btn btn--ghost btn--danger" type="button" id="task-clear">شروع دوباره</button>
+        </div>
+      </div>
+
+      <aside class="room-side">
+        <div class="next-card">
+          <p class="next-card__label">جلسه‌ی بعد</p>
+          <h3 id="next-title">خوشنویسی — قلم‌گیری</h3>
+          <p class="next-card__meta" id="next-meta">شنبه ۱۸:۰۰ · حوزه‌ی آبی · ۹ هنرجو</p>
+          <a class="btn btn--primary btn--block" href="#contact">ادامه در نام‌نویسی</a>
+        </div>
+        <figure class="tools-fig">
+          <img src="./assets/img/desk.webp" alt="قلمدان چوبی کهن با دهانه‌ی کشویی و جای ابزار" width="1100" height="825" loading="lazy">
+          <figcaption>قلمدان — جای قلم، مرکب و پاشکن</figcaption>
+        </figure>
+      </aside>
+    </div>
+  </section>
+
+  <!-- ===== استادها ===== -->
+  <section class="section" id="teachers">
+    <div class="wrap">
+      <div class="section-head">
+        <h2>استادها</h2>
+        <p>دفترچه‌ی تدریس‌شان را کوتاه خوانده‌ایم.</p>
+      </div>
+      <ul class="teacher-grid">
+        <li class="teacher">
+          <span class="monogram" aria-hidden="true">ن</span>
+          <h3>استاد نوری‌قلم</h3>
+          <p class="teacher__craft">خوشنویسی · نستعلیق و شکسته</p>
+          <p class="teacher__years">۲۴ سال تدریس · حوزه‌ی آبی</p>
+          <blockquote>«قلم را نمی‌گیرند، قلم را می‌سازند. هفته‌ی اول فقط تراش می‌دهیم.»</blockquote>
+        </li>
+        <li class="teacher">
+          <span class="monogram" aria-hidden="true">و</span>
+          <h3>استاد وحدت</h3>
+          <p class="teacher__craft">نگارگری · گل و مرغ</p>
+          <p class="teacher__years">۱۷ سال تدریس · حوزه‌ی فیروزج</p>
+          <blockquote>«رنگ باید مثل آب آرام بنشیند؛ اگر دستت بلرزد، قلم‌مو هم می‌لرزد.»</blockquote>
+        </li>
+        <li class="teacher">
+          <span class="monogram" aria-hidden="true">گ</span>
+          <h3>استاد گرازی</h3>
+          <p class="teacher__craft">موسیقی · سنتور و دستگاه</p>
+          <p class="teacher__years">۲۱ سال تدریس · حوزه‌ی صدای زیر</p>
+          <blockquote>«پیش از چهارمضراب، گوش. گوش که صاف شد، انگشت خود می‌رود.»</blockquote>
+        </li>
+        <li class="teacher">
+          <span class="monogram" aria-hidden="true">ش</span>
+          <h3>استاد شمسایی</h3>
+          <p class="teacher__craft">ادبیات و شاهنامه‌خوانی</p>
+          <p class="teacher__years">۱۹ سال تدریس · حوزه‌ی کتابخانه</p>
+          <blockquote>«حافظ را باید بلند خواند. در سکوت، معنی خوابش می‌برد.»</blockquote>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ===== درباره / کلاس قدیمی ===== -->
+  <section class="about" aria-label="درباره‌ی مکتب">
+    <img class="about__img" src="./assets/img/band-class.webp" alt="عکسی سیاه‌وسفید از کلاس درس قدیمی با دانش‌آموزان پشت نیمکت‌های چوبی" width="1600" height="620" loading="lazy">
+    <div class="about__card">
+      <p class="eyebrow"><span class="seal-dot" aria-hidden="true"></span> درباره‌ی ما</p>
+      <h2>مکتب از یک اتاق شروع شد</h2>
+      <p>سال ۱۳۹۲ چهار نفر دور یک میزِ بلند جمع شدیم؛ یک قلم‌دان، دو بسته کاغذ آهار و یک رادیو. امروز همان میز، مکتب است: هفت دوره، چهارده استاد و کلاس‌هایی که هنوز با صدای بلند شروع می‌شوند — چون هیچ ضبطی جای «دوباره بکش» استاد را ندارد.</p>
+      <p class="about__sign">— دفتر مکتب‌خانه</p>
+    </div>
+  </section>
+
+  <!-- ===== اشتراک ===== -->
+  <section class="section section--tinted" id="plans">
+    <div class="wrap">
+      <div class="section-head">
+        <h2>اشتراک</h2>
+        <p>ماهانه بپردازید یا سالانه؛ سالانه دو ماه مهمان مکتب هستید.</p>
+      </div>
+
+      <div class="billing" role="group" aria-label="گونه‌ی پرداخت">
+        <button class="bill-btn is-on" type="button" id="bill-month" aria-pressed="true">ماهانه</button>
+        <button class="bill-btn" type="button" id="bill-year" aria-pressed="false">سالانه <span class="save">۲ ماه رایگان</span></button>
+      </div>
+
+      <ul class="plan-grid">
+        <li class="plan">
+          <h3 class="plan__name">تک‌دوره</h3>
+          <p class="plan__price"><span class="amount" data-month="۱٬۴۵۰٬۰۰۰" data-year="۱۴٬۵۰۰٬۰۰۰">۱٬۴۵۰٬۰۰۰</span> <span class="unit">تومان / ماه</span></p>
+          <p class="plan__hint">یک دوره‌ی انتخابی، هر هفته دو جلسه.</p>
+          <ul class="ticks">
+            <li>حضور در کلاس زنده</li>
+            <li>تصحیح ماهانه‌ی ۸ ورق</li>
+            <li>ضبط جلسات تا ۳۰ روز</li>
+            <li>تخفیف ۱۰٪ قلمدان</li>
+          </ul>
+          <button class="btn btn--outline btn--block plan__pick" type="button" data-plan="تک‌دوره">انتخاب این</button>
+        </li>
+        <li class="plan plan--feature">
+          <p class="plan__flag">محبوب‌ترین</p>
+          <h3 class="plan__name">دو دوره</h3>
+          <p class="plan__price"><span class="amount" data-month="۲٬۳۰۰٬۰۰۰" data-year="۲۳٬۰۰۰٬۰۰۰">۲٬۳۰۰٬۰۰۰</span> <span class="unit">تومان / ماه</span></p>
+          <p class="plan__hint">رشته‌ی اصلی + یک رشته‌ی آزاد.</p>
+          <ul class="ticks">
+            <li>هر چیزی در تک‌دوره</li>
+            <li>تصحیح ماهانه‌ی ۲۰ ورق</li>
+            <li>یک جلسه‌ی خصوصی در ماه</li>
+            <li>دسترسی به کتابخانه‌ی دیجیتال</li>
+            <li>تخفیف ۲۰٪ قلمدان</li>
+          </ul>
+          <button class="btn btn--primary btn--block plan__pick" type="button" data-plan="دو دوره">انتخاب این</button>
+        </li>
+        <li class="plan">
+          <h3 class="plan__name">مکتب کامل</h3>
+          <p class="plan__price"><span class="amount" data-month="۳٬۹۰۰٬۰۰۰" data-year="۳۹٬۰۰۰٬۰۰۰">۳٬۹۰۰٬۰۰۰</span> <span class="unit">تومان / ماه</span></p>
+          <p class="plan__hint">همه‌ی دوره‌ها، بدون سقف.</p>
+          <ul class="ticks">
+            <li>هر چیزی در دو دوره</li>
+            <li>تصحیح بی‌محدود</li>
+            <li>دو جلسه‌ی خصوصی در ماه</li>
+            <li>جای قطعه در نمایشگاه فصلی</li>
+          </ul>
+          <button class="btn btn--outline btn--block plan__pick" type="button" data-plan="مکتب کامل">انتخاب این</button>
+        </li>
+      </ul>
+      <p class="plan__note" id="plan-note" role="status" aria-live="polite">هنوز اشتراکی انتخاب نشده.</p>
+    </div>
+  </section>
+
+  <!-- ===== کتابخانه ===== -->
+  <section class="section library" id="library">
+    <div class="wrap library-grid">
+      <figure class="library-fig">
+        <img src="./assets/img/shelf.webp" alt="قفسه‌های چوبی بلند کتابخانه پر از کتاب تا سقف" width="1400" height="900" loading="lazy">
+        <figcaption>اتاقک کتابخانه — نسخه‌های خطی و جزوه‌های استادها</figcaption>
+      </figure>
+      <div class="library-copy">
+        <div class="section-head section-head--tight">
+          <h2>کتابخانه و دفترچه‌ها</h2>
+          <p>هر دوره یک قفسه دارد: جزوه‌ی درس، نمونه‌ی مشق‌های تصحیح‌شده و فهرست ابزار.</p>
+        </div>
+        <ul class="library-list">
+          <li><span>جزوه‌ی درس</span><strong>۸۴ دفترچه</strong></li>
+          <li><span>نمونه‌ی مشقِ تصحیح‌شده</span><strong>۱٬۲۶۰ ورق</strong></li>
+          <li><span>فهرست ابزار هر دوره</span><strong>۷ رشته</strong></li>
+          <li><span>ضبط جلسات</span><strong>۶۴۰ ساعت</strong></li>
+        </ul>
+        <a class="text-link" href="#courses">برگشت به دوره‌ها</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== سؤال‌ها ===== -->
+  <section class="section section--tinted" id="faq">
+    <div class="wrap narrow">
+      <div class="section-head">
+        <h2>سؤال‌های پرتکرار</h2>
+      </div>
+      <div class="faq-list">
+        <details>
+          <summary>هیچ سابقه‌ای ندارم؛ از کجا شروع کنم؟</summary>
+          <p>از «قلم و مرکب». دو جلسه‌ی اول فقط تراشیدن قلم و گرفتن کاغذ است. اگر بعد از دو جلسه حس کردید رشته‌تان نیست، شهریه‌ی آن ماه برگشت می‌خورد.</p>
+        </details>
+        <details>
+          <summary>ابزار را خودم بخرم یا از مکتب؟</summary>
+          <p>برای سه هفته‌ی اول مکتب قلم و مرکب را در اختیار شما می‌گذارد. بعد از آن با معرفیِ همان استاد، از قلمدان با تخفیف هنرجو می‌خرید — خرید اجباری نیست.</p>
+        </details>
+        <details>
+          <summary>جلسه را از دست بدهم چه می‌شود؟</summary>
+          <p>ضبط جلسه تا ۳۰ روز در پنل شما می‌ماند و مشقِ آن هفته را همان‌طور تصحیح می‌گیرید. اگر بیش از دو جلسه پشت بیفتد، استاد جلسه‌ی جبرانی می‌گذارد.</p>
+        </details>
+        <details>
+          <summary>کلاس‌ها آنلاین است یا حضوری؟</summary>
+          <p>خوشنویسی، نگارگری و موسیقی زنده‌ی آنلاین است (دوربین روی دست استاد). ادبیات، شاهنامه، نجوم و حساب هم آنلاین، ولی نجوم یک شبِ رصدِ حضوری در فصل دارد.</p>
+        </details>
+        <details>
+          <summary>شهریه را می‌توانم تقسيط کنم؟</summary>
+          <p>بله. اشتراک سه‌ماهه به دو قسط تبدیل می‌شود؛ در فرم نام‌نویسی کافی است در یادداشت بنویسید «تقسيط». پشتیبانی تماس می‌گیرد.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== نام‌نویسی ===== -->
+  <section class="section contact" id="contact">
+    <div class="wrap contact-grid">
+      <div class="contact-intro">
+        <div class="section-head section-head--tight">
+          <h2>نام‌نویسی</h2>
+          <p>فرم را پر کنید؛ پشتیبانی مکتب تا پایان روز کاری زنگ می‌زند و جلسه‌ی آزمایشی را می‌گذارد.</p>
+        </div>
+        <ul class="branches">
+          <li class="branch">
+            <h3>حوزه‌ی مرکزی — تهران</h3>
+            <a class="branch__tel" href="tel:02191003300">۰۲۱ ۹۱۰۰ ۳۳۰۰</a>
+            <p>شنبه تا چهارشنبه، ۱۴ تا ۲۱</p>
+          </li>
+          <li class="branch">
+            <h3>پشتیبانی هنرجویان</h3>
+            <a class="branch__tel" href="tel:07191003300">۰۷۱ ۹۱۰۰ ۳۳۰۰</a>
+            <p>هر روز، ۹ تا ۱۳</p>
+          </li>
+        </ul>
+        <p class="addr">خیابان چهل‌ستون، کوچه‌ی کاشی، پلاک ۱۲ · طبقه‌ی دوم، حوزه‌ی آبی</p>
+      </div>
+
+      <form class="enroll" id="enroll-form" novalidate>
+        <div class="field">
+          <label for="e-name">نام و نام خانوادگی</label>
+          <input id="e-name" name="name" type="text" autocomplete="name" aria-describedby="e-name-err">
+          <p class="err" id="e-name-err" hidden>نام‌تان را کامل بنویسید.</p>
+        </div>
+        <div class="field">
+          <label for="e-phone">شماره‌ی همراه</label>
+          <input id="e-phone" name="phone" type="tel" inputmode="numeric" placeholder="09xxxxxxxxx" autocomplete="tel" aria-describedby="e-phone-err">
+          <p class="err" id="e-phone-err" hidden>شماره‌ی ۱۱ رقمی و با ۰۹ شروع شود.</p>
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label for="e-course">دوره</label>
+            <select id="e-course" name="course"></select>
+          </div>
+          <div class="field">
+            <label for="e-level">سطح</label>
+            <select id="e-level" name="level">
+              <option value="novice">تازه‌کار</option>
+              <option value="middle">نیمه‌حرفه‌ای</option>
+              <option value="pro">پیشرفته</option>
+            </select>
+          </div>
+        </div>
+        <fieldset class="field">
+          <legend>روزهای در دسترس</legend>
+          <div class="check-row" id="e-days"></div>
+        </fieldset>
+        <div class="field">
+          <label for="e-note">یادداشت</label>
+          <textarea id="e-note" name="note" rows="3" placeholder="ابزار دارید؟ سابقه‌ی خواندن دارید؟"></textarea>
+        </div>
+        <button class="btn btn--primary btn--block" type="submit">ارسال درخواست</button>
+        <p class="form-live" id="enroll-live" role="status" aria-live="polite"></p>
+      </form>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap footer-grid">
+    <div class="footer-brand">
+      <span class="wordmark-text wordmark-text--light">مکتب‌خانه</span>
+      <p>آموزش زنده‌ی هنرهای سنتی ایران — خوشنویسی، نگارگری، موسیقی، ادبیات، نجوم و حساب.</p>
+    </div>
+    <nav class="footer-nav" aria-label="پیوندهای پابرگ">
+      <ul>
+        <li><a href="#courses">دوره‌ها</a></li>
+        <li><a href="#schedule">برنامه‌ی هفتگی</a></li>
+        <li><a href="#room">اتاق من</a></li>
+        <li><a href="#plans">اشتراک</a></li>
+      </ul>
+    </nav>
+    <div class="footer-contact">
+      <ul>
+        <li><a class="visit-tel" href="tel:02191003300">۰۲۱ ۹۱۰۰ ۳۳۰۰</a></li>
+        <li><a class="visit-tel" href="tel:07191003300">۰۷۱ ۹۱۰۰ ۳۳۰۰</a></li>
+        <li><a href="#contact">فرم نام‌نویسی</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="wrap footer-base">
+    <a class="demo-return-footer" href="/#demos">بازگشت به صفحه اصلی</a>
+    <p>این یک نمونه‌کار است؛ نام استادها، ظرفیت کلاس‌ها و قیمت‌ها ساختگی‌اند و تصاویر از کتابخانه‌ی عمومی ویکی‌انبار برداشته شده‌اند.</p>
+    <p class="copy">© ۱۴۰۴ مکتب‌خانه</p>
+  </div>
+</footer>
+
+<dialog class="sheet" id="course-dialog" aria-labelledby="dialog-title">
+  <div class="sheet__inner">
+    <div class="sheet__head">
+      <h2 id="dialog-title">دوره</h2>
+      <button class="sheet__close" id="dialog-close" type="button" aria-label="بستن"></button>
+    </div>
+    <div class="sheet__body" id="dialog-body"></div>
+  </div>
+</dialog>
+
+<div id="toasts" aria-live="polite" aria-atomic="false"></div>
+
+<script src="./app.js"></script>
+</body>
+</html>

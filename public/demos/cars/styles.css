@@ -12,7 +12,7 @@
   --line-soft:#1d242f;
   --ink:#eef2f8;
   --ink-dim:#98a4b6;
-  --ink-mute:#6b7789;
+  --ink-mute:#7c8a9d;
   --steel:#7fb2ff;
   --steel-deep:#3f7fd4;
   --amber:#ffb45c;
@@ -59,7 +59,7 @@ p{margin:0}
 .logo-mark{inline-size:34px;block-size:34px;fill:var(--steel);stroke:var(--steel);stroke-width:1.4;stroke-linejoin:round}
 .logo-mark circle{fill:var(--steel);stroke:none}
 .wordmark-text{display:flex;flex-direction:column;line-height:1.15;font-weight:800;font-size:1.16rem;letter-spacing:-.02em}
-.wordmark-text em{font-style:normal;font-size:.66rem;font-weight:500;color:var(--ink-mute);letter-spacing:.04em}
+.wordmark-text em{font-style:normal;font-size:.76rem;font-weight:500;color:var(--ink-mute);letter-spacing:.04em}
 .nav-list{display:flex;align-items:center;gap:.35rem}
 .nav-list a{display:block;padding:.5rem .85rem;border-radius:999px;color:var(--ink-dim);font-size:.95rem;font-weight:600;transition:color .2s,background .2s}
 .nav-list a:hover{color:var(--ink);background:var(--panel)}
@@ -165,10 +165,10 @@ select.input{appearance:none;background-image:
 .spec-row{display:grid;grid-template-columns:repeat(3,1fr);gap:.4rem;padding-block:.8rem;border-block:1px solid var(--line-soft)}
 .spec{display:flex;flex-direction:column;align-items:center;gap:.1rem;text-align:center}
 .spec__v{font-weight:800;font-size:.98rem;font-variant-numeric:tabular-nums}
-.spec__l{font-size:.72rem;color:var(--ink-mute)}
+.spec__l{font-size:.78rem;color:var(--ink-mute)}
 .car__foot{display:flex;align-items:center;justify-content:space-between;gap:.8rem;margin-block-start:1rem}
 .price{font-weight:800;font-size:1.02rem;font-variant-numeric:tabular-nums;letter-spacing:-.01em}
-.price small{display:block;font-weight:500;font-size:.72rem;color:var(--ink-mute);letter-spacing:0}
+.price small{display:block;font-weight:500;font-size:.78rem;color:var(--ink-mute);letter-spacing:0}
 .car__actions{display:flex;gap:.45rem;margin-block-start:1.05rem}
 .btn--cmp[aria-pressed="true"]{background:color-mix(in srgb,var(--steel) 20%,transparent);border-color:var(--steel);color:var(--steel)}
 

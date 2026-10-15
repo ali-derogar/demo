@@ -58,7 +58,7 @@ table{border-collapse:collapse;inline-size:100%}
 .logo-mark{inline-size:32px;block-size:32px;fill:none;stroke:var(--copper);stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
 .logo-mark path:first-child{fill:color-mix(in srgb,var(--copper) 22%,transparent)}
 .wordmark-text{display:flex;flex-direction:column;font-weight:800;font-size:1.22rem;line-height:1.1;letter-spacing:-.015em}
-.wordmark-text em{font-style:normal;font-weight:400;font-size:.68rem;color:var(--cream-3);letter-spacing:.06em}
+.wordmark-text em{font-style:normal;font-weight:400;font-size:.76rem;color:var(--cream-3);letter-spacing:.06em}
 
 .nav-list{display:flex;align-items:center;gap:.35rem}
 .nav-list a{display:block;padding:.5rem .85rem;border-radius:999px;color:var(--cream-2);font-size:.95rem;transition:background .2s,color .2s}
@@ -110,7 +110,7 @@ table{border-collapse:collapse;inline-size:100%}
 .hero-card{position:absolute;inset-block-end:clamp(1.2rem,4vw,2.4rem);inset-inline-end:max(1.3rem,calc((100vw - var(--wrap))/2 + .2rem));
   padding:1.1rem 1.35rem;border-radius:var(--radius);background:rgba(30,21,16,.86);
   border:1px solid var(--line);backdrop-filter:blur(8px);max-inline-size:270px;box-shadow:var(--shadow)}
-.hero-card__kicker{font-size:.72rem;letter-spacing:.14em;color:var(--copper);font-weight:600}
+.hero-card__kicker{font-size:.78rem;letter-spacing:.14em;color:var(--copper);font-weight:600}
 .hero-card__name{font-size:1.12rem;font-weight:700;margin-block-start:.25rem}
 .hero-card__note{font-size:.86rem;color:var(--cream-3);margin-block-start:.2rem}
 
@@ -164,10 +164,10 @@ table{border-collapse:collapse;inline-size:100%}
 .item__leader{flex:1 1 auto;block-size:1px;border-block-end:1px dotted color-mix(in srgb,var(--cream-3) 60%,transparent);
   transform:translateY(-3px)}
 .item__price{flex:none;font-variant-numeric:tabular-nums;color:var(--sage);font-weight:600;font-size:.98rem}
-.item__price::after{content:" تومان";font-size:.72rem;color:var(--cream-3);font-weight:400}
+.item__price::after{content:" تومان";font-size:.78rem;color:var(--cream-3);font-weight:400}
 .item__desc{font-size:.88rem;color:var(--cream-3);line-height:1.75;margin-block-start:.1rem}
 .item__tags{display:flex;flex-wrap:wrap;gap:.35rem;margin-block-start:.4rem}
-.tag{font-size:.72rem;padding:.1rem .55rem;border-radius:999px;border:1px solid var(--line);color:var(--cream-3)}
+.tag{font-size:.78rem;padding:.1rem .55rem;border-radius:999px;border:1px solid var(--line);color:var(--cream-3)}
 .tag--veg{color:var(--sage);border-color:color-mix(in srgb,var(--sage) 40%,transparent)}
 .tag--new{color:var(--copper);border-color:color-mix(in srgb,var(--copper) 40%,transparent)}
 .board-empty{padding:2rem 1.4rem;border:1px dashed var(--line);border-radius:var(--radius);color:var(--cream-3);text-align:center}
@@ -192,9 +192,10 @@ table{border-collapse:collapse;inline-size:100%}
 .booking__form,.booking__done{grid-column:1/-1;background:var(--bean);border:1px solid var(--sage);
   border-radius:var(--radius);padding:1.4rem 1.35rem}
 .booking__done{border-color:var(--copper)}
+.step-label__hint{display:none}
 .step-label{font-size:.82rem;letter-spacing:.1em;color:var(--copper);font-weight:700;margin-block-end:1rem;
   display:flex;align-items:center;gap:.6rem}
-.step-label span{display:grid;place-items:center;inline-size:24px;block-size:24px;border-radius:50%;
+.step-label > span[aria-hidden="true"]{display:grid;place-items:center;inline-size:24px;block-size:24px;border-radius:50%;
   background:color-mix(in srgb,var(--copper) 20%,transparent);font-size:.8rem}
 .step-hint{font-size:.84rem;color:var(--cream-3);margin-block-start:.9rem}
 
@@ -212,10 +213,10 @@ table{border-collapse:collapse;inline-size:100%}
 .day:hover{border-color:var(--cream-3);transform:translateY(-2px)}
 .day.is-active{border-color:var(--sage);background:color-mix(in srgb,var(--sage) 14%,transparent)}
 .day__name{font-size:.82rem;font-weight:600}
-.day__date{font-size:.72rem;color:var(--cream-3);font-variant-numeric:tabular-nums}
+.day__date{font-size:.78rem;color:var(--cream-3);font-variant-numeric:tabular-nums}
 .day__meter{block-size:4px;border-radius:999px;background:var(--line);overflow:hidden;margin-block:.25rem}
 .day__meter i{display:block;block-size:100%;background:var(--sage);transition:width .3s}
-.day__load{font-size:.68rem;color:var(--cream-3)}
+.day__load{font-size:.76rem;color:var(--cream-3)}
 .day.is-out{border-color:var(--danger);background:color-mix(in srgb,var(--danger) 10%,transparent)}
 .day.is-out .day__meter i{background:var(--danger)}
 
@@ -227,7 +228,7 @@ table{border-collapse:collapse;inline-size:100%}
 .slot.is-active .slot__free{color:#3d4a2c}
 .slot:disabled{opacity:.4;cursor:not-allowed;text-decoration:line-through}
 .slot__time{font-size:.98rem;font-weight:600;font-variant-numeric:tabular-nums}
-.slot__free{font-size:.7rem;color:var(--cream-3)}
+.slot__free{font-size:.76rem;color:var(--cream-3)}
 
 .form-summary{font-size:.92rem;color:var(--sage);font-weight:600;margin-block-end:1.1rem;
   padding:.6rem .9rem;border-radius:10px;background:color-mix(in srgb,var(--sage) 12%,transparent)}
@@ -281,7 +282,7 @@ table{border-collapse:collapse;inline-size:100%}
 .bean__price{font-variant-numeric:tabular-nums;color:var(--sage);font-weight:600}
 .bean__notes{grid-column:1/-1;font-size:.86rem;color:var(--cream-3)}
 .bean__roast{grid-column:1/-1;display:flex;align-items:center;gap:.5rem;margin-block-start:.35rem}
-.bean__roast span{font-size:.74rem;color:var(--cream-3);letter-spacing:.05em}
+.bean__roast span{font-size:.78rem;color:var(--cream-3);letter-spacing:.05em}
 .roast-scale{display:inline-flex;gap:4px}
 .roast-scale i{inline-size:18px;block-size:5px;border-radius:999px;background:var(--line)}
 .roast-scale i.on{background:var(--copper)}

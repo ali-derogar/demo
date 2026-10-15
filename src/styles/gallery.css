@@ -187,6 +187,7 @@ input {
 
 .wordmark__mark {
   display: grid;
+  flex-shrink: 0;
   place-items: center;
   inline-size: 38px;
   block-size: 38px;
@@ -1049,6 +1050,7 @@ input {
 
   .wordmark {
     font-size: 1rem;
+    min-block-size: 44px;
   }
 
   .wordmark__mark {
@@ -1172,7 +1174,7 @@ input {
   }
 
   .hero__stats dt {
-    font-size: 0.69rem;
+    font-size: 0.78rem;
   }
 
   .hero__stats dd {
@@ -1200,7 +1202,9 @@ input {
 
   .collage-card figcaption {
     padding: 0.3rem 0.4rem;
-    font-size: 0.6rem;
+    font-size: 0.75rem;
+    line-height: 1.45;
+    white-space: normal;
   }
 
   .collage-note {
@@ -1208,7 +1212,7 @@ input {
     margin-block-start: 0.3rem;
     max-inline-size: none;
     text-align: center;
-    font-size: 0.67rem;
+    font-size: 0.75rem;
   }
 
   .gallery,
@@ -1235,7 +1239,7 @@ input {
 
   .gallery__count {
     padding: 0.25rem 0.7rem;
-    font-size: 0.73rem;
+    font-size: 0.78rem;
     white-space: normal;
   }
 
@@ -1304,7 +1308,7 @@ input {
   }
 
   .card__category {
-    font-size: 0.7rem;
+    font-size: 0.78rem;
     padding: 0.15rem 0.65rem;
   }
 
@@ -1335,7 +1339,7 @@ input {
 
   .card__tags li {
     padding: 0.2rem 0.55rem;
-    font-size: 0.69rem;
+    font-size: 0.78rem;
   }
 
   .card__foot {
@@ -1447,7 +1451,7 @@ input {
     min-block-size: 52px;
     border-radius: 16px;
     color: var(--muted);
-    font-size: 0.65rem;
+    font-size: 0.75rem;
     font-weight: 700;
   }
 

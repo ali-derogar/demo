@@ -1,0 +1,101 @@
+/* Keep the route home available independently of each demo's navigation and JavaScript. */
+:root {
+  --demo-return-height: calc(52px + env(safe-area-inset-top, 0px));
+  scroll-padding-block-start: calc(92px + var(--demo-return-height));
+}
+
+body[data-demo] {
+  padding-block-start: var(--demo-return-height);
+}
+
+.demo-return {
+  box-sizing: border-box;
+  position: fixed;
+  inset-block-start: 0;
+  inset-inline: 0;
+  z-index: 85;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  block-size: var(--demo-return-height);
+  padding-block-start: env(safe-area-inset-top, 0px);
+  padding-inline: max(12px, env(safe-area-inset-right, 0px)) max(12px, env(safe-area-inset-left, 0px));
+  border-block-end: 1px solid #e2b06a40;
+  background: #0e0d12;
+  color: #e2b06a;
+  font-family: inherit;
+  line-height: 1.5;
+}
+
+.demo-return__link {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 8px;
+  min-block-size: 44px;
+  padding-inline: 12px;
+  border-radius: 10px;
+  color: #f6dfb6;
+  font-size: 13px;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.demo-return__link:hover {
+  background: #e2b06a1a;
+  color: #fff;
+}
+
+.demo-return__link:focus-visible {
+  outline: 2px solid #e2b06a;
+  outline-offset: -2px;
+}
+
+.demo-return__link svg {
+  flex: 0 0 18px;
+  inline-size: 18px;
+  block-size: 18px;
+}
+
+.demo-return__brand {
+  font-size: 12px;
+  font-weight: 600;
+}
+
+body[data-demo] .demo-return-footer {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25em;
+  min-block-size: 44px;
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+body[data-demo] > .site-header,
+body[data-demo] > .skip-link:focus {
+  inset-block-start: var(--demo-return-height);
+}
+
+body[data-demo] :is(.nav-drawer, .mobile-nav) {
+  max-block-size: calc(100dvh - var(--demo-return-height) - 100px);
+}
+
+@media (max-width: 760px) {
+  :root {
+    scroll-padding-block-start: calc(82px + var(--demo-return-height));
+  }
+
+  body[data-demo] > .site-header {
+    padding-block-start: 0;
+  }
+
+  body[data-demo] .mobile-menu-backdrop {
+    inset-block-start: calc(64px + var(--demo-return-height));
+  }
+
+  [data-demo="store"] .toast-region {
+    inset-block-start: calc(76px + var(--demo-return-height));
+  }
+}

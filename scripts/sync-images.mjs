@@ -6,7 +6,7 @@
  *
  *  usage: node scripts/sync-images.mjs
  */
-import { readFile, writeFile, readdir } from 'node:fs/promises';
+import { readFile, writeFile, stat } from 'node:fs/promises';
 import { join, resolve, dirname, basename } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import sharp from 'sharp';
@@ -16,6 +16,7 @@ const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const DEMOS = await demoIds(ROOT);
 const rows = [];
 
+const missingFiles = [];
 for (const slug of DEMOS) {
   const path = join(ROOT, 'public', 'demos', slug, 'assets', 'ATTRIBUTION.json');
   let items = [];
@@ -29,11 +30,17 @@ for (const slug of DEMOS) {
     const rel = String(item.file ?? item.out ?? '').replace(/^\.?\//, '');
     const localPath = rel.startsWith('public/') ? rel : join('public', 'demos', slug, 'assets', rel);
     if (!localPath.startsWith(`public/demos/${slug}/assets/`)) {
-      console.warn(`  ⚠ ${slug}: رکوردی با مسیر بیرون از assets رد شد → ${item.file}`);
+      missingFiles.push(`${slug}: مسیر بیرون از assets → ${item.file}`);
       continue;
     }
     const abs = join(ROOT, localPath);
     const meta = await sharp(abs).metadata().catch(() => null);
+    if (!meta) {
+      missingFiles.push(`${slug}: فایل روی دیسک نیست → ${localPath}`);
+      continue;
+    }
+    if (!/^https?:\/\//.test(String(item.source ?? '')))
+      missingFiles.push(`${slug}: منبع نشانی وبسایت نیست → ${item.file} (${item.source})`);
     rows.push({
       out: localPath,
       file: basename(localPath),
@@ -42,12 +49,18 @@ for (const slug of DEMOS) {
       artist: item.artist,
       license: item.license,
       source: item.source ?? item.descriptionUrl ?? '',
-      width: meta?.width ?? null,
-      height: meta?.height ?? null,
-      bytes: meta?.size ?? null,
-      format: meta?.format ?? null,
+      width: meta.width,
+      height: meta.height,
+      bytes: (await stat(abs)).size,
+      format: meta.format,
     });
   }
+}
+
+if (missingFiles.length) {
+  console.error(`\n✖ ATTRIBUTION.json با دیسک هم‌خوان نیست (${missingFiles.length} مورد):`);
+  for (const problem of missingFiles) console.error(`  - ${problem}`);
+  process.exit(1);
 }
 
 // تصاویر پیش‌نمایش گالری از تصویر آغازین همان دمو ساخته می‌شوند
@@ -68,7 +81,7 @@ for (const slug of DEMOS) {
     derivedFrom: source?.out ?? '',
     width: meta.width,
     height: meta.height,
-    bytes: meta.size,
+    bytes: (await stat(abs)).size,
     format: meta.format,
   });
 }

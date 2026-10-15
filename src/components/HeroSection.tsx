@@ -12,9 +12,9 @@ export function HeroSection() {
             طراحی سایت
           </p>
           <h1 id="hero-title">
-            چند تا از
+            هر پروژه،
             <br />
-            <span className="hero__accent">کارهای من</span>
+            <span className="hero__accent">یک داستان</span>
           </h1>
           <p className="hero__lead">
             اینجا چند تا از نمونه‌کارهام رو می‌بینید. هر سایتی که دوست داشتید باز کنید و بخش‌های

@@ -6,9 +6,10 @@
   --ivory:#f4f1ea;
   --paper:#faf8f2;
   --ink:#211d18;
-  --muted:#7a7367;
+  --muted:#6e6759;
   --hairline:#dcd5c6;
   --gold:#a9863f;
+  --gold-ink:#7e6027;
   --gold-soft:#c6ab77;
   --shadow:0 24px 60px -32px rgba(33,29,24,.28);
   --serifless:'Vazirmatn',Tahoma,sans-serif;
@@ -62,7 +63,7 @@ ul{margin:0;padding:0;list-style:none}
 }
 .wordmark{display:flex;flex-direction:column;text-decoration:none;line-height:1.2}
 .wordmark-fa{font-size:1.7rem;font-variation-settings:'wght' 700;letter-spacing:.5px}
-.wordmark-sub{font-size:.68rem;color:var(--muted);letter-spacing:1.5px}
+.wordmark-sub{font-size:.76rem;color:var(--muted);letter-spacing:1.5px}
 .main-nav ul{display:flex;gap:6px}
 .nav-link{
   display:inline-block;text-decoration:none;
@@ -101,7 +102,7 @@ ul{margin:0;padding:0;list-style:none}
   gap:56px;align-items:center;
 }
 .issue-line{
-  color:var(--gold);font-size:.85rem;letter-spacing:2.5px;
+  color:var(--gold-ink);font-size:.85rem;letter-spacing:2.5px;
   font-variation-settings:'wght' 600;margin-bottom:18px;
 }
 .hero-title{
@@ -151,7 +152,7 @@ ul{margin:0;padding:0;list-style:none}
   animation:marquee 30s linear infinite;
   font-size:.95rem;color:var(--muted);letter-spacing:1.5px;
 }
-.marquee-track span:nth-child(4n+1){color:var(--gold);font-variation-settings:'wght' 600}
+.marquee-track span:nth-child(4n+1){color:var(--gold-ink);font-variation-settings:'wght' 600}
 @keyframes marquee{from{transform:translateX(0)}to{transform:translateX(50%)}}
 
 /* ---------- sections ---------- */
@@ -199,7 +200,7 @@ ul{margin:0;padding:0;list-style:none}
 }
 .collection-card:hover .card-media img{transform:scale(1.045)}
 .card-body{padding:20px 22px 24px;display:flex;flex-direction:column;gap:8px;flex:1}
-.card-season{font-size:.75rem;letter-spacing:2px;color:var(--gold);font-variation-settings:'wght' 600}
+.card-season{font-size:.75rem;letter-spacing:2px;color:var(--gold-ink);font-variation-settings:'wght' 600}
 .card-title{font-size:1.15rem;font-variation-settings:'wght' 700}
 .card-desc{font-size:.88rem;color:var(--muted);flex:1}
 .card-link{
@@ -320,7 +321,7 @@ ul{margin:0;padding:0;list-style:none}
 }
 .journal-card:first-child{border-inline-start:0}
 .journal-card:hover{background:var(--ivory)}
-.journal-meta{font-size:.76rem;letter-spacing:1.5px;color:var(--gold);margin-bottom:14px}
+.journal-meta{font-size:.76rem;letter-spacing:1.5px;color:var(--gold-ink);margin-bottom:14px}
 .journal-title{font-size:1.25rem;font-variation-settings:'wght' 700;margin-bottom:10px;line-height:1.6}
 .journal-excerpt{font-size:.9rem;color:var(--muted)}
 

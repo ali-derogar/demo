@@ -21,6 +21,15 @@ const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const PUBLIC = join(ROOT, 'public');
 const DEMOS = await demoIds(ROOT);
 const IMAGE_EXT = /\.(webp|jpe?g|png|avif|gif|svg)$/i;
+const DIGITS = '0123456789';
+const toLatinDigits = (text) =>
+  String(text)
+    .replace(/[۰-۹]/g, (d) => DIGITS['۰۱۲۳۴۵۶۷۸۹'.indexOf(d)])
+    .replace(/[٠-٩]/g, (d) => DIGITS['٠١٢٣٤٥٦٧٨٩'.indexOf(d)]);
+const toLatin = (text) =>
+  String(text)
+    .replace(/[۰-۹]/g, (d) => String('۰۱۲۳۴۵۶۷۸۹'.indexOf(d)))
+    .replace(/[٠-٩]/g, (d) => String('٠١٢٣٤٥٦٧٨٩'.indexOf(d)));
 const errors = [];
 const warnings = [];
 const say = (list, msg) => list.push(msg);
@@ -156,6 +165,60 @@ for (const slug of DEMOS) {
   const emptyAlt = [...html.matchAll(/<img[^>]*\balt=["']\s*["'][^>]*>/gi)];
   if (emptyAlt.length) say(warnings, `demos/${slug}: ${emptyAlt.length} img با alt خالی`);
 
+  // src تهی تصویر را می‌شکند؛ نبود عرض/ارتفاع پرش چیدمان می‌دهد
+  if (/<img[^>]*\bsrc=["']\s*["']/i.test(html)) say(errors, `demos/${slug}: img با src تهی`);
+  const noDims = [...html.matchAll(/<img(?![^>]*\bwidth=)[^>]*>/gi)];
+  if (noDims.length) say(warnings, `demos/${slug}: ${noDims.length} img بدون عرض/ارتفاع`);
+
+  // عرض/ارتفاع اتمی اگر پایه‌ی img ارتفاع را auto نکند، نسبت‌های aspect-ratio را می‌شکند
+  const hasAtomicDims = /<img[^>]*\bheight=["']\d+["']/i.test(html);
+  const baseImg = [...css.matchAll(/(?:^|[\s,}])img\s*\{([^}]*)\}/g)].map((m) => m[1]);
+  if (hasAtomicDims && !baseImg.some((body) => /height\s*:\s*auto|block-size\s*:\s*auto/.test(body)))
+    say(errors, `demos/${slug}: قانون پایه‌ی img ارتفاع را auto نمی‌کند؛ تصاویرِ دارای height= کشیده رندر می‌شوند`);
+
+  // فونت‌ها: هر ارجاع باید روی دیسک باشد و هیچ فایل بی‌استفاده نماند
+  const fontDir = join(dir, 'assets', 'fonts');
+  const fontsOnDisk = (await readdir(fontDir).catch(() => [])).filter((f) => /\.woff2?$/i.test(f));
+  const fontRefs = new Set();
+  for (const text of [css, js, html]) {
+    for (const m of (text ?? '').matchAll(/url\(\s*['"]?[^'")]*?([\w.-]+\.woff2?)['"]?\s*\)/g))
+      fontRefs.add(m[1]);
+  }
+  for (const name of fontRefs) {
+    if (!fontsOnDisk.includes(name)) say(errors, `demos/${slug}: فونت ارجاع‌شده یافت نشد → ${name}`);
+  }
+  for (const name of fontsOnDisk) {
+    if (!fontRefs.has(name)) say(errors, `demos/${slug}: فونت بی‌استفاده → assets/fonts/${name}`);
+  }
+
+  // شناسه‌های تکراری و مرجع‌های aria/لنگر شکسته
+  const ids = [...html.matchAll(/\bid=["']([\w-]+)["']/gi)].map((m) => m[1]);
+  const dupes = ids.filter((id, i) => ids.indexOf(id) !== i);
+  if (dupes.length) say(errors, `demos/${slug}: شناسه تکراری → ${[...new Set(dupes)].join('، ')}`);
+  const declared = new Set([
+    ...ids,
+    ...[...(js ?? '').matchAll(/id=["']([\w-]+)["']/g)].map((m) => m[1]),
+    ...[...(js ?? '').matchAll(/\.id\s*=\s*['"]([\w-]+)['"]/g)].map((m) => m[1]),
+    ...[...(js ?? '').matchAll(/setAttribute\(\s*['"]id['"]\s*,\s*['"]([\w-]+)['"]/g)].map((m) => m[1]),
+  ]);
+  const dangling = new Set();
+  for (const m of html.matchAll(/\b(?:aria-labelledby|aria-describedby|aria-controls|for)="([^"]+)"/gi))
+    for (const id of m[1].trim().split(/\s+/)) if (id && !declared.has(id)) dangling.add(id);
+  for (const m of html.matchAll(/href="#([\w-]+)"/g)) if (!declared.has(m[1])) dangling.add(m[1]);
+  if (dangling.size) say(errors, `demos/${slug}: مرجع بی‌هدف → ${[...dangling].join('، ')}`);
+
+  // شماره‌ی تماس: رقم‌های دیده‌شده در صفحه باید همان رقم‌های لینک باشند
+  const body = `${html}\n${js ?? ''}`.replace(/tel:[+\d][\d\s-]*/g, '');
+  const shown = [...body.matchAll(/[0-9۰-۹٠-٩][0-9۰-۹٠-٩\s\u200c-]{7,}[0-9۰-۹٠-٩]/g)]
+    .map((m) => toLatinDigits(m[0]).replace(/\D/g, ''))
+    .filter((digits) => digits.length === 10 || digits.length === 11);
+  for (const href of new Set([...`${html}${js ?? ''}`.matchAll(/tel:\+?([\d\s-]+)/g)].map((m) => m[1]))) {
+    if (!shown.length) break;
+    const digits = href.replace(/\D/g, '').replace(/^98/, '').replace(/^0/, '');
+    if (!shown.some((s) => s.replace(/^0/, '') === digits))
+      say(errors, `demos/${slug}: لینک تماس ${href} با شماره‌ی نمایش‌داده‌شده در صفحه هم‌خوان نیست`);
+  }
+
   // attribution
   const attribution = await read(join(dir, 'assets', 'ATTRIBUTION.json'));
   if (!attribution) {
@@ -174,7 +237,16 @@ for (const slug of DEMOS) {
     }
     for (const item of items) {
       if (!item.license || !item.title) say(errors, `demos/${slug}: attribution بی‌عنوان/بی‌لایسنس → ${item.file}`);
+      const rel = String(item.file ?? '');
+      if (!rel.startsWith('img/'))
+        say(errors, `demos/${slug}: attribution با مسیر نادرست → ${rel} (باید به img/ شروع شود)`);
+      else if (!(await stat(join(dir, 'assets', rel)).then(() => true).catch(() => false)))
+        say(errors, `demos/${slug}: attribution به فایلی اشاره می‌کند که نیست → ${rel}`);
+      if (!/^https?:\/\//.test(String(item.source ?? '')))
+        say(errors, `demos/${slug}: attribution بی‌نشانی منبع → ${rel} (${item.source})`);
     }
+    if (items.length !== onDisk.length)
+      say(errors, `demos/${slug}: attribution ${items.length} رکورد دارد ولی ${onDisk.length} تصویر روی دیسک است`);
   }
 
   // فایل‌های CSS/JS ارجاع‌شده در HTML

@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>مسیر | آژانس مسافرتی و تورهای داخلی و خارجی</title>
+<meta name="description" content="تورهای داخلی و خارجی، بلیت پرواز، رزرو هتل و کارهای ویزا. مقصدتان را انتخاب کنید و قیمت سفر را همین‌جا حساب کنید.">
+<link rel="stylesheet" href="./styles.css">
+<link rel="stylesheet" href="../shared/mobile.css">
+<link rel="stylesheet" href="../shared/navigation.css">
+</head>
+<body data-demo="travel">
+<a class="skip-link" href="#main">پرش به محتوای اصلی</a>
+
+<nav class="demo-return" aria-label="بازگشت به سایت اصلی">
+  <a class="demo-return__link" href="/#demos">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 12h14m-6-6 6 6-6 6"/></svg>
+    بازگشت به صفحه اصلی
+  </a>
+  <span class="demo-return__brand" dir="ltr">persianbotyar</span>
+</nav>
+
+<header class="site-header">
+  <div class="wrap header-inner">
+    <a class="wordmark" href="#top" aria-label="مسیر — صفحه‌ی اصلی">
+      <svg class="logo-mark" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <circle cx="12" cy="12" r="9"/>
+        <path d="M15.6 8.4 13 13l-4.6 2.6L11 11z"/>
+      </svg>
+      <span class="wordmark-text">مسیر<em>آژانس مسافرتی</em></span>
+    </a>
+
+    <nav class="main-nav" aria-label="ناوبری اصلی">
+      <ul class="nav-list">
+        <li><a href="#top">خانه</a></li>
+        <li><a href="#destinations">مقصدها</a></li>
+        <li><a href="#services">خدمات</a></li>
+        <li><a href="#pricing">محاسبه‌ی قیمت</a></li>
+        <li><a href="#voices">نظر مسافران</a></li>
+        <li><a href="#contact" class="nav-cta">گفت‌وگو با ما</a></li>
+      </ul>
+    </nav>
+
+    <button class="menu-toggle" id="menu-toggle" type="button" aria-expanded="false" aria-controls="nav-drawer">
+      <span class="sr-only">باز و بسته کردن فهرست</span>
+      <span class="menu-bar" aria-hidden="true"></span>
+      <span class="menu-bar" aria-hidden="true"></span>
+      <span class="menu-bar" aria-hidden="true"></span>
+    </button>
+  </div>
+  <nav class="nav-drawer" id="nav-drawer" aria-label="فهرست موبایل" hidden>
+    <ul>
+      <li><a href="#top">خانه</a></li>
+      <li><a href="#destinations">مقصدها</a></li>
+      <li><a href="#services">خدمات</a></li>
+      <li><a href="#pricing">محاسبه‌ی قیمت</a></li>
+      <li><a href="#voices">نظر مسافران</a></li>
+      <li><a href="#faq">سؤال‌های پرتکرار</a></li>
+      <li><a href="#contact">گفت‌وگو با ما</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main id="main">
+
+  <!-- ===== بخش آغازین ===== -->
+  <section class="hero" id="top">
+    <div class="hero-media">
+      <img src="./assets/img/hero-01.webp" alt="پل سی‌وسه‌پل اصفهان در شب با نورپردازی روی زاینده‌رود" width="1600" height="848" fetchpriority="high">
+    </div>
+    <div class="hero-scrim" aria-hidden="true"></div>
+
+    <div class="wrap hero-inner">
+      <p class="eyebrow">تورهای داخلی و خارجی · از سال ۱۳۸۵</p>
+      <h1 class="hero-title">راه را<br><span class="hero-accent">ما می‌شناسیم</span></h1>
+      <p class="hero-lead">
+        از کویر و جنگل تا شهرهای بی‌هو‌هوا. مقصدتان را بگویید؛ برنامه، پرواز و جای خواب را ما می‌چینیم.
+        قیمت را هم همین‌جا، پیش از هر تماسی، ببینید.
+      </p>
+      <div class="hero-actions">
+        <a class="btn btn--primary" href="#pricing">محاسبه‌ی قیمت سفر</a>
+        <a class="btn btn--ghost" href="#destinations">دیدن مقصدها</a>
+      </div>
+
+      <form class="finder" id="finder" role="search">
+        <div class="finder__field">
+          <label for="region">نوع سفر</label>
+          <select id="region" name="region">
+            <option value="all">همه‌ی سفرها</option>
+            <option value="iran">داخلی</option>
+            <option value="abroad">خارجی</option>
+            <option value="nature">طبیعت‌گردی</option>
+            <option value="city">شهرگردی</option>
+            <option value="sea">ساحل و جزیره</option>
+            <option value="snow">برف و زمستان</option>
+            <option value="desert">کویر</option>
+            <option value="pilgrim">زیارتی</option>
+          </select>
+        </div>
+        <div class="finder__field finder__field--grow">
+          <label for="q">کجا می‌خواهید بروید؟</label>
+          <input id="q" name="q" type="search" placeholder="مثلاً قشم، استانبول یا دیزین" autocomplete="off">
+        </div>
+        <button class="btn btn--primary finder__go" type="submit">پیدا کردن تور</button>
+      </form>
+    </div>
+  </section>
+
+  <!-- ===== نوار اطمینان ===== -->
+  <section class="promise" aria-label="تعهدهای ما">
+    <div class="wrap promise__grid">
+      <div class="promise__item">
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3.5 19 6v5.4c0 4-2.9 7.4-7 9.1-4.1-1.7-7-5.1-7-9.1V6z"/><path d="m9.2 12.4 2 2 3.6-4"/></svg>
+        <div><h3>بیمه‌ی مسافرت</h3><p>روی همه‌ی تورهای خارجی، بدون هزینه‌ی پنهان.</p></div>
+      </div>
+      <div class="promise__item">
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="8.6"/><path d="M12 7.6V12l3 1.9"/></svg>
+        <div><h3>پاسخ در یک دقیقه</h3><p>تیم شبانه‌روز روی خط است، حتی وسط سفر.</p></div>
+      </div>
+      <div class="promise__item">
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 8.5h16M4 8.5 6 4.5h12l2 4M4 8.5v11h16v-11"/><path d="M9.5 19.5v-6h5v6"/></svg>
+        <div><h3>اقامت مطمئن</h3><p>هتلی که عکسش را می‌بینید، همان است.</p></div>
+      </div>
+      <div class="promise__item">
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3.5 17.5h17M6 17.5V9l6-4.5L18 9v8.5"/><path d="M10 17.5v-4h4v4"/></svg>
+        <div><h3>پرداخت دو مرحله‌ای</h3><p>نیمی هنگام رزرو، نیمی پیش از حرکت.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== مقصدها ===== -->
+  <section class="section destinations" id="destinations">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="section-kicker">مقصدهای این فصل</p>
+        <h2 class="section-title">از کجا شروع می‌کنید؟</h2>
+        <p class="section-lead">
+          قیمت‌ها برای هر نفر و برای تور کامل است. با انتخاب مقصد، برنامه‌ی روزبه‌روز را هم می‌بینید.
+        </p>
+      </div>
+
+      <div class="toolbar">
+        <div class="chips" id="dest-chips" role="group" aria-label="پالایش بر پایه‌ی نوع سفر">
+          <button class="chip is-on" type="button" data-tag="all">همه</button>
+          <button class="chip" type="button" data-tag="iran">داخلی</button>
+          <button class="chip" type="button" data-tag="abroad">خارجی</button>
+          <button class="chip" type="button" data-tag="nature">طبیعت</button>
+          <button class="chip" type="button" data-tag="city">شهرگردی</button>
+          <button class="chip" type="button" data-tag="sea">ساحل</button>
+          <button class="chip" type="button" data-tag="snow">برف</button>
+          <button class="chip" type="button" data-tag="desert">کویر</button>
+          <button class="chip" type="button" data-tag="pilgrim">زیارتی</button>
+          <button class="chip chip--fav" type="button" data-tag="fav">علاقه‌مندی‌ها</button>
+        </div>
+        <div class="field field--search">
+          <label class="sr-only" for="dest-q">جست‌وجوی مقصد</label>
+          <input id="dest-q" type="search" placeholder="جست‌وجوی مقصد…" autocomplete="off">
+          <button class="field__clear" id="dest-clear" type="button" aria-label="پاک کردن جست‌وجو" hidden>
+            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6.5 6.5l11 11M17.5 6.5l-11 11"/></svg>
+          </button>
+        </div>
+        <div class="field field--sort">
+          <label for="dest-sort">ترتیب</label>
+          <select id="dest-sort">
+            <option value="suggest">پیشنهاد ما</option>
+            <option value="cheap">ارزان‌ترین</option>
+            <option value="rich">لوکس‌ترین</option>
+            <option value="short">کوتاه‌ترین سفر</option>
+            <option value="liked">پرطرفدارترین</option>
+          </select>
+        </div>
+      </div>
+
+      <p class="result-count" id="dest-count" role="status">در حال بارگذاری…</p>
+      <div class="dest-grid" id="dest-grid"></div>
+      <div class="empty" id="dest-empty" hidden>
+        <p class="empty__title">مقصدی با این ویژگی پیدا نشد</p>
+        <p class="empty__text">شاید نام را جور دیگری بنویسید، یا فیلترها را بردارید.</p>
+        <button class="btn btn--ghost" id="dest-reset" type="button">برداشتن همه‌ی فیلترها</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== نوار پانوراما ===== -->
+  <section class="panorama" aria-label="نمای شهر در غروب">
+    <img src="./assets/img/hero-02.webp" alt="نمای پانوراما از میدان نقش‌جهان اصفهان در ساعت آبی غروب" width="1600" height="384" loading="lazy">
+    <div class="panorama__text wrap">
+      <p class="panorama__quote">«سفر، تنها چیزی است که می‌خرید و شما را ثروتمند می‌کند.»</p>
+      <ul class="panorama__stats">
+        <li><b>۱۴</b><span>مقط فعال این فصل</span></li>
+        <li><b>۹۰۰+</b><span>سفر چیده‌شده</span></li>
+        <li><b>۴.۸</b><span>میانگین رضایت مسافر</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ===== خدمات ===== -->
+  <section class="section services" id="services">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="section-kicker">کاری که می‌کنیم</p>
+        <h2 class="section-title">فقط کیف را ببندید</h2>
+      </div>
+
+      <div class="service-grid">
+        <article class="service service--photo">
+          <img src="./assets/img/log-flight.webp" alt="نمای بال هواپیما از پنجره روی ابرها در غروب" width="1080" height="1440" loading="lazy">
+          <div class="service__body">
+            <h3>پرواز</h3>
+            <p>
+              بلیت چارتری و سیستمی، با انتخاب ساعت. اگه پروازتان تأخیر داشت، همان شب خبرتان می‌کنیم
+              و بلیت را جابه‌جا می‌کنیم.
+            </p>
+            <ul class="ticks">
+              <li>ارزان‌ترین مسیر دو هفته پیش از حرکت</li>
+              <li>صدای چک‌این و کارت پرواز تا شبِ پرواز</li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="service service--photo">
+          <img src="./assets/img/log-hotel.webp" alt="اتاق هتل با تخت مرتب و نور طبیعی از پنجره" width="1100" height="825" loading="lazy">
+          <div class="service__body">
+            <h3>اقامت</h3>
+            <p>
+              هتل‌ها را خودمان رزرو می‌کنیم و شبِ قبل از حرکت، آدرس و شماره‌ی اتاق را برایتان می‌فرستیم.
+              صبحانه و اینترنت در بیشتر تورها هست.
+            </p>
+            <ul class="ticks">
+              <li>اتاق خانوادگی و یک‌نفره، به انتخاب شما</li>
+              <li>امکان جابه‌جایی هتل تا ۷۲ ساعت پیش از حرکت</li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="service service--list">
+          <h3>کاری‌های پیش از حرکت</h3>
+          <ul class="stack">
+            <li><b>ویزا</b><span>وقت سفارت، ترجمه‌ی مدارک و پیگیری تا صدور؛ پرونده‌تان را ما نگه می‌داریم.</span></li>
+            <li><b>بیمه‌ی سفر</b><span>پوشش درمان و حادثه، همراه با کارت بیمه به نام شما.</span></li>
+            <li><b>ترانسفر</b><span>فرودگاه تا هتل و برگشت، با راننده‌ی آشنا به مسیر.</span></li>
+            <li><b>راهنما</b><span>روی تورهای داخلی، یک راهنمای بومی که شهر را دوست دارد.</span></li>
+          </ul>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== محاسبه‌ی قیمت ===== -->
+  <section class="section pricing" id="pricing">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="section-kicker">قیمت را ببینید</p>
+        <h2 class="section-title">برگه‌ی سفر خودتان را پر کنید</h2>
+        <p class="section-lead">مقصد، تاریخ و تعداد مسافر را انتخاب کنید؛ جمعِ قیمت همان لحظه نوشته می‌شود.</p>
+      </div>
+
+      <form class="pass" id="book-form">
+        <div class="pass__main">
+          <div class="pass__row">
+            <div class="field">
+              <label for="tour">مقصد</label>
+              <select id="tour"></select>
+            </div>
+            <div class="field">
+              <label for="depart">تاریخ حرکت</label>
+              <select id="depart"></select>
+            </div>
+          </div>
+
+          <div class="pass__row">
+            <div class="field field--step">
+              <span class="step-label" id="adults-label">بزرگسال</span>
+              <div class="stepper">
+                <button class="stepper__btn" id="minus-adults" type="button" aria-label="کم کردن بزرگسال">−</button>
+                <input id="adults" class="stepper__num" type="text" inputmode="numeric" value="2" readonly aria-labelledby="adults-label">
+                <button class="stepper__btn" id="plus-adults" type="button" aria-label="اضافه کردن بزرگسال">+</button>
+              </div>
+            </div>
+            <div class="field field--step">
+              <span class="step-label" id="children-label">کودک (زیر ۱۲ سال)</span>
+              <div class="stepper">
+                <button class="stepper__btn" id="minus-children" type="button" aria-label="کم کردن کودک">−</button>
+                <input id="children" class="stepper__num" type="text" inputmode="numeric" value="0" readonly aria-labelledby="children-label">
+                <button class="stepper__btn" id="plus-children" type="button" aria-label="اضافه کردن کودک">+</button>
+              </div>
+            </div>
+          </div>
+
+          <fieldset class="extras">
+            <legend>افزودنی‌ها</legend>
+            <div class="field-check">
+              <label class="check-label" for="add-transfer">
+                <input type="checkbox" id="add-transfer">
+                <span>ترانسفر خصوصی فرودگاه<span class="check-price">۴۵۰۰۰۰</span></span>
+              </label>
+            </div>
+            <div class="field-check">
+              <label class="check-label" for="add-single">
+                <input type="checkbox" id="add-single">
+                <span>اتاق یک‌نفره<span class="check-price">۱۹٪</span></span>
+              </label>
+            </div>
+            <div class="field-check">
+              <label class="check-label" for="add-tour">
+                <input type="checkbox" id="add-tour" checked>
+                <span>برنامه‌ی گشت روزانه<span class="check-price">همراه راهنما</span></span>
+              </label>
+            </div>
+          </fieldset>
+
+          <p class="capacity" id="capacity-note" role="status">در حال خواندن ظرفیت…</p>
+        </div>
+
+        <aside class="pass__stub" aria-label="جمع‌بندی قیمت">
+          <p class="stub__title">برگه‌ی شما</p>
+          <p class="stub__route" id="stub-route">—</p>
+          <ul class="breakdown" id="breakdown"></ul>
+          <div class="stub__total">
+            <span>جمعِ قابل پرداخت</span>
+            <b id="total">—</b>
+            <small>تومان، برای کل سفر</small>
+          </div>
+          <button class="btn btn--primary pass__submit" type="submit" id="quote-submit">ثبت درخواست</button>
+          <p class="stub__note">قیمت‌ها تقریبی است و تا ۴۸ ساعت ضمانت می‌ماند.</p>
+        </aside>
+      </form>
+
+      <div class="confirm" id="quote-result" hidden aria-live="polite">
+        <p class="confirm__title">درخواستتان ثبت شد</p>
+        <p class="confirm__text">
+          کارشناس ما در ساعت کاری تماس می‌گیرد و جزئیات پرداخت را می‌فرستد.
+          کد پیگیری را نگه دارید.
+        </p>
+        <p class="confirm__code">کد پیگیری: <b id="quote-code">—</b></p>
+        <button class="btn btn--ghost" type="button" id="quote-close">بستن</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== نظر مسافران ===== -->
+  <section class="section voices" id="voices">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="section-kicker">مسافران چه می‌گویند</p>
+        <h2 class="section-title">بعد از برگشت</h2>
+      </div>
+      <div class="voice-grid">
+        <blockquote class="voice">
+          <p>«تور هرمز را دو روز قبل رزرو کردیم. برنامه‌ی غلیظی نداشت ولی همان اندازه که لازم بود گشت زدیم و
+            عصرها آزاد بودیم. راننده هم مسیرهای جزیره را خوب می‌شناخت.»</p>
+          <footer><b>مریم تقوی</b><span>قشم و هرمز · تیر ۱۴۰۴</span></footer>
+        </blockquote>
+        <blockquote class="voice">
+          <p>«برای ویزای ترکیه نگران بودم. وقت سفارت و ترجمه را خودشان انجام دادند و هر سه‌روز یک‌بار
+            وضعیت پرونده را پیامک می‌کردند. پرواز بدون معطلی بود.»</p>
+          <footer><b>سهیل مرادی</b><span>استانبول · خرداد ۱۴۰۴</span></footer>
+        </blockquote>
+        <blockquote class="voice voice--wide">
+          <p>«با دو بچه رفتیم دیزین. اتاق را بزرگ‌تر گرفتند و وسایل اسکی را از قبل آماده کرده بودند.
+            صبحانه هتل هم برای بچه‌ها جواب داد. تنها چیزی که کم داشت، زمانِ بیشتر بود.»</p>
+          <footer><b>نگار و امیر صادقی</b><span>دیزین · بهمن ۱۴۰۳</span></footer>
+        </blockquote>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== سؤالات پرتکرار ===== -->
+  <section class="section faq" id="faq">
+    <div class="wrap faq__wrap">
+      <div class="section-head">
+        <p class="section-kicker">سؤال‌های پرتکرار</p>
+        <h2 class="section-title">قبل از رزرو بخوانید</h2>
+      </div>
+
+      <details class="faq__item" open>
+        <summary>قیمت تور چه چیزهایی را کم دارد؟</summary>
+        <p>بلیت رفت و برگشت، اقامت، صبحانه و گشت‌های نوشته‌شده در برنامه داخل قیمت است. ورودی موزه‌ها،
+          غذاهای بین مسیر و هزینه‌ی ویزا جدا حساب می‌شود. افزودنی‌هایی مثل ترانسفر خصوصی را هم خودتان
+          روی برگه‌ی قیمت انتخاب می‌کنید.</p>
+      </details>
+      <details class="faq__item">
+        <summary>تا چند روز قبل می‌توانم انصراف بدهم؟</summary>
+        <p>تا ۱۵ روز پیش از حرکت، بدون کسر هزینه. بین ۱۵ تا ۷ روز، بیست درصد؛ و در هفته‌ی آخر، چهل درصد
+          مبلغ نگه داشته می‌شود. اگر پرواز یا هتل کنسل شود، کل مبلغ برمی‌گردد.</p>
+      </details>
+      <details class="faq__item">
+        <summary>پرداخت اقساطی دارید؟</summary>
+        <p>بله. نیمی از مبلغ هنگام رزرو و نیمِ دیگر تا ده روز پیش از حرکت. برای تورهای خارجی که ویزا
+          لازم دارند، بخش دوم پس از صدور ویزا گرفته می‌شود.</p>
+      </details>
+      <details class="faq__item">
+        <summary>کودک و نوجوان چطور حساب می‌شود؟</summary>
+        <p>زیر دو سال رایگان و روی تخت والدین. از دو تا دوازده سال، هفتاد و پنج درصد قیمت بزرگسال.
+          در محاسبه‌گر، تعداد کودک را جدا وارد کنید؛ خودش اعمال می‌شود.</p>
+      </details>
+      <details class="faq__item">
+        <summary>مدارک هویتی برای تور داخلی لازم است؟</summary>
+        <p>برای همه‌ی مسافران، شناسنامه یا کارت ملی الزامی است؛ برای کودکان هم عکس مدارک کافی نیست.
+          شبِ قبل از حرکت، چک‌لیست مدارک را پیامک می‌کنیم.</p>
+      </details>
+    </div>
+  </section>
+
+  <!-- ===== تماس و شعب ===== -->
+  <section class="section contact" id="contact">
+    <div class="wrap contact__grid">
+      <div class="contact__intro">
+        <p class="section-kicker">گفت‌وگو با ما</p>
+        <h2 class="section-title">سفر بعدی‌تان را با هم بچینیم</h2>
+        <p class="section-lead">
+          شماره‌تان را بگذارید؛ با توجه به بودجه و تاریخ شما، دو یا سه پیشنهاد می‌فرستیم. هیچ تماسی
+          بدون اجازه‌ی شما تکرار نمی‌شود.
+        </p>
+
+        <ul class="branches">
+          <li>
+            <h3>شعبه‌ی تهران</h3>
+            <p>میرداماد، خیابان مدرس، پلاک ۱۴، طبقه‌ی همکف</p>
+            <p class="branch__hours">هرروز ۹ تا ۲۰</p>
+            <a class="visit-tel" href="tel:02191002200">۰۲۱ ۹۱۰۰ ۲۲۰۰</a>
+          </li>
+          <li>
+            <h3>شعبه‌ی شیراز</h3>
+            <p>چمران، نبش کوچه‌ی بهار، مجتمع آرش، واحد ۳</p>
+            <p class="branch__hours">شنبه تا پنجشنبه ۹ تا ۱۸</p>
+            <a class="visit-tel" href="tel:07191002200">۰۷۱ ۹۱۰۰ ۲۲۰۰</a>
+          </li>
+        </ul>
+      </div>
+
+      <form class="panel" id="contact-form" novalidate>
+        <div class="field">
+          <label for="c-name">نام و نام خانوادگی</label>
+          <input id="c-name" name="name" type="text" autocomplete="name" aria-describedby="c-name-err">
+          <p class="err" id="c-name-err" hidden></p>
+        </div>
+        <div class="field">
+          <label for="c-phone">شماره‌ی موبایل</label>
+          <input id="c-phone" name="phone" type="tel" inputmode="numeric" placeholder="09xxxxxxxxx" autocomplete="tel" aria-describedby="c-phone-err">
+          <p class="err" id="c-phone-err" hidden></p>
+        </div>
+        <div class="field">
+          <label for="c-city">شهر مبدأ</label>
+          <select id="c-city" name="city">
+            <option value="tehran">تهران</option>
+            <option value="shiraz">شیراز</option>
+            <option value="mashhad">مشهد</option>
+            <option value="isfahan">اصفهان</option>
+            <option value="tabriz">تبریز</option>
+            <option value="other">شهر دیگر</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="c-note">چه چیزی برایتان مهم است؟</label>
+          <textarea id="c-note" name="note" rows="3" placeholder="تاریخ تقریبی، بودجه، تعداد نفرات…"></textarea>
+        </div>
+        <button class="btn btn--primary" type="submit">فرستادن درخواست</button>
+        <p class="form-note" id="contact-live" role="status">فرم را پر کنید؛ ما تماس می‌گیریم.</p>
+      </form>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap footer-grid">
+    <div class="footer-brand">
+      <a class="wordmark" href="#top" aria-label="مسیر — بازگشت به بالا">
+        <svg class="logo-mark" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <circle cx="12" cy="12" r="9"/>
+          <path d="M15.6 8.4 13 13l-4.6 2.6L11 11z"/>
+        </svg>
+        <span class="wordmark-text">مسیر<em>آژانس مسافرتی</em></span>
+      </a>
+      <p class="footer-about">
+        تورهای داخلی و خارجی، بلیت پرواز، اقامت و کارهای ویزا. کد آژانس: م-۱۴۲۰.
+      </p>
+    </div>
+    <nav class="footer-col" aria-label="پیوندهای بخش‌ها">
+      <h3>بخش‌ها</h3>
+      <ul>
+        <li><a href="#destinations">مقصدها</a></li>
+        <li><a href="#services">خدمات</a></li>
+        <li><a href="#pricing">محاسبه‌ی قیمت</a></li>
+        <li><a href="#faq">سؤال‌های پرتکرار</a></li>
+      </ul>
+    </nav>
+    <nav class="footer-col" aria-label="پیوندهای تماس">
+      <h3>تماس</h3>
+      <ul>
+        <li><a class="visit-tel" href="tel:02191002200">۰۲۱ ۹۱۰۰ ۲۲۰۰</a></li>
+        <li><a class="visit-tel" href="tel:07191002200">۰۷۱ ۹۱۰۰ ۲۲۰۰</a></li>
+        <li><span>هرروز ۹ تا ۲۰</span></li>
+        <li><span>تهران · شیراز</span></li>
+      </ul>
+    </nav>
+  </div>
+  <div class="wrap footer-base">
+    <a class="demo-return-footer" href="/#demos">بازگشت به صفحه اصلی</a>
+    <p>این یک نمونه‌کار است؛ مقصدها، قیمت‌ها و درخواست‌ها واقعی نیستند.</p>
+    <p>© ۱۴۰۴ مسیر</p>
+  </div>
+</footer>
+
+<dialog class="sheet" id="tour-dialog" aria-labelledby="dialog-title">
+  <div class="sheet-controls">
+    <h2 id="dialog-title">برنامه‌ی تور</h2>
+    <button class="btn btn--icon" id="dialog-close" type="button" aria-label="بستن پنجره‌ی تور">
+      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6.5 6.5l11 11M17.5 6.5l-11 11"/></svg>
+    </button>
+  </div>
+  <div class="sheet-body" id="dialog-body"></div>
+</dialog>
+
+<div class="toast-region" id="toasts" aria-live="polite"></div>
+
+<script src="./app.js"></script>
+</body>
+</html>

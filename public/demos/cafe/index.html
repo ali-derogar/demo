@@ -7,9 +7,18 @@
 <meta name="description" content="منوی صبحانه و نوشیدنی‌های کافه بخار، همراه با قیمت، ساعت کاری و رزرو میز.">
 <link rel="stylesheet" href="./styles.css">
 <link rel="stylesheet" href="../shared/mobile.css">
+<link rel="stylesheet" href="../shared/navigation.css">
 </head>
 <body data-demo="cafe">
 <a class="skip-link" href="#main">پرش به محتوای اصلی</a>
+
+<nav class="demo-return" aria-label="بازگشت به سایت اصلی">
+  <a class="demo-return__link" href="/#demos">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 12h14m-6-6 6 6-6 6"/></svg>
+    بازگشت به صفحه اصلی
+  </a>
+  <span class="demo-return__brand" dir="ltr">persianbotyar</span>
+</nav>
 
 <header class="site-header">
   <div class="wrap header-inner">
@@ -216,7 +225,7 @@
         </div>
 
         <div class="booking__step">
-          <p class="step-label"><span aria-hidden="true">۲</span> چه روزی؟</p>
+          <p class="step-label"><span aria-hidden="true">۲</span> چه روزی؟ <span class="step-label__hint">هفته را کنار بکشید</span></p>
           <div class="days" id="day-strip" role="group" aria-label="انتخاب روز رزرو"></div>
         </div>
 
@@ -393,7 +402,7 @@
   </div>
   <div class="wrap footer-base">
     <p>© <span id="year">۱۴۰۵</span> بخار — همه‌ی حقوق محفوظ است.</p>
-    <a href="/">بازگشت به گالری نمونه‌کده</a>
+    <a class="demo-return-footer" href="/#demos">بازگشت به صفحه اصلی</a>
   </div>
 </footer>
 

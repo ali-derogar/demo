@@ -62,6 +62,8 @@ body[data-demo] :is(.nav-drawer, .mobile-nav) {
   body[data-demo] .section { padding-block: 2.5rem; }
   body[data-demo] .section-head { margin-block-end: 1.4rem; }
   body[data-demo] :is(.btn, .chip, .add-btn, .card-link, .remove-btn, .field__clear, #dialog-close) { min-block-size: 44px; }
+  body[data-demo] .field-check .check-label { min-block-size: 44px; align-items: center; }
+  body[data-demo] .check-label input[type="checkbox"] { inline-size: 26px; block-size: 26px; min-inline-size: 26px; margin-block: 0; }
   body[data-demo] .sheet-controls {
     display: flex; align-items: center; justify-content: flex-end; position: sticky; inset-block-start: 0;
     z-index: 5; min-block-size: 60px; padding: .5rem .75rem; background: var(--bg-2, var(--bg));
@@ -76,7 +78,8 @@ body[data-demo] :is(.nav-drawer, .mobile-nav) {
   body[data-demo] :is(.chips, .filter-bar, .tabs)::-webkit-scrollbar { display: none; }
   body[data-demo] :is(.chips, .filter-bar, .tabs) > button { flex: 0 0 auto; white-space: nowrap; }
   body[data-demo] .site-footer { padding-block-end: max(24px, env(safe-area-inset-bottom)); }
-  body[data-demo] :is(.footer-links a, .footer-nav a, .footer-col a, .visit-tel) {
+  body[data-demo] :is(.footer-links a, .footer-nav a, .footer-col a, .footer-grid nav a, .footer-base a,
+  .footer-bottom a, .gallery-link, .visit-tel, .wordmark) {
     display: inline-flex; align-items: center; min-block-size: 44px;
   }
 
@@ -99,7 +102,7 @@ body[data-demo] :is(.nav-drawer, .mobile-nav) {
   [data-demo="fashion"] .model-card img { aspect-ratio: 3/5; }
   [data-demo="fashion"] .model-info { padding: 50px 10px 12px; background: linear-gradient(transparent, #1c1812eb 35%); }
   [data-demo="fashion"] .model-name { font-size: .95rem; }
-  [data-demo="fashion"] .model-data { max-block-size: 140px; opacity: 1; font-size: .7rem; }
+  [data-demo="fashion"] .model-data { max-block-size: 140px; opacity: 1; font-size: .76rem; }
   [data-demo="fashion"] .model-data div { gap: 4px; flex-wrap: wrap; }
   [data-demo="fashion"] .model-data dt { min-inline-size: 32px; }
   [data-demo="fashion"] .style-card img { aspect-ratio: 4/3; }
@@ -134,7 +137,7 @@ body[data-demo] :is(.nav-drawer, .mobile-nav) {
   /* Cars: full-width actions and sheets that stay inside the visible viewport. */
   [data-demo="cars"] .hero-inner { padding-block: 2.5rem 2rem; }
   [data-demo="cars"] .hero-stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .7rem; margin-block-start: 1.7rem; padding-block-start: 1rem; }
-  [data-demo="cars"] .hero-stats dt { font-size: .7rem; }
+  [data-demo="cars"] .hero-stats dt { font-size: .76rem; }
   [data-demo="cars"] .hero-stats dd { font-size: 1.3rem; }
   [data-demo="cars"] .hero-actions { display: grid; grid-template-columns: 1fr 1fr; gap: .6rem; }
   [data-demo="cars"] .hero-actions .btn { padding-inline: .6rem; font-size: .85rem; }
@@ -178,7 +181,7 @@ body[data-demo] :is(.nav-drawer, .mobile-nav) {
   [data-demo="store"] .price-row { flex-wrap: wrap; gap: .15rem .4rem; }
   [data-demo="store"] .price { font-size: .95rem; flex-basis: 100%; }
   [data-demo="store"] .old-price { font-size: .75rem; }
-  [data-demo="store"] .save-chip { font-size: .68rem; }
+  [data-demo="store"] .save-chip { font-size: .76rem; }
   [data-demo="store"] .add-btn { font-size: .8rem; }
   [data-demo="store"] .cart-drawer { max-block-size: 100dvh; padding-block-start: env(safe-area-inset-top); }
   [data-demo="store"] .drawer-head, [data-demo="store"] .drawer-foot { flex-shrink: 0; }
@@ -208,14 +211,81 @@ body[data-demo] :is(.nav-drawer, .mobile-nav) {
   [data-demo="cafe"] .item__leader { display: none; }
   [data-demo="cafe"] .item__price { font-size: .9rem; }
   [data-demo="cafe"] .booking__step, [data-demo="cafe"] .booking__form, [data-demo="cafe"] .booking__done { padding: 1rem; }
+  [data-demo="cafe"] .step-label { flex-wrap: wrap; }
+  [data-demo="cafe"] .step-label__hint { display: inline; flex: 0 0 auto; margin-inline-start: auto; white-space: nowrap; font-size: .78rem; font-weight: 400; color: var(--cream-3); letter-spacing: 0; }
   [data-demo="cafe"] .days { display: flex; overflow-x: auto; gap: .5rem; padding-block: 4px; scroll-snap-type: inline proximity; overscroll-behavior-inline: contain; }
-  [data-demo="cafe"] .day { flex: 0 0 100px; scroll-snap-align: start; }
+  [data-demo="cafe"] .day { flex: 0 0 92px; scroll-snap-align: start; }
   [data-demo="cafe"] .slots { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); }
   [data-demo="cafe"] .slot { min-inline-size: 0; padding-inline: .4rem; }
   [data-demo="cafe"] .mosaic__big img, [data-demo="cafe"] .roast-figure img { aspect-ratio: 4/3; border-radius: 22px; }
   [data-demo="cafe"] .team { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .7rem; }
   [data-demo="cafe"] .team__name { font-size: .95rem; margin-inline: .7rem; }
   [data-demo="cafe"] .team__role { font-size: .75rem; margin-inline: .7rem; }
+  [data-demo="cafe"] .step-hint a { display: inline-flex; align-items: center; min-block-size: 44px; padding-inline: .2rem; }
+
+  /* Travel: stacked fare sheet, swipeable filters and a boarding pass that stays readable. */
+  [data-demo="travel"] .hero-inner { padding-block: 2.4rem 2rem; }
+  [data-demo="travel"] .hero-actions { display: grid; grid-template-columns: 1fr 1fr; gap: .6rem; }
+  [data-demo="travel"] .hero-actions .btn { padding-inline: .6rem; font-size: .86rem; }
+  [data-demo="travel"] .finder { margin-block-start: 1.8rem; }
+  [data-demo="travel"] .promise__grid { grid-template-columns: minmax(0, 1fr); gap: 1rem; padding-block: 1.2rem; }
+  [data-demo="travel"] .toolbar .field--sort { flex: 1 1 100%; }
+  [data-demo="travel"] .field--sort select { inline-size: 100%; }
+  [data-demo="travel"] .panorama img { block-size: 250px; }
+  [data-demo="travel"] .panorama__text { padding-block: 1rem; gap: .8rem; }
+  [data-demo="travel"] .panorama__quote { font-size: 1rem; }
+  [data-demo="travel"] .panorama__stats { gap: 1.1rem; }
+  [data-demo="travel"] .pass__main, [data-demo="travel"] .pass__stub { padding: 1.1rem; }
+  [data-demo="travel"] .pass__row { gap: .8rem; }
+  [data-demo="travel"] .stepper { inline-size: 100%; }
+  [data-demo="travel"] .stepper__num { flex: 1; min-inline-size: 0; }
+  [data-demo="travel"] dialog#tour-dialog { inline-size: calc(100% - 16px); max-inline-size: none; max-block-size: calc(100dvh - 24px - env(safe-area-inset-top) - env(safe-area-inset-bottom)); border-radius: 22px; }
+  [data-demo="travel"] .sheet-body { max-block-size: none; padding: 1rem; }
+  [data-demo="travel"] .sheet-controls { gap: .6rem; }
+  [data-demo="travel"] #dialog-close { flex: 0 0 44px; }
+  [data-demo="travel"] .sb-actions .btn { flex: 1 1 100%; }
+  [data-demo="travel"] .footer-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.4rem 1rem; }
+  [data-demo="travel"] .footer-brand { grid-column: 1/-1; }
+  [data-demo="travel"] .wordmark-text em { font-size: .76rem; }
+  [data-demo="travel"] .dest__price small { font-size: .78rem; }
+
+  /* Maktab: ruled practice sheets, stacked weekly rows and a course sheet that fits one hand. */
+  [data-demo="maktab"] .hero { padding-block: 2rem 2.4rem; }
+  [data-demo="maktab"] .hero-title { font-size: clamp(2rem, 9vw, 2.6rem); }
+  [data-demo="maktab"] .hero-sheet { padding: .7rem; }
+  [data-demo="maktab"] .corner-seal { inline-size: 86px; inset-block-start: -16px; inset-inline-start: -6px; }
+  [data-demo="maktab"] .corner-seal svg { inline-size: 86px; }
+  [data-demo="maktab"] .corner-seal span { font-size: .75rem; inset-block-start: 46%; letter-spacing: 0; }
+  [data-demo="maktab"] .promise-grid { grid-template-columns: minmax(0, 1fr); gap: 1.1rem; }
+  [data-demo="maktab"] .toolbar { padding: .9rem; }
+  [data-demo="maktab"] .toolbar__tools { display: grid; grid-template-columns: minmax(0, 1fr); }
+  [data-demo="maktab"] .toolbar__tools .select { flex-basis: auto; inline-size: 100%; }
+  [data-demo="maktab"] .day-tabs { display: flex; overflow-x: auto; gap: .45rem; padding-block-end: 4px;
+    scroll-snap-type: inline proximity; overscroll-behavior-inline: contain; scrollbar-width: none; }
+  [data-demo="maktab"] .day-tab { flex: 0 0 auto; scroll-snap-align: start; }
+  [data-demo="maktab"] .sess { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: .3rem .8rem; }
+  [data-demo="maktab"] .sess__time { grid-column: 1; grid-row: 1; display: flex; align-items: baseline; gap: .45rem; }
+  [data-demo="maktab"] .sess__time em { display: inline; }
+  [data-demo="maktab"] .sess__seats { grid-column: 2; grid-row: 1; text-align: end; }
+  [data-demo="maktab"] .sess__main { grid-column: 1/-1; grid-row: 2; }
+  [data-demo="maktab"] .sess__room { grid-column: 1; grid-row: 3; }
+  [data-demo="maktab"] .sess > .btn { grid-column: 2; grid-row: 3; justify-self: end; }
+  [data-demo="maktab"] .teacher-grid { grid-template-columns: minmax(0, 1fr); }
+  [data-demo="maktab"] .d-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  [data-demo="maktab"] .d-foot .btn { flex: 1 1 100%; }
+  [data-demo="maktab"] .field-row { grid-template-columns: minmax(0, 1fr); }
+  [data-demo="maktab"] .enroll { padding: 1.1rem; }
+  [data-demo="maktab"] .about__card { padding: 1.15rem; }
+  [data-demo="maktab"] dialog.sheet { inline-size: calc(100% - 16px); max-inline-size: none;
+    max-block-size: calc(100dvh - 24px - env(safe-area-inset-top) - env(safe-area-inset-bottom)); border-radius: 20px; }
+  [data-demo="maktab"] .sheet__body { max-block-size: none; padding: 1rem; }
+  [data-demo="maktab"] .sheet__close { inline-size: 44px; block-size: 44px; }
+  [data-demo="maktab"] .footer-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.3rem 1rem; }
+  [data-demo="maktab"] .footer-brand { grid-column: 1/-1; }
+  [data-demo="maktab"] #toasts { inset-inline: .7rem; inline-size: auto; max-inline-size: none; }
+  [data-demo="maktab"] :is(.text-link, .branch__tel, .footer-nav a, .footer-contact a) {
+    display: inline-flex; align-items: center; min-block-size: 44px; }
+  [data-demo="maktab"] .wordmark-text em { font-size: .76rem; }
 }
 
 @media (max-width: 359px) {

@@ -39,7 +39,7 @@ export function DemoGallery() {
         <div className="gallery__head">
           <div>
             <p className="eyebrow">نمونه‌ها</p>
-            <h2 id="gallery-title">سایت‌هایی که طراحی کردم</h2>
+            <h2 id="gallery-title">از طرح اولیه تا اولین کلیک</h2>
             <p className="gallery__intro">
               هر نمونه‌ای که دوست داشتید باز کنید. برای پیدا کردنش هم می‌تونید از جست‌وجو یا
               دسته‌بندی‌ها کمک بگیرید.

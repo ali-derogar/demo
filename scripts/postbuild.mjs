@@ -49,8 +49,16 @@ for (const slug of DEMOS) {
   if (/github\.com|github|گیت‌هاب/i.test(html)) problems.push(`${slug}: نشانی گیت‌هاب در HTML عمومی است`);
   if (/https?:\/\/(?!fonts\.)[^"')\s]*\.(jpe?g|png|webp|avif)/i.test(html))
     problems.push(`${slug}: تصویر دوربردی (URL بیرونی) در HTML استفاده شده`);
+  const returnNav = html.match(/<nav\b[^>]*\bclass="demo-return"[^>]*>([\s\S]*?)<\/nav>/i)?.[1] ?? '';
+  if (!/<a\b[^>]*\bhref="\/#demos"[^>]*>[\s\S]*?بازگشت به صفحه اصلی/.test(returnNav))
+    problems.push(`${slug}: لینک بازگشت به صفحه‌ی اصلی در نوار ثابت وجود ندارد`);
+  if (!html.includes('href="../shared/navigation.css"'))
+    problems.push(`${slug}: استایل نوار بازگشت بارگذاری نمی‌شود`);
   demoReport.push({ slug, images });
 }
+
+if (!(await exists(join(DIST, 'demos', 'shared', 'navigation.css'))))
+  problems.push('استایل مشترک نوار بازگشت در خروجی build وجود ندارد');
 
 // ۳) تصاویر پیش‌نمایش گالری
 for (const slug of PREVIEW_SLOTS) {

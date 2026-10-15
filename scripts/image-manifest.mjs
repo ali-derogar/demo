@@ -293,161 +293,257 @@ export const manifest = [
     "quality": 80
   },
   {
-    "out": "public/demos/fashion/assets/coll-01.webp",
+    "out": "public/demos/fashion/assets/img/coll-01.webp",
     "title": "FRANCESCA-HUNG-AAFW-2021.jpg",
-    "width": null,
+    "width": 800,
     "format": "webp",
     "cover": true,
     "quality": 80
   },
   {
-    "out": "public/demos/fashion/assets/coll-02.webp",
+    "out": "public/demos/fashion/assets/img/coll-02.webp",
     "title": "Berlin Fashion Week 2013.jpg",
-    "width": null,
+    "width": 800,
     "format": "webp",
     "cover": true,
     "quality": 80
   },
   {
-    "out": "public/demos/fashion/assets/coll-03.webp",
+    "out": "public/demos/fashion/assets/img/coll-03.webp",
     "title": "Digitalis evening dress by Mary Katrantzou (51441).jpg",
-    "width": null,
+    "width": 760,
     "format": "webp",
     "cover": true,
     "quality": 80
   },
   {
-    "out": "public/demos/fashion/assets/coll-04.webp",
+    "out": "public/demos/fashion/assets/img/coll-04.webp",
     "title": "Street Style of 2018 2019 in Tehran 4.jpg",
-    "width": null,
+    "width": 800,
     "format": "webp",
     "cover": true,
     "quality": 80
   },
   {
-    "out": "public/demos/fashion/assets/hero-01.webp",
+    "out": "public/demos/fashion/assets/img/hero-01.webp",
     "title": "Street Style of 2018 2019 in Tehran 2.jpg",
-    "width": null,
+    "width": 1100,
     "format": "webp",
     "cover": true,
     "quality": 80
   },
   {
-    "out": "public/demos/fashion/assets/look-01.webp",
+    "out": "public/demos/fashion/assets/img/look-01.webp",
     "title": "Street Style of 2018 2019 in Tehran.jpg",
-    "width": null,
+    "width": 720,
     "format": "webp",
     "cover": true,
     "quality": 80
   },
   {
-    "out": "public/demos/fashion/assets/look-02.webp",
+    "out": "public/demos/fashion/assets/img/look-02.webp",
     "title": "Street Style of 2018 2019 in Tehran 5.jpg",
-    "width": null,
+    "width": 720,
     "format": "webp",
     "cover": true,
     "quality": 80
   },
   {
-    "out": "public/demos/fashion/assets/look-03.webp",
+    "out": "public/demos/fashion/assets/img/look-03.webp",
     "title": "London Fashion Week Men's Strand January 2017 05.jpg",
-    "width": null,
+    "width": 720,
     "format": "webp",
     "cover": true,
     "quality": 80
   },
   {
-    "out": "public/demos/fashion/assets/look-04.webp",
+    "out": "public/demos/fashion/assets/img/look-04.webp",
     "title": "080 Bcn Fashion Week 2013 11 (55257592).jpeg",
-    "width": null,
+    "width": 800,
     "format": "webp",
     "cover": true,
     "quality": 80
   },
   {
-    "out": "public/demos/fashion/assets/look-05.webp",
+    "out": "public/demos/fashion/assets/img/look-05.webp",
     "title": "080 Bcn Fashion Week 2013 17 (55257624).jpeg",
-    "width": null,
+    "width": 800,
     "format": "webp",
     "cover": true,
     "quality": 80
   },
   {
-    "out": "public/demos/fashion/assets/look-06.webp",
+    "out": "public/demos/fashion/assets/img/look-06.webp",
     "title": "2014 Erywań, Damskie buty na wysokim obcasie na witrynie sklepowej.jpg",
-    "width": null,
+    "width": 800,
     "format": "webp",
     "cover": true,
     "quality": 80
   },
   {
-    "out": "public/demos/fashion/assets/look-07.webp",
+    "out": "public/demos/fashion/assets/img/look-07.webp",
     "title": "Camp - Notes on Fashion at the Met - Alessandro Michele for Gucci (73831).jpg",
-    "width": null,
+    "width": 800,
     "format": "webp",
     "cover": true,
     "quality": 80
   },
   {
-    "out": "public/demos/fashion/assets/look-08.webp",
+    "out": "public/demos/fashion/assets/img/look-08.webp",
     "title": "Supermodel Elza Matiz at Paris Fashion Week.jpg",
-    "width": null,
+    "width": 800,
     "format": "webp",
     "cover": true,
     "quality": 80
   },
   {
-    "out": "public/demos/fashion/assets/model-01.webp",
+    "out": "public/demos/fashion/assets/img/model-01.webp",
     "title": "LARA-WORTHINGTON-AAFW-2021.jpg",
-    "width": null,
+    "width": 700,
     "format": "webp",
     "cover": true,
     "quality": 80
   },
   {
-    "out": "public/demos/fashion/assets/model-02.webp",
+    "out": "public/demos/fashion/assets/img/model-02.webp",
     "title": "Charlee Fraser AAFW 2021 (cropped).jpg",
-    "width": null,
+    "width": 700,
     "format": "webp",
     "cover": true,
     "quality": 80
   },
   {
-    "out": "public/demos/fashion/assets/model-03.webp",
+    "out": "public/demos/fashion/assets/img/model-03.webp",
     "title": "ERIN-HOLLAND-AAFW-2021.jpg",
-    "width": null,
+    "width": 700,
     "format": "webp",
     "cover": true,
     "quality": 80
   },
   {
-    "out": "public/demos/fashion/assets/model-04.webp",
+    "out": "public/demos/fashion/assets/img/model-04.webp",
     "title": "Cara Delevingne During LFW SS15 (cropped).jpg",
-    "width": null,
+    "width": 700,
     "format": "webp",
     "cover": true,
     "quality": 80
   },
   {
-    "out": "public/demos/fashion/assets/style-01.webp",
+    "out": "public/demos/fashion/assets/img/style-01.webp",
     "title": "Upcycle (Unsplash).jpg",
-    "width": null,
+    "width": 800,
     "format": "webp",
     "cover": true,
     "quality": 80
   },
   {
-    "out": "public/demos/fashion/assets/style-02.webp",
+    "out": "public/demos/fashion/assets/img/style-02.webp",
     "title": "Bree Robertson presents a red carpet gown.jpg",
-    "width": null,
+    "width": 800,
     "format": "webp",
     "cover": true,
     "quality": 80
   },
   {
-    "out": "public/demos/fashion/assets/style-03.webp",
+    "out": "public/demos/fashion/assets/img/style-03.webp",
     "title": "Street fashion 2019 .jpg",
-    "width": null,
+    "width": 800,
+    "format": "webp",
+    "cover": true,
+    "quality": 80
+  },
+  {
+    "out": "public/demos/maktab/assets/img/band-class.webp",
+    "title": "PH003 N816 Roy C. Andrews photographs - DPLA - b63fba21de4ac8bb824d1dd8daf4f21d.jpg",
+    "width": 1600,
+    "format": "webp",
+    "cover": true,
+    "quality": 80
+  },
+  {
+    "out": "public/demos/maktab/assets/img/course-adab.webp",
+    "title": "DivanofHafez3.jpg",
+    "width": 1100,
+    "format": "webp",
+    "cover": true,
+    "quality": 80
+  },
+  {
+    "out": "public/demos/maktab/assets/img/course-hesab.webp",
+    "title": "Bodleian MS. Huntington 214 roll332 frame36.jpg",
+    "width": 1000,
+    "format": "webp",
+    "cover": true,
+    "quality": 80
+  },
+  {
+    "out": "public/demos/maktab/assets/img/course-khat.webp",
+    "title": "Nastaliq calligraphy, Malek-Mohammad, Calligraphy Museum of Iran.jpg",
+    "width": 1000,
+    "format": "webp",
+    "cover": true,
+    "quality": 80
+  },
+  {
+    "out": "public/demos/maktab/assets/img/course-mosiqi.webp",
+    "title": "Woman playing a santur, Qajar Iran, artist named Ahmad.jpg",
+    "width": 1013,
+    "format": "webp",
+    "cover": true,
+    "quality": 80
+  },
+  {
+    "out": "public/demos/maktab/assets/img/course-najom.webp",
+    "title": "MIA - Planispheric Astrolabe, Iran, 984 AD.jpg",
+    "width": 1100,
+    "format": "webp",
+    "cover": true,
+    "quality": 80
+  },
+  {
+    "out": "public/demos/maktab/assets/img/course-negar.webp",
+    "title": "Five Qizilbash visiting a sheikh, Isfahan, Iran, workshop of Mu'in Mosavver, ca. 1680.jpg",
+    "width": 1100,
+    "format": "webp",
+    "cover": true,
+    "quality": 80
+  },
+  {
+    "out": "public/demos/maktab/assets/img/course-shahnameh.webp",
+    "title": "Shahnameh - The Div Akvan throws Rustam into the sea.jpg",
+    "width": 1100,
+    "format": "webp",
+    "cover": true,
+    "quality": 80
+  },
+  {
+    "out": "public/demos/maktab/assets/img/desk.webp",
+    "title": "Antique lap desk interior view.JPG",
+    "width": 1100,
+    "format": "webp",
+    "cover": true,
+    "quality": 80
+  },
+  {
+    "out": "public/demos/maktab/assets/img/hero-01.webp",
+    "title": "Sa'di's Bustan - Nasta'liq calligraphy style.jpg",
+    "width": 1024,
+    "format": "webp",
+    "cover": true,
+    "quality": 80
+  },
+  {
+    "out": "public/demos/maktab/assets/img/shelf.webp",
+    "title": "Simon Room mezzanine bookshelves.jpg",
+    "width": 1400,
+    "format": "webp",
+    "cover": true,
+    "quality": 80
+  },
+  {
+    "out": "public/demos/maktab/assets/img/tile.webp",
+    "title": "426A0864.jpg",
+    "width": 1600,
     "format": "webp",
     "cover": true,
     "quality": 80
@@ -541,121 +637,265 @@ export const manifest = [
     "quality": 80
   },
   {
-    "out": "public/demos/store/assets/assets/img/backpack-01.webp",
+    "out": "public/demos/store/assets/img/backpack-01.webp",
     "title": "Upcycled Denim Backpack - DPLA - 7b66835f0256a3168818383844dbd8e1 (page 2).jpg",
-    "width": null,
+    "width": 800,
     "format": "webp",
     "cover": true,
     "quality": 80
   },
   {
-    "out": "public/demos/store/assets/assets/img/board-01.webp",
+    "out": "public/demos/store/assets/img/board-01.webp",
     "title": "Wooden cutting board 2017.jpg",
-    "width": null,
+    "width": 900,
     "format": "webp",
     "cover": true,
     "quality": 80
   },
   {
-    "out": "public/demos/store/assets/assets/img/candle-01.webp",
+    "out": "public/demos/store/assets/img/candle-01.webp",
     "title": "Gel Wax Candle.jpg",
-    "width": null,
+    "width": 900,
     "format": "webp",
     "cover": true,
     "quality": 80
   },
   {
-    "out": "public/demos/store/assets/assets/img/headphones-01.webp",
+    "out": "public/demos/store/assets/img/headphones-01.webp",
     "title": "1970s or earlier Elega DR 243C stereo headphones made in Japan.jpg",
-    "width": null,
+    "width": 900,
     "format": "webp",
     "cover": true,
     "quality": 80
   },
   {
-    "out": "public/demos/store/assets/assets/img/hero-01.webp",
+    "out": "public/demos/store/assets/img/hero-01.webp",
     "title": "Decorative candle and flowers.jpg",
-    "width": null,
+    "width": 1600,
     "format": "webp",
     "cover": true,
     "quality": 80
   },
   {
-    "out": "public/demos/store/assets/assets/img/keyboard-01.webp",
+    "out": "public/demos/store/assets/img/keyboard-01.webp",
     "title": "Beautiful Mechanical Keyboard.jpg",
-    "width": null,
+    "width": 900,
     "format": "webp",
     "cover": true,
     "quality": 80
   },
   {
-    "out": "public/demos/store/assets/assets/img/lamp-01.webp",
+    "out": "public/demos/store/assets/img/lamp-01.webp",
     "title": "Hanoi lamp.JPG",
-    "width": null,
+    "width": 900,
     "format": "webp",
     "cover": true,
     "quality": 80
   },
   {
-    "out": "public/demos/store/assets/assets/img/mouse-01.webp",
+    "out": "public/demos/store/assets/img/mouse-01.webp",
     "title": "2008 Taipei IT Month Day9 Elecom Optical EGG Mouse in Orange.jpg",
-    "width": null,
+    "width": 900,
     "format": "webp",
     "cover": true,
     "quality": 80
   },
   {
-    "out": "public/demos/store/assets/assets/img/mug-01.webp",
+    "out": "public/demos/store/assets/img/mug-01.webp",
     "title": "Amor en tazas.jpg",
-    "width": null,
+    "width": 900,
     "format": "webp",
     "cover": true,
     "quality": 80
   },
   {
-    "out": "public/demos/store/assets/assets/img/press-01.webp",
+    "out": "public/demos/store/assets/img/press-01.webp",
     "title": "Stainless steel french press.png",
-    "width": null,
+    "width": 900,
     "format": "webp",
     "cover": true,
     "quality": 80
   },
   {
-    "out": "public/demos/store/assets/assets/img/speaker-01.webp",
+    "out": "public/demos/store/assets/img/speaker-01.webp",
     "title": "JBL Flip 4.jpg",
-    "width": null,
+    "width": 800,
     "format": "webp",
     "cover": true,
     "quality": 80
   },
   {
-    "out": "public/demos/store/assets/assets/img/sunglasses-01.webp",
+    "out": "public/demos/store/assets/img/sunglasses-01.webp",
     "title": "American Optical Original Pilot Aviator sunglasses.jpg",
-    "width": null,
+    "width": 900,
     "format": "webp",
     "cover": true,
     "quality": 80
   },
   {
-    "out": "public/demos/store/assets/assets/img/teapot-01.webp",
+    "out": "public/demos/store/assets/img/teapot-01.webp",
     "title": "Wedgwood Factory (British) - Teapot - 1951.309 - Cleveland Museum of Art.jpg",
-    "width": null,
+    "width": 900,
     "format": "webp",
     "cover": true,
     "quality": 80
   },
   {
-    "out": "public/demos/store/assets/assets/img/vase-01.webp",
+    "out": "public/demos/store/assets/img/vase-01.webp",
     "title": "Old Terracotta flower vase.jpg",
-    "width": null,
+    "width": 800,
     "format": "webp",
     "cover": true,
     "quality": 80
   },
   {
-    "out": "public/demos/store/assets/assets/img/watch-01.webp",
+    "out": "public/demos/store/assets/img/watch-01.webp",
     "title": "1961 Enicar Ultrasonic gold-plated \"Cioccolatone\" design.jpg",
-    "width": null,
+    "width": 900,
+    "format": "webp",
+    "cover": true,
+    "quality": 80
+  },
+  {
+    "out": "public/demos/travel/assets/img/dest-anzali.webp",
+    "title": "Anzali lagoon by Mardetanha 5641.jpg",
+    "width": 1100,
+    "format": "webp",
+    "cover": true,
+    "quality": 80
+  },
+  {
+    "out": "public/demos/travel/assets/img/dest-cappadocia.webp",
+    "title": "Hot air balloon at sunrise over Cappadocia, Turkey.JPG",
+    "width": 1100,
+    "format": "webp",
+    "cover": true,
+    "quality": 80
+  },
+  {
+    "out": "public/demos/travel/assets/img/dest-desert.webp",
+    "title": "Maranjab Desert, Aran o Bidgol, Esfahan province, Iran , Photographer Mostafa Meraji 08.jpg",
+    "width": 1100,
+    "format": "webp",
+    "cover": true,
+    "quality": 80
+  },
+  {
+    "out": "public/demos/travel/assets/img/dest-dizin.webp",
+    "title": "Dizin Ski resort Tehran.jpg",
+    "width": 1100,
+    "format": "webp",
+    "cover": true,
+    "quality": 80
+  },
+  {
+    "out": "public/demos/travel/assets/img/dest-dubai.webp",
+    "title": "Dubai skyline unsplash.jpg",
+    "width": 1100,
+    "format": "webp",
+    "cover": true,
+    "quality": 80
+  },
+  {
+    "out": "public/demos/travel/assets/img/dest-forest.webp",
+    "title": "Alasht road.jpg",
+    "width": 1100,
+    "format": "webp",
+    "cover": true,
+    "quality": 80
+  },
+  {
+    "out": "public/demos/travel/assets/img/dest-hormuz.webp",
+    "title": "Picture 7 - Hormuz Island.jpg",
+    "width": 1100,
+    "format": "webp",
+    "cover": true,
+    "quality": 80
+  },
+  {
+    "out": "public/demos/travel/assets/img/dest-isfahan.webp",
+    "title": "Naghsh-e Jahan Square.jpg",
+    "width": 1100,
+    "format": "webp",
+    "cover": true,
+    "quality": 80
+  },
+  {
+    "out": "public/demos/travel/assets/img/dest-istanbul.webp",
+    "title": "Sultanahmet, Istanbul (P1100256).jpg",
+    "width": 1100,
+    "format": "webp",
+    "cover": true,
+    "quality": 80
+  },
+  {
+    "out": "public/demos/travel/assets/img/dest-kish.webp",
+    "title": "Kish Island south coast.jpg",
+    "width": 1100,
+    "format": "webp",
+    "cover": true,
+    "quality": 80
+  },
+  {
+    "out": "public/demos/travel/assets/img/dest-mashhad.webp",
+    "title": "Imam Reza shrine.jpg",
+    "width": 1100,
+    "format": "webp",
+    "cover": true,
+    "quality": 80
+  },
+  {
+    "out": "public/demos/travel/assets/img/dest-persepolis.webp",
+    "title": "Persépolis, Irán, 2016-09-24, DD 15.jpg",
+    "width": 1100,
+    "format": "webp",
+    "cover": true,
+    "quality": 80
+  },
+  {
+    "out": "public/demos/travel/assets/img/dest-shiraz.webp",
+    "title": "Mezquita de Nasirolmolk, Shiraz, Irán, 2016-09-24, DD 66-68 HDR.jpg",
+    "width": 1100,
+    "format": "webp",
+    "cover": true,
+    "quality": 80
+  },
+  {
+    "out": "public/demos/travel/assets/img/dest-tbilisi.webp",
+    "title": "Old Tbilisi town in Tbilisi, Georgia.jpg",
+    "width": 1100,
+    "format": "webp",
+    "cover": true,
+    "quality": 80
+  },
+  {
+    "out": "public/demos/travel/assets/img/hero-01.webp",
+    "title": "Si-o-se Pol, Isfahan, Irán, 2016-09-19, DD 04-06 HDR.jpg",
+    "width": 1600,
+    "format": "webp",
+    "cover": true,
+    "quality": 80
+  },
+  {
+    "out": "public/demos/travel/assets/img/hero-02.webp",
+    "title": "Panorama of Naqsh-i Jahan Square, Isfahan at blue hour (2019, edited).jpg",
+    "width": 1600,
+    "format": "webp",
+    "cover": true,
+    "quality": 80
+  },
+  {
+    "out": "public/demos/travel/assets/img/log-flight.webp",
+    "title": "Sunset view from an airplane window above the clouds.jpg",
+    "width": 1080,
+    "format": "webp",
+    "cover": true,
+    "quality": 80
+  },
+  {
+    "out": "public/demos/travel/assets/img/log-hotel.webp",
+    "title": "Hotel room interior at hotel Radisson Blu Oulu.jpg",
+    "width": 1100,
     "format": "webp",
     "cover": true,
     "quality": 80
@@ -685,6 +925,14 @@ export const manifest = [
     "quality": 80
   },
   {
+    "out": "public/images/previews/maktab.webp",
+    "title": "پیش‌نمایش گالری از Sa'di's Bustan - Nasta'liq calligraphy style.jpg",
+    "width": 1200,
+    "format": "webp",
+    "cover": true,
+    "quality": 80
+  },
+  {
     "out": "public/images/previews/sports.webp",
     "title": "پیش‌نمایش گالری از File:Aronald Classic Columbus.Ohio USA 3 (24912310643).jpg",
     "width": 1200,
@@ -695,6 +943,14 @@ export const manifest = [
   {
     "out": "public/images/previews/store.webp",
     "title": "پیش‌نمایش گالری از Decorative candle and flowers.jpg",
+    "width": 1200,
+    "format": "webp",
+    "cover": true,
+    "quality": 80
+  },
+  {
+    "out": "public/images/previews/travel.webp",
+    "title": "پیش‌نمایش گالری از Si-o-se Pol, Isfahan, Irán, 2016-09-19, DD 04-06 HDR.jpg",
     "width": 1200,
     "format": "webp",
     "cover": true,

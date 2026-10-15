@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { BrandMark } from './BrandMark';
 
 const links = [
   { href: '#top', label: 'صفحه اصلی' },
@@ -70,12 +71,10 @@ export function SiteHeader() {
     <>
       <header ref={headerRef} className={`site-header${scrolled ? ' is-scrolled' : ''}`}>
         <div className="shell site-header__inner">
-          <a className="wordmark" href="#top" aria-label="نمونه‌کده؛ صفحه اصلی" onClick={() => setOpen(false)}>
-            <span className="wordmark__mark" aria-hidden="true">
-              ن
-            </span>
-            <span className="wordmark__text">
-              نمونه‌کده
+          <a className="wordmark" href="#top" aria-label="persianbotyar؛ صفحه اصلی" onClick={() => setOpen(false)}>
+            <BrandMark />
+            <span className="wordmark__text" dir="ltr">
+              persianbotyar
               <span className="wordmark__dot" aria-hidden="true">
                 .
               </span>
