@@ -192,12 +192,13 @@ for (const slug of DEMOS) {
   }
 
   // شناسه‌های تکراری و مرجع‌های aria/لنگر شکسته
-  const ids = [...html.matchAll(/\bid=["']([\w-]+)["']/gi)].map((m) => m[1]);
+  // توجه: «id=» باید اول صفت باشد؛ وگرنه data-id="…" هم اشتباهاً جور می‌شود.
+  const ids = [...html.matchAll(/(?:^|[\s<])id=["']([\w-]+)["']/gi)].map((m) => m[1]);
   const dupes = ids.filter((id, i) => ids.indexOf(id) !== i);
   if (dupes.length) say(errors, `demos/${slug}: شناسه تکراری → ${[...new Set(dupes)].join('، ')}`);
   const declared = new Set([
     ...ids,
-    ...[...(js ?? '').matchAll(/id=["']([\w-]+)["']/g)].map((m) => m[1]),
+    ...[...(js ?? '').matchAll(/(?:^|[\s{}(,;.<])id=["']([\w-]+)["']/g)].map((m) => m[1]),
     ...[...(js ?? '').matchAll(/\.id\s*=\s*['"]([\w-]+)['"]/g)].map((m) => m[1]),
     ...[...(js ?? '').matchAll(/setAttribute\(\s*['"]id['"]\s*,\s*['"]([\w-]+)['"]/g)].map((m) => m[1]),
   ]);

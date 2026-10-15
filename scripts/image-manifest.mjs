@@ -701,6 +701,102 @@ export const manifest = [
     "quality": 80
   },
   {
+    "out": "public/demos/sekke/assets/img/bazaar.webp",
+    "title": "Tabriz Bazaar.jpg",
+    "width": 1400,
+    "format": "webp",
+    "cover": true,
+    "quality": 80
+  },
+  {
+    "out": "public/demos/sekke/assets/img/bullion-pile.webp",
+    "title": "Gold bars stacked in a pyramid, Dawson, probably between 1902 and 1910 (AL+CA 1405).jpg",
+    "width": 768,
+    "format": "webp",
+    "cover": true,
+    "quality": 80
+  },
+  {
+    "out": "public/demos/sekke/assets/img/coin-bahar.webp",
+    "title": "Bahar Azadi Coin.jpg",
+    "width": 900,
+    "format": "webp",
+    "cover": true,
+    "quality": 80
+  },
+  {
+    "out": "public/demos/sekke/assets/img/coin-pahlavi.webp",
+    "title": "5 Pahlavi - Iranian Golden coin.jpg",
+    "width": 900,
+    "format": "webp",
+    "cover": true,
+    "quality": 80
+  },
+  {
+    "out": "public/demos/sekke/assets/img/coin-quarter.webp",
+    "title": "Gold Pahlavi coin struck in 1974.jpg",
+    "width": 800,
+    "format": "webp",
+    "cover": true,
+    "quality": 80
+  },
+  {
+    "out": "public/demos/sekke/assets/img/dirham-coin.webp",
+    "title": "United Arab Emirates 1 dirham coin front.png",
+    "width": 900,
+    "format": "webp",
+    "cover": true,
+    "quality": 80
+  },
+  {
+    "out": "public/demos/sekke/assets/img/euro-note.webp",
+    "title": "50euro.png",
+    "width": 1000,
+    "format": "webp",
+    "cover": true,
+    "quality": 80
+  },
+  {
+    "out": "public/demos/sekke/assets/img/gold-bars.webp",
+    "title": "Gold bullion bars.jpg",
+    "width": 1200,
+    "format": "webp",
+    "cover": true,
+    "quality": 80
+  },
+  {
+    "out": "public/demos/sekke/assets/img/scale.webp",
+    "title": "Diamond Balance Scale 0.01 - 25 Carats Jewelers Measuring Tool.jpg",
+    "width": 1100,
+    "format": "webp",
+    "cover": true,
+    "quality": 80
+  },
+  {
+    "out": "public/demos/sekke/assets/img/shop-interior.webp",
+    "title": "GOLD Jewelry Shop at Hamad International Airport.jpg",
+    "width": 1600,
+    "format": "webp",
+    "cover": true,
+    "quality": 80
+  },
+  {
+    "out": "public/demos/sekke/assets/img/usd-note.webp",
+    "title": "Obverse of the series 2009 $100 Federal Reserve Note.jpg",
+    "width": 1200,
+    "format": "webp",
+    "cover": true,
+    "quality": 80
+  },
+  {
+    "out": "public/demos/sekke/assets/img/vault.webp",
+    "title": "Vault door - Reserve Bank Museum - Wellington, New Zealand.jpg",
+    "width": 1200,
+    "format": "webp",
+    "cover": true,
+    "quality": 80
+  },
+  {
     "out": "public/demos/sports/assets/img/athlete-01.webp",
     "title": "File:Nadadora de águas abertas em Fernando de Noronha.jpg",
     "width": 480,
@@ -1087,6 +1183,14 @@ export const manifest = [
   {
     "out": "public/images/previews/nabz.webp",
     "title": "پیش‌نمایش گالری از Pretty Lights at the Aragon Ballroom - 8 November 2013 - Light show.jpg",
+    "width": 1200,
+    "format": "webp",
+    "cover": true,
+    "quality": 80
+  },
+  {
+    "out": "public/images/previews/sekke.webp",
+    "title": "پیش‌نمایش گالری از تصویر همان دمو",
     "width": 1200,
     "format": "webp",
     "cover": true,

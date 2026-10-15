@@ -302,6 +302,18 @@ body[data-demo] :is(.nav-drawer, .mobile-nav) {
   [data-demo="nabz"] :is(.footer-contact a, .footer-links a, .text-link) {
     display: inline-flex; align-items: center; min-block-size: 44px; }
   [data-demo="nabz"] #toasts { inset-inline: .7rem; }
+
+  /* Sekke: rate board needs room to scroll, tape slows down, tap targets grow. */
+  [data-demo="sekke"] { --tape-dur: 46s; }
+  [data-demo="sekke"] .wordmark-text em { font-size: .76rem; letter-spacing: .18em; }
+  [data-demo="sekke"] .board__table { min-inline-size: 580px; font-size: .88rem; }
+  [data-demo="sekke"] .board__table :is(th, td) { padding: .7rem .55rem; }
+  [data-demo="sekke"] .row__open { display: block; inline-size: 100%; min-block-size: 44px; }
+  [data-demo="sekke"] :is(.tab, .pick) { min-block-size: 44px; }
+  [data-demo="sekke"] :is(.footer-links, .footer-contact) a { display: inline-flex; align-items: center; min-block-size: 44px; }
+  [data-demo="sekke"] :is(.coin__u, .conv__u) { font-size: .82rem; }
+  [data-demo="sekke"] .chart__frame { block-size: 300px; }
+  [data-demo="sekke"] #toasts { inset-inline: .7rem; }
 }
 
 @media (max-width: 359px) {

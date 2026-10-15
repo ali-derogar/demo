@@ -1,0 +1,865 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>سکه | تابلوی زنده‌ی طلا، سکه و ارز</title>
+<meta name="description" content="تابلوی زنده‌ی نرخ سکه، شمش، طلای آب‌شده و ارزها؛ نمودار کندل‌استیک، تبدیل نرخ، مشخصات هر سکه و استعلام اصالت.">
+<link rel="stylesheet" href="./styles.css">
+<link rel="stylesheet" href="../shared/mobile.css">
+<link rel="stylesheet" href="../shared/navigation.css">
+</head>
+<body data-demo="sekke">
+<a class="skip-link" href="#main">پرش به محتوای اصلی</a>
+
+<nav class="demo-return" aria-label="بازگشت به سایت اصلی">
+  <a class="demo-return__link" href="/#demos">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 12h14m-6-6 6 6-6 6"/></svg>
+    بازگشت به صفحه اصلی
+  </a>
+  <span class="demo-return__brand" dir="ltr">persianbotyar</span>
+</nav>
+
+<header class="site-header" id="site-header">
+  <div class="wrap header-inner">
+    <a class="wordmark" href="#top" aria-label="سکه — صفحه‌ی اصلی">
+      <span class="logo-coin" aria-hidden="true"><i></i><i></i></span>
+      <span class="wordmark-text">سکه<em>تابلوی نرخ</em></span>
+    </a>
+
+    <nav class="main-nav" aria-label="ناوبری اصلی">
+      <ul class="nav-list">
+        <li><a href="#top">خانه</a></li>
+        <li><a href="#board">تابلو</a></li>
+        <li><a href="#chart">نمودار</a></li>
+        <li><a href="#convert">تبدیل نرخ</a></li>
+        <li><a href="#coins">سکه‌ها</a></li>
+        <li><a href="#contact" class="nav-cta">درخواست نرخ</a></li>
+      </ul>
+    </nav>
+
+    <button class="menu-toggle" id="menu-toggle" type="button" aria-expanded="false" aria-controls="nav-drawer">
+      <span class="sr-only">باز و بسته کردن فهرست</span>
+      <span class="menu-bar" aria-hidden="true"></span>
+      <span class="menu-bar" aria-hidden="true"></span>
+    </button>
+  </div>
+  <nav class="nav-drawer" id="nav-drawer" aria-label="فهرست موبایل" hidden>
+    <ul>
+      <li><a href="#top">خانه</a></li>
+      <li><a href="#board">تابلوی نرخ</a></li>
+      <li><a href="#chart">نمودار کندل‌استیک</a></li>
+      <li><a href="#convert">تبدیل سریع</a></li>
+      <li><a href="#coins">مشخصات سکه‌ها</a></li>
+      <li><a href="#auth">استعلام اصالت</a></li>
+      <li><a href="#wallet">سبد پیگیری</a></li>
+      <li><a href="#branches">شعبه‌ها</a></li>
+      <li><a href="#faq">سؤال‌های پرتکرار</a></li>
+      <li><a href="#contact">درخواست نرخ</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main id="main">
+
+  <!-- ۱) ترمینال نرخ -->
+  <section class="terminal" id="top" aria-labelledby="terminal-h">
+    <div class="grain" aria-hidden="true">
+      <span class="grain__noise"></span>
+      <span class="grain__sheen"></span>
+      <span class="grain__vignette"></span>
+    </div>
+
+    <div class="wrap terminal__inner">
+      <div class="terminal__head">
+        <p class="badge"><span class="badge__dot" aria-hidden="true"></span>تابلوی زنده · <span class="badge__clock">ساعت <span class="tnum" id="wall-clock" dir="ltr"><span class="num" dir="ltr">۱۱:۲۴:۳۶</span></span></span></p>
+        <h1 id="terminal-h" class="terminal__h1">نرخ، همان‌جا که اتفاق می‌افتد</h1>
+        <p class="terminal__lede">خرید و فروشِ سکه، شمش، طلای آب‌شده و ارز در یک تابلو. هر نرخ از دو عدد اشتقاق می‌شود: قیمتِ جهانیِ طلا و نرخِ دلار. فرمولش هم همین‌جا چاپ شده است.</p>
+      </div>
+
+      <div class="hero-rate">
+        <div class="hero-rate__main" id="hero-rate">
+<p class="hero__label">سکه امامی · فروش به شما</p>
+              <p class="hero__value"><span class="num" dir="ltr">۷۷٬۲۵۰٬۰۰۰</span><span class="hero__unit">تومان</span></p>
+              <p class="hero__pair">
+                <span>خرید از شما</span><b class="num" dir="ltr">۷۶٬۷۸۵٬۰۰۰</b>
+                <span>میانگین</span><b class="num" dir="ltr">۷۷٬۲۵۰٬۰۰۰</b>
+              </p>
+              <p class="hero__chg is-up" id="hero-chg"><svg class="tri" viewBox="0 0 10 7" width="10" height="7" aria-hidden="true" focusable="false"><path d="M5 0 10 7H0z" fill="currentColor"/></svg><span class="num" dir="ltr">۱٫۴٪</span><span class="hero__chgcap">تغییر امروز</span></p>
+        </div>
+        <div class="hero-rate__switch" role="group" aria-label="نمادِ اصلیِ تابلو">
+          <button type="button" class="pick is-on" data-id="emami" aria-pressed="true">سکه امامی</button>
+          <button type="button" class="pick" data-id="half" aria-pressed="false">نیم سکه</button>
+          <button type="button" class="pick" data-id="quarter" aria-pressed="false">ربع سکه</button>
+          <button type="button" class="pick" data-id="gram18" aria-pressed="false">گرم ۱۸</button>
+          <button type="button" class="pick" data-id="usd" aria-pressed="false">دلار</button>
+        </div>
+        <ul class="rail" aria-label="نرخ‌های کلیدی">
+<li class="rail__item" data-id="ounce" style="--d:0ms">
+            <span class="rail__name">اونس طلا</span>
+            <b class="rail__value num" dir="ltr">۳٬۳۸۶٫۴۰</b>
+            <span class="rail__unit">دلار</span>
+            <span class="rail__chg is-up"><svg class="tri" viewBox="0 0 10 7" width="10" height="7" aria-hidden="true" focusable="false"><path d="M5 0 10 7H0z" fill="currentColor"/></svg><span class="num" dir="ltr">۰٫۳٪</span></span>
+          </li>
+          <li class="rail__item" data-id="usd" style="--d:90ms">
+            <span class="rail__name">دلار آمریکا</span>
+            <b class="rail__value num" dir="ltr">۹۲٬۴۰۰</b>
+            <span class="rail__unit">تومان</span>
+            <span class="rail__chg is-down"><svg class="tri" viewBox="0 0 10 7" width="10" height="7" aria-hidden="true" focusable="false"><path d="M5 0 10 7H0z" fill="currentColor" transform="rotate(180 5 3.5)"/></svg><span class="num" dir="ltr">۰٫۲٪</span></span>
+          </li>
+          <li class="rail__item" data-id="gram18" style="--d:180ms">
+            <span class="rail__name">گرم ۱۸ عیار</span>
+            <b class="rail__value num" dir="ltr">۷٬۵۴۵٬۰۰۰</b>
+            <span class="rail__unit">تومان</span>
+            <span class="rail__chg is-up"><svg class="tri" viewBox="0 0 10 7" width="10" height="7" aria-hidden="true" focusable="false"><path d="M5 0 10 7H0z" fill="currentColor"/></svg><span class="num" dir="ltr">۰٫۳٪</span></span>
+          </li>
+          <li class="rail__item" data-id="mesghal" style="--d:270ms">
+            <span class="rail__name">مثقال طلا</span>
+            <b class="rail__value num" dir="ltr">۳۲٬۸۳۶٬۰۰۰</b>
+            <span class="rail__unit">تومان</span>
+            <span class="rail__chg is-down"><svg class="tri" viewBox="0 0 10 7" width="10" height="7" aria-hidden="true" focusable="false"><path d="M5 0 10 7H0z" fill="currentColor" transform="rotate(180 5 3.5)"/></svg><span class="num" dir="ltr">۱٫۰٪</span></span>
+          </li>
+        </ul>
+      </div>
+
+      <div class="terminal__cta">
+        <a class="btn btn--gold" href="#convert">نرخِ لحظه را حساب کن</a>
+        <a class="btn btn--ghost" href="#auth">استعلام اصالت سکه</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ۲) نوارِ نرخ -->
+  <div class="tape" id="tape" aria-hidden="true">
+    <div class="tape__fade"></div>
+    <div class="tape__track">
+<span class="tape__cell" data-id="emami"><span class="tape__name">سکه امامی</span><b class="num" dir="ltr">۷۷٬۲۵۰٬۰۰۰</b><i class="tape__d is-up num" dir="ltr">۱٫۴٪</i></span>
+        <span class="tape__cell" data-id="bahar"><span class="tape__name">سکه بهار آزادی</span><b class="num" dir="ltr">۷۵٬۹۲۵٬۰۰۰</b><i class="tape__d is-up num" dir="ltr">۰٫۸٪</i></span>
+        <span class="tape__cell" data-id="half"><span class="tape__name">نیم سکه</span><b class="num" dir="ltr">۳۹٬۹۵۰٬۰۰۰</b><i class="tape__d is-down num" dir="ltr">۰٫۷٪</i></span>
+        <span class="tape__cell" data-id="quarter"><span class="tape__name">ربع سکه</span><b class="num" dir="ltr">۲۲٬۲۷۵٬۰۰۰</b><i class="tape__d is-up num" dir="ltr">۲٫۴٪</i></span>
+        <span class="tape__cell" data-id="grami"><span class="tape__name">سکه گرمی</span><b class="num" dir="ltr">۱۰٬۶۰۵٬۰۰۰</b><i class="tape__d is-down num" dir="ltr">۱٫۴٪</i></span>
+        <span class="tape__cell" data-id="melted"><span class="tape__name">طلای آب‌شده</span><b class="num" dir="ltr">۱۰٬۱۲۰٬۰۰۰</b><i class="tape__d is-up num" dir="ltr">۰٫۳٪</i></span>
+        <span class="tape__cell" data-id="bar100"><span class="tape__name">شمش ۱۰۰ گرمی</span><b class="num" dir="ltr">۱٬۰۲۴٬۱۰۰٬۰۰۰</b><i class="tape__d is-up num" dir="ltr">۰٫۶٪</i></span>
+        <span class="tape__cell" data-id="gram18"><span class="tape__name">گرم ۱۸ عیار</span><b class="num" dir="ltr">۷٬۵۴۵٬۰۰۰</b><i class="tape__d is-up num" dir="ltr">۰٫۳٪</i></span>
+        <span class="tape__cell" data-id="mesghal"><span class="tape__name">مثقال طلا</span><b class="num" dir="ltr">۳۲٬۸۳۶٬۰۰۰</b><i class="tape__d is-down num" dir="ltr">۱٫۰٪</i></span>
+        <span class="tape__cell" data-id="usd"><span class="tape__name">دلار آمریکا</span><b class="num" dir="ltr">۹۲٬۴۰۰</b><i class="tape__d is-down num" dir="ltr">۰٫۲٪</i></span>
+        <span class="tape__cell" data-id="eur"><span class="tape__name">یورو</span><b class="num" dir="ltr">۹۸٬۱۰۰</b><i class="tape__d is-up num" dir="ltr">۰٫۲٪</i></span>
+        <span class="tape__cell" data-id="gbp"><span class="tape__name">پوند استرلینگ</span><b class="num" dir="ltr">۱۱۸٬۵۰۰</b><i class="tape__d is-up num" dir="ltr">۰٫۴٪</i></span>
+        <span class="tape__cell" data-id="aed"><span class="tape__name">درهم امارات</span><b class="num" dir="ltr">۲۵٬۲۰۰</b><i class="tape__d is-down num" dir="ltr">۰٫۰٪</i></span>
+        <span class="tape__cell" data-id="try"><span class="tape__name">لیر ترکی</span><b class="num" dir="ltr">۲٬۱۷۰</b><i class="tape__d is-down num" dir="ltr">۱٫۲٪</i></span>
+        <span class="tape__cell" data-id="ounce"><span class="tape__name">اونس طلا</span><b class="num" dir="ltr">۳٬۳۸۶٫۴۰</b><i class="tape__d is-up num" dir="ltr">۰٫۳٪</i></span>
+<span class="tape__cell" data-id="emami"><span class="tape__name">سکه امامی</span><b class="num" dir="ltr">۷۷٬۲۵۰٬۰۰۰</b><i class="tape__d is-up num" dir="ltr">۱٫۴٪</i></span>
+        <span class="tape__cell" data-id="bahar"><span class="tape__name">سکه بهار آزادی</span><b class="num" dir="ltr">۷۵٬۹۲۵٬۰۰۰</b><i class="tape__d is-up num" dir="ltr">۰٫۸٪</i></span>
+        <span class="tape__cell" data-id="half"><span class="tape__name">نیم سکه</span><b class="num" dir="ltr">۳۹٬۹۵۰٬۰۰۰</b><i class="tape__d is-down num" dir="ltr">۰٫۷٪</i></span>
+        <span class="tape__cell" data-id="quarter"><span class="tape__name">ربع سکه</span><b class="num" dir="ltr">۲۲٬۲۷۵٬۰۰۰</b><i class="tape__d is-up num" dir="ltr">۲٫۴٪</i></span>
+        <span class="tape__cell" data-id="grami"><span class="tape__name">سکه گرمی</span><b class="num" dir="ltr">۱۰٬۶۰۵٬۰۰۰</b><i class="tape__d is-down num" dir="ltr">۱٫۴٪</i></span>
+        <span class="tape__cell" data-id="melted"><span class="tape__name">طلای آب‌شده</span><b class="num" dir="ltr">۱۰٬۱۲۰٬۰۰۰</b><i class="tape__d is-up num" dir="ltr">۰٫۳٪</i></span>
+        <span class="tape__cell" data-id="bar100"><span class="tape__name">شمش ۱۰۰ گرمی</span><b class="num" dir="ltr">۱٬۰۲۴٬۱۰۰٬۰۰۰</b><i class="tape__d is-up num" dir="ltr">۰٫۶٪</i></span>
+        <span class="tape__cell" data-id="gram18"><span class="tape__name">گرم ۱۸ عیار</span><b class="num" dir="ltr">۷٬۵۴۵٬۰۰۰</b><i class="tape__d is-up num" dir="ltr">۰٫۳٪</i></span>
+        <span class="tape__cell" data-id="mesghal"><span class="tape__name">مثقال طلا</span><b class="num" dir="ltr">۳۲٬۸۳۶٬۰۰۰</b><i class="tape__d is-down num" dir="ltr">۱٫۰٪</i></span>
+        <span class="tape__cell" data-id="usd"><span class="tape__name">دلار آمریکا</span><b class="num" dir="ltr">۹۲٬۴۰۰</b><i class="tape__d is-down num" dir="ltr">۰٫۲٪</i></span>
+        <span class="tape__cell" data-id="eur"><span class="tape__name">یورو</span><b class="num" dir="ltr">۹۸٬۱۰۰</b><i class="tape__d is-up num" dir="ltr">۰٫۲٪</i></span>
+        <span class="tape__cell" data-id="gbp"><span class="tape__name">پوند استرلینگ</span><b class="num" dir="ltr">۱۱۸٬۵۰۰</b><i class="tape__d is-up num" dir="ltr">۰٫۴٪</i></span>
+        <span class="tape__cell" data-id="aed"><span class="tape__name">درهم امارات</span><b class="num" dir="ltr">۲۵٬۲۰۰</b><i class="tape__d is-down num" dir="ltr">۰٫۰٪</i></span>
+        <span class="tape__cell" data-id="try"><span class="tape__name">لیر ترکی</span><b class="num" dir="ltr">۲٬۱۷۰</b><i class="tape__d is-down num" dir="ltr">۱٫۲٪</i></span>
+        <span class="tape__cell" data-id="ounce"><span class="tape__name">اونس طلا</span><b class="num" dir="ltr">۳٬۳۸۶٫۴۰</b><i class="tape__d is-up num" dir="ltr">۰٫۳٪</i></span>
+    </div>
+  </div>
+
+  <!-- ۳) تابلوی کامل -->
+  <section class="board section" id="board" aria-labelledby="board-h">
+    <div class="wrap">
+      <div class="section__head">
+        <div>
+          <h2 id="board-h">تابلوی کامل</h2>
+          <p class="section__lede">روی هر نماد بزنید تا ارزشِ ذاتی، حباب و فرمولِ نرخش باز شود.</p>
+        </div>
+        <p class="board__updated">آخرین به‌روزرسانی <span class="tnum" id="board-clock" dir="ltr"><span class="num" dir="ltr">۱۱:۲۴:۳۶</span></span></p>
+      </div>
+
+      <div class="board__tools">
+        <div class="chips" role="group" aria-label="فیلترِ نمادها">
+          <button type="button" class="chip is-on" data-filter="all" aria-pressed="true">همه</button>
+          <button type="button" class="chip" data-filter="coin" aria-pressed="false">سکه و طلا</button>
+          <button type="button" class="chip" data-filter="currency" aria-pressed="false">ارز</button>
+          <button type="button" class="chip" data-filter="ounce" aria-pressed="false">اونس</button>
+        </div>
+        <div class="board__search">
+          <label class="sr-only" for="board-search">جست‌وجوی نماد</label>
+          <input id="board-search" type="search" placeholder="مثلاً ربع یا یورو" autocomplete="off">
+        </div>
+        <button type="button" class="chip chip--sort" id="sort-toggle" aria-pressed="false">مرتب‌سازی بر پایه‌ی تغییر</button>
+      </div>
+
+      <div class="board__grid">
+        <div class="board__table-wrap">
+          <table class="board__table" id="board-table">
+            <caption class="sr-only">نرخِ خرید، فروش و تغییرِ روزانه‌ی پانزده نماد</caption>
+            <thead>
+              <tr>
+                <th scope="col">نماد</th>
+                <th scope="col">خرید از شما</th>
+                <th scope="col">فروش به شما</th>
+                <th scope="col">تغییر امروز</th>
+                <th scope="col">روند ۲۴ ساعت</th>
+              </tr>
+            </thead>
+            <tbody id="board-body">
+<tr data-id="emami" data-group="coin">
+              <th scope="row"><button class="row__open" type="button" data-id="emami">سکه امامی</button><span class="row__sub">طرح جدید · هر قطعه</span></th>
+              <td class="c-buy"><span class="num" dir="ltr">۷۶٬۷۸۵٬۰۰۰</span></td>
+              <td class="c-sell"><span class="num" dir="ltr">۷۷٬۲۵۰٬۰۰۰</span></td>
+              <td class="c-chg is-up"><svg class="tri" viewBox="0 0 10 7" width="10" height="7" aria-hidden="true" focusable="false"><path d="M5 0 10 7H0z" fill="currentColor"/></svg><span class="num" dir="ltr">۱٫۴٪</span></td>
+              <td class="c-spark"><canvas width="88" height="26" aria-hidden="true"></canvas></td>
+            </tr>
+            <tr data-id="bahar" data-group="coin">
+              <th scope="row"><button class="row__open" type="button" data-id="bahar">سکه بهار آزادی</button><span class="row__sub">طرح قدیم · هر قطعه</span></th>
+              <td class="c-buy"><span class="num" dir="ltr">۷۵٬۴۶۵٬۰۰۰</span></td>
+              <td class="c-sell"><span class="num" dir="ltr">۷۵٬۹۲۵٬۰۰۰</span></td>
+              <td class="c-chg is-up"><svg class="tri" viewBox="0 0 10 7" width="10" height="7" aria-hidden="true" focusable="false"><path d="M5 0 10 7H0z" fill="currentColor"/></svg><span class="num" dir="ltr">۰٫۸٪</span></td>
+              <td class="c-spark"><canvas width="88" height="26" aria-hidden="true"></canvas></td>
+            </tr>
+            <tr data-id="half" data-group="coin">
+              <th scope="row"><button class="row__open" type="button" data-id="half">نیم سکه</button><span class="row__sub">نیم قطعه</span></th>
+              <td class="c-buy"><span class="num" dir="ltr">۳۹٬۶۵۰٬۰۰۰</span></td>
+              <td class="c-sell"><span class="num" dir="ltr">۳۹٬۹۵۰٬۰۰۰</span></td>
+              <td class="c-chg is-down"><svg class="tri" viewBox="0 0 10 7" width="10" height="7" aria-hidden="true" focusable="false"><path d="M5 0 10 7H0z" fill="currentColor" transform="rotate(180 5 3.5)"/></svg><span class="num" dir="ltr">۰٫۷٪</span></td>
+              <td class="c-spark"><canvas width="88" height="26" aria-hidden="true"></canvas></td>
+            </tr>
+            <tr data-id="quarter" data-group="coin">
+              <th scope="row"><button class="row__open" type="button" data-id="quarter">ربع سکه</button><span class="row__sub">یک‌چهارم</span></th>
+              <td class="c-buy"><span class="num" dir="ltr">۲۲٬۰۷۵٬۰۰۰</span></td>
+              <td class="c-sell"><span class="num" dir="ltr">۲۲٬۲۷۵٬۰۰۰</span></td>
+              <td class="c-chg is-up"><svg class="tri" viewBox="0 0 10 7" width="10" height="7" aria-hidden="true" focusable="false"><path d="M5 0 10 7H0z" fill="currentColor"/></svg><span class="num" dir="ltr">۲٫۴٪</span></td>
+              <td class="c-spark"><canvas width="88" height="26" aria-hidden="true"></canvas></td>
+            </tr>
+            <tr data-id="grami" data-group="coin">
+              <th scope="row"><button class="row__open" type="button" data-id="grami">سکه گرمی</button><span class="row__sub">حدود یک گرم</span></th>
+              <td class="c-buy"><span class="num" dir="ltr">۱۰٬۵۱۵٬۰۰۰</span></td>
+              <td class="c-sell"><span class="num" dir="ltr">۱۰٬۶۰۵٬۰۰۰</span></td>
+              <td class="c-chg is-down"><svg class="tri" viewBox="0 0 10 7" width="10" height="7" aria-hidden="true" focusable="false"><path d="M5 0 10 7H0z" fill="currentColor" transform="rotate(180 5 3.5)"/></svg><span class="num" dir="ltr">۱٫۴٪</span></td>
+              <td class="c-spark"><canvas width="88" height="26" aria-hidden="true"></canvas></td>
+            </tr>
+            <tr data-id="melted" data-group="coin">
+              <th scope="row"><button class="row__open" type="button" data-id="melted">طلای آب‌شده</button><span class="row__sub">هر گرم · ۲۴ عیار</span></th>
+              <td class="c-buy"><span class="num" dir="ltr">۱۰٬۰۷۰٬۰۰۰</span></td>
+              <td class="c-sell"><span class="num" dir="ltr">۱۰٬۱۲۰٬۰۰۰</span></td>
+              <td class="c-chg is-up"><svg class="tri" viewBox="0 0 10 7" width="10" height="7" aria-hidden="true" focusable="false"><path d="M5 0 10 7H0z" fill="currentColor"/></svg><span class="num" dir="ltr">۰٫۳٪</span></td>
+              <td class="c-spark"><canvas width="88" height="26" aria-hidden="true"></canvas></td>
+            </tr>
+            <tr data-id="bar100" data-group="coin">
+              <th scope="row"><button class="row__open" type="button" data-id="bar100">شمش ۱۰۰ گرمی</button><span class="row__sub">شمش ۱۰۰ گرمی</span></th>
+              <td class="c-buy"><span class="num" dir="ltr">۱٬۰۱۸٬۵۰۰٬۰۰۰</span></td>
+              <td class="c-sell"><span class="num" dir="ltr">۱٬۰۲۴٬۱۰۰٬۰۰۰</span></td>
+              <td class="c-chg is-up"><svg class="tri" viewBox="0 0 10 7" width="10" height="7" aria-hidden="true" focusable="false"><path d="M5 0 10 7H0z" fill="currentColor"/></svg><span class="num" dir="ltr">۰٫۶٪</span></td>
+              <td class="c-spark"><canvas width="88" height="26" aria-hidden="true"></canvas></td>
+            </tr>
+            <tr data-id="gram18" data-group="coin">
+              <th scope="row"><button class="row__open" type="button" data-id="gram18">گرم ۱۸ عیار</button><span class="row__sub">هر گرم · ۱۸ عیار</span></th>
+              <td class="c-buy"><span class="num" dir="ltr">۷٬۵۱۱٬۰۰۰</span></td>
+              <td class="c-sell"><span class="num" dir="ltr">۷٬۵۴۵٬۰۰۰</span></td>
+              <td class="c-chg is-up"><svg class="tri" viewBox="0 0 10 7" width="10" height="7" aria-hidden="true" focusable="false"><path d="M5 0 10 7H0z" fill="currentColor"/></svg><span class="num" dir="ltr">۰٫۳٪</span></td>
+              <td class="c-spark"><canvas width="88" height="26" aria-hidden="true"></canvas></td>
+            </tr>
+            <tr data-id="mesghal" data-group="coin">
+              <th scope="row"><button class="row__open" type="button" data-id="mesghal">مثقال طلا</button><span class="row__sub">۴٫۶۰۸ گرم</span></th>
+              <td class="c-buy"><span class="num" dir="ltr">۳۲٬۶۷۲٬۰۰۰</span></td>
+              <td class="c-sell"><span class="num" dir="ltr">۳۲٬۸۳۶٬۰۰۰</span></td>
+              <td class="c-chg is-down"><svg class="tri" viewBox="0 0 10 7" width="10" height="7" aria-hidden="true" focusable="false"><path d="M5 0 10 7H0z" fill="currentColor" transform="rotate(180 5 3.5)"/></svg><span class="num" dir="ltr">۱٫۰٪</span></td>
+              <td class="c-spark"><canvas width="88" height="26" aria-hidden="true"></canvas></td>
+            </tr>
+            <tr data-id="usd" data-group="currency">
+              <th scope="row"><button class="row__open" type="button" data-id="usd">دلار آمریکا</button><span class="row__sub">اسکناس · هر دلار</span></th>
+              <td class="c-buy"><span class="num" dir="ltr">۹۲٬۰۰۰</span></td>
+              <td class="c-sell"><span class="num" dir="ltr">۹۲٬۴۰۰</span></td>
+              <td class="c-chg is-down"><svg class="tri" viewBox="0 0 10 7" width="10" height="7" aria-hidden="true" focusable="false"><path d="M5 0 10 7H0z" fill="currentColor" transform="rotate(180 5 3.5)"/></svg><span class="num" dir="ltr">۰٫۲٪</span></td>
+              <td class="c-spark"><canvas width="88" height="26" aria-hidden="true"></canvas></td>
+            </tr>
+            <tr data-id="eur" data-group="currency">
+              <th scope="row"><button class="row__open" type="button" data-id="eur">یورو</button><span class="row__sub">هر یورو</span></th>
+              <td class="c-buy"><span class="num" dir="ltr">۹۷٬۷۰۰</span></td>
+              <td class="c-sell"><span class="num" dir="ltr">۹۸٬۱۰۰</span></td>
+              <td class="c-chg is-up"><svg class="tri" viewBox="0 0 10 7" width="10" height="7" aria-hidden="true" focusable="false"><path d="M5 0 10 7H0z" fill="currentColor"/></svg><span class="num" dir="ltr">۰٫۲٪</span></td>
+              <td class="c-spark"><canvas width="88" height="26" aria-hidden="true"></canvas></td>
+            </tr>
+            <tr data-id="gbp" data-group="currency">
+              <th scope="row"><button class="row__open" type="button" data-id="gbp">پوند استرلینگ</button><span class="row__sub">هر پوند</span></th>
+              <td class="c-buy"><span class="num" dir="ltr">۱۱۸٬۰۰۰</span></td>
+              <td class="c-sell"><span class="num" dir="ltr">۱۱۸٬۵۰۰</span></td>
+              <td class="c-chg is-up"><svg class="tri" viewBox="0 0 10 7" width="10" height="7" aria-hidden="true" focusable="false"><path d="M5 0 10 7H0z" fill="currentColor"/></svg><span class="num" dir="ltr">۰٫۴٪</span></td>
+              <td class="c-spark"><canvas width="88" height="26" aria-hidden="true"></canvas></td>
+            </tr>
+            <tr data-id="aed" data-group="currency">
+              <th scope="row"><button class="row__open" type="button" data-id="aed">درهم امارات</button><span class="row__sub">هر درهم</span></th>
+              <td class="c-buy"><span class="num" dir="ltr">۲۵٬۰۰۰</span></td>
+              <td class="c-sell"><span class="num" dir="ltr">۲۵٬۲۰۰</span></td>
+              <td class="c-chg is-down"><svg class="tri" viewBox="0 0 10 7" width="10" height="7" aria-hidden="true" focusable="false"><path d="M5 0 10 7H0z" fill="currentColor" transform="rotate(180 5 3.5)"/></svg><span class="num" dir="ltr">۰٫۰٪</span></td>
+              <td class="c-spark"><canvas width="88" height="26" aria-hidden="true"></canvas></td>
+            </tr>
+            <tr data-id="try" data-group="currency">
+              <th scope="row"><button class="row__open" type="button" data-id="try">لیر ترکی</button><span class="row__sub">هر لیر</span></th>
+              <td class="c-buy"><span class="num" dir="ltr">۲٬۱۶۰</span></td>
+              <td class="c-sell"><span class="num" dir="ltr">۲٬۱۷۰</span></td>
+              <td class="c-chg is-down"><svg class="tri" viewBox="0 0 10 7" width="10" height="7" aria-hidden="true" focusable="false"><path d="M5 0 10 7H0z" fill="currentColor" transform="rotate(180 5 3.5)"/></svg><span class="num" dir="ltr">۱٫۲٪</span></td>
+              <td class="c-spark"><canvas width="88" height="26" aria-hidden="true"></canvas></td>
+            </tr>
+            <tr data-id="ounce" data-group="ounce">
+              <th scope="row"><button class="row__open" type="button" data-id="ounce">اونس طلا</button><span class="row__sub">هر اونس · دلار</span></th>
+              <td class="c-buy"><span class="num" dir="ltr">۳٬۳۸۲٫۳۴</span></td>
+              <td class="c-sell"><span class="num" dir="ltr">۳٬۳۸۶٫۴۰</span></td>
+              <td class="c-chg is-up"><svg class="tri" viewBox="0 0 10 7" width="10" height="7" aria-hidden="true" focusable="false"><path d="M5 0 10 7H0z" fill="currentColor"/></svg><span class="num" dir="ltr">۰٫۳٪</span></td>
+              <td class="c-spark"><canvas width="88" height="26" aria-hidden="true"></canvas></td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <aside class="rate-detail" id="rate-detail" aria-live="polite" aria-labelledby="rate-title">
+          <p class="rate-detail__kicker">برگه‌ی نماد</p>
+<h3 id="rate-title">سکه امامی</h3>
+            <p class="rate__price"><span class="num" dir="ltr">۷۷٬۲۵۰٬۰۰۰</span><span class="rate__unit">تومان</span></p>
+            <p class="rate__meta">خرید <span class="num" dir="ltr">۷۶٬۷۸۵٬۰۰۰</span> · فروش <span class="num" dir="ltr">۷۷٬۲۵۰٬۰۰۰</span> · کارمزد <span class="num" dir="ltr">۰٫۶۰</span>٪</p>
+            <ul class="rate__math">
+              <li><span>طلای خالص</span><b><span class="num" dir="ltr">۷٫۳۲</span> گرم × <span class="num" dir="ltr">۱۰٬۰۶۰٬۰۰۰</span> = <span class="num" dir="ltr">۷۳٬۶۴۰٬۰۰۰</span> تومان</b></li>
+              <li><span>حباب</span><b><span class="num" dir="ltr">۴٫۹</span>٪ = <span class="num" dir="ltr">۳٬۶۰۸٬۰۰۰</span> تومان</b></li>
+              <li><span>نرخ تابلو</span><b><span class="num" dir="ltr">۷۳٬۶۴۰٬۰۰۰</span> × <span class="num" dir="ltr">۱٫۰۴۹</span> = <span class="num" dir="ltr">۷۷٬۲۵۰٬۰۰۰</span> تومان</b></li>
+            </ul>
+            <p class="rate__driver">اونس <span class="num" dir="ltr">۳۳۸۶٫۴۰</span> دلار · دلار <span class="num" dir="ltr">۹۲٬۴۰۰</span> تومان · هر اونس <span class="num" dir="ltr">۳۱٫۱۰۳۵</span> گرم</p>
+            <p class="rate__note">نرخِ تابلو به نزدیک‌ترین <span class="num" dir="ltr">۵٬۰۰۰</span> تومان گرد می‌شود؛ خودِ محاسبه گرد نیست.</p>
+          <div class="rate__spark">
+            <canvas id="rate-spark" width="320" height="86" role="img" aria-label="نمودارِ کوچکِ روند بیست‌وچهار ساعته"></canvas>
+          </div>
+          <div class="rate__actions">
+            <button type="button" class="btn btn--ghost btn--sm" id="rate-watch">به سبد پیگیری اضافه کن</button>
+            <a class="btn btn--gold btn--sm" href="#chart">نمودارِ کامل</a>
+          </div>
+          <noscript><p class="rate__note">نرخ‌های این صفحه یک snapshot است؛ برای تکان‌خوردنِ عدد، جاوااسکریپت مرورگر را روشن کنید.</p></noscript>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <!-- ۴) نمودار -->
+  <section class="chart section" id="chart" aria-labelledby="chart-h">
+    <div class="wrap">
+      <div class="section__head">
+        <div>
+          <h2 id="chart-h">نمودارِ کندل‌استیک</h2>
+          <p class="section__lede">بدنه‌ی هر کندل فاصله‌ی فتح تا تسویه است؛ سایه‌ها بلندترین و کوتاه‌ترینِ همان بازه. میانگینِ متحرکِ بیست دوره هم روی همان مقیاس رسم می‌شود.</p>
+        </div>
+        <p class="pill pill--live" id="chart-live"><span class="badge__dot" aria-hidden="true"></span>پخشِ زنده</p>
+      </div>
+
+      <div class="chart__bar">
+        <label class="sr-only" for="chart-symbol">نمادِ نمودار</label>
+        <select id="chart-symbol">
+          <option value="emami" selected>سکه امامی</option>
+          <option value="bahar">سکه بهار آزادی</option>
+          <option value="half">نیم سکه</option>
+          <option value="quarter">ربع سکه</option>
+          <option value="gram18">گرم ۱۸ عیار</option>
+          <option value="mesghal">مثقال طلا</option>
+          <option value="usd">دلار آمریکا</option>
+          <option value="eur">یورو</option>
+          <option value="ounce">اونس طلا</option>
+        </select>
+        <div class="tabs" role="group" aria-label="بازه‌ی زمانی">
+          <button type="button" class="tab" data-tf="5m" aria-pressed="false">۵ دقیقه</button>
+          <button type="button" class="tab is-on" data-tf="1h" aria-pressed="true">۱ ساعت</button>
+          <button type="button" class="tab" data-tf="1d" aria-pressed="false">۱ روز</button>
+        </div>
+        <button type="button" class="chip is-on" id="ma-toggle" aria-pressed="true">میانگین ۲۰</button>
+        <button type="button" class="chip" id="replay" aria-pressed="false">پخشِ مجدد</button>
+      </div>
+
+      <div class="chart__frame">
+        <canvas id="chart-canvas" width="1200" height="440" role="img" aria-label="نمودارِ میله‌ایِ شمعِ نرخ در بازه‌ی انتخابی"></canvas>
+        <div class="chart__readout" id="chart-readout" aria-live="off"></div>
+      </div>
+
+      <ul class="chart__stats" id="chart-stats">
+        <li><span>افتتاح</span><b class="num" id="st-open" dir="ltr">—</b></li>
+        <li><span>بیشترین</span><b class="num" id="st-high" dir="ltr">—</b></li>
+        <li><span>کمترین</span><b class="num" id="st-low" dir="ltr">—</b></li>
+        <li><span>تسویه</span><b class="num" id="st-close" dir="ltr">—</b></li>
+        <li><span>حجمِ معامله (قطعه)</span><b class="num" id="st-vol" dir="ltr">—</b></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ۵) تبدیل سریع -->
+  <section class="convert section" id="convert" aria-labelledby="convert-h">
+    <div class="wrap convert__wrap">
+      <div class="section__head">
+        <div>
+          <h2 id="convert-h">چقدر می‌شود؟</h2>
+          <p class="section__lede">مبلغ یا تعداد را وارد کنید؛ نرخِ تابلو و کارمزدِ صرافی روی همان عدد می‌نشیند.</p>
+        </div>
+      </div>
+
+      <div class="convert__grid">
+        <form class="conv__form" id="conv-form">
+          <div class="field">
+            <label for="conv-amount">مبلغ یا تعداد</label>
+            <input id="conv-amount" type="text" inputmode="decimal" value="1" autocomplete="off">
+            <span class="field__hint" id="conv-amount-unit">سکه</span>
+          </div>
+          <div class="field">
+            <label for="conv-from">از</label>
+            <select id="conv-from"></select>
+          </div>
+          <div class="field">
+            <label for="conv-to">به</label>
+            <select id="conv-to"></select>
+          </div>
+          <fieldset class="conv__side">
+            <legend>طرفِ معامله</legend>
+            <label><input type="radio" name="side" value="buy" checked> می‌خرم</label>
+            <label><input type="radio" name="side" value="sell"> می‌فروشم</label>
+          </fieldset>
+          <p class="conv__note">کارمزدِ صرافی <span class="num" dir="ltr">۰٫۴</span>٪ روی مبلغِ پایه حساب می‌شود.</p>
+        </form>
+
+        <div class="conv__out" id="conv-out-box" aria-live="polite">
+<p class="conv__line"><span>مبلغِ پایه</span><b class="num" dir="ltr">۷۷٬۲۴۸٬۰۰۰</b><i class="conv__u">تومان</i></p>
+              <p class="conv__line"><span>کارمزد <span class="num" dir="ltr">۰٫۴</span>٪</span><b class="num" dir="ltr">۳۰۹٬۰۰۰</b><i class="conv__u">تومان</i></p>
+              <p class="conv__total"><span>قابل پرداخت</span><b class="num" dir="ltr" id="conv-out">۷۷٬۵۵۷٬۰۰۰</b><i class="conv__u">تومان</i></p>
+              <p class="conv__rate">نرخِ تابلو <span class="num" dir="ltr">۷۷٬۲۵۰٬۰۰۰</span> · فردایی <span class="num" dir="ltr">۷۷٬۹۰۵٬۰۰۰</span></p>
+          <div class="conv__buttons">
+            <button type="button" class="btn btn--ghost btn--sm" id="conv-copy">کپیِ نتیجه</button>
+            <button type="button" class="btn btn--gold btn--sm" id="conv-order" aria-haspopup="dialog">ثبت سفارش</button>
+          </div>
+          <p class="conv__disclaimer">این ارقام برای نمونه‌کار است و سفارشِ واقعی ثبت نمی‌شود.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ۶) کارت‌های ورق‌خور -->
+  <section class="coins section" id="coins" aria-labelledby="coins-h">
+    <div class="wrap">
+      <div class="section__head">
+        <div>
+          <h2 id="coins-h">مشخصاتِ هر قطعه</h2>
+          <p class="section__lede">کارت را ورق بزنید؛ وزنِ خالص، عیار، ارزشِ ذاتی و اندازه‌ی حباب را نشان می‌دهد.</p>
+        </div>
+      </div>
+      <div class="coin-grid">
+<article class="coin" id="coin-emami" style="--d:0ms">
+          <div class="coin__inner">
+            <div class="coin__face coin__front">
+              <div class="coin__media frame"><img src="assets/img/coin-bahar.webp" alt="دسته‌ی سکه‌های طلای بهار آزادی روی ترازو" width="900" height="512" loading="lazy" decoding="async"></div>
+              <h3 class="coin__title">سکه امامی</h3>
+              <p class="coin__cap">خرید از شما</p>
+              <p class="coin__price"><span class="num" dir="ltr">۷۶٬۷۸۵٬۰۰۰</span><span class="coin__unit">تومان</span></p>
+              <p class="coin__hint">برای دیدنِ مشخصات ورق بزنید</p>
+            </div>
+            <div class="coin__face coin__back" role="group" aria-label="مشخصات سکه امامی">
+              <h3 class="coin__title coin__title--back">سکه امامی</h3>
+              <dl class="coin__spec">
+                <div><dt>طلای خالص</dt><dd><span class="num" dir="ltr">۷٫۳۲</span><span class="coin__u">گرم</span></dd></div>
+                <div><dt>عیار</dt><dd><span class="num" dir="ltr">۹۱۶٫۷</span></dd></div>
+                <div><dt>ارزش ذاتی</dt><dd><span class="num" dir="ltr">۷۳٬۶۴۰٬۰۰۰</span><span class="coin__u">تومان</span></dd></div>
+                <div><dt>حباب</dt><dd class="is-up"><span class="num" dir="ltr">۳٬۶۱۰٬۰۰۰</span><span class="coin__u">تومان</span></dd></div>
+                <div><dt>کارمزد</dt><dd><span class="num" dir="ltr">۰٫۶۰</span><span class="coin__u">٪</span></dd></div>
+              </dl>
+              <p class="coin__sell"><span>فروش به شما</span><span class="num" dir="ltr">۷۷٬۲۵۰٬۰۰۰</span></p>
+            </div>
+          </div>
+        </article>
+        <article class="coin" id="coin-bahar" style="--d:60ms">
+          <div class="coin__inner">
+            <div class="coin__face coin__front">
+              <div class="coin__media frame"><img src="assets/img/coin-pahlavi.webp" alt="روی و پشت یک سکه‌ی طلای ایرانی" width="900" height="449" loading="lazy" decoding="async"></div>
+              <h3 class="coin__title">سکه بهار آزادی</h3>
+              <p class="coin__cap">خرید از شما</p>
+              <p class="coin__price"><span class="num" dir="ltr">۷۵٬۴۶۵٬۰۰۰</span><span class="coin__unit">تومان</span></p>
+              <p class="coin__hint">برای دیدنِ مشخصات ورق بزنید</p>
+            </div>
+            <div class="coin__face coin__back" role="group" aria-label="مشخصات سکه بهار آزادی">
+              <h3 class="coin__title coin__title--back">سکه بهار آزادی</h3>
+              <dl class="coin__spec">
+                <div><dt>طلای خالص</dt><dd><span class="num" dir="ltr">۷٫۳۲</span><span class="coin__u">گرم</span></dd></div>
+                <div><dt>عیار</dt><dd><span class="num" dir="ltr">۹۱۶٫۷</span></dd></div>
+                <div><dt>ارزش ذاتی</dt><dd><span class="num" dir="ltr">۷۳٬۶۴۰٬۰۰۰</span><span class="coin__u">تومان</span></dd></div>
+                <div><dt>حباب</dt><dd class="is-up"><span class="num" dir="ltr">۲٬۲۸۵٬۰۰۰</span><span class="coin__u">تومان</span></dd></div>
+                <div><dt>کارمزد</dt><dd><span class="num" dir="ltr">۰٫۶۰</span><span class="coin__u">٪</span></dd></div>
+              </dl>
+              <p class="coin__sell"><span>فروش به شما</span><span class="num" dir="ltr">۷۵٬۹۲۵٬۰۰۰</span></p>
+            </div>
+          </div>
+        </article>
+        <article class="coin" id="coin-half" style="--d:120ms">
+          <div class="coin__inner">
+            <div class="coin__face coin__front">
+              <div class="coin__media frame"><img src="assets/img/coin-quarter.webp" alt="یک سکه‌ی طلای کوچک ایرانی" width="800" height="396" loading="lazy" decoding="async"></div>
+              <h3 class="coin__title">نیم سکه</h3>
+              <p class="coin__cap">خرید از شما</p>
+              <p class="coin__price"><span class="num" dir="ltr">۳۹٬۶۵۰٬۰۰۰</span><span class="coin__unit">تومان</span></p>
+              <p class="coin__hint">برای دیدنِ مشخصات ورق بزنید</p>
+            </div>
+            <div class="coin__face coin__back" role="group" aria-label="مشخصات نیم سکه">
+              <h3 class="coin__title coin__title--back">نیم سکه</h3>
+              <dl class="coin__spec">
+                <div><dt>طلای خالص</dt><dd><span class="num" dir="ltr">۳٫۶۶</span><span class="coin__u">گرم</span></dd></div>
+                <div><dt>عیار</dt><dd><span class="num" dir="ltr">۹۱۶٫۷</span></dd></div>
+                <div><dt>ارزش ذاتی</dt><dd><span class="num" dir="ltr">۳۶٬۸۲۰٬۰۰۰</span><span class="coin__u">تومان</span></dd></div>
+                <div><dt>حباب</dt><dd class="is-up"><span class="num" dir="ltr">۳٬۱۳۰٬۰۰۰</span><span class="coin__u">تومان</span></dd></div>
+                <div><dt>کارمزد</dt><dd><span class="num" dir="ltr">۰٫۷۵</span><span class="coin__u">٪</span></dd></div>
+              </dl>
+              <p class="coin__sell"><span>فروش به شما</span><span class="num" dir="ltr">۳۹٬۹۵۰٬۰۰۰</span></p>
+            </div>
+          </div>
+        </article>
+        <article class="coin" id="coin-melted" style="--d:180ms">
+          <div class="coin__inner">
+            <div class="coin__face coin__front">
+              <div class="coin__media frame"><img src="assets/img/bullion-pile.webp" alt="هرمی از شمش‌های طلای آب‌شده" width="768" height="610" loading="lazy" decoding="async"></div>
+              <h3 class="coin__title">طلای آب‌شده</h3>
+              <p class="coin__cap">خرید از شما</p>
+              <p class="coin__price"><span class="num" dir="ltr">۱۰٬۰۷۰٬۰۰۰</span><span class="coin__unit">تومان</span></p>
+              <p class="coin__hint">برای دیدنِ مشخصات ورق بزنید</p>
+            </div>
+            <div class="coin__face coin__back" role="group" aria-label="مشخصات طلای آب‌شده">
+              <h3 class="coin__title coin__title--back">طلای آب‌شده</h3>
+              <dl class="coin__spec">
+                <div><dt>وزن</dt><dd><span class="num" dir="ltr">۱٫۰۰</span><span class="coin__u">گرم</span></dd></div>
+                <div><dt>عیار</dt><dd><span class="num" dir="ltr">۹۹۹</span></dd></div>
+                <div><dt>ارزش ذاتی</dt><dd><span class="num" dir="ltr">۱۰٬۰۶۰٬۰۰۰</span><span class="coin__u">تومان</span></dd></div>
+                <div><dt>حباب</dt><dd class="is-up"><span class="num" dir="ltr">۶۰٬۰۰۰</span><span class="coin__u">تومان</span></dd></div>
+                <div><dt>کارمزد</dt><dd><span class="num" dir="ltr">۰٫۵۰</span><span class="coin__u">٪</span></dd></div>
+              </dl>
+              <p class="coin__sell"><span>فروش به شما</span><span class="num" dir="ltr">۱۰٬۱۲۰٬۰۰۰</span></p>
+            </div>
+          </div>
+        </article>
+        <article class="coin" id="coin-bar100" style="--d:240ms">
+          <div class="coin__inner">
+            <div class="coin__face coin__front">
+              <div class="coin__media frame"><img src="assets/img/gold-bars.webp" alt="چند شمش طلای استاندارد با وزنِ ثبت‌شده" width="1200" height="900" loading="lazy" decoding="async"></div>
+              <h3 class="coin__title">شمش ۱۰۰ گرمی</h3>
+              <p class="coin__cap">خرید از شما</p>
+              <p class="coin__price"><span class="num" dir="ltr">۱٬۰۱۸٬۵۰۰٬۰۰۰</span><span class="coin__unit">تومان</span></p>
+              <p class="coin__hint">برای دیدنِ مشخصات ورق بزنید</p>
+            </div>
+            <div class="coin__face coin__back" role="group" aria-label="مشخصات شمش ۱۰۰ گرمی">
+              <h3 class="coin__title coin__title--back">شمش ۱۰۰ گرمی</h3>
+              <dl class="coin__spec">
+                <div><dt>طلای خالص</dt><dd><span class="num" dir="ltr">۱۰۰٫۰۰</span><span class="coin__u">گرم</span></dd></div>
+                <div><dt>عیار</dt><dd><span class="num" dir="ltr">۹۹۹</span></dd></div>
+                <div><dt>ارزش ذاتی</dt><dd><span class="num" dir="ltr">۱٬۰۰۶٬۰۰۰٬۰۰۰</span><span class="coin__u">تومان</span></dd></div>
+                <div><dt>حباب</dt><dd class="is-up"><span class="num" dir="ltr">۱۸٬۱۰۰٬۰۰۰</span><span class="coin__u">تومان</span></dd></div>
+                <div><dt>کارمزد</dt><dd><span class="num" dir="ltr">۰٫۵۵</span><span class="coin__u">٪</span></dd></div>
+              </dl>
+              <p class="coin__sell"><span>فروش به شما</span><span class="num" dir="ltr">۱٬۰۲۴٬۱۰۰٬۰۰۰</span></p>
+            </div>
+          </div>
+        </article>
+        <article class="coin" id="coin-gram18" style="--d:300ms">
+          <div class="coin__inner">
+            <div class="coin__face coin__front">
+              <div class="coin__media frame"><img src="assets/img/scale.webp" alt="ترازوی زرگری برای وزن‌کردن طلای ۱۸ عیار" width="1100" height="733" loading="lazy" decoding="async"></div>
+              <h3 class="coin__title">گرم ۱۸ عیار</h3>
+              <p class="coin__cap">خرید از شما</p>
+              <p class="coin__price"><span class="num" dir="ltr">۷٬۵۱۱٬۰۰۰</span><span class="coin__unit">تومان</span></p>
+              <p class="coin__hint">برای دیدنِ مشخصات ورق بزنید</p>
+            </div>
+            <div class="coin__face coin__back" role="group" aria-label="مشخصات گرم ۱۸ عیار">
+              <h3 class="coin__title coin__title--back">گرم ۱۸ عیار</h3>
+              <dl class="coin__spec">
+                <div><dt>طلای خالص</dt><dd><span class="num" dir="ltr">۰٫۷۵۰۰</span><span class="coin__u">گرم</span></dd></div>
+                <div><dt>عیار</dt><dd><span class="num" dir="ltr">۷۵۰</span></dd></div>
+                <div><dt>ارزش ذاتی</dt><dd><span class="num" dir="ltr">۷٬۵۴۵٬۰۰۰</span><span class="coin__u">تومان</span></dd></div>
+                <div><dt>حباب</dt><dd class="is-down"><span class="num" dir="ltr">۰</span><span class="coin__u">تومان</span></dd></div>
+                <div><dt>کارمزد</dt><dd><span class="num" dir="ltr">۰٫۴۵</span><span class="coin__u">٪</span></dd></div>
+              </dl>
+              <p class="coin__sell"><span>فروش به شما</span><span class="num" dir="ltr">۷٬۵۴۵٬۰۰۰</span></p>
+            </div>
+          </div>
+        </article>
+        <article class="coin" id="coin-usd" style="--d:360ms">
+          <div class="coin__inner">
+            <div class="coin__face coin__front">
+              <div class="coin__media frame"><img src="assets/img/usd-note.webp" alt="اسکناس صد دلاری ایالات متحده‌ی آمریکا" width="1200" height="505" loading="lazy" decoding="async"></div>
+              <h3 class="coin__title">دلار آمریکا</h3>
+              <p class="coin__cap">خرید از شما</p>
+              <p class="coin__price"><span class="num" dir="ltr">۹۲٬۰۰۰</span><span class="coin__unit">تومان</span></p>
+              <p class="coin__hint">برای دیدنِ مشخصات ورق بزنید</p>
+            </div>
+            <div class="coin__face coin__back" role="group" aria-label="مشخصات دلار آمریکا">
+              <h3 class="coin__title coin__title--back">دلار آمریکا</h3>
+              <dl class="coin__spec">
+                <div><dt>مبنای نرخ</dt><dd>دلارِ مرجعِ بازار</dd></div>
+                <div><dt>واحد</dt><dd>هر واحد</dd></div>
+                <div><dt>خرید از شما</dt><dd><span class="num" dir="ltr">۹۲٬۰۰۰</span><span class="coin__u">تومان</span></dd></div>
+                <div><dt>فروش به شما</dt><dd><span class="num" dir="ltr">۹۲٬۴۰۰</span><span class="coin__u">تومان</span></dd></div>
+                <div><dt>کارمزد</dt><dd><span class="num" dir="ltr">۰٫۴۰</span><span class="coin__u">٪</span></dd></div>
+              </dl>
+              <p class="coin__sell"><span>فروش به شما</span><span class="num" dir="ltr">۹۲٬۴۰۰</span></p>
+            </div>
+          </div>
+        </article>
+        <article class="coin" id="coin-eur" style="--d:0ms">
+          <div class="coin__inner">
+            <div class="coin__face coin__front">
+              <div class="coin__media frame"><img src="assets/img/euro-note.webp" alt="اسکناس پنجاه یورو" width="1000" height="571" loading="lazy" decoding="async"></div>
+              <h3 class="coin__title">یورو</h3>
+              <p class="coin__cap">خرید از شما</p>
+              <p class="coin__price"><span class="num" dir="ltr">۹۷٬۷۰۰</span><span class="coin__unit">تومان</span></p>
+              <p class="coin__hint">برای دیدنِ مشخصات ورق بزنید</p>
+            </div>
+            <div class="coin__face coin__back" role="group" aria-label="مشخصات یورو">
+              <h3 class="coin__title coin__title--back">یورو</h3>
+              <dl class="coin__spec">
+                <div><dt>مبنای نرخ</dt><dd>بر پایه‌ی دلار</dd></div>
+                <div><dt>واحد</dt><dd>هر واحد</dd></div>
+                <div><dt>خرید از شما</dt><dd><span class="num" dir="ltr">۹۷٬۷۰۰</span><span class="coin__u">تومان</span></dd></div>
+                <div><dt>فروش به شما</dt><dd><span class="num" dir="ltr">۹۸٬۱۰۰</span><span class="coin__u">تومان</span></dd></div>
+                <div><dt>کارمزد</dt><dd><span class="num" dir="ltr">۰٫۴۵</span><span class="coin__u">٪</span></dd></div>
+              </dl>
+              <p class="coin__sell"><span>فروش به شما</span><span class="num" dir="ltr">۹۸٬۱۰۰</span></p>
+            </div>
+          </div>
+        </article>
+        <article class="coin" id="coin-aed" style="--d:60ms">
+          <div class="coin__inner">
+            <div class="coin__face coin__front">
+              <div class="coin__media frame"><img src="assets/img/dirham-coin.webp" alt="سکه‌ی یک درهم امارات" width="900" height="900" loading="lazy" decoding="async"></div>
+              <h3 class="coin__title">درهم امارات</h3>
+              <p class="coin__cap">خرید از شما</p>
+              <p class="coin__price"><span class="num" dir="ltr">۲۵٬۰۰۰</span><span class="coin__unit">تومان</span></p>
+              <p class="coin__hint">برای دیدنِ مشخصات ورق بزنید</p>
+            </div>
+            <div class="coin__face coin__back" role="group" aria-label="مشخصات درهم امارات">
+              <h3 class="coin__title coin__title--back">درهم امارات</h3>
+              <dl class="coin__spec">
+                <div><dt>مبنای نرخ</dt><dd>بر پایه‌ی دلار</dd></div>
+                <div><dt>واحد</dt><dd>هر واحد</dd></div>
+                <div><dt>خرید از شما</dt><dd><span class="num" dir="ltr">۲۵٬۰۰۰</span><span class="coin__u">تومان</span></dd></div>
+                <div><dt>فروش به شما</dt><dd><span class="num" dir="ltr">۲۵٬۲۰۰</span><span class="coin__u">تومان</span></dd></div>
+                <div><dt>کارمزد</dt><dd><span class="num" dir="ltr">۰٫۵۰</span><span class="coin__u">٪</span></dd></div>
+              </dl>
+              <p class="coin__sell"><span>فروش به شما</span><span class="num" dir="ltr">۲۵٬۲۰۰</span></p>
+            </div>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ۷) استعلام اصالت -->
+  <section class="auth section" id="auth" aria-labelledby="auth-h">
+    <div class="wrap auth__wrap">
+      <div class="auth__media frame">
+        <img src="assets/img/scale.webp" alt="ترازوی دقیقِ زرگری برای وزن‌کردن طلای ظریف" width="1100" height="733" loading="lazy" decoding="async">
+      </div>
+      <div class="auth__panel">
+        <h2 id="auth-h">سکه‌ات واقعی است؟</h2>
+        <p class="section__lede">شماره‌ی سریالِ هشت‌رقمیِ روی سکه و وزنِ اعلامی را وارد کنید. نتیجه در همان لحظه از خودِ عدد در می‌آید، نه از حافظه‌ی ما.</p>
+        <form class="auth__form" id="auth-form">
+          <div class="field">
+            <label for="serial">شماره‌ی سریال</label>
+            <input id="serial" type="text" inputmode="numeric" maxlength="8" placeholder="۱۲۳۴۵۶۷۸" autocomplete="off">
+          </div>
+          <div class="field">
+            <label for="weight">وزنِ اعلامی (گرم)</label>
+            <input id="weight" type="text" inputmode="decimal" value="7.32" autocomplete="off">
+          </div>
+          <button type="submit" class="btn btn--gold" id="auth-go">استعلام کن</button>
+        </form>
+        <div class="verdict" id="auth-result" role="status" aria-live="polite">
+          <svg class="seal" viewBox="0 0 120 120" width="120" height="120" aria-hidden="true" focusable="false">
+            <circle cx="60" cy="60" r="52" fill="none" stroke="currentColor" stroke-width="2"/>
+            <circle cx="60" cy="60" r="44" fill="none" stroke="currentColor" stroke-width="1" stroke-dasharray="4 6"/>
+            <path d="M38 61.5 52 75 83 44" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <p class="verdict__text">هنوز استعلامی زده نشده است.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ۸) سبد پیگیری -->
+  <section class="wallet section" id="wallet" aria-labelledby="wallet-h">
+    <div class="wrap wallet__wrap">
+      <div class="section__head">
+        <div>
+          <h2 id="wallet-h">سبدِ پیگیریِ من</h2>
+          <p class="section__lede">نمادها را از تابلو اضافه کنید؛ ارزشِ هر قطعه با نرخِ زنده می‌تواند و سود و زیان نسبت به نرخِ ورود نشان داده می‌شود. سبد فقط در همین مرورگر نگه داشته می‌شود.</p>
+        </div>
+        <button type="button" class="chip" id="wallet-clear">پاک کردنِ سبد</button>
+      </div>
+      <ul class="wallet__list" id="watch-list">
+        <li class="wallet__empty" id="wallet-empty">سبد خالی است. در تابلو، برگه‌ی یک نماد را باز کنید و «به سبد پیگیری اضافه کن» را بزنید.</li>
+      </ul>
+      <p class="wallet__total">جمعِ ارزشِ روز: <b class="num" id="watch-total" dir="ltr">۰</b><span class="wallet__u">تومان</span></p>
+    </div>
+  </section>
+
+  <!-- ۹) شعبه‌ها -->
+  <section class="branches section" id="branches" aria-labelledby="branches-h">
+    <div class="wrap">
+      <div class="section__head">
+        <div>
+          <h2 id="branches-h">شعبه‌ها</h2>
+          <p class="section__lede">وضعیتِ باز و بسته بودن از همین ساعتِ دیواری حساب می‌شود؛ نیم‌روزِ کاری را از دست ندهید.</p>
+        </div>
+      </div>
+      <div class="branch-grid">
+        <article class="branch reveal">
+          <h3>شعبه‌ی بازار — تهران</h3>
+          <p class="branch__addr">راسته‌ی طلاکوب، بازار بزرگ، پاسگاهِ دوم، پلاک ۲۱۴</p>
+          <p class="branch__hours">شنبه تا پنجشنبه <span class="num" dir="ltr">۹</span> تا <span class="num" dir="ltr">۱۷</span> · پنجشنبه تا <span class="num" dir="ltr">۱۴</span></p>
+          <p class="branch__status" data-open="9" data-close="17" data-thu="14" data-days="6,0,1,2,3,4"><span class="pill">در حالِ خدمت</span><b class="branch__next tnum"></b></p>
+          <a class="visit-tel" href="tel:02191002244">۰۲۱ ۹۱۰۰ ۲۲۴۴</a>
+        </article>
+        <article class="branch reveal">
+          <h3>شعبه‌ی ونک — تهران</h3>
+          <p class="branch__addr">میدان ونک، خیابان ملاصدرا، پلاک ۸۶</p>
+          <p class="branch__hours">شنبه تا چهارشنبه <span class="num" dir="ltr">۱۰</span> تا <span class="num" dir="ltr">۱۸</span></p>
+          <p class="branch__status" data-open="10" data-close="18" data-days="6,0,1,2,3"><span class="pill">در حالِ خدمت</span><b class="branch__next tnum"></b></p>
+          <a class="visit-tel" href="tel:02191002255">۰۲۱ ۹۱۰۰ ۲۲۵۵</a>
+        </article>
+        <article class="branch reveal">
+          <h3>شعبه‌ی محمودیه — مشهد</h3>
+          <p class="branch__addr">بلوار سهدی، نرسیده به چهارراه، مجتمعِ تجاریِ آسمان، طبقه‌ی همکف</p>
+          <p class="branch__hours">هر روز <span class="num" dir="ltr">۸</span> تا <span class="num" dir="ltr">۱۳</span> و <span class="num" dir="ltr">۱۶</span> تا <span class="num" dir="ltr">۲۰</span></p>
+          <p class="branch__status" data-open="8" data-close="13" data-open2="16" data-close2="20"><span class="pill">در حالِ خدمت</span><b class="branch__next tnum"></b></p>
+          <a class="visit-tel" href="tel:05191002266">۰۵۱ ۹۱۰۰ ۲۲۶۶</a>
+        </article>
+      </div>
+      <div class="vault-strip">
+        <div class="vault-strip__media frame">
+          <img src="assets/img/vault.webp" alt="درِ فلزیِ بزرگِ گاوصندوق یک بانک" width="1200" height="1689" loading="lazy" decoding="async">
+        </div>
+        <div class="vault-strip__text">
+          <h3>اماناتِ صندوقی</h3>
+          <p>صندوقِ اماناتِ سکه و شمش با بیمه‌ی کامل، دسترسی زیرِ نظرِ مشتری و ثبتِ هر باز و بسته در سامانه. قراردادِ یک‌ساله از <span class="num" dir="ltr">۴۸۰٬۰۰۰</span> تومان.</p>
+          <a class="text-link" href="#contact">برای صندوق وقت بگیر</a>
+        </div>
+      </div>
+      <div class="bazaar-strip">
+        <img src="assets/img/bazaar.webp" alt="راسته‌ی پوشیده‌ی بازار با مغازه‌های کوچک" width="1400" height="1749" loading="lazy" decoding="async">
+        <p class="bazaar-strip__cap">بازار همیشه یک صفحه‌ی نرخ دارد؛ این تابلو همان صفحه است، فقط سریع‌تر.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ۱۰) سؤال‌های پرتکرار -->
+  <section class="faq section" id="faq" aria-labelledby="faq-h">
+    <div class="wrap faq__wrap">
+      <h2 id="faq-h">سؤال‌های پرتکرار</h2>
+      <details class="faq__item" name="faq" open>
+        <summary>نرخ‌ها هر چند لحظه عوض می‌شود؟</summary>
+        <p>تابلو هر <span class="num" dir="ltr">۱٫۲</span> ثانیه یک بار به‌روز می‌شود. عددِ بزرگ بالای صفحه و ستونِ «فروش به شما» از یک منبع حساب می‌شوند، پس دو نرخِ متفاوت روی صفحه نمی‌بینید.</p>
+      </details>
+      <details class="faq__item" name="faq">
+        <summary>فرقِ «خرید از شما» و «فروش به شما» چیست؟</summary>
+        <p>«خرید از شما» همان قیمت است که صرافی سکه‌ی شما را می‌خرد و کارمزد از آن کم می‌شود. «فروش به شما» قیمتی است که اگر بخواهید بخرید می‌پردازید. فاصله‌ی این دو، سودِ صرافی است و روی برگه‌ی هر نماد چاپ شده.</p>
+      </details>
+      <details class="faq__item" name="faq">
+        <summary>حبابِ سکه یعنی چه و چطور حساب می‌شود؟</summary>
+        <p>ارزشِ ذاتیِ یک سکه وزنِ طلای خالصِ آن ضربدر نرخِ هر گرمِ طلای بیست‌وچهار عیار است. هر چه نرخِ تابلو بالاتر برود، مابه‌التفاوت می‌شود حباب. فرمول و عددِ هر دو در برگه‌ی نماد هست؛ با ماشین‌حساب هم می‌شود چک کرد.</p>
+      </details>
+      <details class="faq__item" name="faq">
+        <summary>چرا نرخِ ربع سکه از دو برابرِ یک سکه فاصله دارد؟</summary>
+        <p>چون تقاضا روی قطعه‌های کوچک جمع می‌شود. به همین دلیل حبابِ ربع از نیم و حبابِ نیم از تمامِ سکه بیشتر است — همان ترتیبی که در مشخصاتِ کارت‌ها می‌بینید.</p>
+      </details>
+      <details class="faq__item" name="faq">
+        <summary>برای خریدِ نقدی چه مدارکی لازم است؟</summary>
+        <p>کارت ملی به نامِ خریدار و شماره‌ی موبایلِ به نامِ خودِ شخص. برای مبلغ‌های بالای حدِ پایور، فاکتورِ رسمی با کدِ اقتصادی صادر می‌شود و پرداخت فقط از حسابِ به نامِ خریدار پذیرفته می‌شود.</p>
+      </details>
+      <details class="faq__item" name="faq">
+        <summary>نرخ‌های این صفحه واقعی است؟</summary>
+        <p>خیر. این یک نمونه‌کار است و ارقام از دو عددِ نمونه (نرخِ دلار و قیمتِ جهانیِ اونس) اشتقاق می‌شوند تا همه‌چی با هم بخواند؛ نه قیمتِ امروزِ بازار.</p>
+      </details>
+    </div>
+  </section>
+
+  <!-- ۱۱) درخواست نرخ -->
+  <section class="contact section" id="contact" aria-labelledby="contact-h">
+    <div class="wrap contact__wrap">
+      <div class="contact__intro">
+        <h2 id="contact-h">نرخِ لحظه‌ای می‌خواهید؟</h2>
+        <p>شماره‌ی موبایل و نمادِ موردنظر را بگذارید؛ هم‌قیمتِ لحظه را پیامک می‌کنیم و تا پایانِ ساعتِ کاری با شما تماس می‌گیریم.</p>
+        <ul class="contact__facts">
+          <li><span>پاسخگویی</span><b>شنبه تا پنجشنبه، <span class="num" dir="ltr">۹</span> تا <span class="num" dir="ltr">۲۰</span></b></li>
+          <li><span>تلفنِ مرکزی</span><b><a class="visit-tel" href="tel:02191002244">۰۲۱ ۹۱۰۰ ۲۲۴۴</a></b></li>
+          <li><span>حداقلِ معامله</span><b>یک گرم طلای ۱۸ عیار</b></li>
+        </ul>
+      </div>
+      <form class="contact__form" id="rate-form" novalidate>
+        <div class="field">
+          <label for="c-name">نام و نام خانوادگی</label>
+          <input id="c-name" name="name" type="text" autocomplete="name" required>
+          <p class="field__error" id="c-name-error" hidden>نام را کامل بنویسید.</p>
+        </div>
+        <div class="field">
+          <label for="c-phone">موبایل</label>
+          <input id="c-phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="۰۹۱۲۳۴۵۶۷۸۹" required>
+          <p class="field__error" id="c-phone-error" hidden>شماره‌ی موبایلِ دوازده‌رقمی وارد کنید.</p>
+        </div>
+        <div class="field">
+          <label for="c-symbol">نماد</label>
+          <select id="c-symbol"></select>
+        </div>
+        <div class="field">
+          <label for="c-note">یادداشت</label>
+          <textarea id="c-note" name="note" rows="3" placeholder="مثلاً: پنج سکه، پرداخت نقدی"></textarea>
+        </div>
+        <button type="submit" class="btn btn--gold">درخواست را ثبت کن</button>
+        <p class="contact__ticket" id="ticket" hidden></p>
+      </form>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="wrap footer-grid">
+    <div class="footer-brand">
+      <span class="wordmark-text">سکه<em>تابلوی نرخ</em></span>
+      <p>نمونه‌کارِ رابطِ کاربریِ صرافی: تابلوی زنده، نمودارِ کندل‌استیک، تبدیلِ نرخ و استعلامِ اصالت.</p>
+    </div>
+    <nav class="footer-nav" aria-label="پیوندهای پابرگ">
+      <ul>
+        <li><a href="#board">تابلوی نرخ</a></li>
+        <li><a href="#chart">نمودار</a></li>
+        <li><a href="#coins">مشخصات سکه‌ها</a></li>
+        <li><a href="#branches">شعبه‌ها</a></li>
+      </ul>
+    </nav>
+    <div class="footer-contact">
+      <ul>
+        <li><a class="visit-tel" href="tel:02191002244">۰۲۱ ۹۱۰۰ ۲۲۴۴</a></li>
+        <li><a class="visit-tel" href="tel:05191002266">۰۵۱ ۹۱۰۰ ۲۲۶۶</a></li>
+        <li><a href="#contact">درخواست نرخ</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="wrap footer-base">
+    <a class="demo-return-footer" href="/#demos">بازگشت به صفحه اصلی <bdi dir="ltr">persianbotyar</bdi></a>
+    <p>این یک نمونه‌کار است؛ نرخ‌ها، شعب و شماره‌ها ساختگی‌اند و ساخته‌ی بازارِ واقعی نیستند. تصاویر از کتابخانه‌ی عمومی ویکی‌انبار برداشته شده‌اند.</p>
+    <p class="copy">© ۱۴۰۵ سکه</p>
+  </div>
+</footer>
+
+<dialog class="sheet" id="order-dialog" aria-labelledby="sheet-title">
+  <div class="sheet__inner">
+    <div class="sheet__head">
+      <h2 id="sheet-title">برگه‌ی سفارش</h2>
+      <button class="sheet__close" id="sheet-close" type="button" aria-label="بستن">بستن</button>
+    </div>
+    <div class="sheet__body" id="sheet-body"></div>
+    <div class="sheet__foot">
+      <button type="button" class="btn btn--ghost" id="sheet-cancel">انصراف</button>
+      <button type="button" class="btn btn--gold" id="sheet-confirm">سفارش را ثبت کن</button>
+    </div>
+  </div>
+</dialog>
+
+<div id="toasts" aria-live="polite" aria-atomic="false"></div>
+
+<script src="./app.js"></script>
+</body>
+</html>
