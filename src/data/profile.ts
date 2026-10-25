@@ -43,13 +43,18 @@ export interface TimelineNode {
 }
 
 /**
- * گره‌های تایم‌لاین «درباره من»؛ فقط مهارت و تحصیلات، بدون نام کارفرما یا شرح وظایف شرکتی.
+ * گره‌های «مسیرِ کار»؛ ترتیبِ تقریباً زمانی دارد و فقط چیزهایی را می‌گوید که
+ * در خودِ سایت قابل دیدن هستند. نام کارفرما و شرح وظایف شرکتی عمداً نیامده است.
  */
 export const aboutTimeline: TimelineNode[] = [
-  { title: 'کارشناسی مهندسی کامپیوتر', meta: 'دانشگاه یادگار امام (ره) — تهران' },
-  { title: 'بک‌اند و یادگیری ماشین', meta: 'FastAPI · Django · Celery · scikit-learn' },
-  { title: 'سازنده‌ی اپ موبایل', meta: 'دو اپلیکیشن با BeeWare' },
-  { title: 'طراح رابط', meta: `${projects.length} سایت نمونه‌کار در این گالری` },
+  { title: 'کارشناسی مهندسی کامپیوتر', meta: 'دانشگاه یادگار امام (ره)' },
+  { title: 'سمتِ سرور', meta: 'پایتون · FastAPI · Django · Celery · PostgreSQL' },
+  {
+    title: 'persianbotyar',
+    meta: 'ربات تلگرام و سرویس برای فروشگاه‌های اینترنتی ایران',
+  },
+  { title: 'اپ موبایل و مدلِ یادگیری', meta: 'BeeWare · pandas · scikit-learn' },
+  { title: 'رابطِ کاربری', meta: 'طراحی و کدِ همه‌ی سایت‌های این گالری' },
 ];
 
 export type ContactKind = 'github' | 'telegram' | 'email' | 'phone';
@@ -73,9 +78,9 @@ export const profile = {
   tagline: ['Python', 'FastAPI · Django', 'Machine Learning', 'BeeWare'],
   location: 'تهران، ایران',
   summary: [
-    'من علی دروگرم؛ مهندس نرم‌افزار. تمرکز اصلی‌ام بک‌اند پایتون است: سرویس‌های مقیاس‌پذیر و RESTful با FastAPI و Django و صف‌های تسک توزیع‌شده با Celery، Redis و RabbitMQ.',
-    'دو اپلیکیشن موبایل هم با BeeWare ساخته‌ام و در حوزه‌ی هوش مصنوعی و یادگیری ماشین کار کرده‌ام؛ تحلیل داده و مدل‌سازی با NumPy، pandas، Matplotlib، scikit-learn و یادگیری عمیق.',
-    'در کنار این‌ها رابط کاربری هم طراحی و پیاده می‌کنم؛ همان سایت‌هایی که در این گالری می‌بینید. سعی می‌کنم چیزی که کاربر لمس می‌کند به‌اندازه‌ی چیزی که پشت صحنه اجرا می‌شود تمیز و دقیق باشد.',
+    'پنج سال است مهندسی نرم‌افزار می‌کنم و بیشترِ این پنج سال را سمتِ سرور گذشته‌ام: سرویس‌های FastAPI و Django، صف‌های پردازشِ کارهای سنگین با Celery و Redis، و دیتابیس‌هایی که باید زیر بارِ واقعی جواب بدهند. نام persianbotyar از همین‌جا آمده است؛ ربات‌ها و سرویس‌هایی که برای فروشگاه‌های اینترنتی ایرانی می‌سازم.',
+    'اما کارم فقط نوشتن API نیست. خودم هم رابط می‌چینم و همه‌ی سایت‌های این گالری طرح و کدِ دستِ خودم است. دلیلش ساده است: وقتی سرویسی را می‌سازم که قرار است کسی با آن کار کند، می‌خواهم از همان اول بدانم آخرین چیزی که کاربر می‌بیند چه خواهد بود.',
+    'در این سال‌ها یک چیز را خوب یاد گرفته‌ام: کدِ خوب، کدِ باهوش نیست؛ کدِ قابل‌فهم است. تست نوشتن، مستند کردن و ساده‌نگه‌داشتنِ معماری را بخشی از خودِ کار می‌دانم، نه کارِ اضافه. چیزی که تحویل می‌دهم باید شش ماه بعد هم برای نفرِ بعدی روشن باشد.',
   ],
 } as const;
 
@@ -242,10 +247,29 @@ export interface HeroStat {
   prefix?: string;
 }
 
-/** آمار هیرو از خودِ داده‌ها مشتق می‌شود تا همیشه تازه بماند */
-export const heroStats: HeroStat[] = [
-  { value: projects.length, label: 'نمونه‌کار' },
-  { value: new Set(projects.map((p) => p.category)).size, label: 'حوزه‌ی کاری' },
-  { value: 2, prefix: '+', label: 'سال تجربه' },
-  { value: skillGroups.length, label: 'گروه مهارت' },
-];
+/**
+ * تنها عددِ آمارِ صفحه. بقیه‌ی حرف‌ها را به‌جای شمارش، خودِ «طیف حوزه‌ها» می‌زند؛
+ * برای همین آمارِ تکراری (۹ نمونه‌کار / ۹ حوزه / ۹ گروه مهارت) حذف شده است.
+ */
+export const experienceStat: HeroStat = { value: 5, prefix: '+', label: 'سال تجربه' };
+
+export interface DomainRow {
+  /** همان شناسه‌ی پروژه؛ برای کلید رندر */
+  id: string;
+  domain: string;
+  demoTitle: string;
+  tagline: string;
+  /** رنگِ دموی خودش؛ طیف را از نظرِ بصری به گالری وصل می‌کند */
+  accent: string;
+  url: string;
+}
+
+/** طیف حوزه‌ها؛ مستقیماً از پروژه‌ها مشتق می‌شود تا همیشه تازه بماند */
+export const domains: DomainRow[] = projects.map((project) => ({
+  id: project.id,
+  domain: project.categoryLabel,
+  demoTitle: project.title,
+  tagline: project.tagline,
+  accent: project.accent,
+  url: project.url,
+}));

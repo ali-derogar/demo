@@ -560,39 +560,112 @@
   .v2-chrome { display: none; }
 }
 
-/* --------------------------- آمار --------------------------- */
-.v2-stats { padding-block: clamp(2rem, 5vw, 3.5rem); }
-.v2-stats__grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.2rem; }
-.v2-stat {
-  position: relative;
-  padding: 1.8rem 1.2rem;
-  border: 1px solid var(--glass-line);
-  border-radius: 22px;
-  background: var(--glass);
-  text-align: center;
-  overflow: hidden;
+/* --------------------------- طیف حوزه‌ها --------------------------- */
+.v2-spectrum { padding-block: clamp(4rem, 10vw, 7.5rem); }
+.v2-spectrum__grid {
+  display: grid;
+  grid-template-columns: 0.9fr 1.1fr;
+  gap: clamp(1.8rem, 5vw, 4.5rem);
+  align-items: start;
 }
-.v2-stat::before {
-  content: "";
-  position: absolute;
-  inset: auto -20% -50% -20%;
-  height: 70%;
-  background: radial-gradient(circle, rgba(94, 242, 255, 0.25), transparent 60%);
+.v2-spectrum__head { position: sticky; top: calc(var(--header-size) + 2.5rem); }
+.v2-spectrum__lead {
+  color: var(--muted);
+  font-size: 1.05rem;
+  line-height: 1.7;
+  margin-block: 0 1.8rem;
+  max-width: 34ch;
 }
-.v2-stat__value {
-  position: relative;
-  display: block;
-  font-size: clamp(2.2rem, 5vw, 3.4rem);
+.v2-spectrum__years { display: flex; align-items: baseline; gap: 0.7rem; margin: 0; }
+.v2-spectrum__years-num {
+  font-size: clamp(3.6rem, 8vw, 5.6rem);
   font-weight: 900;
+  line-height: 1.1;
   background: linear-gradient(120deg, var(--cyan), var(--violet));
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
   font-variant-numeric: tabular-nums;
 }
-.v2-stat__label { position: relative; color: var(--muted); font-size: 0.92rem; }
-@media (max-width: 760px) {
-  .v2-stats__grid { grid-template-columns: repeat(2, 1fr); }
+.v2-spectrum__years-cap { color: var(--muted); font-weight: 700; }
+
+.v2-spectrum__rows { display: grid; gap: 0.45rem; margin: 0; padding: 0; list-style: none; }
+.v2-row__link {
+  --t: var(--cyan);
+  position: relative;
+  display: grid;
+  grid-template-columns: 12px minmax(0, auto) minmax(12px, 1fr) minmax(0, auto) 18px;
+  align-items: center;
+  gap: 0.85rem;
+  padding: 1rem 1.15rem;
+  border: 1px solid var(--glass-line);
+  border-radius: 16px;
+  background: var(--glass);
+  color: inherit;
+  text-decoration: none;
+  overflow: hidden;
+  transition: border-color 0.35s var(--ease), transform 0.35s var(--ease), box-shadow 0.35s var(--ease);
+}
+.v2-row__link::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to left, color-mix(in srgb, var(--t) 22%, transparent), transparent 62%);
+  opacity: 0;
+  transition: opacity 0.35s var(--ease);
+}
+.v2-row__link:hover,
+.v2-row__link:focus-visible {
+  border-color: color-mix(in srgb, var(--t) 50%, transparent);
+  transform: translateY(-2px);
+  box-shadow: 0 14px 34px -18px color-mix(in srgb, var(--t) 70%, transparent);
+}
+.v2-row__link:hover::before,
+.v2-row__link:focus-visible::before { opacity: 1; }
+.v2-row__dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--t);
+  box-shadow: 0 0 14px color-mix(in srgb, var(--t) 75%, transparent);
+  transition: transform 0.35s var(--ease);
+}
+.v2-row__link:hover .v2-row__dot,
+.v2-row__link:focus-visible .v2-row__dot { transform: scale(1.25); }
+.v2-row__domain { position: relative; font-weight: 800; white-space: nowrap; }
+.v2-row__leader { position: relative; border-bottom: 1px dotted rgba(244, 243, 255, 0.22); }
+.v2-row__demo {
+  position: relative;
+  color: var(--muted);
+  font-size: 0.92rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+}
+.v2-row__go {
+  position: relative;
+  width: 18px;
+  height: 18px;
+  color: var(--t);
+  opacity: 0;
+  transform: translate(4px, -4px);
+  transition: opacity 0.35s var(--ease), transform 0.35s var(--ease);
+}
+.v2-row__link:hover .v2-row__go,
+.v2-row__link:focus-visible .v2-row__go { opacity: 1; transform: none; }
+
+@media (max-width: 900px) {
+  .v2-spectrum__grid { grid-template-columns: 1fr; }
+  .v2-spectrum__head { position: static; }
+  .v2-spectrum__lead { max-width: 46ch; }
+}
+@media (max-width: 620px) {
+  .v2-row__link { grid-template-columns: 10px minmax(0, 1fr); gap: 0.35rem 0.7rem; padding: 0.9rem 1rem; }
+  .v2-row__leader,
+  .v2-row__go { display: none; }
+  .v2-row__dot { width: 10px; height: 10px; }
+  .v2-row__demo { grid-column: 2; grid-row: 2; white-space: normal; }
 }
 
 /* --------------------------- درباره + تایم‌لاین --------------------------- */
@@ -604,6 +677,14 @@
   align-items: start;
 }
 .v2-about__text { color: var(--muted); margin-block: 0.9rem; font-size: 1.05rem; }
+.v2-about__stack {
+  color: var(--muted-2);
+  font-size: 0.85rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-block: 0 1.6rem;
+}
+.v2-about__path > .v2-about__block-title { margin-block-start: 0; }
 .v2-avatars { display: flex; align-items: center; gap: 1rem; margin-block: 1rem 1.4rem; }
 .v2-avatars__mark {
   width: 64px;
@@ -768,6 +849,11 @@
 
   .v2-collage { height: auto; display: grid; gap: 0.8rem; grid-template-columns: repeat(3, 1fr); }
   .v2-collage__item { position: static; width: auto; height: 120px; transform: none; }
+
+  .v2-row__link,
+  .v2-row__link::before,
+  .v2-row__dot,
+  .v2-row__go { transition: none; }
 }
 
 /* --------------------------- حالت پررنگ/forced-colors --------------------------- */
@@ -778,16 +864,17 @@
   .v2-stars { display: none; }
   .v2-cap,
   .v2-stack__card,
-  .v2-stat,
+  .v2-row__link,
   .v2-ccard,
   .v2-about__langs span,
   .v2-meta__cat {
     background: Canvas;
     border-color: CanvasText;
   }
+  .v2-row__dot { background: CanvasText; box-shadow: none; }
   .v2-hero__grad,
   .v2-contact__grad,
-  .v2-stat__value {
+  .v2-spectrum__years-num {
     -webkit-text-fill-color: currentColor;
     color: CanvasText;
     background: none;

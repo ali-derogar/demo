@@ -7,23 +7,23 @@ import { SkillsGrid } from './SkillsGrid';
 
 const clamp01 = (v: number) => (v < 0 ? 0 : v > 1 ? 1 : v);
 
-/** چهار نکته‌ی رویکرد طراحی که از بخش «درباره من» قبلی حفظ شده‌اند */
+/** چهار اصلِ کاری که جای «نکاتِ عمومیِ طراحی» را می‌گیرند */
 const approach = [
   {
-    title: 'ظاهر سایت مناسب کارتون باشه',
-    text: 'برای یه کافه عکس غذا و منو مهمه؛ برای فروشگاه، پیدا کردن محصول و خرید.',
+    title: 'مسئله، بعد ابزار',
+    text: 'اول می‌فهمم کاربر در آخرِ کار چه کاری می‌خواهد انجام بدهد. انتخابِ فریمورک و دیتابیس بعد از این سؤال می‌آید، نه قبل از آن.',
   },
   {
-    title: 'کار کردن با سایت راحت باشه',
-    text: 'جست‌وجو، فرم‌ها و دکمه‌ها را طوری می‌چینم که بازدیدکننده سردرگم نشه.',
+    title: 'سادگی بر هوشمندی',
+    text: 'بین راه‌حلِ باهوش و راه‌حلِ قابل‌فهم، دومی را انتخاب می‌کنم. کدی که شش ماه بعد کسی نفهمد، بدهی است؛ حتی اگر تمیز نوشته شده باشد.',
   },
   {
-    title: 'با گوشی هم راحت کار کنه',
-    text: 'اندازه‌ی متن و دکمه‌ها روی گوشی برای خوندن و کار کردن تنظیم می‌شه.',
+    title: 'سرعت، بخشی از طراحی است',
+    text: 'روی گوشیِ معمولی و اینترنتِ واقعی نگاه می‌کنم، نه فقط روی لپ‌تاپِ خودم. صفحه‌ای که دیر بالا بیاید، درست طراحی نشده است.',
   },
   {
-    title: 'اطلاعات مهم دم دست باشه',
-    text: 'قیمت، ساعت کاری و راه تماس جایی هستند که راحت پیدا بشن.',
+    title: 'تحویل، پایانِ کار نیست',
+    text: 'تست، مستند و راهنمای استفاده را جزو خروجی می‌دانم. چیزی که فقط روی ماشینِ من کار می‌کند، آماده نیست.',
   },
 ];
 
@@ -52,9 +52,11 @@ export function ProfileSection() {
     <section className="v2-about shell" id="about" aria-labelledby="about-title">
       <div className="v2-about__grid">
         <div className="v2-about__bio">
-          <p className="v2-kicker">درباره من</p>
+          <p className="v2-kicker">درباره‌ی من</p>
           <h2 className="v2-h2" id="about-title">
-            کسی که پشت این کارهاست
+            هم سرویس می‌سازم،
+            <br />
+            هم صفحه
           </h2>
 
           <div className="v2-avatars">
@@ -66,6 +68,10 @@ export function ProfileSection() {
               <span>{profile.title}</span>
             </span>
           </div>
+
+          <p className="v2-about__stack" dir="ltr">
+            {profile.tagline.join(' · ')}
+          </p>
 
           {profile.summary.map((paragraph) => (
             <Reveal as="p" className="v2-about__text" key={paragraph}>
@@ -82,17 +88,20 @@ export function ProfileSection() {
           </div>
         </div>
 
-        <div className="v2-tl" ref={tlRef}>
-          <span className="v2-tl__line" aria-hidden="true">
-            <span className="v2-tl__progress" />
-          </span>
-          {aboutTimeline.map((node) => (
-            <Reveal className="v2-tl__node" key={node.title}>
-              <span className="v2-tl__dot" aria-hidden="true" />
-              <h3 className="v2-tl__title">{node.title}</h3>
-              <p className="v2-tl__meta">{node.meta}</p>
-            </Reveal>
-          ))}
+        <div className="v2-about__path">
+          <h3 className="v2-about__block-title">مسیرِ کار</h3>
+          <div className="v2-tl" ref={tlRef}>
+            <span className="v2-tl__line" aria-hidden="true">
+              <span className="v2-tl__progress" />
+            </span>
+            {aboutTimeline.map((node) => (
+              <Reveal className="v2-tl__node" key={node.title}>
+                <span className="v2-tl__dot" aria-hidden="true" />
+                <h3 className="v2-tl__title">{node.title}</h3>
+                <p className="v2-tl__meta">{node.meta}</p>
+              </Reveal>
+            ))}
+          </div>
         </div>
       </div>
 
@@ -102,7 +111,7 @@ export function ProfileSection() {
       </div>
 
       <div className="v2-about__block">
-        <h3 className="v2-about__block-title">رویکرد من در طراحی</h3>
+        <h3 className="v2-about__block-title">چطور کار می‌کنم</h3>
         <ul className="approach" role="list">
           {approach.map((note, index) => (
             <Reveal as="li" key={note.title} className="approach__item" delay={(index % 4) * 0.05}>

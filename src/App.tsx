@@ -10,7 +10,7 @@ import { HeroSection } from './components/HeroSection';
 import { Marquee } from './components/Marquee';
 import { Capabilities } from './components/Capabilities';
 import { DemoGallery } from './components/DemoGallery';
-import { StatsBand } from './components/StatsBand';
+import { DomainSpectrum } from './components/DomainSpectrum';
 import { ProfileSection } from './components/ProfileSection';
 import { ContactSection } from './components/ContactSection';
 import { SiteFooter } from './components/SiteFooter';
@@ -39,7 +39,7 @@ export default function App() {
         <Marquee items={techMarquee} label="فناوری‌هایی که با آن‌ها کار می‌کنم" />
         <Capabilities />
         <DemoGallery />
-        <StatsBand />
+        <DomainSpectrum />
         <ProfileSection />
         <ContactSection />
       </main>
