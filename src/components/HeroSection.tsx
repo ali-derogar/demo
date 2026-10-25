@@ -1,12 +1,10 @@
 import { useEffect } from 'react';
 import { m, useMotionValue, useReducedMotion, useSpring } from 'motion/react';
 import { projects } from '../data/projects';
-import { heroStats, profile } from '../data/profile';
-import { faDigit } from '../lib/fa';
+import { profile } from '../data/profile';
 import { getPointer, subscribeRaf } from '../lib/raf';
 import { useMediaQuery } from '../lib/useMedia';
-import { CountUp } from './CountUp';
-import { Reveal } from './Reveal';
+import { MaskLine } from './MaskReveal';
 
 /** جابه‌جایی نرم کلاژ با اشاره‌گر؛ روی لمسی و «کاهش حرکت» غیرفعال */
 function usePointerParallax(strength: number) {
@@ -29,77 +27,67 @@ function usePointerParallax(strength: number) {
   return { x: springX, y: springY };
 }
 
+const collageIds = ['nabz', 'cars', 'sekke'];
+
 export function HeroSection() {
   const parallax = usePointerParallax(16);
+  const collage = collageIds
+    .map((id) => projects.find((project) => project.id === id))
+    .filter((project): project is (typeof projects)[number] => Boolean(project));
 
   return (
-    <section className="hero" id="top" aria-labelledby="hero-title">
-      <div className="shell hero__inner">
-        <div className="hero__copy">
-          <Reveal as="p" className="eyebrow">
-            <span className="eyebrow__pulse" aria-hidden="true" />
-            طراح رابط فارسی و {profile.title}
-          </Reveal>
+    <section className="v2-hero shell" id="top" aria-labelledby="hero-title">
+      <div className="v2-hero__copy">
+        <p className="v2-kicker">
+          <span className="v2-kicker__pulse" aria-hidden="true" />
+          طراح رابط فارسی و {profile.title}
+        </p>
 
-          <h1 id="hero-title">
-            <span className="hero__line">کدِ تمیز،</span>
-            <span className="hero__line">
-              <span className="hero__accent">ظاهرِ زنده</span>
-            </span>
-          </h1>
+        <h1 className="v2-hero__title" id="hero-title">
+          <MaskLine when="load">کدِ تمیز،</MaskLine>
+          <MaskLine className="v2-hero__grad" delay={0.1} when="load">
+            ظاهرِ زنده
+          </MaskLine>
+        </h1>
 
-          <p className="hero__badges" dir="ltr" aria-label={profile.tagline.join('، ')}>
-            {profile.tagline.map((item) => (
-              <span className="hero__badge" key={item}>
-                {item}
-              </span>
-            ))}
-          </p>
+        <p className="v2-hero__lead">
+          هر اسکرول، یک لایه از کار را باز می‌کند. از بک‌اند پایتون و مدل‌های یادگیری ماشین تا
+          اپ موبایل و رابط‌هایی که کاربر لمس می‌کند.
+        </p>
 
-          <Reveal as="p" className="hero__lead" delay={0.05}>
-            سایت‌های این گالری را خودم طراحی و پیاده کرده‌ام؛ و در سمت دیگر، سرویس‌های
-            FastAPI و Django با صف‌های تسک توزیع‌شده می‌سازم. چیزی که کاربر لمس می‌کند باید
-            به‌اندازه‌ی پشت‌صحنه دقیق باشد.
-          </Reveal>
-
-          <div className="hero__actions">
-            <a className="btn btn--primary" href="#demos" data-cursor="cta">
-              دیدن کارها
-              <span className="btn__arrow" aria-hidden="true">
-                ←
-              </span>
-            </a>
-            <a className="btn btn--ghost" href="#contact" data-cursor="cta">
-              ارتباط با من
-            </a>
-          </div>
-
-          <dl className="hero__stats">
-            {heroStats.map((stat) => (
-              <div key={stat.label}>
-                <dt>{stat.label}</dt>
-                <dd>
-                  <CountUp
-                    to={stat.value}
-                    prefix={stat.prefix}
-                    srLabel={`${stat.prefix ?? ''}${faDigit(stat.value)} ${stat.label}`}
-                  />
-                </dd>
-              </div>
-            ))}
-          </dl>
+        <div className="v2-hero__actions">
+          <a className="v2-btn v2-btn--primary" href="#demos" data-cursor="cta">
+            دیدن کارها
+            <span aria-hidden="true">←</span>
+          </a>
+          <a className="v2-btn v2-btn--ghost" href="#contact">
+            ارتباط با من
+          </a>
         </div>
 
-        <m.div className="hero__collage" style={{ x: parallax.x, y: parallax.y }} aria-hidden="true">
-          {projects.slice(0, 6).map((project, index) => (
-            <figure className="collage-card" key={project.id}>
-              <img src={project.preview} alt="" loading={index < 3 ? 'eager' : 'lazy'} width={1200} height={800} />
-              <figcaption>{project.categoryLabel}</figcaption>
-            </figure>
-          ))}
-          <p className="collage-note">پایین‌تر می‌توانید هرکدام را باز کنید.</p>
-        </m.div>
+        <p className="v2-hero__cue">
+          <span className="v2-hero__mouse" aria-hidden="true" />
+          اسکرول کن
+        </p>
       </div>
+
+      <m.div
+        className="v2-collage"
+        style={{ x: parallax.x, y: parallax.y }}
+        aria-hidden="true"
+      >
+        {collage.map((project, index) => (
+          <figure className={`v2-collage__item v2-collage__item--${index + 1}`} key={project.id}>
+            <img
+              src={project.preview}
+              alt=""
+              loading={index < 2 ? 'eager' : 'lazy'}
+              width={1200}
+              height={800}
+            />
+          </figure>
+        ))}
+      </m.div>
     </section>
   );
 }

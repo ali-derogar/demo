@@ -4,7 +4,8 @@ import { BrandMark } from './BrandMark';
 
 const links = [
   { href: '#top', label: 'صفحه اصلی' },
-  { href: '#demos', label: 'نمونه‌ها' },
+  { href: '#caps', label: 'توانمندی' },
+  { href: '#demos', label: 'نمونه‌کارها' },
   { href: '#about', label: 'درباره من' },
   { href: '#contact', label: 'ارتباط' },
 ];

@@ -1,9 +1,9 @@
 import { useMemo, useRef, useState } from 'react';
 import { categories, projects, type DemoCategory } from '../data/projects';
 import { faDigit, matchesFa } from '../lib/fa';
-import { DemoCard } from './DemoCard';
 import { EmptyState } from './EmptyState';
 import { Reveal } from './Reveal';
+import { WorkStack } from './WorkStack';
 
 export function DemoGallery() {
   const [query, setQuery] = useState('');
@@ -39,11 +39,11 @@ export function DemoGallery() {
       <div className="shell">
         <div className="gallery__head">
           <Reveal>
-            <p className="eyebrow">نمونه‌ها</p>
-            <h2 id="gallery-title">از طرح اولیه تا اولین کلیک</h2>
+            <p className="eyebrow">نمونه‌کارها</p>
+            <h2 id="gallery-title">کارت‌ها روی هم می‌نشینند</h2>
             <p className="gallery__intro">
-              هر نمونه‌ای که دوست داشتید باز کنید. برای پیدا کردنش هم می‌تونید از جست‌وجو یا
-              دسته‌بندی‌ها کمک بگیرید.
+              با هر اسکرول، پروژه‌ی بعدی با اسکرین‌شات واقعی روی قبلی می‌آید. برای پیدا کردن یک
+              کار خاص از جست‌وجو یا دسته‌بندی‌ها کمک بگیرید.
             </p>
           </Reveal>
           <p className="gallery__count" role="status" aria-live="polite">
@@ -105,16 +105,7 @@ export function DemoGallery() {
         </div>
 
         {visible.length > 0 ? (
-          <ul className="cards" role="list">
-            {visible.map((project, index) => (
-              <DemoCard
-                key={project.id}
-                project={project}
-                priority={index < 2}
-                revealDelay={(index % 3) * 0.06}
-              />
-            ))}
-          </ul>
+          <WorkStack projects={visible} />
         ) : (
           <EmptyState query={query} categoryLabel={categories.find((c) => c.value === category)?.label ?? ''} onReset={resetFilters} />
         )}

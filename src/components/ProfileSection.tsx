@@ -1,9 +1,11 @@
-import { languages, profile } from '../data/profile';
+import { useEffect, useRef } from 'react';
+import { aboutTimeline, languages, profile } from '../data/profile';
 import { faDigit } from '../lib/fa';
-import { ExperienceTimeline } from './ExperienceTimeline';
+import { subscribeRaf } from '../lib/raf';
 import { Reveal } from './Reveal';
-import { SectionHead } from './SectionHead';
 import { SkillsGrid } from './SkillsGrid';
+
+const clamp01 = (v: number) => (v < 0 ? 0 : v > 1 ? 1 : v);
 
 /** چهار نکته‌ی رویکرد طراحی که از بخش «درباره من» قبلی حفظ شده‌اند */
 const approach = [
@@ -25,71 +27,91 @@ const approach = [
   },
 ];
 
+/** تایم‌لاینی که خط آن با اسکرول پر می‌شود */
+function useTimelineFill(ref: React.RefObject<HTMLElement>) {
+  useEffect(() => {
+    const root = ref.current;
+    if (!root) return;
+    const fill = root.querySelector<HTMLElement>('.v2-tl__progress');
+    if (!fill) return;
+    const update = () => {
+      const rect = root.getBoundingClientRect();
+      const p = clamp01((window.innerHeight * 0.7 - rect.top) / rect.height);
+      fill.style.transform = `scaleY(${p})`;
+    };
+    update();
+    return subscribeRaf(update);
+  }, [ref]);
+}
+
 export function ProfileSection() {
+  const tlRef = useRef<HTMLDivElement>(null);
+  useTimelineFill(tlRef);
+
   return (
-    <section className="profile" id="about" aria-labelledby="profile-title">
-      <div className="shell">
-        <SectionHead
-          id="profile-title"
-          eyebrow="درباره من"
-          title={<>کسی که پشت این نمونه‌کارهاست</>}
-          lead="هم رابط کاربری را می‌سازم و هم بک‌اندی که زیرش کار می‌کند."
-        />
+    <section className="v2-about shell" id="about" aria-labelledby="about-title">
+      <div className="v2-about__grid">
+        <div className="v2-about__bio">
+          <p className="v2-kicker">درباره من</p>
+          <h2 className="v2-h2" id="about-title">
+            کسی که پشت این کارهاست
+          </h2>
 
-        <div className="profile__bio">
-          <Reveal className="profile__card">
-            <div className="profile__id">
-              <span className="profile__avatar" aria-hidden="true">
-                {profile.name.charAt(0)}
+          <div className="v2-avatars">
+            <span className="v2-avatars__mark" aria-hidden="true">
+              {profile.name.charAt(0)}
+            </span>
+            <span className="v2-avatars__who">
+              <b>{profile.name}</b>
+              <span>{profile.title}</span>
+            </span>
+          </div>
+
+          {profile.summary.map((paragraph) => (
+            <Reveal as="p" className="v2-about__text" key={paragraph}>
+              {paragraph}
+            </Reveal>
+          ))}
+
+          <div className="v2-about__langs">
+            {languages.map((language) => (
+              <span key={language.name}>
+                {language.name} — {language.level}
               </span>
-              <div>
-                <h3 className="profile__name">{profile.name}</h3>
-                <p className="profile__title">{profile.title}</p>
-                <p className="profile__tagline" dir="ltr">
-                  {profile.tagline.join(' · ')}
-                </p>
-              </div>
-            </div>
-            {profile.summary.map((paragraph) => (
-              <p className="profile__text" key={paragraph}>
-                {paragraph}
-              </p>
             ))}
-            <div className="profile__meta">
-              <span className="profile__loc">{profile.location}</span>
-              <ul className="profile__langs" role="list">
-                {languages.map((language) => (
-                  <li key={language.name}>
-                    {language.name} — {language.level}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </Reveal>
+          </div>
         </div>
 
-        <div className="profile__block">
-          <h3 className="profile__block-title">مهارت‌ها</h3>
-          <SkillsGrid />
+        <div className="v2-tl" ref={tlRef}>
+          <span className="v2-tl__line" aria-hidden="true">
+            <span className="v2-tl__progress" />
+          </span>
+          {aboutTimeline.map((node) => (
+            <Reveal className="v2-tl__node" key={node.title}>
+              <span className="v2-tl__dot" aria-hidden="true" />
+              <h3 className="v2-tl__title">{node.title}</h3>
+              <p className="v2-tl__meta">{node.meta}</p>
+            </Reveal>
+          ))}
         </div>
+      </div>
 
-        <div className="profile__block">
-          <h3 className="profile__block-title">تجربه و تحصیلات</h3>
-          <ExperienceTimeline />
-        </div>
+      <div className="v2-about__block">
+        <h3 className="v2-about__block-title">مهارت‌ها</h3>
+        <SkillsGrid />
+      </div>
 
-        <div className="profile__block">
-          <h3 className="profile__block-title">رویکرد من در طراحی</h3>
-          <ul className="approach" role="list">
-            {approach.map((note, index) => (
-              <Reveal as="li" key={note.title} className="approach__item" delay={(index % 4) * 0.05}>
-                <span className="approach__num">{faDigit(index + 1)}</span>
-                <h4>{note.title}</h4>
-                <p>{note.text}</p>
-              </Reveal>
-            ))}
-          </ul>
-        </div>
+      <div className="v2-about__block">
+        <h3 className="v2-about__block-title">رویکرد من در طراحی</h3>
+        <ul className="approach" role="list">
+          {approach.map((note, index) => (
+            <Reveal as="li" key={note.title} className="approach__item" delay={(index % 4) * 0.05}>
+              <span className="approach__num">{faDigit(index + 1)}</span>
+              <h4>{note.title}</h4>
+              <p>{note.text}</p>
+            </Reveal>
+          ))}
+        </ul>
       </div>
     </section>
   );

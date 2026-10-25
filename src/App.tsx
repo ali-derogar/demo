@@ -1,12 +1,16 @@
 import { useEffect } from 'react';
 import { LazyMotion, domAnimation } from 'motion/react';
 import { useSmoothScroll } from './lib/useSmoothScroll';
-import { AmbientBackground } from './components/AmbientBackground';
+import { Backdrop } from './components/Backdrop';
+import { Preloader } from './components/Preloader';
+import { ScrollChrome } from './components/ScrollChrome';
 import { CustomCursor } from './components/CustomCursor';
 import { SiteHeader } from './components/SiteHeader';
 import { HeroSection } from './components/HeroSection';
 import { Marquee } from './components/Marquee';
+import { Capabilities } from './components/Capabilities';
 import { DemoGallery } from './components/DemoGallery';
+import { StatsBand } from './components/StatsBand';
 import { ProfileSection } from './components/ProfileSection';
 import { ContactSection } from './components/ContactSection';
 import { SiteFooter } from './components/SiteFooter';
@@ -22,7 +26,9 @@ export default function App() {
 
   return (
     <LazyMotion features={domAnimation} strict>
-      <AmbientBackground />
+      <Preloader />
+      <Backdrop />
+      <ScrollChrome />
       <CustomCursor />
       <a className="skip-link" href="#demos">
         پرش به نمونهکارها
@@ -31,7 +37,9 @@ export default function App() {
       <main id="main">
         <HeroSection />
         <Marquee items={techMarquee} label="فناوری‌هایی که با آن‌ها کار می‌کنم" />
+        <Capabilities />
         <DemoGallery />
+        <StatsBand />
         <ProfileSection />
         <ContactSection />
       </main>

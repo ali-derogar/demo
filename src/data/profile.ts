@@ -37,6 +37,21 @@ export interface LanguageEntry {
   level: string;
 }
 
+export interface TimelineNode {
+  title: string;
+  meta: string;
+}
+
+/**
+ * گره‌های تایم‌لاین «درباره من»؛ فقط مهارت و تحصیلات، بدون نام کارفرما یا شرح وظایف شرکتی.
+ */
+export const aboutTimeline: TimelineNode[] = [
+  { title: 'کارشناسی مهندسی کامپیوتر', meta: 'دانشگاه یادگار امام (ره) — تهران' },
+  { title: 'بک‌اند و یادگیری ماشین', meta: 'FastAPI · Django · Celery · scikit-learn' },
+  { title: 'سازنده‌ی اپ موبایل', meta: 'دو اپلیکیشن با BeeWare' },
+  { title: 'طراح رابط', meta: `${projects.length} سایت نمونه‌کار در این گالری` },
+];
+
 export type ContactKind = 'github' | 'telegram' | 'email' | 'phone';
 
 export interface ContactLink {
@@ -53,14 +68,14 @@ export interface ContactLink {
 export const profile = {
   brand: 'persianbotyar',
   name: 'علی دروگر',
-  title: 'توسعه‌دهنده‌ی بک‌اند پایتون',
+  title: 'مهندس نرم‌افزار',
   /** اجزای تگ‌لاین؛ با «·» کنار هم چیده می‌شوند (لاتین، dir=ltr) */
-  tagline: ['FastAPI', 'Django', 'Distributed Systems', 'Async Microservices'],
+  tagline: ['Python', 'FastAPI · Django', 'Machine Learning', 'BeeWare'],
   location: 'تهران، ایران',
   summary: [
-    'من علی دروگرم؛ توسعه‌دهنده‌ی بک‌اند پایتون. سرویس‌های مقیاس‌پذیر و RESTful با FastAPI و Django می‌سازم و صف‌های تسک توزیع‌شده با Celery، Redis و RabbitMQ را طراحی و نگهداری می‌کنم.',
-    'در کنار کار روی بک‌اند، رابط کاربری هم طراحی و پیاده می‌کنم؛ همان سایت‌هایی که در این گالری می‌بینید. سعی می‌کنم چیزی که کاربر لمس می‌کند به‌اندازه‌ی چیزی که پشت صحنه اجرا می‌شود تمیز و دقیق باشد.',
-    'روی دیتابیس‌های رابطه‌ای و NoSQL، مهندسی تست خودکار و اتوماسیون تلگرام کار کرده‌ام و کد را با اصول clean code و الگوهای طراحی می‌نویسم.',
+    'من علی دروگرم؛ مهندس نرم‌افزار. تمرکز اصلی‌ام بک‌اند پایتون است: سرویس‌های مقیاس‌پذیر و RESTful با FastAPI و Django و صف‌های تسک توزیع‌شده با Celery، Redis و RabbitMQ.',
+    'دو اپلیکیشن موبایل هم با BeeWare ساخته‌ام و در حوزه‌ی هوش مصنوعی و یادگیری ماشین کار کرده‌ام؛ تحلیل داده و مدل‌سازی با NumPy، pandas، Matplotlib، scikit-learn و یادگیری عمیق.',
+    'در کنار این‌ها رابط کاربری هم طراحی و پیاده می‌کنم؛ همان سایت‌هایی که در این گالری می‌بینید. سعی می‌کنم چیزی که کاربر لمس می‌کند به‌اندازه‌ی چیزی که پشت صحنه اجرا می‌شود تمیز و دقیق باشد.',
   ],
 } as const;
 
@@ -92,29 +107,62 @@ export const skillGroups: SkillGroup[] = [
     items: ['Pyrogram', 'Telegram API', 'Playwright', 'BeautifulSoup', 'Async Bot Dev'],
   },
   {
+    id: 'ml',
+    title: 'هوش مصنوعی و یادگیری ماشین',
+    items: ['NumPy', 'pandas', 'Matplotlib', 'scikit-learn', 'Deep Learning', 'تحلیل داده'],
+  },
+  {
+    id: 'mobile',
+    title: 'اپلیکیشن موبایل',
+    items: ['BeeWare', 'Toga', 'Briefcase', 'Python'],
+  },
+  {
     id: 'devops',
-    title: 'DevOps و ابزار هوش مصنوعی',
+    title: 'DevOps و ابزار',
     items: ['Docker', 'Git', 'CI Workflows', 'Linux', 'Agile/Scrum', 'Prompt Engineering'],
   },
 ];
 
-export const experiences: ExperienceEntry[] = [
-  {
-    role: 'توسعه‌دهنده‌ی نرم‌افزار',
-    company: 'شرکت دانش‌گستر سینا',
-    location: 'تهران، ایران',
-    periodFa: 'تیر ۱۴۰۲ — اکنون',
-    current: true,
-    points: [
-      'مهندسی و مقیاس‌دهی میکروسرویس‌های بک‌اند با FastAPI و پایتون روی MongoDB؛ کاهش تأخیر پاسخ API و مقیاس افقی پایدار.',
-      'طراحی خط‌لوله‌های خزش و ورود داده با Playwright؛ پردازش بیش از ۱۰٬۰۰ رکورد در روز با تلاش مجدد خودکار و ضدربات.',
-      'راه‌اندازی و یکپارچه‌سازی صف‌های پیام ناهمگام با Celery، Redis و RabbitMQ برای افزایش throughput کارهای پس‌زمینه.',
-      'استانداردسازی بازبینی کد و تست خودکار با Pytest، Unittest و Doctest در جریان CI/CD.',
-      'منتورینگ توسعه‌دهنده‌های جونیور، معماری OOP و استراتژی شاخه‌های Git در چارچوب Agile/Scrum.',
-    ],
-    stack: ['FastAPI', 'Python', 'MongoDB', 'Celery', 'Redis', 'RabbitMQ', 'Playwright'],
-  },
+export type IconKey =
+  | 'cpu'
+  | 'layers'
+  | 'sparkles'
+  | 'phone'
+  | 'bot'
+  | 'code'
+  | 'telegram'
+  | 'mail'
+  | 'call'
+  | 'github';
+
+export type Tone = 'cyan' | 'violet' | 'magenta' | 'amber' | 'gold';
+
+export interface Capability {
+  id: string;
+  /** شماره‌ی دو رقمی نمایشی (فارسی) */
+  n: string;
+  title: string;
+  text: string;
+  tags: string[];
+  icon: IconKey;
+  tone: Tone;
+}
+
+/** شش توانمندی اصلی؛ در بخش اسکرول افقیِ پین‌شده نمایش داده می‌شود */
+export const capabilities: Capability[] = [
+  { id: 'backend', n: '۰۱', title: 'بک‌اند پایتون', text: 'سرویس‌های مقیاس‌پذیر و RESTful با FastAPI و Django.', tags: ['FastAPI', 'Django', 'gRPC', 'Pydantic'], icon: 'cpu', tone: 'cyan' },
+  { id: 'queue', n: '۰۲', title: 'صف و مقیاس', text: 'پردازش ناهمگام کارهای سنگین با صف‌های توزیع‌شده.', tags: ['Celery', 'Redis', 'RabbitMQ'], icon: 'layers', tone: 'violet' },
+  { id: 'ai', n: '۰۳', title: 'هوش مصنوعی و ML', text: 'تحلیل داده و مدل‌سازی تا یادگیری عمیق.', tags: ['NumPy', 'pandas', 'scikit-learn', 'Deep Learning'], icon: 'sparkles', tone: 'magenta' },
+  { id: 'mobile', n: '۰۴', title: 'اپلیکیشن موبایل', text: 'دو اپ با BeeWare ساخته‌ام؛ پایتون در هر دو پلتفرم.', tags: ['BeeWare', 'Toga', 'Briefcase'], icon: 'phone', tone: 'amber' },
+  { id: 'automation', n: '۰۵', title: 'ربات و اتوماسیون', text: 'ربات تلگرام و خط‌لوله‌های خزش داده.', tags: ['Pyrogram', 'Playwright', 'BeautifulSoup'], icon: 'bot', tone: 'gold' },
+  { id: 'frontend', n: '۰۶', title: 'رابط کاربری', text: 'همان سایت‌هایی که در این گالری می‌بینید؛ تمیز و دقیق.', tags: ['React', 'Vite', 'TypeScript', 'CSS'], icon: 'code', tone: 'cyan' },
 ];
+
+/**
+ * جزئیات محل کار فعلی و شرح وظایف شرکتی عمداً نمایش داده نمی‌شود.
+ * برای همین این فهرست خالی است؛ تایم‌لاین فقط تحصیلات را نشان می‌دهد.
+ */
+export const experiences: ExperienceEntry[] = [];
 
 export const education: EducationEntry[] = [
   {
@@ -180,6 +228,11 @@ export const techMarquee: string[] = [
   'gRPC',
   'Pytest',
   'Pydantic',
+  'NumPy',
+  'pandas',
+  'scikit-learn',
+  'Deep Learning',
+  'BeeWare',
 ];
 
 export interface HeroStat {

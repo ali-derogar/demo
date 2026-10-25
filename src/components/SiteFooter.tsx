@@ -33,6 +33,7 @@ export function SiteFooter() {
           <h3>بخش‌ها</h3>
           <ul role="list">
             <li><a href="#top">صفحه اصلی</a></li>
+            <li><a href="#caps">توانمندی</a></li>
             <li><a href="#demos">نمونه‌ها</a></li>
             <li><a href="#about">درباره من</a></li>
             <li><a href="#contact">ارتباط</a></li>
