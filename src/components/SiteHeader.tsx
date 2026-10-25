@@ -1,10 +1,12 @@
 import { useEffect, useRef, useState } from 'react';
+import { getLenis } from '../lib/useSmoothScroll';
 import { BrandMark } from './BrandMark';
 
 const links = [
   { href: '#top', label: 'صفحه اصلی' },
   { href: '#demos', label: 'نمونه‌ها' },
   { href: '#about', label: 'درباره من' },
+  { href: '#contact', label: 'ارتباط' },
 ];
 
 export function SiteHeader() {
@@ -32,6 +34,7 @@ export function SiteHeader() {
   useEffect(() => {
     if (!open) return;
     const previousOverflow = document.body.style.overflow;
+    getLenis()?.stop();
     const background = Array.from(document.querySelectorAll<HTMLElement>('#main, .site-footer, .mobile-dock'));
     const previousInert = background.map((element) => element.inert);
     background.forEach((element) => { element.inert = true; });
@@ -61,6 +64,7 @@ export function SiteHeader() {
     document.addEventListener('pointerdown', onOutside);
     return () => {
       document.body.style.overflow = previousOverflow;
+      getLenis()?.start();
       background.forEach((element, index) => { element.inert = previousInert[index]; });
       window.removeEventListener('keydown', onKey);
       document.removeEventListener('pointerdown', onOutside);
@@ -97,6 +101,20 @@ export function SiteHeader() {
               </li>
             </ul>
           </nav>
+
+          <a
+            className="header-gh"
+            href="https://github.com/ali-derogar"
+            target="_blank"
+            rel="noreferrer"
+            dir="ltr"
+            data-cursor="link"
+            aria-label="گیت‌هاب من"
+          >
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" focusable="false">
+              <path d="M9 19c-4 1.5-4-2.5-6-3m12 5v-3.5c0-1 .1-1.4-.5-2 2.8-.3 5.5-1.4 5.5-6a4.6 4.6 0 0 0-1.3-3.2 4.2 4.2 0 0 0-.1-3.2s-1.1-.3-3.5 1.3a12 12 0 0 0-6.2 0C6.5 2.8 5.4 3.1 5.4 3.1a4.2 4.2 0 0 0-.1 3.2A4.6 4.6 0 0 0 4 9.5c0 4.6 2.7 5.7 5.5 6-.6.6-.6 1.2-.5 2V21" />
+            </svg>
+          </a>
 
           <button
             type="button"

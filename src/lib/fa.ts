@@ -73,6 +73,11 @@ export function faCount(value: number): string {
   return COUNT_WORDS[value - 1] ?? faDigit(value);
 }
 
+/** عدد گرد شده با ارقام فارسی؛ برای فریم‌های شمارنده (CountUp) */
+export function faCompact(value: number): string {
+  return faDigit(Math.round(value));
+}
+
 export function faYear(date = new Date()): string {
   return new Intl.DateTimeFormat('fa-IR', { calendar: 'persian', year: 'numeric' }).format(date);
 }

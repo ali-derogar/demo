@@ -1,3 +1,4 @@
+import type { PointerEvent } from 'react';
 import type { DemoProject } from '../data/projects';
 
 interface Props {
@@ -6,8 +7,19 @@ interface Props {
 }
 
 export function DemoCard({ project, priority = false }: Props) {
+  const onPointerMove = (event: PointerEvent<HTMLElement>) => {
+    if (event.pointerType !== 'mouse') return;
+    const rect = event.currentTarget.getBoundingClientRect();
+    event.currentTarget.style.setProperty('--mx', `${event.clientX - rect.left}px`);
+    event.currentTarget.style.setProperty('--my', `${event.clientY - rect.top}px`);
+  };
+
   return (
-    <li className="card" style={{ ['--card-accent' as string]: project.accent }}>
+    <li
+      className="card"
+      onPointerMove={onPointerMove}
+      style={{ ['--card-accent' as string]: project.accent }}
+    >
       <article className="card__body">
         <a className="card__media" href={project.url} tabIndex={-1} aria-hidden="true">
           <img
@@ -25,7 +37,7 @@ export function DemoCard({ project, priority = false }: Props) {
           <p className="card__category">{project.categoryLabel}</p>
           <span className="card__live"><span aria-hidden="true" />پیش‌نمایش</span>
           <h3 className="card__title">
-            <a className="card__link" href={project.url}>
+            <a className="card__link" href={project.url} data-cursor="link">
               {project.title}
               <span className="sr-only">؛ باز کردن وب‌سایت</span>
             </a>

@@ -3,6 +3,7 @@ import { categories, projects, type DemoCategory } from '../data/projects';
 import { faDigit, matchesFa } from '../lib/fa';
 import { DemoCard } from './DemoCard';
 import { EmptyState } from './EmptyState';
+import { Reveal } from './Reveal';
 
 export function DemoGallery() {
   const [query, setQuery] = useState('');
@@ -37,14 +38,14 @@ export function DemoGallery() {
     <section className="gallery" id="demos" aria-labelledby="gallery-title">
       <div className="shell">
         <div className="gallery__head">
-          <div>
+          <Reveal>
             <p className="eyebrow">نمونه‌ها</p>
             <h2 id="gallery-title">از طرح اولیه تا اولین کلیک</h2>
             <p className="gallery__intro">
               هر نمونه‌ای که دوست داشتید باز کنید. برای پیدا کردنش هم می‌تونید از جست‌وجو یا
               دسته‌بندی‌ها کمک بگیرید.
             </p>
-          </div>
+          </Reveal>
           <p className="gallery__count" role="status" aria-live="polite">
             {visible.length === projects.length
               ? `${faDigit(projects.length)} نمونه‌کار`
@@ -104,11 +105,13 @@ export function DemoGallery() {
         </div>
 
         {visible.length > 0 ? (
-          <ul className="cards" role="list">
-            {visible.map((project, index) => (
-              <DemoCard key={project.id} project={project} priority={index < 2} />
-            ))}
-          </ul>
+          <Reveal>
+            <ul className="cards" role="list">
+              {visible.map((project, index) => (
+                <DemoCard key={project.id} project={project} priority={index < 2} />
+              ))}
+            </ul>
+          </Reveal>
         ) : (
           <EmptyState query={query} categoryLabel={categories.find((c) => c.value === category)?.label ?? ''} onReset={resetFilters} />
         )}
