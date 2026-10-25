@@ -1471,9 +1471,11 @@ input {
     block-size: 20px;
   }
 
+  /* طلایی از برندِ قبلی بود و تنها رنگِ گرمِ صفحه را به خودِ حالتِ فعال
+     می‌داد؛ حالا همان سیانِ هویتِ فعلی است. */
   .mobile-dock .is-active {
-    color: var(--gold);
-    background: rgba(226, 176, 106, 0.12);
+    color: var(--cyan);
+    background: color-mix(in srgb, var(--cyan) 14%, transparent);
   }
 }
 
