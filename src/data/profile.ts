@@ -46,7 +46,7 @@ export interface ContactLink {
   value: string;
   href: string;
   /** توضیح کوتاه فارسی زیر کارت */
-  note: string;
+  note?: string;
   external: boolean;
 }
 
@@ -144,7 +144,6 @@ export const contactLinks: ContactLink[] = [
     label: 'گیت‌هاب',
     value: 'ali-derogar',
     href: 'https://github.com/ali-derogar',
-    note: 'بخشی از پروژه‌هایم خصوصی است؛ آنچه عمومی است همین‌جا هست.',
     external: true,
   },
   {

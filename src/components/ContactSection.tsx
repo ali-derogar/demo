@@ -72,7 +72,7 @@ export function ContactSection() {
                   <span className="contact-card__value" dir="ltr">
                     {link.value}
                   </span>
-                  <span className="contact-card__note">{link.note}</span>
+                  {link.note && <span className="contact-card__note">{link.note}</span>}
                 </span>
                 <span className="sr-only">؛ باز کردن {link.label}</span>
               </a>

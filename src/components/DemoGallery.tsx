@@ -105,13 +105,16 @@ export function DemoGallery() {
         </div>
 
         {visible.length > 0 ? (
-          <Reveal>
-            <ul className="cards" role="list">
-              {visible.map((project, index) => (
-                <DemoCard key={project.id} project={project} priority={index < 2} />
-              ))}
-            </ul>
-          </Reveal>
+          <ul className="cards" role="list">
+            {visible.map((project, index) => (
+              <DemoCard
+                key={project.id}
+                project={project}
+                priority={index < 2}
+                revealDelay={(index % 3) * 0.06}
+              />
+            ))}
+          </ul>
         ) : (
           <EmptyState query={query} categoryLabel={categories.find((c) => c.value === category)?.label ?? ''} onReset={resetFilters} />
         )}
