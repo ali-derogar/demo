@@ -52,7 +52,13 @@ export function ProfileSection() {
     <section className="v2-about shell" id="about" aria-labelledby="about-title">
       <div className="v2-about__grid">
         <div className="v2-about__bio">
-          <p className="v2-kicker">درباره‌ی من</p>
+          <p className="v2-kicker">
+            <span className="v2-kicker__pulse" aria-hidden="true" />
+            <span className="v2-kicker__n" aria-hidden="true">
+              ۰۵
+            </span>
+            درباره‌ی من
+          </p>
           <h2 className="v2-h2" id="about-title">
             هم سرویس می‌سازم،
             <br />

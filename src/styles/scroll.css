@@ -35,8 +35,8 @@
   position: fixed;
   inset: -20%;
   z-index: -3;
-  filter: blur(60px);
-  opacity: 0.55;
+  filter: blur(96px) saturate(0.85);
+  opacity: 0.42;
   pointer-events: none;
 }
 .v2-aurora span {
@@ -48,7 +48,7 @@
 .v2-aurora .a1 {
   width: 50vw;
   height: 50vw;
-  background: radial-gradient(circle, var(--cyan), transparent 60%);
+  background: radial-gradient(circle, color-mix(in srgb, var(--cyan) 70%, #fff), transparent 62%);
   top: 0;
   right: 0;
   animation: v2drift1 22s var(--ease) infinite alternate;
@@ -56,7 +56,7 @@
 .v2-aurora .a2 {
   width: 44vw;
   height: 44vw;
-  background: radial-gradient(circle, var(--magenta), transparent 60%);
+  background: radial-gradient(circle, color-mix(in srgb, var(--magenta) 62%, #fff), transparent 62%);
   bottom: 0;
   left: 0;
   animation: v2drift2 26s var(--ease) infinite alternate;
@@ -64,7 +64,7 @@
 .v2-aurora .a3 {
   width: 38vw;
   height: 38vw;
-  background: radial-gradient(circle, var(--violet), transparent 60%);
+  background: radial-gradient(circle, color-mix(in srgb, var(--violet) 70%, #fff), transparent 62%);
   top: 40%;
   left: 40%;
   animation: v2drift3 30s var(--ease) infinite alternate;
@@ -219,6 +219,8 @@
   display: inline-flex;
   align-items: center;
   gap: 0.55rem;
+  /* بدون این، برچسب‌های کوتاه مثل «درباره‌ی من» داخل ستون دوخطی می‌شدند */
+  white-space: nowrap;
   margin: 0;
 }
 .v2-kicker__pulse {
@@ -257,6 +259,9 @@
   grid-template-columns: 1.05fr 0.95fr;
   gap: clamp(2rem, 5vw, 4rem);
   align-items: center;
+  /* روی موبایل دو ردیف می‌شود؛ بدون این، ردیف‌های auto فضای خالی را بین
+     متن و کلاژ پخش می‌کردند و یک گودالِ وسطِ هیرو باز می‌ماند. */
+  align-content: center;
   padding-block: calc(var(--header-size) + 40px) 60px;
   position: relative;
 }
@@ -341,41 +346,153 @@
   100% { opacity: 0; transform: translate(-50%, 12px); }
 }
 
-/* کلاژ شناور */
+/* کلاژ شناور
+   سه پیش‌نمایش از سه پروژه، نوردهی‌شان یکی نیست (میانگینِ روشنایی: nabz≈18،
+   cars≈116، sekke≈30). بدون تراز، عکسِ ماشینِ سفید تمامِ توجه را از تیتر
+   می‌دزدید؛ پس هر کارت فقط `--collage-bright` خودش را دارد و بقیه‌ی تیمار
+   مشترک است. رنگِ لبه و هاله هم از accentِ خودِ همان پروژه می‌آید. */
 .v2-collage {
   position: relative;
-  height: 520px;
+  height: clamp(430px, 56vh, 600px);
   will-change: transform;
 }
 .v2-collage__item {
   position: absolute;
   margin: 0;
-  border-radius: 20px;
+  border-radius: 18px;
   overflow: hidden;
-  border: 1px solid var(--glass-line);
-  box-shadow: 0 30px 70px rgba(0, 0, 0, 0.6);
+  border: 1px solid color-mix(in srgb, var(--collage-accent, var(--violet)) 26%, var(--glass-line));
+  background: #0a0a12;
+  box-shadow:
+    0 28px 64px rgba(0, 0, 0, 0.62),
+    0 16px 52px -18px color-mix(in srgb, var(--collage-accent, var(--violet)) 42%, transparent);
 }
 .v2-collage__item img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  filter: brightness(var(--collage-bright, 1)) saturate(1.1) contrast(1.05);
 }
+/* پرده‌ی مشترک: بالا برای خوانا شدنِ نوارِ کارت، پایین برای برچسب */
 .v2-collage__item::after {
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, transparent 50%, rgba(5, 5, 9, 0.7));
+  background:
+    linear-gradient(180deg, rgba(5, 5, 9, 0.74), transparent 26%, transparent 46%, rgba(5, 5, 9, 0.82)),
+    radial-gradient(
+      110% 70% at 88% 8%,
+      color-mix(in srgb, var(--collage-accent, var(--violet)) 22%, transparent),
+      transparent 58%
+    );
 }
-.v2-collage__item--1 { width: 62%; height: 60%; top: 0; right: 0; transform: rotate(3deg); animation: v2float1 9s var(--ease) infinite alternate; }
-.v2-collage__item--2 { width: 56%; height: 52%; bottom: 0; left: 0; transform: rotate(-4deg); animation: v2float2 11s var(--ease) infinite alternate; }
-.v2-collage__item--3 { width: 40%; height: 34%; bottom: 6%; right: 6%; transform: rotate(6deg); animation: v2float3 8s var(--ease) infinite alternate; }
+.v2-collage__bar {
+  position: absolute;
+  inset-inline: 0;
+  inset-block-start: 0;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  padding: 0.62rem 0.9rem;
+}
+.v2-collage__dots {
+  flex: none;
+  inline-size: 5px;
+  block-size: 5px;
+  border-radius: 50%;
+  margin-inline-end: 0.6rem;
+  background: var(--collage-accent, var(--cyan));
+  box-shadow:
+    9px 0 0 color-mix(in srgb, var(--collage-accent, var(--cyan)) 45%, #55566b),
+    18px 0 0 color-mix(in srgb, var(--collage-accent, var(--cyan)) 22%, #55566b);
+}
+.v2-collage__label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: rgba(233, 236, 255, 0.76);
+}
+.v2-collage__item--1 {
+  top: 0;
+  left: 0;
+  width: 66%;
+  height: 54%;
+  z-index: 1;
+  --collage-bright: 1.14;
+  transform: rotate(-2.5deg);
+  animation: v2float1 9s var(--ease) infinite alternate;
+}
+.v2-collage__item--2 {
+  top: 27%;
+  right: 0;
+  width: 57%;
+  height: 46%;
+  z-index: 2;
+  --collage-bright: 0.56;
+  transform: rotate(3deg);
+  animation: v2float2 11s var(--ease) infinite alternate;
+}
+.v2-collage__item--3 {
+  bottom: 0;
+  left: 12%;
+  width: 62%;
+  height: 44%;
+  z-index: 3;
+  --collage-bright: 1.08;
+  transform: rotate(1.6deg);
+  animation: v2float3 8s var(--ease) infinite alternate;
+}
 @keyframes v2float1 { to { translate: 0 -14px; } }
 @keyframes v2float2 { to { translate: 0 12px; } }
 @keyframes v2float3 { to { translate: 0 -10px; } }
 
+/* اسپات‌لایت: با هاور روی یک کارت، دو تای دیگر عقب می‌روند.
+   :has لازم است؛ بدون آن، صرفِ ورودِ ماوس به کانتینر همه را کم‌نور می‌کرد
+   و در فاصله‌ی بین کارت‌ها صفحه چشمک می‌زد. */
+@media (hover: hover) and (pointer: fine) {
+  .v2-collage__item {
+    transition:
+      scale 0.5s var(--ease-out-expo),
+      opacity 0.4s var(--ease),
+      box-shadow 0.5s var(--ease);
+  }
+  .v2-collage:has(.v2-collage__item:hover) .v2-collage__item {
+    opacity: 0.4;
+  }
+  .v2-collage__item:hover {
+    opacity: 1 !important;
+    scale: 1.045;
+    z-index: 4;
+    box-shadow:
+      0 34px 84px rgba(0, 0, 0, 0.72),
+      0 20px 62px -16px color-mix(in srgb, var(--collage-accent, var(--violet)) 62%, transparent);
+  }
+}
+
 @media (max-width: 900px) {
   .v2-hero { grid-template-columns: 1fr; }
-  .v2-collage { height: 360px; order: -1; }
+
+  /* روی گوشی، آبجکت‌های مطلقِ کلاژ کل صفحه‌ی اول را می‌گرفتند و تیتر زیرِ
+     تایم‌اسکرول می‌رفت. اینجا کلاژ به یک ردیفِ فشرده تبدیل می‌شود که بعد از
+     متن می‌آید. */
+  .v2-collage {
+    height: auto;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.6rem;
+    margin-block-start: 2rem;
+  }
+  .v2-collage__item {
+    position: static;
+    width: auto;
+    height: clamp(96px, 24vw, 132px);
+    transform: none;
+    animation: none;
+    border-radius: 12px;
+  }
+  .v2-collage__bar { padding: 0.4rem 0.5rem; }
+  .v2-collage__label { display: none; }
+  .v2-collage__dots { margin-inline-end: 0; }
 }
 
 /* --------------------- توانمندی: اسکرول افقی --------------------- */
@@ -391,6 +508,22 @@
   justify-content: center;
 }
 .v2-hscroll__head { margin-block-end: 1.4rem; }
+/* نشانه‌ی پیشرفتِ ریل: بدون آن، ۳۶۰vh اسکرولِ پین‌شده هیچ بازخوردی نمی‌دهد */
+.v2-hscroll__bar {
+  margin-block-start: 1.3rem;
+  height: 2px;
+  border-radius: 2px;
+  overflow: hidden;
+  background: color-mix(in srgb, var(--paper) 9%, transparent);
+}
+.v2-hscroll__bar i {
+  display: block;
+  height: 100%;
+  transform: scaleX(0);
+  transform-origin: left center;
+  will-change: transform;
+  background: var(--spectrum);
+}
 .v2-hscroll__track {
   display: flex;
   gap: 1.4rem;
@@ -401,7 +534,8 @@
 .v2-cap {
   direction: rtl;
   flex: 0 0 min(82vw, 380px);
-  min-height: 58vh;
+  /* 58vh باعث می‌شد نیمه‌ی پایینِ هر کارت فقط از بافتِ خالی پر شود */
+  min-height: clamp(320px, 42vh, 430px);
   border: 1px solid var(--glass-line);
   border-radius: 26px;
   background: linear-gradient(180deg, var(--glass), rgba(8, 8, 16, 0.6));
@@ -509,12 +643,31 @@
 .v2-chrome i:nth-child(3) { background: #28c840; }
 .v2-chrome span { margin-inline-start: 0.6rem; font-size: 0.72rem; color: var(--muted-2); }
 .v2-meta {
+  position: relative;
   padding: clamp(1.5rem, 3vw, 2.8rem);
   display: flex;
   flex-direction: column;
   justify-content: center;
   gap: 0.7rem;
   background: linear-gradient(180deg, var(--ink-2), #0a0a14);
+}
+/* شماره‌ی ترتیبیِ کارت؛ گوشه‌ی بیرونِ ستونِ متن می‌نشیند و همان فضای
+   مرده را پر می‌کند. رنگش از accentِ خودِ پروژه است. */
+.v2-meta__no {
+  position: absolute;
+  inset-block-start: 0.6rem;
+  inset-inline-end: 1.4rem;
+  z-index: 0;
+  font-size: clamp(3.2rem, 6.4vw, 5.4rem);
+  font-weight: 900;
+  line-height: 1;
+  pointer-events: none;
+  color: color-mix(in srgb, var(--t) 12%, transparent);
+  -webkit-text-stroke: 1.2px color-mix(in srgb, var(--t) 42%, transparent);
+}
+.v2-meta > :not(.v2-meta__no) {
+  position: relative;
+  z-index: 1;
 }
 .v2-meta__cat {
   align-self: flex-start;
@@ -527,7 +680,23 @@
 }
 .v2-meta__title { font-size: clamp(1.5rem, 2.8vw, 2.3rem); font-weight: 900; }
 .v2-meta__tag { color: var(--t); font-weight: 700; }
-.v2-meta__hl { display: flex; flex-wrap: wrap; gap: 0.45rem; margin-top: 0.3rem; }
+/* توضیحِ پروژه تا حالا فقط در جست‌وجو مصرف می‌شد و هیچ‌جای صفحه خوانده
+   نمی‌شد؛ ستونِ متنِ کارت هم نصفه خالی بود. */
+.v2-meta__desc {
+  max-width: 46ch;
+  margin-block: 0.15rem 0.4rem;
+  color: var(--muted);
+  font-size: 0.95rem;
+  line-height: 1.95;
+  text-wrap: pretty;
+}
+.v2-meta__tech {
+  align-self: flex-start;
+  font-size: 0.74rem;
+  letter-spacing: 0.05em;
+  color: var(--muted-2);
+}
+.v2-meta__hl { display: flex; flex-wrap: wrap; gap: 0.45rem; margin-top: 0.15rem; }
 .v2-meta__hl li {
   font-size: 0.78rem;
   padding: 0.28rem 0.6rem;
@@ -549,6 +718,34 @@
   transition: transform 0.2s;
 }
 .v2-meta__open:hover { transform: translateY(-2px); }
+
+/* لپ‌تاپ‌های ۷۲۰p: کارت ۷۸vh یعنی ~۵۶۰px جا دارد و متنِ بلندترین
+   پروژه‌ها (سکه، مکتب‌خانه) از پایینِ کارتِ `overflow: hidden` بیرون می‌زد؛
+   دکمه‌ی «باز کردن سایت» کامل ناپدید می‌شد. در ارتفاعِ کم، ریتمِ
+   تایپوگرافی فشرده می‌شود تا همان محتوا بدون حذف‌شدن جا شود. */
+@media (min-width: 821px) and (max-height: 820px) {
+  .v2-stack__card {
+    top: 9vh;
+    height: 82vh;
+  }
+  .v2-meta {
+    gap: 0.45rem;
+    padding: 1.5rem;
+  }
+  .v2-meta__title { font-size: 1.55rem; }
+  .v2-meta__desc {
+    font-size: 0.85rem;
+    line-height: 1.7;
+  }
+  .v2-meta__hl li {
+    font-size: 0.72rem;
+    padding: 0.2rem 0.5rem;
+  }
+  .v2-meta__open {
+    margin-top: 0.5rem;
+    padding: 0.6rem 1.15rem;
+  }
+}
 
 @media (max-width: 820px) {
   .v2-stack__card {
@@ -669,14 +866,21 @@
 }
 
 /* --------------------------- درباره + تایم‌لاین --------------------------- */
-.v2-about { padding-block: clamp(4rem, 10vw, 8rem); }
+.v2-about { padding-block: clamp(3.5rem, 8vw, 6rem); }
 .v2-about__grid {
   display: grid;
   grid-template-columns: 1.05fr 0.95fr;
   gap: clamp(1.5rem, 4vw, 3.5rem);
   align-items: start;
 }
-.v2-about__text { color: var(--muted); margin-block: 0.9rem; font-size: 1.05rem; }
+/* متنِ بدنه نه «لید» است؛ هم‌اندازه‌ی لیدِ هیرو کل صفحه را به دیوارِ نوشته تبدیل می‌کرد */
+.v2-about__text {
+  color: var(--muted);
+  margin-block: 0.9rem;
+  max-width: 64ch;
+  font-size: 0.98rem;
+  line-height: 1.95;
+}
 .v2-about__stack {
   color: var(--muted-2);
   font-size: 0.85rem;
@@ -748,7 +952,7 @@
 }
 
 /* --------------------------- تماس --------------------------- */
-.v2-contact { text-align: center; padding-block: clamp(5rem, 12vw, 9rem); }
+.v2-contact { text-align: center; padding-block: clamp(4rem, 9vw, 6.5rem); }
 .v2-contact__title { font-size: clamp(2.1rem, 6.5vw, 4.4rem); font-weight: 900; line-height: 1.25; }
 .v2-contact__title .v2-mask { display: inline-block; }
 .v2-contact__grad,
@@ -827,6 +1031,7 @@
 
   .v2-hscroll { height: auto; }
   .v2-hscroll__sticky { position: static; height: auto; overflow: visible; }
+  .v2-hscroll__bar { display: none; }
   .v2-hscroll__track {
     flex-wrap: wrap;
     direction: rtl;
@@ -879,4 +1084,465 @@
     color: CanvasText;
     background: none;
   }
+}
+
+/* ============================================================
+   لایه‌ی پرداخت — آخرین بخشِ فایل و آخرین لایه‌ی cascade
+   فقط ارتقای سیستمی است: مقیاسِ تایپوگرافی، عمق و نور، حلقه‌ی
+   رنگیِ دور کارت‌ها و ریزبرخوردها. هیچ کلاسِ موجودی جابه‌جا نشده.
+   ============================================================ */
+
+/* زاویه‌ی حلقه؛ با @property قابل انیمیشن می‌شود و در مرورگرِ
+   پشتیبانی‌نکرده صرفاً ثابت می‌ماند (بدون شکستن ظاهر). */
+@property --v2-angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+
+:root {
+  --fs-lead: clamp(1.02rem, 1.35vw, 1.18rem);
+  --dur-1: 160ms;
+  --dur-2: 320ms;
+  --dur-3: 620ms;
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  /* سایه‌های چندلایه با ته‌رنگِ نایلون + لبه‌ی روشنِ داخلی؛
+     همان چیزی که سطح شیشه‌ای را از «خاکستری تخت» جدا می‌کند */
+  --elev-1: inset 0 1px 0 rgba(255, 255, 255, 0.05), 0 2px 8px rgba(4, 4, 12, 0.45);
+  --elev-2: inset 0 1px 0 rgba(255, 255, 255, 0.07), 0 10px 24px -14px rgba(4, 4, 12, 0.8),
+    0 28px 64px -34px rgba(4, 4, 12, 0.9);
+  --elev-3: inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 18px 42px -18px rgba(4, 4, 12, 0.85),
+    0 54px 96px -44px rgba(0, 0, 0, 0.95);
+}
+
+/* --------------------------- کرومِ سراسری --------------------------- */
+::selection {
+  background: color-mix(in srgb, var(--cyan) 32%, transparent);
+  color: var(--paper);
+}
+
+html {
+  scrollbar-color: rgba(180, 190, 255, 0.3) transparent;
+  scrollbar-width: thin;
+  scrollbar-gutter: stable;
+}
+html::-webkit-scrollbar { inline-size: 11px; }
+html::-webkit-scrollbar-track { background: transparent; }
+html::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, rgba(94, 242, 255, 0.55), rgba(169, 140, 240, 0.55));
+  border-radius: 999px;
+  border: 3px solid transparent;
+  background-clip: padding-box;
+}
+html::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, var(--cyan), var(--violet));
+  background-clip: padding-box;
+}
+
+:focus-visible {
+  outline: 2px solid var(--cyan);
+  outline-offset: 3px;
+}
+
+input,
+textarea {
+  caret-color: var(--cyan);
+}
+
+p,
+li {
+  text-wrap: pretty;
+}
+
+/* --------------------------- ریتمِ تایپوگرافی --------------------------- */
+.v2-hero__lead,
+.v2-spectrum__lead,
+.gallery__intro {
+  font-size: var(--fs-lead);
+  line-height: 2;
+}
+
+/* --------------------------- عمق و نور --------------------------- */
+.v2-cap,
+.v2-stack__card,
+.v2-ccard,
+.v2-row__link {
+  box-shadow: var(--elev-2);
+}
+.v2-cap:hover,
+.v2-ccard:hover,
+.v2-row__link:hover,
+.v2-row__link:focus-visible {
+  box-shadow: var(--elev-3);
+}
+.v2-btn--primary {
+  box-shadow: 0 12px 34px -10px color-mix(in srgb, var(--cyan) 60%, transparent), var(--elev-1);
+}
+.v2-btn--primary:hover {
+  box-shadow: 0 18px 44px -12px color-mix(in srgb, var(--cyan) 70%, transparent), var(--elev-1);
+}
+.v2-btn:active { transform: translateY(0) scale(0.985); }
+.v2-meta__open {
+  position: relative;
+  box-shadow: 0 10px 26px -12px color-mix(in srgb, var(--t) 85%, transparent);
+}
+
+/* --------------------------- حلقه‌ی رنگیِ چرخان ---------------------------
+   یک نورِ متحرک که دورِ لبه‌ی کارت می‌چرخد؛ فقط با mask ساخته می‌شود،
+   پس هیچ border و سایه‌ی اضافه‌ای لازم ندارد. */
+.v2-cap::before,
+.v2-row__link::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: conic-gradient(
+    from var(--v2-angle),
+    transparent 0 52%,
+    color-mix(in srgb, var(--t) 85%, #ffffff) 68%,
+    transparent 84%
+  );
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--dur-3) var(--ease);
+}
+.v2-cap:hover::before,
+.v2-row__link:hover::after,
+.v2-row__link:focus-visible::after {
+  opacity: 1;
+  animation: v2orbit 2.8s linear infinite;
+}
+@keyframes v2orbit {
+  to { --v2-angle: 360deg; }
+}
+
+/* --------------------------- ریزبرخورد --------------------------- */
+.v2-meta__open::after {
+  content: "";
+  position: absolute;
+  inset-block-end: 0.55rem;
+  inset-inline: 1.4rem;
+  block-size: 1.5px;
+  border-radius: 2px;
+  background: rgba(10, 10, 15, 0.45);
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform var(--dur-2) var(--ease-out-expo);
+}
+.v2-meta__open:hover::after { transform: scaleX(1); }
+
+.chip {
+  transition: color var(--dur-2) var(--ease), border-color var(--dur-2) var(--ease),
+    background var(--dur-2) var(--ease), box-shadow var(--dur-2) var(--ease),
+    transform var(--dur-1) var(--ease-spring);
+}
+.chip:active { transform: scale(0.96); }
+.chip.is-active { box-shadow: var(--elev-1), 0 6px 18px -10px rgba(94, 242, 255, 0.8); }
+
+.v2-shot { position: relative; }
+.v2-shot::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(180deg, rgba(6, 6, 12, 0.35), transparent 28%);
+  pointer-events: none;
+}
+
+/* --------------------------- شفافیتِ کم ---------------------------
+   کاربرِ ویندوز/مک که «کاهش شفافیت» را روشن کرده، بلورِ پس‌زمینه
+   نمی‌خواهد؛ سطح را ماتِ توپر می‌کنیم تا خوانا بماند. */
+@media (prefers-reduced-transparency: reduce) {
+  .v2-cap,
+  .v2-stack__card,
+  .v2-ccard,
+  .v2-row__link,
+  .site-header {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    background: rgba(10, 10, 18, 0.94);
+  }
+  .v2-noise,
+  .v2-aurora { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .v2-cap:hover::before,
+  .v2-row__link:hover::after,
+  .v2-row__link:focus-visible::after { animation: none; }
+  .v2-btn:active,
+  .chip:active { transform: none; }
+}
+
+/* --------------------------- سِرتیترِ شماره‌دار ---------------------------
+   هر بخش شماره‌ی فارسی و یک خطِ مو دارد؛ فقط تزئین است، پس
+   اعداد برای صفحه‌خوان aria-hidden می‌روند. */
+.v2-kicker__n {
+  font-weight: 900;
+  color: var(--muted-2);
+  font-variant-numeric: tabular-nums;
+}
+.v2-kicker__n::after {
+  content: "";
+  display: inline-block;
+  inline-size: 14px;
+  border-block-end: 1px solid var(--line);
+  vertical-align: middle;
+  margin-inline: 0.45rem 0;
+}
+.v2-kicker::after {
+  content: "";
+  flex: 0 1 clamp(34px, 8vw, 96px);
+  block-size: 1px;
+  min-inline-size: 0;
+  background: linear-gradient(to left, transparent, color-mix(in srgb, var(--cyan) 55%, transparent));
+}
+
+/* --------------------------- برقِ دکمه و تیترِ گرادیانی --------------------------- */
+.v2-btn--primary {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+.v2-btn--primary::after {
+  content: "";
+  position: absolute;
+  inset-block: -50%;
+  inset-inline-end: 70%;
+  inline-size: 34%;
+  background: linear-gradient(100deg, transparent, rgba(255, 255, 255, 0.55), transparent);
+  transform: translateX(0) rotate(8deg);
+  opacity: 0;
+  pointer-events: none;
+}
+.v2-btn--primary:hover::after {
+  opacity: 1;
+  animation: v2shine 0.9s var(--ease-out-expo);
+}
+@keyframes v2shine {
+  from { transform: translateX(-180%) rotate(8deg); }
+  to { transform: translateX(420%) rotate(8deg); }
+}
+
+.v2-hero__grad,
+.v2-hero__grad > span {
+  background-size: 220% 100%;
+  animation: v2flow 9s linear infinite;
+}
+@keyframes v2flow {
+  from { background-position: 0% 50%; }
+  to { background-position: 220% 50%; }
+}
+
+/* --------------------------- کرومِ بومی و کنتراست --------------------------- */
+:root { color-scheme: dark; }
+a,
+button {
+  -webkit-tap-highlight-color: transparent;
+}
+
+@media (prefers-contrast: more) {
+  :root {
+    --muted: rgba(244, 243, 255, 0.92);
+    --muted-2: rgba(244, 243, 255, 0.78);
+    --line: rgba(210, 218, 255, 0.4);
+    --glass-line: rgba(210, 218, 255, 0.5);
+  }
+  .v2-cap,
+  .v2-stack__card,
+  .v2-ccard,
+  .v2-row__link,
+  .site-header {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    background: rgba(6, 6, 12, 0.98);
+  }
+  .v2-noise,
+  .v2-aurora,
+  .v2-stars { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .v2-hero__grad,
+  .v2-hero__grad > span { animation: none; }
+  .v2-btn--primary:hover::after { animation: none; opacity: 0; }
+}
+
+/* --------------------------- هدر، تماس و فوتر --------------------------- */
+.site-header.is-scrolled {
+  border-block-end: 1px solid color-mix(in srgb, var(--cyan) 14%, var(--line));
+  box-shadow: 0 18px 40px -28px rgba(0, 0, 0, 0.95);
+}
+.v2-cta {
+  box-shadow: var(--elev-2);
+  transition: transform var(--dur-2) var(--ease-out-expo), box-shadow var(--dur-2) var(--ease);
+}
+.v2-cta:hover { transform: translateY(-2px); box-shadow: var(--elev-3); }
+.site-footer {
+  position: relative;
+}
+.site-footer::before {
+  content: "";
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline: 0;
+  block-size: 1px;
+  background: linear-gradient(
+    to left,
+    transparent,
+    color-mix(in srgb, var(--cyan) 26%, transparent) 22%,
+    color-mix(in srgb, var(--violet) 26%, transparent) 78%,
+    transparent
+  );
+}
+.wordmark--footer { letter-spacing: -0.02em; }
+
+/* «نمونه‌ها» ۹ آیتم دارد و دو ستونِ دیگر ۴ و ۵ تا؛ تک‌ستونه قدِ فوتر را
+   دو برابر می‌کرد و ستونِ برند وسطِ هیچ‌چیز معلق می‌ماند. */
+@media (min-width: 721px) {
+  .site-footer__nav--demos ul {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 0.9rem;
+    row-gap: 0.55rem;
+  }
+  .site-footer__nav--demos li {
+    text-wrap: balance;
+  }
+  .site-footer__nav--demos li + li {
+    margin-block-start: 0;
+  }
+  .site-footer__nav--demos a {
+    font-size: 0.86rem;
+  }
+}
+
+.site-footer__nav h3 {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--paper);
+}
+.site-footer__nav h3::before {
+  content: "";
+  inline-size: 14px;
+  block-size: 2px;
+  border-radius: 2px;
+  background: var(--spectrum);
+}
+.site-footer__nav a {
+  color: color-mix(in srgb, var(--muted) 88%, var(--paper));
+}
+.site-footer__nav a:hover {
+  color: var(--cyan);
+}
+
+/* ============================================================
+   امضایِ هویتی — کاشیِ هشت‌پر و طیفِ نه‌رنگه
+   دو انگشتِ نقاشی که همه‌جای صفحه تکرار می‌شوند: گرهِ هشت‌پرِ
+   ایرانی به‌جای بافتِ عمومی، و رنگ‌های خودِ نمونه‌کارها به‌عنوان
+   رنگِ سازمانی. هر دو لایه‌ی تزئینی‌اند و در چیدمان دست نمی‌برند.
+   ============================================================ */
+
+:root {
+  /* کاشیِ ۷۲×۷۲: دو مربعِ چهل‌وپنج‌درجه‌روی‌هم = ستاره‌ی هشت‌پر.
+     درشت و کم‌رنگ؛ در ۴۴px و opacity=.62 بافتِ صفحه به شکلِ شمشربه تبدیل می‌شد. */
+  --khatam: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='72' height='72' viewBox='0 0 72 72'%3E%3Cg fill='none' stroke='%23b4beff' stroke-opacity='0.22' stroke-width='1'%3E%3Crect x='21' y='21' width='30' height='30'/%3E%3Crect x='21' y='21' width='30' height='30' transform='rotate(45 36 36)'/%3E%3Ccircle cx='36' cy='36' r='4.2'/%3E%3C/g%3E%3C/svg%3E");
+  --khatam-size: 72px;
+  /* همان کاشی برای سطحِ کارت‌ها. با stroke-opacityِ مشترک، بافتِ روی شیشه
+     آن‌قدر بلند بود که با متنِ کارت رقابت کند؛ پس یک نسخه‌ی آروم دارد. */
+  --khatam-soft: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='72' height='72' viewBox='0 0 72 72'%3E%3Cg fill='none' stroke='%23b4beff' stroke-opacity='0.05' stroke-width='1'%3E%3Crect x='21' y='21' width='30' height='30'/%3E%3Crect x='21' y='21' width='30' height='30' transform='rotate(45 36 36)'/%3E%3Ccircle cx='36' cy='36' r='4.2'/%3E%3C/g%3E%3C/svg%3E");
+  --spectrum: linear-gradient(to left, var(--cyan), var(--violet) 55%, var(--magenta));
+  /* شیشه‌ی پررنگ‌تر: متن روی کارت‌ها خوانده نمی‌شد */
+  --glass: rgba(13, 13, 22, 0.74);
+}
+
+/* گرهِ صفحه از شبکه‌ی ساده به شبکه‌ی هشت‌پر ارتقا پیدا می‌کند */
+.v2-grid {
+  background-image: var(--khatam), linear-gradient(var(--line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--line) 1px, transparent 1px);
+  background-size: var(--khatam-size) var(--khatam-size), 72px 72px, 72px 72px;
+  /* .62 → .34 کم شد ولی هنوز کاغذدیواری بود؛ هویتِ بصری باید نجوا باشد
+     نه اینکه همه‌جای صفحه تکرارِ دیده‌شدنی ببرد. */
+  opacity: 0.17;
+}
+
+/* بافتِ کاشی روی سطح‌های شیشه‌ای، زیرِ نورِ هاور */
+.v2-cap {
+  background: var(--khatam-soft) center top / var(--khatam-size) var(--khatam-size),
+    linear-gradient(180deg, var(--glass), rgba(8, 8, 16, 0.72));
+}
+.v2-ccard {
+  background: var(--khatam-soft) center top / var(--khatam-size) var(--khatam-size), var(--glass);
+}
+.v2-row__link {
+  background: var(--khatam-soft) center / var(--khatam-size) var(--khatam-size), var(--glass);
+}
+
+/* کارت‌های اصولِ کاری: به‌جای کشیدن تا قدِ بلندترین کارت، قدِ خودِ محتوا را
+   می‌گیرند وگرنه نیمه‌ی پایین‌شان خالی می‌ماند.
+   کارت‌های مهارت از این قاعده مستثنا هستند؛ آنجا چیپ‌ها به ته‌ی کارت
+   تکیه می‌دهند، پس کشیدنِ کارت فضای مرده‌ای زیرِ چیپ ایجاد نمی‌کند. */
+.approach { align-items: start; }
+.skill-card,
+.approach__item {
+  background: var(--khatam-soft) center top / var(--khatam-size) var(--khatam-size), var(--glass);
+}
+
+/* نوارِ پیشرفتِ اسکرول، طیفِ خودِ پروژه‌هاست */.v2-rail__fill {
+  background: var(--spectrum);
+  box-shadow: 0 0 14px color-mix(in srgb, var(--violet) 55%, transparent);
+}
+.v2-dot.is-on {
+  background: var(--cyan);
+  box-shadow: 0 0 12px color-mix(in srgb, var(--cyan) 70%, transparent);
+}
+
+/* خطِ موِ زیرِ سِرتیترِ اول و لبه‌ی بالای فوتر */
+.v2-hero .v2-kicker::after,
+.site-footer::before {
+  background: var(--spectrum);
+  opacity: 0.75;
+}
+
+/* --------------------------- هاله‌ی دنبال‌کننده ---------------------------
+   فقط transform عوض می‌شود (کامپوزیت)، پس گران‌ترین لایه‌ی صفحه نیست. */
+.v2-spot {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: -1;
+  inline-size: 560px;
+  block-size: 560px;
+  margin: -280px 0 0 -280px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(94, 242, 255, 0.15),
+    color-mix(in srgb, var(--violet) 26%, transparent) 42%,
+    transparent 70%
+  );
+  mix-blend-mode: screen;
+  opacity: 0;
+  pointer-events: none;
+  contain: strict;
+  will-change: transform;
+  transition: opacity 0.8s var(--ease);
+}
+.v2-spot.is-live { opacity: 1; }
+
+@media (hover: none), (prefers-reduced-motion: reduce) {
+  .v2-spot { display: none; }
+}
+
+/* روی صفحه‌ی باریک، خطِ مو را حذف می‌کنیم تا برچسبِ nowrap سر نزند */
+@media (max-width: 420px) {
+  .v2-kicker::after { display: none; }
 }

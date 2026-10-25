@@ -15,6 +15,9 @@ export function DomainSpectrum() {
         <div className="v2-spectrum__head">
           <p className="v2-kicker">
             <span className="v2-kicker__pulse" aria-hidden="true" />
+            <span className="v2-kicker__n" aria-hidden="true">
+              ۰۴
+            </span>
             طیفِ حوزه‌ها
           </p>
           <h2 id="spectrum-title" className="v2-h2">

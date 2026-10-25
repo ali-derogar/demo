@@ -61,8 +61,8 @@ export function faNumber(value: number): string {
   return persianNumber.format(value);
 }
 
-/** رقم فارسی برای شمارنده‌های کوچک */
-export function faDigit(value: number): string {
+/** رقم فارسی برای شمارنده‌های کوچک؛ رشته هم می‌پذیرد تا صفرِ پیشوند حفظ شود */
+export function faDigit(value: number | string): string {
   return String(value).replace(/\d/g, (d) => FA_TO_DIGIT[Number(d)]);
 }
 

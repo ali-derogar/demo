@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { useReducedMotion } from 'motion/react';
-import { subscribeRaf, onResize } from '../lib/raf';
+import { getPointer, subscribeRaf, onResize } from '../lib/raf';
+import { useMediaQuery } from '../lib/useMedia';
 
 interface Star { x: number; y: number; r: number; a: number; s: number }
 
@@ -53,6 +54,25 @@ export function Backdrop() {
     return () => { unsubResize(); unsubRaf(); };
   }, [reduced]);
 
+  const spotRef = useRef<HTMLDivElement>(null);
+  const fine = useMediaQuery('(hover: hover) and (pointer: fine)');
+
+  /** هاله‌ای که با تأخیرِ نرم نشانگر را دنبال می‌کند؛ فقط روی دستگاهِ ماوس‌دار */
+  useEffect(() => {
+    const el = spotRef.current;
+    if (!el || reduced || !fine) return;
+    let x = window.innerWidth / 2;
+    let y = window.innerHeight / 2;
+    return subscribeRaf(() => {
+      const p = getPointer();
+      if (!p.active) return;
+      x += (p.x - x) * 0.12;
+      y += (p.y - y) * 0.12;
+      el.classList.add('is-live');
+      el.style.transform = `translate3d(${x}px, ${y}px, 0)`;
+    });
+  }, [fine, reduced]);
+
   return (
     <>
       <div className="v2-aurora" aria-hidden="true">
@@ -62,6 +82,7 @@ export function Backdrop() {
       </div>
       <canvas ref={canvasRef} className="v2-stars" aria-hidden="true" />
       <div className="v2-grid" aria-hidden="true" />
+      <div ref={spotRef} className="v2-spot" aria-hidden="true" />
       <div className="v2-noise" aria-hidden="true" />
     </>
   );

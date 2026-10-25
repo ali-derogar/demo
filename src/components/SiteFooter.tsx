@@ -18,7 +18,7 @@ export function SiteFooter() {
           </p>
         </div>
 
-        <nav className="site-footer__nav" aria-label="نمونه‌ها">
+        <nav className="site-footer__nav site-footer__nav--demos" aria-label="نمونه‌ها">
           <h3>نمونه‌ها</h3>
           <ul role="list">
             {demos.map((project) => (

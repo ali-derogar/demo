@@ -1,5 +1,5 @@
-import { type ReactNode } from 'react';
-import { m, useReducedMotion } from 'motion/react';
+import { useRef, type ReactNode } from 'react';
+import { m, useInView, useReducedMotion } from 'motion/react';
 
 interface Props {
   children: ReactNode;
@@ -15,17 +15,22 @@ interface Props {
  */
 export function MaskLine({ children, className, delay = 0, when = 'view' }: Props) {
   const reduced = useReducedMotion();
+  const wrapRef = useRef<HTMLSpanElement>(null);
+  // whileInView اینجا کار نمی‌کند: هدفِ ناظر همان spanِ جابه‌شده است که داخل
+  // پرده‌ی overflow:hidden خودش کاملاً بریده می‌شود، پس هرگز «دیده» نمی‌شود.
+  const inView = useInView(wrapRef, { once: true, amount: 0.6 });
   const classes = `v2-mask${className ? ` ${className}` : ''}`;
   if (reduced) return <span className={classes}>{children}</span>;
 
-  const motionProps =
-    when === 'load'
-      ? { initial: { y: '115%' }, animate: { y: 0 } }
-      : { initial: { y: '115%' }, whileInView: { y: 0 }, viewport: { once: true, amount: 0.6 } };
+  const shown = when === 'load' || inView;
 
   return (
-    <span className={classes}>
-      <m.span {...motionProps} transition={{ duration: 1, delay, ease: [0.22, 0.61, 0.36, 1] }}>
+    <span className={classes} ref={when === 'load' ? undefined : wrapRef}>
+      <m.span
+        initial={{ y: '115%' }}
+        animate={{ y: shown ? 0 : '115%' }}
+        transition={{ duration: 1, delay, ease: [0.22, 0.61, 0.36, 1] }}
+      >
         {children}
       </m.span>
     </span>

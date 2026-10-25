@@ -95,10 +95,33 @@ html.has-custom-cursor textarea {
 }
 
 .marquee__item {
+  position: relative;
   color: var(--muted);
   font-weight: 800;
   font-size: 1.05rem;
   letter-spacing: 0.02em;
+}
+
+/* ریتم: نصفِ آیتم‌ها یک پله عقب می‌روند، وگرنه ردیف به یک دیوارِ هم‌وزن
+   از کلمات خاکستری تبدیل می‌شد. */
+.marquee__item:nth-child(even) {
+  opacity: 0.52;
+}
+
+/* جداکننده: همان الماسِ هشت‌پر، وسطِ فاصله‌ی بینِ دو آیتم */
+.marquee__item::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: calc(100% + 1.25rem);
+  width: 6px;
+  height: 6px;
+  background: var(--cyan);
+  opacity: 0.55;
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+.marquee__item:last-child::after {
+  display: none;
 }
 
 .marquee:hover .marquee__track {
@@ -326,11 +349,15 @@ html.has-custom-cursor textarea {
 /* -------------------------------- skills ------------------------------- */
 .skills {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  /* ۹ گروه مهارت ÷ ۳ ستون = سه ردیفِ کامل. با چهار ستون، ردیفِ سوم تنها
+     یک کارت داشت و سه‌چهارمِ عرضِ آن ردیف فضای خالی می‌ماند. */
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: clamp(1rem, 2vw, 1.4rem);
 }
 
 .skill-card {
+  display: flex;
+  flex-direction: column;
   padding: 1.4rem;
   border: 1px solid var(--glass-line);
   border-radius: var(--radius-sm);
@@ -344,7 +371,25 @@ html.has-custom-cursor textarea {
 }
 
 .skill-card__title { font-size: 1rem; font-weight: 800; margin-block-end: 0.9rem; color: var(--paper); }
-.skill-card__chips { display: flex; flex-wrap: wrap; gap: 0.45rem; }
+/* چیپ‌ها به ته‌ی کارت تکیه می‌دهند: قدِ کارت‌ها در یک ردیف برابر است ولی
+   فضای اضافه بین عنوان و چیپ می‌نشیند، نه زیرِ چیپ. */
+.skill-card__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  margin-block-start: auto;
+  padding-block-start: 0.35rem;
+}
+
+@media (max-width: 900px) {
+  .skills { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .skills > .skill-card:last-child { grid-column: 1 / -1; }
+}
+
+@media (max-width: 600px) {
+  .skills { grid-template-columns: minmax(0, 1fr); }
+  .skills > .skill-card:last-child { grid-column: auto; }
+}
 
 .skill-chip {
   padding: 0.3rem 0.7rem;

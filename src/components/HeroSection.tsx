@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, type CSSProperties } from 'react';
 import { m, useMotionValue, useReducedMotion, useSpring } from 'motion/react';
 import { projects } from '../data/projects';
 import { profile } from '../data/profile';
@@ -40,7 +40,10 @@ export function HeroSection() {
       <div className="v2-hero__copy">
         <p className="v2-kicker">
           <span className="v2-kicker__pulse" aria-hidden="true" />
-          طراح رابط فارسی و {profile.title}
+          <span className="v2-kicker__n" aria-hidden="true">
+            ۰۱
+          </span>
+          {profile.title} و طراح رابط
         </p>
 
         <h1 className="v2-hero__title" id="hero-title">
@@ -77,7 +80,11 @@ export function HeroSection() {
         aria-hidden="true"
       >
         {collage.map((project, index) => (
-          <figure className={`v2-collage__item v2-collage__item--${index + 1}`} key={project.id}>
+          <figure
+            className={`v2-collage__item v2-collage__item--${index + 1}`}
+            key={project.id}
+            style={{ '--collage-accent': project.accent } as CSSProperties}
+          >
             <img
               src={project.preview}
               alt=""
@@ -85,6 +92,10 @@ export function HeroSection() {
               width={1200}
               height={800}
             />
+            <figcaption className="v2-collage__bar">
+              <span className="v2-collage__dots" />
+              <span className="v2-collage__label">{project.categoryLabel}</span>
+            </figcaption>
           </figure>
         ))}
       </m.div>

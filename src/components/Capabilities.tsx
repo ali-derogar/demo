@@ -22,6 +22,7 @@ export function Capabilities() {
     const root = rootRef.current;
     const track = trackRef.current;
     if (!root || !track) return;
+    const bar = root.querySelector<HTMLElement>('.v2-hscroll__bar i');
 
     const update = () => {
       const rect = root.getBoundingClientRect();
@@ -29,6 +30,9 @@ export function Capabilities() {
       const progress = clamp01(-rect.top / (total || 1));
       const max = Math.max(0, track.scrollWidth - track.clientWidth);
       track.style.transform = `translateX(${-progress * max}px)`;
+      // ردیلِ پیشرفت: ۳۶۰vh اسکرولِ پین‌شده بدون نشانی، صفحه را «گیر‌کرده»
+      // به‌نظر می‌رساند.
+      if (bar) bar.style.transform = `scaleX(${progress})`;
     };
 
     update();
@@ -70,10 +74,19 @@ export function Capabilities() {
     <section id="caps" className="v2-hscroll" ref={rootRef} aria-labelledby="caps-title">
       <div className="v2-hscroll__sticky">
         <div className="v2-hscroll__head shell">
-          <p className="v2-kicker">توانمندی‌ها</p>
+          <p className="v2-kicker">
+            <span className="v2-kicker__pulse" aria-hidden="true" />
+            <span className="v2-kicker__n" aria-hidden="true">
+              ۰۲
+            </span>
+            توانمندی‌ها
+          </p>
           <h2 id="caps-title" className="v2-h2">
             با اسکرول، افقی جابه‌جا شو
           </h2>
+          <div className="v2-hscroll__bar" aria-hidden="true">
+            <i />
+          </div>
         </div>
         <div className="v2-hscroll__track" ref={trackRef}>
           {capabilities.map((cap) => (

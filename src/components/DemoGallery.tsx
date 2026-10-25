@@ -39,8 +39,14 @@ export function DemoGallery() {
       <div className="shell">
         <div className="gallery__head">
           <Reveal>
-            <p className="eyebrow">نمونه‌کارها</p>
-            <h2 id="gallery-title">کارت‌ها روی هم می‌نشینند</h2>
+            <p className="v2-kicker">
+              <span className="v2-kicker__pulse" aria-hidden="true" />
+              <span className="v2-kicker__n" aria-hidden="true">
+                ۰۳
+              </span>
+              نمونه‌کارها
+            </p>
+            <h2 id="gallery-title">کارهایی که از صفر ساخته‌ام</h2>
             <p className="gallery__intro">
               با هر اسکرول، پروژه‌ی بعدی با اسکرین‌شات واقعی روی قبلی می‌آید. برای پیدا کردن یک
               کار خاص از جست‌وجو یا دسته‌بندی‌ها کمک بگیرید.

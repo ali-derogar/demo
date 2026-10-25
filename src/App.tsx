@@ -15,12 +15,17 @@ import { ProfileSection } from './components/ProfileSection';
 import { ContactSection } from './components/ContactSection';
 import { SiteFooter } from './components/SiteFooter';
 import { MobileDock } from './components/MobileDock';
-import { techMarquee } from './data/profile';
+import { techMarquee, domains } from './data/profile';
 
 export default function App() {
   useEffect(() => {
     document.documentElement.lang = 'fa';
     document.documentElement.dir = 'rtl';
+    // امضای رنگی صفحه از خودِ نمونه‌کارها ساخته می‌شود، نه از هگزِ دست‌نویس
+    document.documentElement.style.setProperty(
+      '--spectrum',
+      `linear-gradient(to left, ${domains.map((domain) => domain.accent).join(', ')})`,
+    );
   }, []);
   useSmoothScroll();
 

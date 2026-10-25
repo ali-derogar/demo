@@ -1,6 +1,7 @@
 import { useEffect, useRef, type CSSProperties } from 'react';
 import { useReducedMotion } from 'motion/react';
 import type { DemoProject } from '../data/projects';
+import { faDigit } from '../lib/fa';
 import { subscribeRaf } from '../lib/raf';
 
 const clamp01 = (v: number) => (v < 0 ? 0 : v > 1 ? 1 : v);
@@ -55,19 +56,28 @@ export function WorkStack({ projects }: Props) {
               <img
                 src={project.preview}
                 alt={project.previewAlt}
+                width={1200}
+                height={800}
                 loading={index < 2 ? 'eager' : 'lazy'}
                 decoding="async"
               />
             </div>
             <div className="v2-meta">
+              <span className="v2-meta__no" aria-hidden="true">
+                {faDigit(String(index + 1).padStart(2, '0'))}
+              </span>
               <span className="v2-meta__cat">{project.categoryLabel}</span>
               <h3 className="v2-meta__title">{project.title.split('؛')[0]}</h3>
               <p className="v2-meta__tag">{project.tagline}</p>
+              <p className="v2-meta__desc">{project.description}</p>
               <ul className="v2-meta__hl" role="list">
                 {project.highlights.slice(0, 3).map((item) => (
                   <li key={item}>{item}</li>
                 ))}
               </ul>
+              <p className="v2-meta__tech" dir="ltr">
+                {project.technologies.join(' · ')}
+              </p>
               <a className="v2-meta__open" href={project.url} data-cursor="link">
                 باز کردن سایت
                 <span aria-hidden="true">←</span>
