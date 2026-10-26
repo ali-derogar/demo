@@ -254,7 +254,9 @@ html.has-custom-cursor textarea {
     grid-template-columns: repeat(4, minmax(0, 1fr));
   }
 
-  .mobile-dock a { font-size: 0.68rem; }
+  /* 0.68rem یعنی ۱۰.۹px؛ برچسبِ ناوبریِ اصلیِ موبایل از آستانه‌ی
+     خواناییِ فارسی ریزتر می‌شد. 0.75rem در ۳۲۰px هم جا می‌شود. */
+  .mobile-dock a { font-size: 0.75rem; }
 }
 
 @media (hover: none) {

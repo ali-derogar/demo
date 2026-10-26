@@ -6,7 +6,7 @@ import { Reveal } from './Reveal';
 
 export function SiteFooter() {
   return (
-    <footer className="site-footer">
+    <footer className="site-footer" aria-label="پانویس">
       <div className="shell site-footer__inner">
         <Reveal as="div" className="site-footer__brand">
           <a className="wordmark wordmark--footer" href="#top" aria-label="persianbotyar؛ بازگشت به بالا">
@@ -65,7 +65,7 @@ export function SiteFooter() {
       </div>
 
       <Reveal as="div" className="shell site-footer__base" delay={0.1} amount={0.3}>
-        <p>© {faYear()} <bdi dir="ltr">persianbotyar</bdi> — همهی حقوق محفوظ است.</p>
+        <p>© {faYear()} <bdi dir="ltr">persianbotyar</bdi> — همه‌ی حقوق محفوظ است.</p>
         <p className="site-footer__meta">طراحی رابط و توسعه‌ی بک‌اند</p>
       </Reveal>
     </footer>

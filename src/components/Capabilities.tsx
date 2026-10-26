@@ -16,12 +16,15 @@ export function Capabilities() {
   const trackRef = useRef<HTMLDivElement>(null);
   const reduced = useReducedMotion();
   const fine = useMediaQuery('(hover: hover) and (pointer: fine)');
+  /* همان شرطِ CSS که ردیف را به اسکرولِ بومی تبدیل می‌کند. */
+  const nativeStrip = useMediaQuery('(hover: none), (max-width: 900px)');
+  const stripMode = Boolean(reduced) || !fine || nativeStrip;
 
   useEffect(() => {
     // روی لمسی پین خاموش می‌ماند (JS نمی‌نویسد) و CSS کارت‌ها را به
     // ردیفِ افقیِ scroll-snap تبدیل می‌کند؛ وگرنه سوایپ عمودی با حرکت
     // افقی کارت‌ها رقابت می‌کرد.
-    if (reduced || !fine) return;
+    if (stripMode) return;
     const root = rootRef.current;
     const track = trackRef.current;
     if (!root || !track) return;
@@ -54,7 +57,7 @@ export function Capabilities() {
       offRaf();
       offResize();
     };
-  }, [fine, reduced]);
+  }, [stripMode]);
 
   useEffect(() => {
     if (reduced || !fine) return;
@@ -105,7 +108,16 @@ export function Capabilities() {
             <i />
           </div>
         </div>
-        <div className="v2-hscroll__track" ref={trackRef}>
+        {/* در حالتِ ردیفِ بومی (لمسی/پنجره‌ی باریک/کاهش حرکت) اسکرول‌بار
+            پنهان است و کارت‌ها لینک ندارند؛ بدون focusable بودن، این
+            فهرست با کیبورد قابلِ پیمایش نبود. */}
+        <div
+          className="v2-hscroll__track"
+          ref={trackRef}
+          role="group"
+          aria-label="فهرست توانمندی‌ها"
+          tabIndex={stripMode ? 0 : -1}
+        >
           {capabilities.map((cap) => (
             <article key={cap.id} className={`v2-cap v2-tone-${cap.tone}`} data-tilt data-cursor="link">
               <span className="v2-cap__n">{cap.n}</span>

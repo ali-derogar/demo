@@ -16,6 +16,21 @@ function headerOffset(): number {
   return (Number.isFinite(size) ? size : 76) + 16;
 }
 
+/* هدف عددی داده می‌شود، نه المان: اگر المان بدهیم Lenis آفستِ هدر را دوبار
+   کم می‌کند و سکشن ۹۲px پایین‌تر از جای خود می‌نشیند. */
+function absoluteTop(el: HTMLElement): number {
+  return Math.max(0, el.getBoundingClientRect().top + window.scrollY - headerOffset());
+}
+
+/** پرشِ فوری به یک سکشن با همان آفستِ هدر؛ برای «کاهش حرکت» به اسکرولِ بومی می‌افتد */
+export function scrollToSection(el: HTMLElement): void {
+  if (!instance) {
+    el.scrollIntoView({ block: 'start' });
+    return;
+  }
+  instance.scrollTo(absoluteTop(el), { immediate: true });
+}
+
 /**
  * اسکرول نرم با Lenis روی همان حلقه‌ی rAF مشترک.
  * روی «کاهش حرکت» اصلاً نصب نمی‌شود؛ پیمایش پیش‌فرض مرورگر + scroll-padding کافی است.
@@ -47,7 +62,7 @@ export function useSmoothScroll(): void {
 
       event.preventDefault();
       lenis.start();
-      lenis.scrollTo(target, { offset: -headerOffset(), duration: 1.2 });
+      lenis.scrollTo(absoluteTop(target), { duration: 1.2 });
       history.replaceState(null, '', href);
       // فرود دادن فوکوس روی سکشن برای کاربر کیبورد/صفحه‌خوان
       target.setAttribute('tabindex', '-1');

@@ -1,6 +1,7 @@
-import { useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { categories, projects, type DemoCategory } from '../data/projects';
 import { faDigit, matchesFa } from '../lib/fa';
+import { scrollToSection } from '../lib/useSmoothScroll';
 import { EmptyState } from './EmptyState';
 import { Reveal } from './Reveal';
 import { WorkStack } from './WorkStack';
@@ -9,6 +10,7 @@ export function DemoGallery() {
   const [query, setQuery] = useState('');
   const [category, setCategory] = useState<DemoCategory>('all');
   const inputRef = useRef<HTMLInputElement>(null);
+  const rootRef = useRef<HTMLElement>(null);
 
   const visible = useMemo(
     () =>
@@ -34,8 +36,29 @@ export function DemoGallery() {
     inputRef.current?.focus();
   };
 
+  /* فیلتر، ارتفاع صفحه را یک‌باره کوتاه می‌کند؛ اگر کاربر داخل استک اسکرول کرده
+     باشد مرورگر او را زیرِ نتیجه رها می‌کند (کارتِ تنها ۴۰۰۰px بالاتر).
+     دو فریم تأخیر: تا DOMِ تازه و ارتفاعِ نوِ سند جا بیفتد. */
+  useEffect(() => {
+    let second = 0;
+    const first = requestAnimationFrame(() => {
+      second = requestAnimationFrame(() => {
+        const root = rootRef.current;
+        if (!root) return;
+        const card = root.querySelector<HTMLElement>('.v2-stack__card');
+        if (!card) return;
+        if (card.getBoundingClientRect().bottom > 0) return;
+        scrollToSection(root);
+      });
+    });
+    return () => {
+      cancelAnimationFrame(first);
+      cancelAnimationFrame(second);
+    };
+  }, [visible]);
+
   return (
-    <section className="gallery" id="demos" aria-labelledby="gallery-title">
+    <section className="gallery" id="demos" ref={rootRef} aria-labelledby="gallery-title">
       <div className="shell">
         <div className="gallery__head">
           <Reveal>

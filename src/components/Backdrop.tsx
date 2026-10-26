@@ -63,11 +63,18 @@ export function Backdrop() {
     if (!el || reduced || !fine) return;
     let x = window.innerWidth / 2;
     let y = window.innerHeight / 2;
-    return subscribeRaf(() => {
+    let prev = performance.now();
+    return subscribeRaf((now, delta) => {
       const p = getPointer();
       if (!p.active) return;
-      x += (p.x - x) * 0.12;
-      y += (p.y - y) * 0.12;
+      /* ضریبِ همگرایی زمان‌مبنا: با ضریبِ ثابتِ هر-فریم، روی نمایشگرِ ۱۲۰Hz
+         هاله چهار بار چسبنده‌تر و روی فریم‌رفتارِ پایین چهار جا-مانده‌تر
+         می‌شد؛ τ=۱۳۰ms دقیقاً همان سرعتِ ۰٫۱۲ در ۶۰fps را می‌دهد. */
+      const dt = Number.isFinite(delta) && delta > 0 ? Math.min(delta, 100) : now - prev;
+      prev = now;
+      const k = 1 - Math.exp(-dt / 130);
+      x += (p.x - x) * k;
+      y += (p.y - y) * k;
       el.classList.add('is-live');
       el.style.transform = `translate3d(${x}px, ${y}px, 0)`;
     });

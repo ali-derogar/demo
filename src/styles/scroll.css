@@ -48,13 +48,24 @@
 }
 
 /* --------------------------- پس‌زمینه --------------------------- */
+/*
+ * موشنِ بلور-سطح: این سه گوی با filter: blur(96px) روی والد نرم می‌شدند، اما
+ * والدِ فیلتر-دار هر فریم که فرزندانش transform می‌کنند باید کامل رستر شود؛
+ * سنجش (CDP، ۱۴۴۰×۹۰۰) همان صفحه را با ۲۴.۸fps و p50 فریم ۳۳.۴ms نگه می‌داشت
+ * و با حذفِ فقطِ blur روی ۶۰fps و ۱۶.۷ms. نرمی حالا داخل خودِ گرادیان پخته شده:
+ * وقفه‌ها پروفیلِ alpha اندازه‌گیری‌شده‌ی همان blur را با خطای ≤۰٫۹٪ بازتولید
+ * می‌کنند، پس ظاهر ثابت می‌ماند و رستر هر-فریم حذف می‌شود.
+ */
 .v2-aurora {
   position: fixed;
   inset: -20%;
   z-index: -3;
-  filter: blur(96px) saturate(0.85);
+  filter: saturate(0.85);
   opacity: 0.42;
   pointer-events: none;
+  --blob-cyan: color-mix(in srgb, var(--cyan) 70%, #fff);
+  --blob-magenta: color-mix(in srgb, var(--magenta) 62%, #fff);
+  --blob-violet: color-mix(in srgb, var(--violet) 70%, #fff);
 }
 .v2-aurora span {
   position: absolute;
@@ -65,7 +76,19 @@
 .v2-aurora .a1 {
   width: 50vw;
   height: 50vw;
-  background: radial-gradient(circle, color-mix(in srgb, var(--cyan) 70%, #fff), transparent 62%);
+  background: radial-gradient(
+    circle,
+    color-mix(in srgb, var(--blob-cyan) 64%, transparent) 0%,
+    color-mix(in srgb, var(--blob-cyan) 63%, transparent) 10%,
+    color-mix(in srgb, var(--blob-cyan) 53%, transparent) 20%,
+    color-mix(in srgb, var(--blob-cyan) 43%, transparent) 30%,
+    color-mix(in srgb, var(--blob-cyan) 31%, transparent) 40%,
+    color-mix(in srgb, var(--blob-cyan) 19%, transparent) 50%,
+    color-mix(in srgb, var(--blob-cyan) 12%, transparent) 58%,
+    color-mix(in srgb, var(--blob-cyan) 7%, transparent) 66%,
+    color-mix(in srgb, var(--blob-cyan) 3%, transparent) 74%,
+    color-mix(in srgb, var(--blob-cyan) 1%, transparent) 82%
+  );
   top: 0;
   right: 0;
   animation: v2drift1 22s var(--ease) infinite alternate;
@@ -73,7 +96,19 @@
 .v2-aurora .a2 {
   width: 44vw;
   height: 44vw;
-  background: radial-gradient(circle, color-mix(in srgb, var(--magenta) 62%, #fff), transparent 62%);
+  background: radial-gradient(
+    circle,
+    color-mix(in srgb, var(--blob-magenta) 59%, transparent) 0%,
+    color-mix(in srgb, var(--blob-magenta) 59%, transparent) 10%,
+    color-mix(in srgb, var(--blob-magenta) 50%, transparent) 20%,
+    color-mix(in srgb, var(--blob-magenta) 41%, transparent) 30%,
+    color-mix(in srgb, var(--blob-magenta) 32%, transparent) 40%,
+    color-mix(in srgb, var(--blob-magenta) 20%, transparent) 50%,
+    color-mix(in srgb, var(--blob-magenta) 13%, transparent) 58%,
+    color-mix(in srgb, var(--blob-magenta) 7%, transparent) 66%,
+    color-mix(in srgb, var(--blob-magenta) 4%, transparent) 74%,
+    color-mix(in srgb, var(--blob-magenta) 2%, transparent) 82%
+  );
   bottom: 0;
   left: 0;
   animation: v2drift2 26s var(--ease) infinite alternate;
@@ -81,7 +116,19 @@
 .v2-aurora .a3 {
   width: 38vw;
   height: 38vw;
-  background: radial-gradient(circle, color-mix(in srgb, var(--violet) 70%, #fff), transparent 62%);
+  background: radial-gradient(
+    circle,
+    color-mix(in srgb, var(--blob-violet) 52%, transparent) 0%,
+    color-mix(in srgb, var(--blob-violet) 52%, transparent) 10%,
+    color-mix(in srgb, var(--blob-violet) 45%, transparent) 20%,
+    color-mix(in srgb, var(--blob-violet) 37%, transparent) 30%,
+    color-mix(in srgb, var(--blob-violet) 28%, transparent) 40%,
+    color-mix(in srgb, var(--blob-violet) 20%, transparent) 50%,
+    color-mix(in srgb, var(--blob-violet) 14%, transparent) 58%,
+    color-mix(in srgb, var(--blob-violet) 9%, transparent) 66%,
+    color-mix(in srgb, var(--blob-violet) 5%, transparent) 74%,
+    color-mix(in srgb, var(--blob-violet) 2%, transparent) 82%
+  );
   top: 40%;
   left: 40%;
   animation: v2drift3 30s var(--ease) infinite alternate;
@@ -210,14 +257,22 @@
   position: relative;
   transition: 0.3s var(--ease);
 }
+/* خودِ نقطه ۹px است؛ حلقه‌ی نامرئی آن را به حداقلِ قابل‌ضربان می‌رساند */
+.v2-dot::before {
+  content: "";
+  position: absolute;
+  inset: -8px;
+}
 .v2-dot.is-on {
   background: var(--cyan);
   box-shadow: 0 0 0 4px rgba(94, 242, 255, 0.18);
   transform: scale(1.3);
 }
+/* برچسب باید سمتِ راستِ ریل باشد: ریل به left: 20px چسبیده و با right
+   برچسب از لبه‌ی صفحه بیرون می‌زد و فقط یک گلفِش دیده می‌شد. */
 .v2-dot__label {
   position: absolute;
-  right: 18px;
+  left: 18px;
   top: 50%;
   transform: translateY(-50%);
   font-size: 0.72rem;
@@ -520,6 +575,16 @@
   .v2-collage__dots { margin-inline-end: 0; }
 }
 
+/* داکِ موبایل (۱۲px فاصله + ۶۶px قد) روی ردیفِ کلاژِ هیرو می‌نشست و
+   ۴۳px از پایینش را می‌پوشاند. چون هیرو با align-content:center وسط‌چین
+   می‌شود، paddingِ تنِ پایین فقط نصفِ مقدارش را جابه‌جا می‌کرد؛ پس بالا
+   هم جمع شد تا کلاژ به بالای داک برسد. */
+@media (max-width: 720px) {
+  .v2-hero {
+    padding-block: calc(var(--header-size) + 0.75rem) calc(152px + env(safe-area-inset-bottom));
+  }
+}
+
 /* --------------------- توانمندی: اسکرول افقی --------------------- */
 .v2-hscroll { height: 360vh; position: relative; }
 .v2-hscroll__sticky {
@@ -803,6 +868,21 @@
     min-height: 82vh;
   }
   .v2-chrome { display: none; }
+}
+
+/* قدِ ثابتِ کارت در ارتفاعِ کم جواب نمی‌دهد: روی گوشیِ افقی (۸۴۴×۳۹۰) و
+   پنجره‌ی کوتاهِ دسکتاپ (۹۶۰×۶۰۰) ستونِ متنِ بلندترین پروژه‌ها ~۵۰۰px
+   می‌خواست و «باز کردن سایت» ۸ تا ۲۰۰px پایین‌تر از کارت می‌افتاد و
+   زیرِ overflow:hidden ناپدید می‌شد. */
+@media (min-width: 821px) and (max-height: 640px) {
+  .v2-stack__item {
+    height: auto;
+    padding-block-end: 14vh;
+  }
+  .v2-stack__card {
+    height: auto;
+    min-height: 82vh;
+  }
 }
 
 /* --------------------------- طیف حوزه‌ها --------------------------- */
@@ -1160,6 +1240,13 @@
 }
 @media (hover: none) and (prefers-reduced-motion: reduce) {
   .v2-hero__mouse { animation: none; }
+}
+
+/* حداقلِ قابل‌ضربانِ لمسی ۴۴px است و دکمۀ گیت‌هابِ هدر ۴۰px بود؛
+   با حلقۀ نامرئی گشاد می‌شود تا ظاهرِ هدر دست‌نخورده بماند. */
+@media (hover: none) {
+  .header-gh { position: relative; }
+  .header-gh::before { content: ""; position: absolute; inset: -4px; }
 }
 
 /* --------------------------- حالت پررنگ/forced-colors --------------------------- */

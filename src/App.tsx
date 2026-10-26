@@ -33,12 +33,14 @@ export default function App() {
     <LazyMotion features={domAnimation} strict>
       <Preloader />
       <Backdrop />
-      <ScrollChrome />
       <CustomCursor />
       <a className="skip-link" href="#demos">
         پرش به نمونهکارها
       </a>
       <SiteHeader />
+      {/* بعد از هدر می‌آید تا اولین ایستگاهِ Tab همان «پرش به نمونه‌کارها»
+          باشد، نه ناوبریِ ثابتِ کناری؛ z-index همه ثابت است. */}
+      <ScrollChrome />
       <main id="main">
         <HeroSection />
         <Marquee items={techMarquee} label="فناوری‌هایی که با آن‌ها کار می‌کنم" />
