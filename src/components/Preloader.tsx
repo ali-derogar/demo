@@ -38,7 +38,7 @@ export function Preloader() {
         <span className="v2-pre__mark">p</span>
         <span className="v2-pre__num">{faDigit(value)}٪</span>
         <span className="v2-pre__bar">
-          <i style={{ width: `${value}%` }} />
+          <i style={{ transform: `scaleX(${value / 100})` }} />
         </span>
       </div>
     </div>

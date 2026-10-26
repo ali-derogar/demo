@@ -1,4 +1,4 @@
-import { useEffect, type CSSProperties } from 'react';
+import { useEffect, useRef, type CSSProperties } from 'react';
 import { m, useMotionValue, useReducedMotion, useSpring } from 'motion/react';
 import { projects } from '../data/projects';
 import { profile } from '../data/profile';
@@ -31,12 +31,26 @@ const collageIds = ['nabz', 'cars', 'sekke'];
 
 export function HeroSection() {
   const parallax = usePointerParallax(16);
+  const heroRef = useRef<HTMLElement>(null);
   const collage = collageIds
     .map((id) => projects.find((project) => project.id === id))
     .filter((project): project is (typeof projects)[number] => Boolean(project));
 
+  // انیمیشنِ گرادیانِ تیتر فقط وقتی هیرو در دید است اجرا شود؛ وگرنه
+  // background-position تا پایینِ صفحه هر فریم repaint می‌کرد.
+  useEffect(() => {
+    const el = heroRef.current;
+    if (!el) return;
+    const io = new IntersectionObserver(
+      ([entry]) => el.classList.toggle('is-flow', entry.isIntersecting),
+      { threshold: 0 },
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+
   return (
-    <section className="v2-hero shell" id="top" aria-labelledby="hero-title">
+    <section className="v2-hero shell" id="top" ref={heroRef} aria-labelledby="hero-title">
       <div className="v2-hero__copy">
         <p className="v2-kicker">
           <span className="v2-kicker__pulse" aria-hidden="true" />

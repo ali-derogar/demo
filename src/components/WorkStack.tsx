@@ -2,7 +2,7 @@ import { useEffect, useRef, type CSSProperties } from 'react';
 import { useReducedMotion } from 'motion/react';
 import type { DemoProject } from '../data/projects';
 import { faDigit } from '../lib/fa';
-import { subscribeRaf } from '../lib/raf';
+import { onResize, subscribeRaf } from '../lib/raf';
 
 const clamp01 = (v: number) => (v < 0 ? 0 : v > 1 ? 1 : v);
 
@@ -22,23 +22,50 @@ export function WorkStack({ projects }: Props) {
     if (reduced) return;
     const root = rootRef.current;
     if (!root) return;
-    const cards = Array.from(root.querySelectorAll<HTMLElement>('.v2-stack__card'));
+    const cards = Array.from(root.querySelectorAll<HTMLElement>('.v2-stack__item')).map((item) => ({
+      item,
+      card: item.querySelector<HTMLElement>('.v2-stack__card'),
+      scrim: item.querySelector<HTMLElement>('.v2-stack__scrim'),
+      img: item.querySelector<HTMLElement>('.v2-shot img'),
+      top: 0,
+      height: 1,
+    }));
+
+    // offsetها یک‌بار در mount و هنگام resize اندازه‌گیری می‌شود؛ خواندن
+    // getBoundingClientRectِ ۸ کارت در هر فریم، reflow اجباری می‌ساخت.
+    const measure = () => {
+      const scrollY = window.scrollY;
+      for (const c of cards) {
+        const rect = c.item.getBoundingClientRect();
+        c.top = rect.top + scrollY;
+        c.height = rect.height || 1;
+      }
+    };
+    measure();
+    const offResize = onResize(measure);
 
     const update = () => {
-      for (const card of cards) {
-        const item = card.parentElement;
-        if (!item) continue;
-        const rect = item.getBoundingClientRect();
-        const passed = clamp01(-rect.top / rect.height);
-        card.style.transform = `scale(${1 - passed * 0.12}) translateY(${passed * -8}px)`;
-        card.style.filter = `brightness(${1 - passed * 0.4})`;
-        const img = card.querySelector<HTMLElement>('.v2-shot img');
-        if (img) img.style.transform = `scale(1.08) translateY(${passed * 24}px)`;
+      const scrollY = window.scrollY;
+      const vh = window.innerHeight;
+      for (const c of cards) {
+        // کارت‌های خارج از دید (با حاشیه) هیچ خواندن/نوشتنی ندارند
+        if (c.top > scrollY + vh * 1.2 || c.top + c.height < scrollY - vh * 0.2) continue;
+        const passed = clamp01((scrollY - c.top) / c.height);
+        if (c.card) {
+          c.card.style.transform = `scale(${1 - passed * 0.12}) translateY(${passed * -8}px)`;
+        }
+        // scrim با opacity (کامپوزیت) به‌جای filter: brightness روی هر فریم
+        if (c.scrim) c.scrim.style.opacity = String(passed * 0.4);
+        if (c.img) c.img.style.transform = `scale(1.08) translateY(${passed * 24}px)`;
       }
     };
 
     update();
-    return subscribeRaf(update);
+    const offRaf = subscribeRaf(update);
+    return () => {
+      offRaf();
+      offResize();
+    };
   }, [projects, reduced]);
 
   return (
@@ -83,6 +110,7 @@ export function WorkStack({ projects }: Props) {
                 <span aria-hidden="true">←</span>
               </a>
             </div>
+            <span className="v2-stack__scrim" aria-hidden="true" />
           </article>
         </div>
       ))}

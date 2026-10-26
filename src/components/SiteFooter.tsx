@@ -2,12 +2,13 @@ import { contactLinks } from '../data/profile';
 import { projects as demos } from '../data/projects';
 import { faYear } from '../lib/fa';
 import { BrandMark } from './BrandMark';
+import { Reveal } from './Reveal';
 
 export function SiteFooter() {
   return (
     <footer className="site-footer">
       <div className="shell site-footer__inner">
-        <div className="site-footer__brand">
+        <Reveal as="div" className="site-footer__brand">
           <a className="wordmark wordmark--footer" href="#top" aria-label="persianbotyar؛ بازگشت به بالا">
             <BrandMark />
             <span className="wordmark__text" dir="ltr">persianbotyar</span>
@@ -16,9 +17,15 @@ export function SiteFooter() {
             نمونه‌های طراحی سایت و کارهای بک‌اند من. اگر دنبال ایده برای سایت یا سرویس
             پروژه‌تان می‌گردید، نگاهی بیندازید یا مستقیم در تماس باشید.
           </p>
-        </div>
+        </Reveal>
 
-        <nav className="site-footer__nav site-footer__nav--demos" aria-label="نمونه‌ها">
+        <Reveal
+          as="nav"
+          className="site-footer__nav site-footer__nav--demos"
+          label="نمونه‌ها"
+          delay={0.05}
+          amount={0.1}
+        >
           <h3>نمونه‌ها</h3>
           <ul role="list">
             {demos.map((project) => (
@@ -27,9 +34,9 @@ export function SiteFooter() {
               </li>
             ))}
           </ul>
-        </nav>
+        </Reveal>
 
-        <nav className="site-footer__nav" aria-label="بخش‌ها">
+        <Reveal as="nav" className="site-footer__nav" label="بخش‌ها" delay={0.1} amount={0.1}>
           <h3>بخش‌ها</h3>
           <ul role="list">
             <li><a href="#top">صفحه اصلی</a></li>
@@ -38,9 +45,9 @@ export function SiteFooter() {
             <li><a href="#about">درباره من</a></li>
             <li><a href="#contact">ارتباط</a></li>
           </ul>
-        </nav>
+        </Reveal>
 
-        <nav className="site-footer__nav" aria-label="راه‌های تماس">
+        <Reveal as="nav" className="site-footer__nav" label="راه‌های تماس" delay={0.15} amount={0.1}>
           <h3>تماس</h3>
           <ul role="list">
             {contactLinks.map((link) => (
@@ -54,13 +61,13 @@ export function SiteFooter() {
               </li>
             ))}
           </ul>
-        </nav>
+        </Reveal>
       </div>
 
-      <div className="shell site-footer__base">
+      <Reveal as="div" className="shell site-footer__base" delay={0.1} amount={0.3}>
         <p>© {faYear()} <bdi dir="ltr">persianbotyar</bdi> — همهی حقوق محفوظ است.</p>
         <p className="site-footer__meta">طراحی رابط و توسعه‌ی بک‌اند</p>
-      </div>
+      </Reveal>
     </footer>
   );
 }

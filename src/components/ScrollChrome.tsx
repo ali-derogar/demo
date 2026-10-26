@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { subscribeRaf } from '../lib/raf';
+import { onResize, subscribeRaf } from '../lib/raf';
 
 const clamp01 = (v: number) => (v < 0 ? 0 : v > 1 ? 1 : v);
 
@@ -26,9 +26,9 @@ export function ScrollChrome() {
 
     const update = () => {
       const vh = window.innerHeight;
-      const dh = document.documentElement.scrollHeight - vh;
       const progress = dh > 0 ? clamp01(window.scrollY / dh) : 0;
-      if (fill) fill.style.width = `${progress * 100}%`;
+      // scaleX به‌جای width: نوشتن پراپ layout در هر فریم، reflow اجباری می‌ساخت
+      if (fill) fill.style.transform = `scaleX(${progress})`;
 
       let active = 0;
       sections.forEach((section, index) => {
@@ -38,9 +38,17 @@ export function ScrollChrome() {
       dots.forEach((dot, index) => dot.classList.toggle('is-on', index === active));
     };
 
+    let dh = document.documentElement.scrollHeight - window.innerHeight;
+    const measure = () => {
+      dh = document.documentElement.scrollHeight - window.innerHeight;
+    };
+    const offResize = onResize(measure);
     update();
     const unsubscribe = subscribeRaf(update);
-    return () => unsubscribe();
+    return () => {
+      unsubscribe();
+      offResize();
+    };
   }, []);
 
   return (

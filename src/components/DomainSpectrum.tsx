@@ -1,6 +1,7 @@
 import type { CSSProperties } from 'react';
 import { domains, experienceStat } from '../data/profile';
 import { faDigit } from '../lib/fa';
+import { MaskLine } from './MaskReveal';
 import { Reveal } from './Reveal';
 
 /**
@@ -30,17 +31,17 @@ export function DomainSpectrum() {
             هر ردیف بروی، مستقیم به همان نمونه‌کار می‌رسی.
           </p>
           <p className="v2-spectrum__years">
-            <span className="v2-spectrum__years-num">
+            <MaskLine className="v2-spectrum__years-num" when="view">
               {experienceStat.prefix}
               {faDigit(experienceStat.value)}
-            </span>
+            </MaskLine>
             <span className="v2-spectrum__years-cap">{experienceStat.label}</span>
           </p>
         </div>
 
         <ul className="v2-spectrum__rows">
           {domains.map((item, index) => (
-            <Reveal as="li" className="v2-row" key={item.id} delay={(index % 3) * 0.05} amount={0.4}>
+            <Reveal as="li" className="v2-row" key={item.id} delay={(index % 3) * 0.05} amount={0.4} from="side">
               <a
                 className="v2-row__link"
                 href={item.url}

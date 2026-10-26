@@ -4,12 +4,13 @@
    gallery.css / modern.css در تضاد نیفتند.
    ============================================================ */
 
+/* پالتِ رسمیِ v2؛ تنها منبعِ رنگ‌های نئونِ صفحه */
 :root {
   --cyan: #5ef2ff;
   --violet: #a98cf0;
   --magenta: #ff2e88;
   --amber: #ffb454;
-  --gold: #f2c14e;
+  --tone-gold: #f2c14e;
 }
 
 /* رنگ هر توانمندی؛ از طریق کلاس tone به متغیر --t نگاشت می‌شود */
@@ -17,7 +18,23 @@
 .v2-tone-violet { --t: var(--violet); }
 .v2-tone-magenta { --t: var(--magenta); }
 .v2-tone-amber { --t: var(--amber); }
-.v2-tone-gold { --t: var(--gold); }
+.v2-tone-gold { --t: var(--tone-gold); }
+
+/* الگوی مشترک تیترِ گرادیانی — یک تعریف، همه‌ی مصرف‌ها.
+   قبل از بلوک forced-colors تعریف می‌شود تا حالتِ پررنگ بتواند بازش کند. */
+.v2-gradtext,
+.v2-gradtext > span,
+.v2-hero__grad,
+.v2-hero__grad > span,
+.v2-contact__grad,
+.v2-contact__grad > span,
+.v2-spectrum__years-num,
+.v2-spectrum__years-num > span {
+  background-image: var(--spectrum);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
 
 /* آیکون خطی مشترک */
 .ic {
@@ -149,7 +166,10 @@
 .v2-pre__bar i {
   display: block;
   height: 100%;
-  width: 0;
+  width: 100%;
+  /* با scaleX پر می‌شود؛ RTL: مبدأ از راست */
+  transform: scaleX(0);
+  transform-origin: right center;
   background: linear-gradient(90deg, var(--cyan), var(--magenta));
 }
 
@@ -164,7 +184,12 @@
 }
 .v2-rail__fill {
   height: 100%;
-  width: 0;
+  width: 100%;
+  /* با scaleX(progress) پر می‌شود؛ صفحه همیشه RTL است، پس پیشرفت
+     از لبه‌ی راست (ابتدای خواندن) شروع می‌شود */
+  transform: scaleX(0);
+  transform-origin: right center;
+  will-change: transform;
   background: linear-gradient(90deg, var(--cyan), var(--violet), var(--magenta));
   box-shadow: 0 0 18px rgba(94, 242, 255, 0.6);
 }
@@ -273,10 +298,6 @@
 }
 .v2-hero__grad,
 .v2-hero__grad > span {
-  background: linear-gradient(100deg, var(--cyan), var(--violet) 50%, var(--magenta));
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
   padding-block: 0.05em;
 }
 .v2-hero__lead {
@@ -306,13 +327,17 @@
   color: #04121a;
   box-shadow: 0 14px 40px rgba(94, 242, 255, 0.3);
 }
-.v2-btn--primary:hover { transform: translateY(-2px); filter: brightness(1.06); }
 .v2-btn--ghost {
   border-color: var(--glass-line);
   background: var(--glass);
   color: var(--paper);
 }
-.v2-btn--ghost:hover { border-color: var(--cyan); color: var(--cyan); }
+/* stateهای فقط-هاور داخل @media (hover:hover) پیچیده شده‌اند تا tap روی
+   لمسی آن‌ها را «گیر» نکند؛ سمانتیک فوکوسِ کیبورد دست‌نخورده است. */
+@media (hover: hover) {
+  .v2-btn--primary:hover { transform: translateY(-2px); filter: brightness(1.06); }
+  .v2-btn--ghost:hover { border-color: var(--cyan); color: var(--cyan); }
+}
 .v2-hero__cue {
   margin-top: 2.6rem;
   display: inline-flex;
@@ -539,8 +564,8 @@
   border: 1px solid var(--glass-line);
   border-radius: 26px;
   background: linear-gradient(180deg, var(--glass), rgba(8, 8, 16, 0.6));
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  /* بدون backdrop-filter: سطح کارت ۷۴–۸۸٪ توپر است و بلور، پشت trackِ
+     متحرک هر فریم repaint می‌داد بدون هیچ اثرِ دیده‌شدنی */
   padding: 2rem;
   position: relative;
   overflow: hidden;
@@ -556,7 +581,9 @@
   opacity: 0.4;
   filter: blur(26px);
 }
-.v2-cap:hover { border-color: color-mix(in srgb, var(--t) 55%, transparent); }
+@media (hover: hover) {
+  .v2-cap:hover { border-color: color-mix(in srgb, var(--t) 55%, transparent); }
+}
 .v2-cap__n {
   position: absolute;
   top: 1.6rem;
@@ -601,9 +628,20 @@
   display: grid;
   grid-template-columns: 1.15fr 0.85fr;
   box-shadow: 0 50px 100px rgba(0, 0, 0, 0.6);
-  will-change: transform, filter;
+  will-change: transform;
   transform-origin: top center;
   background: var(--ink-2);
+}
+/* تاریک‌شدنِ کارتِ رد‌شده؛ opacity کامپوزیت‌پذیر است، برخلاف
+   filter: brightness که هر فریم repaint کامل می‌کرد */
+.v2-stack__scrim {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  border-radius: inherit;
+  background: #04040a;
+  opacity: 0;
+  pointer-events: none;
 }
 .v2-shot { position: relative; overflow: hidden; background: #0a0a14; }
 .v2-shot img {
@@ -717,7 +755,9 @@
   font-weight: 900;
   transition: transform 0.2s;
 }
-.v2-meta__open:hover { transform: translateY(-2px); }
+@media (hover: hover) {
+  .v2-meta__open:hover { transform: translateY(-2px); }
+}
 
 /* لپ‌تاپ‌های ۷۲۰p: کارت ۷۸vh یعنی ~۵۶۰px جا دارد و متنِ بلندترین
    پروژه‌ها (سکه، مکتب‌خانه) از پایینِ کارتِ `overflow: hidden` بیرون می‌زد؛
@@ -786,10 +826,6 @@
   font-size: clamp(3.6rem, 8vw, 5.6rem);
   font-weight: 900;
   line-height: 1.1;
-  background: linear-gradient(120deg, var(--cyan), var(--violet));
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
   font-variant-numeric: tabular-nums;
 }
 .v2-spectrum__years-cap { color: var(--muted); font-weight: 700; }
@@ -975,13 +1011,6 @@
 .v2-contact { text-align: center; padding-block: clamp(4rem, 9vw, 6.5rem); }
 .v2-contact__title { font-size: clamp(2.1rem, 6.5vw, 4.4rem); font-weight: 900; line-height: 1.25; }
 .v2-contact__title .v2-mask { display: inline-block; }
-.v2-contact__grad,
-.v2-contact__grad > span {
-  background: linear-gradient(100deg, var(--cyan), var(--magenta));
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-}
 .v2-cta {
   margin-top: 2.2rem;
   display: inline-flex;
@@ -1017,10 +1046,12 @@
   background: var(--glass);
   transition: 0.35s var(--ease);
 }
-.v2-ccard:hover {
-  transform: translateY(-4px);
-  border-color: var(--cyan);
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+@media (hover: hover) {
+  .v2-ccard:hover {
+    transform: translateY(-4px);
+    border-color: var(--cyan);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+  }
 }
 .v2-ccard__icon {
   width: 46px;
@@ -1081,6 +1112,56 @@
   .v2-row__go { transition: none; }
 }
 
+/* --------------------------- لمسی: ردیف افقیِ اسنپ‌شده ---------------------------
+   پین ۳۶۰vh روی گوشی یعنی فلیک عمودی، کارت‌ها را افقی می‌کشید و کاربر
+   بن‌بست حس می‌کرد. اینجا (و در JS با گیت pointer:fine) چیدمان به یک
+   ردیفِ قابل‌کشیدنِ افقی با scroll-snap تبدیل می‌شود؛ geometry عمداً
+   مشابه حالت «کاهش حرکت» است که از قبل تست شده. */
+@media (hover: none), (max-width: 900px) {
+  .v2-hscroll { height: auto; }
+  .v2-hscroll__sticky { position: static; height: auto; overflow: visible; }
+  .v2-hscroll__bar { display: none; }
+  .v2-hscroll__track {
+    direction: rtl;
+    transform: none !important;
+    will-change: auto;
+    padding-inline: clamp(1.15rem, 6vw, 4rem);
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .v2-cap {
+    flex: 0 0 min(82vw, 340px);
+    scroll-snap-align: center;
+    min-height: 0;
+  }
+}
+
+/* روی لمسی hover وجود ندارد؛ stateهای فقط-هاور یا بی‌اثر می‌مانند یا
+   بعد از tap «گیر» می‌کنند. */
+@media (hover: none) {
+  .v2-hero__mouse {
+    width: 15px;
+    height: 15px;
+    border: none;
+    border-radius: 0;
+    border-inline-end: 2px solid var(--muted-2);
+    border-block-end: 2px solid var(--muted-2);
+    transform: rotate(45deg);
+    animation: v2chevron 1.8s var(--ease) infinite;
+  }
+  .v2-hero__mouse::after { display: none; }
+}
+@keyframes v2chevron {
+  0% { opacity: 0.35; translate: 0 -4px; }
+  50% { opacity: 1; }
+  100% { opacity: 0.35; translate: 0 4px; }
+}
+@media (hover: none) and (prefers-reduced-motion: reduce) {
+  .v2-hero__mouse { animation: none; }
+}
+
 /* --------------------------- حالت پررنگ/forced-colors --------------------------- */
 @media (forced-colors: active) {
   .v2-noise,
@@ -1098,8 +1179,11 @@
   }
   .v2-row__dot { background: CanvasText; box-shadow: none; }
   .v2-hero__grad,
+  .v2-hero__grad > span,
   .v2-contact__grad,
-  .v2-spectrum__years-num {
+  .v2-contact__grad > span,
+  .v2-spectrum__years-num,
+  .v2-spectrum__years-num > span {
     -webkit-text-fill-color: currentColor;
     color: CanvasText;
     background: none;
@@ -1191,17 +1275,23 @@ li {
 .v2-row__link {
   box-shadow: var(--elev-2);
 }
-.v2-cap:hover,
-.v2-ccard:hover,
-.v2-row__link:hover,
 .v2-row__link:focus-visible {
   box-shadow: var(--elev-3);
+}
+@media (hover: hover) {
+  .v2-cap:hover,
+  .v2-ccard:hover,
+  .v2-row__link:hover {
+    box-shadow: var(--elev-3);
+  }
 }
 .v2-btn--primary {
   box-shadow: 0 12px 34px -10px color-mix(in srgb, var(--cyan) 60%, transparent), var(--elev-1);
 }
-.v2-btn--primary:hover {
-  box-shadow: 0 18px 44px -12px color-mix(in srgb, var(--cyan) 70%, transparent), var(--elev-1);
+@media (hover: hover) {
+  .v2-btn--primary:hover {
+    box-shadow: 0 18px 44px -12px color-mix(in srgb, var(--cyan) 70%, transparent), var(--elev-1);
+  }
 }
 .v2-btn:active { transform: translateY(0) scale(0.985); }
 .v2-meta__open {
@@ -1233,14 +1323,30 @@ li {
   pointer-events: none;
   transition: opacity var(--dur-3) var(--ease);
 }
-.v2-cap:hover::before,
-.v2-row__link:hover::after,
 .v2-row__link:focus-visible::after {
   opacity: 1;
   animation: v2orbit 2.8s linear infinite;
 }
+@media (hover: hover) {
+  .v2-cap:hover::before,
+  .v2-row__link:hover::after {
+    opacity: 1;
+    animation: v2orbit 2.8s linear infinite;
+  }
+}
 @keyframes v2orbit {
   to { --v2-angle: 360deg; }
+}
+/* روی لمسی حلقه‌ی چرخانِ کارت جای خود را به یک نورِ استاتیکِ آروم
+   می‌دهد تا هویتِ موشنیِ کارت حفظ شود (اینجا، بعد از تعریفِ لایه‌ی عمیق). */
+@media (hover: none) {
+  .v2-cap::before {
+    opacity: 0.35;
+    animation: v2orbit 6s linear infinite;
+  }
+}
+@media (hover: none) and (prefers-reduced-motion: reduce) {
+  .v2-cap::before { animation: none; }
 }
 
 /* --------------------------- ریزبرخورد --------------------------- */
@@ -1256,7 +1362,9 @@ li {
   transform-origin: right;
   transition: transform var(--dur-2) var(--ease-out-expo);
 }
-.v2-meta__open:hover::after { transform: scaleX(1); }
+@media (hover: hover) {
+  .v2-meta__open:hover::after { transform: scaleX(1); }
+}
 
 .chip {
   transition: color var(--dur-2) var(--ease), border-color var(--dur-2) var(--ease),
@@ -1342,9 +1450,11 @@ li {
   opacity: 0;
   pointer-events: none;
 }
-.v2-btn--primary:hover::after {
-  opacity: 1;
-  animation: v2shine 0.9s var(--ease-out-expo);
+@media (hover: hover) {
+  .v2-btn--primary:hover::after {
+    opacity: 1;
+    animation: v2shine 0.9s var(--ease-out-expo);
+  }
 }
 @keyframes v2shine {
   from { transform: translateX(-180%) rotate(8deg); }
@@ -1355,6 +1465,11 @@ li {
 .v2-hero__grad > span {
   background-size: 220% 100%;
   animation: v2flow 9s linear infinite;
+  animation-play-state: paused;
+}
+.v2-hero.is-flow .v2-hero__grad,
+.v2-hero.is-flow .v2-hero__grad > span {
+  animation-play-state: running;
 }
 @keyframes v2flow {
   from { background-position: 0% 50%; }
@@ -1404,7 +1519,9 @@ button {
   box-shadow: var(--elev-2);
   transition: transform var(--dur-2) var(--ease-out-expo), box-shadow var(--dur-2) var(--ease);
 }
-.v2-cta:hover { transform: translateY(-2px); box-shadow: var(--elev-3); }
+@media (hover: hover) {
+  .v2-cta:hover { transform: translateY(-2px); box-shadow: var(--elev-3); }
+}
 .site-footer {
   position: relative;
 }

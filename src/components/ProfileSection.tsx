@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react';
+import { useReducedMotion } from 'motion/react';
 import { aboutTimeline, languages, profile } from '../data/profile';
 import { faDigit } from '../lib/fa';
 import { subscribeRaf } from '../lib/raf';
@@ -29,7 +30,9 @@ const approach = [
 
 /** تایم‌لاینی که خط آن با اسکرول پر می‌شود */
 function useTimelineFill(ref: React.RefObject<HTMLElement>) {
+  const reduced = useReducedMotion();
   useEffect(() => {
+    if (reduced) return;
     const root = ref.current;
     if (!root) return;
     const fill = root.querySelector<HTMLElement>('.v2-tl__progress');
@@ -41,7 +44,7 @@ function useTimelineFill(ref: React.RefObject<HTMLElement>) {
     };
     update();
     return subscribeRaf(update);
-  }, [ref]);
+  }, [ref, reduced]);
 }
 
 export function ProfileSection() {
@@ -80,7 +83,7 @@ export function ProfileSection() {
           </p>
 
           {profile.summary.map((paragraph) => (
-            <Reveal as="p" className="v2-about__text" key={paragraph}>
+            <Reveal as="p" className="v2-about__text" key={paragraph} from="fade">
               {paragraph}
             </Reveal>
           ))}

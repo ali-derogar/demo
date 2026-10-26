@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { useReducedMotion } from 'motion/react';
 import { capabilities } from '../data/profile';
-import { subscribeRaf } from '../lib/raf';
+import { onResize, subscribeRaf } from '../lib/raf';
 import { useMediaQuery } from '../lib/useMedia';
 import { Icon } from './icons';
 
@@ -18,17 +18,30 @@ export function Capabilities() {
   const fine = useMediaQuery('(hover: hover) and (pointer: fine)');
 
   useEffect(() => {
-    if (reduced) return;
+    // روی لمسی پین خاموش می‌ماند (JS نمی‌نویسد) و CSS کارت‌ها را به
+    // ردیفِ افقیِ scroll-snap تبدیل می‌کند؛ وگرنه سوایپ عمودی با حرکت
+    // افقی کارت‌ها رقابت می‌کرد.
+    if (reduced || !fine) return;
     const root = rootRef.current;
     const track = trackRef.current;
     if (!root || !track) return;
     const bar = root.querySelector<HTMLElement>('.v2-hscroll__bar i');
 
+    // اندازه‌ها یک‌بار در mount و هنگام resize؛ خواندن scrollWidth/offsetHeight
+    // در هر فریم reflow اجباری می‌ساخت.
+    let total = 1;
+    let max = 0;
+    const measure = () => {
+      total = root.offsetHeight - window.innerHeight;
+      max = Math.max(0, track.scrollWidth - track.clientWidth);
+    };
+    measure();
+    const offResize = onResize(measure);
+
     const update = () => {
       const rect = root.getBoundingClientRect();
-      const total = root.offsetHeight - window.innerHeight;
-      const progress = clamp01(-rect.top / (total || 1));
-      const max = Math.max(0, track.scrollWidth - track.clientWidth);
+      if (rect.bottom < 0 || rect.top > window.innerHeight) return;
+      const progress = clamp01(-rect.top / total);
       track.style.transform = `translateX(${-progress * max}px)`;
       // ردیلِ پیشرفت: ۳۶۰vh اسکرولِ پین‌شده بدون نشانی، صفحه را «گیر‌کرده»
       // به‌نظر می‌رساند.
@@ -36,8 +49,12 @@ export function Capabilities() {
     };
 
     update();
-    return subscribeRaf(update);
-  }, [reduced]);
+    const offRaf = subscribeRaf(update);
+    return () => {
+      offRaf();
+      offResize();
+    };
+  }, [fine, reduced]);
 
   useEffect(() => {
     if (reduced || !fine) return;
