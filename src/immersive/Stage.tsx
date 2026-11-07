@@ -68,6 +68,7 @@ export function Stage({ progressRef, workRef }: { progressRef: RefObject<ScenePr
     const camera = new PerspectiveCamera(34, 1, .1, 120);
     let compact = window.innerWidth < 768;
     const world = new Group();
+    world.name = 'home-world';
     world.position.set(0, .6, 0);
     scene.add(world);
 
@@ -242,12 +243,29 @@ export function Stage({ progressRef, workRef }: { progressRef: RefObject<ScenePr
     const nextAim = new Vector3();
     const clickUv = new Vector2();
     let pendingClick = false;
+    const heroDrag = { id: -1, x: 0, y: 0, lastX: 0, active: false };
+    let heroAngle = 0, heroTarget = 0;
 
     const onPointerDown = (event: PointerEvent) => {
       if (reduced || progressRef.current?.overlay) return;
       clickUv.set(event.clientX / Math.max(1, window.innerWidth), 1 - event.clientY / Math.max(1, window.innerHeight));
       pendingClick = true;
+      if (workBlend < .15 && event.button === 0 && !(event.target as Element | null)?.closest?.('a,button,input,summary')) {
+        Object.assign(heroDrag, { id: event.pointerId, x: event.clientX, y: event.clientY, lastX: event.clientX, active: false });
+      }
     };
+    const onHeroMove = (event: PointerEvent) => {
+      if (heroDrag.id !== event.pointerId || workBlend > .15) return;
+      const dx = event.clientX - heroDrag.x, dy = event.clientY - heroDrag.y;
+      if (!heroDrag.active) {
+        if (Math.abs(dy) > 10 && Math.abs(dy) > Math.abs(dx)) { heroDrag.id = -1; return; }
+        if (Math.abs(dx) < 8) return;
+        heroDrag.active = true;
+      }
+      heroTarget += (event.clientX - heroDrag.lastX) * .006;
+      heroDrag.lastX = event.clientX;
+    };
+    const onHeroEnd = () => { heroDrag.id = -1; heroDrag.active = false; };
 
     const renderFrame = (_time: number, delta: number) => {
       if (lost) return;
@@ -278,7 +296,8 @@ export function Stage({ progressRef, workRef }: { progressRef: RefObject<ScenePr
       camera.rotateZ(-.025 * workBlend * (1 - (work?.selection ?? 0)));
       camera.updateMatrixWorld();
       world.position.set(nextAim.x * panelMix * workBlend, .6 * (1 - workBlend) + nextAim.y * panelMix * workBlend, (nextAim.z - 3) * panelMix * workBlend);
-      world.rotation.y = reduced ? -.08 : Math.sin(elapsed * .14) * .08 + (1 - intro) * .45 + chapter * .6 * (1 - workBlend);
+      heroAngle += (heroTarget - heroAngle) * ease;
+      world.rotation.y = reduced ? -.08 : Math.sin(elapsed * .14) * .08 + (1 - intro) * .45 + (chapter * .6 + heroAngle) * (1 - workBlend);
       world.rotation.z = reduced ? 0 : Math.sin(elapsed * .19) * .025;
       world.updateMatrixWorld(true);
       if (work && !reduced) orbit.update(
@@ -426,12 +445,18 @@ export function Stage({ progressRef, workRef }: { progressRef: RefObject<ScenePr
     };
     window.addEventListener('click', onProjectClick);
     window.addEventListener('pointerdown', onPointerDown, { passive: true });
+    window.addEventListener('pointermove', onHeroMove, { passive: true });
+    window.addEventListener('pointerup', onHeroEnd, { passive: true });
+    window.addEventListener('pointercancel', onHeroEnd, { passive: true });
     canvas.addEventListener('webglcontextlost', onContextLost);
     return () => {
       lost = true;
       unsubscribe();
       observer.disconnect();
       window.removeEventListener('pointerdown', onPointerDown);
+      window.removeEventListener('pointermove', onHeroMove);
+      window.removeEventListener('pointerup', onHeroEnd);
+      window.removeEventListener('pointercancel', onHeroEnd);
       window.removeEventListener('click', onProjectClick);
       canvas.removeEventListener('webglcontextlost', onContextLost);
       gpu?.dispose();

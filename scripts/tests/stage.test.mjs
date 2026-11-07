@@ -65,3 +65,26 @@ test('selection advances the real camera and card transforms smoothly, preserves
   assert.ok(Math.abs(eye.z - wideZ) < .001);
   assert.ok(orbit.group.children[1].material.uniforms.uReveal.value > .99);
 });
+
+test('dragging the home sculpture rotates it while vertical touch remains native', async (t) => {
+  const env = await environment({ width: 1440, height: 900 });
+  const { Stage } = await source('src/immersive/Stage.tsx', { three: new URL('./renderer.mock.mjs', import.meta.url).href });
+  const { projects } = await source('src/data/projects.ts');
+  const progressRef = { current: { chapter: 'home', position: 0, progress: 0, workBlend: 0, overlay: null } };
+  const workRef = { current: { items: projects, target: 0, position: 0, dragging: false, ready: false, selectedIndex: null, selection: 0 } };
+  const root = createRoot(env.q('#root'));
+  const action = async (callback) => { await act(async () => { callback(); await env.settle(); }); };
+  t.after(async () => { try { await action(() => root.unmount()); assert.deepEqual(env.errors, []); } finally { env.cleanup(); } });
+  await action(() => root.render(React.createElement(Stage, { progressRef, workRef })));
+  await action(() => {});
+  const world = renderers.at(-1).scene.getObjectByName('home-world'); const before = world.rotation.y;
+  const pointer = (type, x, y) => {
+    const event = new MouseEvent(type, { bubbles: true, cancelable: true, button: 0, clientX: x, clientY: y });
+    Object.defineProperty(event, 'pointerId', { value: 4 }); env.q('canvas').dispatchEvent(event); return event;
+  };
+  await action(() => { pointer('pointerdown', 700, 400); pointer('pointermove', 900, 402); pointer('pointerup', 900, 402); });
+  assert.ok(world.rotation.y > before + .2);
+  let vertical;
+  await action(() => { pointer('pointerdown', 700, 400); vertical = pointer('pointermove', 702, 450); pointer('pointerup', 702, 450); });
+  assert.equal(vertical.defaultPrevented, false);
+});
