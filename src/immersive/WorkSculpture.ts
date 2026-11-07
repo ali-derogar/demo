@@ -7,7 +7,7 @@ export function createWorkSculpture(mobile: boolean) {
   const material = new MeshPhysicalMaterial({
     color: 0xb4bacf, metalness: .9, roughness: .21, clearcoat: 1,
     clearcoatRoughness: .16, iridescence: 1, iridescenceIOR: 1.4,
-    iridescenceThicknessRange: [160, 520], envMapIntensity: 2.2,
+    iridescenceThicknessMinimum: 160, iridescenceThicknessMaximum: 520, envMapIntensity: 2.2,
     side: DoubleSide, transparent: true, opacity: .88,
   });
   const geometries: BufferGeometry[] = [];

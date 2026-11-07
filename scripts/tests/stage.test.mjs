@@ -50,13 +50,13 @@ test('selection advances the real camera and card transforms smoothly, preserves
     camera.position.copy(eye); camera.lookAt(aim); camera.updateMatrixWorld();
     orbit.update(state, camera, 1, 1 / 60, 1, false);
   };
-  frame(); const wideZ = eye.z;
+  frame(); const wideZ = eye.z, restingCardZ = orbit.group.children[0].position.z;
   state.selectedIndex = 0; frame();
   assert.ok(state.selection > 0 && state.selection < .2, 'first frame begins the transition without snapping');
   for (let i = 0; i < 90; i++) frame();
   assert.ok(state.selection > .99);
   assert.ok(eye.z < wideZ - .5, 'camera moves closer to the selected card');
-  assert.ok(orbit.group.children[0].position.z > 6.8);
+  assert.ok(orbit.group.children[0].position.z > restingCardZ + .2);
   assert.ok(orbit.group.children[0].scale.x > 1.02);
   assert.ok(orbit.group.children[1].material.uniforms.uReveal.value < .4);
   assert.equal(orbit.hitTest(camera, 720, 450, 1440, 900), 0, 'the transformed card remains clickable');

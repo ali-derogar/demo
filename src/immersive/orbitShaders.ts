@@ -60,6 +60,7 @@ export const orbitFragment = /* glsl */ `
     color += vec3(.75, .87, 1.0) * sweep * sin(uSelected * 3.14159) * .13;
     color += uAccent * edge * uSelected * .28;
     color *= 1.0 - vEdge * .09;
+    color *= 1.0 - exp(-pow((vUv.y - .5) * 3.0, 2.0)) * uTitleReady * .72;
     if (!gl_FrontFacing) color *= .2;
     if (uReveal < .005) discard;
     vec4 title = texture2D(uTitle, vUv);

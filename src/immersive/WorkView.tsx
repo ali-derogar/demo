@@ -68,7 +68,7 @@ export function WorkView({ motionRef }: { motionRef: MutableRefObject<OrbitMotio
     motionRef.current.items = shown;
     motionRef.current.ready = false;
     const region = stageRef.current;
-    if (region) region.dataset.ready = 'false';
+    if (region) { region.dataset.ready = 'false'; region.dataset.labels = 'false'; }
     measure();
     const observer = new ResizeObserver(measure);
     observer.observe(track);

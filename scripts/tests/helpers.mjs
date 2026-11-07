@@ -60,7 +60,12 @@ export async function environment({ hash = '#home', type = 'navigate', width = 3
   if (earlyScript) w.eval(earlyScript);
   const media = new Set();
   w.matchMedia = (query) => ({
-    get matches() { return query.includes('prefers-reduced-motion') ? reduced : query.includes('max-width') && width < 768; },
+    get matches() {
+      if (query.includes('prefers-reduced-motion')) return reduced;
+      const minWidth = query.match(/min-width:\s*(\d+)px/), minHeight = query.match(/min-height:\s*(\d+)px/);
+      if (minWidth || minHeight) return (!minWidth || width >= Number(minWidth[1])) && (!minHeight || height >= Number(minHeight[1]));
+      return query.includes('max-width') && width < 768;
+    },
     media: query, addEventListener(_, callback) { if (query.includes('prefers-reduced-motion')) media.add(callback); },
     removeEventListener(_, callback) { media.delete(callback); }, addListener() {}, removeListener() {},
   });

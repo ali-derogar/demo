@@ -11,7 +11,7 @@ export function createBrandSculpture() {
   const chrome = new MeshPhysicalMaterial({
     color: 0xd3d4dc, metalness: .96, roughness: .14,
     clearcoat: 1, clearcoatRoughness: .12, envMapIntensity: 1.7,
-    iridescence: .75, iridescenceThicknessRange: [130, 460],
+    iridescence: .75, iridescenceThicknessMinimum: 130, iridescenceThicknessMaximum: 460,
     side: DoubleSide,
   });
   const light = new MeshBasicMaterial({ color: 0x84e5bd, transparent: true, opacity: .5, toneMapped: false });

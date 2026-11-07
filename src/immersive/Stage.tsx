@@ -411,7 +411,7 @@ export function Stage({ progressRef, workRef }: { progressRef: RefObject<ScenePr
       event.preventDefault();
       lost = true;
       unsubscribe();
-      if (workRef.current) workRef.current.ready = false;
+      if (workRef.current) { workRef.current.ready = false; workRef.current.labelsReady = false; }
       setStatus('fallback');
     };
     const onProjectClick = (event: MouseEvent) => {
@@ -436,7 +436,7 @@ export function Stage({ progressRef, workRef }: { progressRef: RefObject<ScenePr
       geometry.dispose(); particleMaterial.dispose();
       brand.dispose(); sculpture.dispose(); orbit.dispose(); environment?.dispose(); emptyTexture.dispose(); backdrop?.dispose();
       atmosphereGeometry.dispose(); atmosphereMaterial.dispose();
-      if (workRef.current) workRef.current.ready = false;
+      if (workRef.current) { workRef.current.ready = false; workRef.current.labelsReady = false; }
       flowRead?.dispose(); flowWrite?.dispose();
       fluidQuad?.dispose(); fluidMaterial?.dispose();
       composer?.passes.forEach((pass) => pass.dispose());

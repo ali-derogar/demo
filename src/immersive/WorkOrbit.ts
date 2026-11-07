@@ -5,7 +5,7 @@ import {
 } from 'three';
 import type { DemoProject } from '../data/projects';
 import { getPointer } from '../lib/raf';
-import { ORBIT_CARD_HEIGHT, ORBIT_CARD_WIDTH, ORBIT_CURVE_RADIUS, ORBIT_RADIUS, orbitPose, type OrbitMotion } from './orbit';
+import { ORBIT_CARD_HEIGHT, ORBIT_CARD_WIDTH, ORBIT_CURVE_RADIUS, ORBIT_RADIUS, insideOrbitCard, orbitPose, type OrbitMotion } from './orbit';
 import { orbitFragment, orbitVertex } from './orbitShaders';
 import { createResourceQueue } from './resourceQueue';
 import { createProjectLabel } from './projectLabel';
@@ -70,6 +70,7 @@ export function createWorkOrbit(renderer: WebGLRenderer, linearOutput: boolean, 
         side: DoubleSide, transparent: true, toneMapped: false,
       });
       const panel = new Mesh(geometry, material);
+      material.forceSinglePass = true;
       const pose = orbitPose(index, next.length, portrait);
       panel.position.set(pose.x, pose.y, pose.z);
       panel.rotation.y = pose.angle;
@@ -114,7 +115,8 @@ export function createWorkOrbit(renderer: WebGLRenderer, linearOutput: boolean, 
     if (!group.visible) return -1;
     ndc.set(x / Math.max(1, width) * 2 - 1, 1 - y / Math.max(1, height) * 2);
     raycaster.setFromCamera(ndc, camera);
-    return (raycaster.intersectObjects(panels, false)[0]?.object.userData.index as number | undefined) ?? -1;
+    const hit = raycaster.intersectObjects(panels, false).find((item) => item.uv && insideOrbitCard(item.uv.x, item.uv.y));
+    return (hit?.object.userData.index as number | undefined) ?? -1;
   }
 
   function update(state: OrbitMotion, camera: PerspectiveCamera, time: number, dt: number, reveal: number, interactive: boolean) {

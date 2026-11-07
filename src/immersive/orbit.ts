@@ -20,6 +20,11 @@ export const ORBIT_CARD_WIDTH = 5.4;
 export const ORBIT_CARD_HEIGHT = 3;
 export const ORBIT_CURVE_RADIUS = 12;
 
+export function insideOrbitCard(u: number, v: number): boolean {
+  const x = Math.abs(u - .5) - .445, y = Math.abs(v - .5) - .445;
+  return Math.hypot(Math.max(x, 0), Math.max(y, 0)) + Math.min(Math.max(x, y), 0) - .055 <= .001;
+}
+
 export function clampProject(position: number, count: number): number {
   return Math.max(0, Math.min(Math.max(0, count - 1), position));
 }
