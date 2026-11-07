@@ -125,7 +125,7 @@ ul, ol { list-style: none; margin: 0; padding: 0; }
 .im-scene-caption__cross { grid-row: span 2; font-size: 22px; font-weight: 200; align-self: center; }
 
 /* Projects remain real links and real images on every pointer type. */
-.im-chapter--work { background: linear-gradient(180deg, rgb(11 12 13 / 88%), rgb(11 12 13 / 82%)); }
+.im-chapter--work { background: linear-gradient(180deg, rgb(11 12 13 / 62%), rgb(11 12 13 / 52%)); }
 .im-work { padding-block: 132px 100px; }
 .im-work__toolbar { display: flex; align-items: center; justify-content: space-between; gap: 25px; border-block: 1px solid var(--line); padding-block: 20px; margin-block: 65px; }
 .im-work__filters { display: flex; flex-wrap: wrap; gap: 4px 8px; }
