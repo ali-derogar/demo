@@ -4,13 +4,14 @@ import React, { act } from 'react';
 import { createRoot } from 'react-dom/client';
 import { source, environment } from './helpers.mjs';
 import { renderers } from './renderer.mock.mjs';
+import { PerspectiveCamera, Vector3 } from 'three';
 
 test('context restoration rebuilds Stage once, releases the old renderer and preserves gallery position', async (t) => {
   const env = await environment();
   const { Stage } = await source('src/immersive/Stage.tsx', { three: new URL('./renderer.mock.mjs', import.meta.url).href });
   const { projects } = await source('src/data/projects.ts');
   const progressRef = { current: { chapter: 'work', position: 1, progress: 1, workBlend: 1, overlay: 'contact' } };
-  const workRef = { current: { items: projects, target: 3.2, position: 3.2, dragging: false, blockClickUntil: 0, ready: false, interactive: false } };
+  const workRef = { current: { items: projects, target: 3.2, position: 3.2, dragging: false, blockClickUntil: 0, ready: false, interactive: false, selectedIndex: null, selection: 0 } };
   const root = createRoot(env.q('#root'));
   const action = async (callback) => { await act(async () => { callback(); await env.settle(); }); };
   t.after(async () => { try { await action(() => root.unmount()); assert.deepEqual(env.errors, []); assert.ok(renderers.every((renderer) => renderer.disposed)); } finally { env.cleanup(); } });
@@ -33,4 +34,34 @@ test('context restoration rebuilds Stage once, releases the old renderer and pre
   assert.equal(workRef.current.position, 3.2); assert.equal(workRef.current.target, 3.2);
   assert.equal(progressRef.current.overlay, 'contact');
   renderers.at(-1).camera.toArray().forEach((value, index) => assert.ok(Math.abs(value - eye[index]) < 1e-9));
+});
+
+test('selection advances the real camera and card transforms smoothly, preserves picking, then returns to the helix', async (t) => {
+  const env = await environment({ width: 1440, height: 900 }); t.after(() => env.cleanup());
+  const { createWorkOrbit } = await source('src/immersive/WorkOrbit.ts');
+  const { projects } = await source('src/data/projects.ts');
+  const orbit = createWorkOrbit({ capabilities: { getMaxAnisotropy: () => 1 } }, false);
+  t.after(() => orbit.dispose());
+  const state = { items: projects, target: 0, position: 0, selectedIndex: null, selection: 0, dragging: false, ready: false };
+  const camera = new PerspectiveCamera(34, 1440 / 900, .1, 120);
+  const eye = new Vector3(), aim = new Vector3();
+  const frame = () => {
+    orbit.advance(state, 1 / 60); orbit.cameraPose(state, camera.aspect, camera.fov, eye, aim);
+    camera.position.copy(eye); camera.lookAt(aim); camera.updateMatrixWorld();
+    orbit.update(state, camera, 1, 1 / 60, 1, false);
+  };
+  frame(); const wideZ = eye.z;
+  state.selectedIndex = 0; frame();
+  assert.ok(state.selection > 0 && state.selection < .2, 'first frame begins the transition without snapping');
+  for (let i = 0; i < 90; i++) frame();
+  assert.ok(state.selection > .99);
+  assert.ok(eye.z < wideZ - .5, 'camera moves closer to the selected card');
+  assert.ok(orbit.group.children[0].position.z > 6.8);
+  assert.ok(orbit.group.children[0].scale.x > 1.02);
+  assert.ok(orbit.group.children[1].material.uniforms.uReveal.value < .4);
+  assert.equal(orbit.hitTest(camera, 720, 450, 1440, 900), 0, 'the transformed card remains clickable');
+  state.selectedIndex = null;
+  for (let i = 0; i < 120; i++) frame();
+  assert.ok(Math.abs(eye.z - wideZ) < .001);
+  assert.ok(orbit.group.children[1].material.uniforms.uReveal.value > .99);
 });

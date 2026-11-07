@@ -29,7 +29,7 @@ export function ImmersiveApp() {
   const audio = useSyncExternalStore(ambient.subscribe, ambient.getSnapshot, ambient.getSnapshot);
   const mainRef = useRef<HTMLElement>(null);
   const progressRef = useRef<SceneProgress>({ chapter: 'home', position: 0, progress: 0, workBlend: 0, overlay: null });
-  const workRef = useRef<OrbitMotion>({ items: projects, target: 0, position: 0, dragging: false, blockClickUntil: 0, ready: false, interactive: false });
+  const workRef = useRef<OrbitMotion>({ items: projects, target: 0, position: 0, dragging: false, blockClickUntil: 0, ready: false, interactive: false, selectedIndex: null, selection: 0 });
   useSmoothScroll(false);
   const { panel, closePanel } = useSceneNavigation();
 

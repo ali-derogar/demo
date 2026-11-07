@@ -22,6 +22,7 @@ export const orbitFragment = /* glsl */ `
   uniform float uFocus;
   uniform float uHover;
   uniform vec3 uAccent;
+  uniform float uSelected;
   varying vec2 vUv;
   varying float vEdge;
   void main() {
@@ -33,6 +34,10 @@ export const orbitFragment = /* glsl */ `
     vec3 color = mix(image, uAccent * (.45 + uFocus * .5), edge * .7);
     float sheen = pow(max(0.0, 1.0 - abs(vUv.x - .45) * 2.0), 6.0) * uHover * .06;
     color += vec3(.8, .9, 1.0) * sheen;
+    // A single soft sweep follows the selection progress, then settles to a rim.
+    float sweep = exp(-pow((vUv.x - mix(-.2, 1.2, uSelected)) * 15.0, 2.0));
+    color += vec3(.75, .87, 1.0) * sweep * sin(uSelected * 3.14159) * .13;
+    color += uAccent * edge * uSelected * .28;
     color *= 1.0 - vEdge * .09;
     if (!gl_FrontFacing) color *= .2;
     if (uReveal < .005) discard;

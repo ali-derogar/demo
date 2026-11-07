@@ -8,6 +8,8 @@ export interface OrbitMotion {
   blockClickUntil: number;
   ready: boolean;
   interactive: boolean;
+  selectedIndex: number | null;
+  selection: number;
   onPick?: (index: number) => void;
 }
 

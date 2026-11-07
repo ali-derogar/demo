@@ -258,7 +258,7 @@ export function Stage({ progressRef, workRef }: { progressRef: RefObject<ScenePr
       }
       camera.position.lerp(eye, firstFrame || reduced ? 1 : ease);
       camera.lookAt(aim);
-      camera.rotateZ(-.025 * workBlend);
+      camera.rotateZ(-.025 * workBlend * (1 - (work?.selection ?? 0)));
       camera.updateMatrixWorld();
       world.position.set(nextAim.x * workBlend * .2, .6 * (1 - workBlend) + nextAim.y * workBlend, -3 * workBlend);
       world.rotation.y = reduced ? -.08 : Math.sin(elapsed * .14) * .08 + (1 - intro) * .45;

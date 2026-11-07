@@ -132,3 +132,56 @@ test('startup handles repeated refresh and legacy navigation APIs without adding
   delete env.w.performance.navigation;
   assert.equal(navigationType(), 'navigate');
 });
+
+test('every project selects on its first click and keeps native demo navigation on the second', async (t) => {
+  const env = await app(t, { hash: '#demos' });
+  const stage = env.q('.im-orbit__stage');
+  const click = (element, options = {}) => {
+    const event = new MouseEvent('click', { bubbles: true, cancelable: true, button: 0, ...options });
+    element.dispatchEvent(event); return event;
+  };
+  for (let i = 0; i < 9; i++) {
+    if (i) await env.action(() => stage.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowLeft', bubbles: true, cancelable: true })));
+    assert.equal(env.q('.im-work-track').dataset.selected, 'false');
+    const link = env.q('.im-orbit__captions li:not([hidden]) a'); let first, second;
+    await env.action(() => { first = click(link); });
+    assert.equal(first.defaultPrevented, true, `project ${i + 1} selects before navigation`);
+    assert.equal(link.getAttribute('aria-current'), 'true');
+    assert.equal(env.q('.im-work-track').dataset.selected, 'true');
+    assert.equal(env.q('.im-orbit__filters').hidden, true);
+    assert.match(env.q('#im-orbit-help').textContent, /دوباره کلیک/);
+    await env.action(() => { second = click(link); });
+    assert.equal(second.defaultPrevented, false, `project ${i + 1} opens via its native link`);
+    assert.equal(link.target, '_blank');
+  }
+  await env.action(() => stage.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true })));
+  assert.equal(env.q('.im-work-track').dataset.selected, 'false');
+  assert.equal(document.activeElement, stage);
+  let modified;
+  await env.action(() => { modified = click(env.q('.im-orbit__captions li:not([hidden]) a'), { ctrlKey: true }); });
+  assert.equal(modified.defaultPrevented, false);
+  assert.equal(env.q('.im-work-track').dataset.selected, 'false');
+});
+
+test('mobile fallback and reduced motion keep two-step selection, Enter, scroll and back controls usable', async (t) => {
+  const env = await app(t, { hash: '#demos', reduced: true });
+  const stage = env.q('.im-orbit__stage');
+  await env.action(() => env.q('.im-orbit__fallback a').click());
+  assert.equal(env.q('.im-work-track').dataset.selected, 'true');
+  await env.action(() => env.q('.im-orbit__back').click());
+  assert.equal(env.q('.im-work-track').dataset.selected, 'false');
+  assert.equal(document.activeElement, stage);
+  await env.action(() => stage.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true, cancelable: true })));
+  assert.equal(env.q('.im-work-track').dataset.selected, 'true');
+  let activation;
+  const observe = (event) => { if (event.target.closest?.('.im-orbit__project-link')) activation = event; };
+  env.w.addEventListener('click', observe);
+  await env.action(() => stage.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true, cancelable: true })));
+  env.w.removeEventListener('click', observe);
+  assert.equal(activation.defaultPrevented, false);
+  await env.action(() => env.w.dispatchEvent(new Event('wheel')));
+  assert.equal(env.q('.im-work-track').dataset.selected, 'false');
+  await env.action(() => env.q('.im-orbit__fallback a').click());
+  await env.action(() => env.w.scrollTo({ top: env.scroll + 40 }));
+  assert.equal(env.q('.im-work-track').dataset.selected, 'false');
+});

@@ -52,6 +52,7 @@ export function createWorkOrbit(renderer: WebGLRenderer, linearOutput: boolean) 
           uImage: { value: placeholder as Texture }, uLoaded: { value: 0 },
           uTime: { value: 0 }, uSpeed: { value: 0 }, uHover: { value: 0 },
           uFocus: { value: index === 0 ? 1 : 0 }, uReveal: { value: 0 },
+          uSelected: { value: 0 },
           uEncodeOutput: { value: linearOutput ? 0 : 1 },
           uAccent: { value: new Color(project.accent) },
         },
@@ -63,6 +64,7 @@ export function createWorkOrbit(renderer: WebGLRenderer, linearOutput: boolean) 
       panel.position.set(pose.x, pose.y, pose.z);
       panel.rotation.y = pose.angle;
       panel.userData.index = index;
+      panel.userData.pose = pose;
       group.add(panel);
       return panel;
     });
@@ -72,6 +74,7 @@ export function createWorkOrbit(renderer: WebGLRenderer, linearOutput: boolean) 
     prepare(state.items);
     const ease = 1 - Math.exp(-dt * (state.dragging ? 16 : 8));
     state.position += (state.target - state.position) * ease;
+    state.selection += ((state.selectedIndex === null ? 0 : 1) - state.selection) * (1 - Math.exp(-dt * 6));
     speed = previousPosition === null ? 0 : (state.position - previousPosition) / Math.max(dt, .001);
     previousPosition = state.position;
     const target = Math.round(state.target);
@@ -91,9 +94,10 @@ export function createWorkOrbit(renderer: WebGLRenderer, linearOutput: boolean) 
     const distance = Math.max(
       ORBIT_CARD_HEIGHT / (2 * halfFov * .54),
       ORBIT_CARD_WIDTH / (2 * halfFov * aspect * .86),
-    );
+    ) * (1 - state.selection * (aspect < .8 ? .025 : .12));
     eye.set(Math.sin(pose.angle) * (ORBIT_RADIUS + distance), pose.y + .18, Math.cos(pose.angle) * (ORBIT_RADIUS + distance));
     aim.set(pose.x, pose.y, pose.z);
+    aim.y += state.selection * .06;
   }
 
   function hitTest(camera: PerspectiveCamera, x: number, y: number, width: number, height: number): number {
@@ -111,6 +115,12 @@ export function createWorkOrbit(renderer: WebGLRenderer, linearOutput: boolean) 
     const ease = 1 - Math.exp(-dt * 8);
     panels.forEach((panel, index) => {
       const uniforms = panel.material.uniforms;
+      const selected = state.selectedIndex === index ? 1 : 0;
+      uniforms.uSelected.value += (selected - uniforms.uSelected.value) * (1 - Math.exp(-dt * 6));
+      const lift = uniforms.uSelected.value as number;
+      const pose = panel.userData.pose as ReturnType<typeof orbitPose>;
+      panel.position.set(pose.x + Math.sin(pose.angle) * lift * .28, pose.y + lift * .06, pose.z + Math.cos(pose.angle) * lift * .28);
+      panel.scale.setScalar(1 + lift * .025);
       const texture = images.get(items[index].preview);
       uniforms.uImage.value = texture ?? placeholder;
       uniforms.uLoaded.value = texture ? 1 : 0;
@@ -119,8 +129,9 @@ export function createWorkOrbit(renderer: WebGLRenderer, linearOutput: boolean) 
       uniforms.uHover.value += ((hover === index ? 1 : 0) - uniforms.uHover.value) * ease;
       uniforms.uSpeed.value += (speed - uniforms.uSpeed.value) * ease;
       uniforms.uTime.value = time;
-      uniforms.uReveal.value = reveal;
+      uniforms.uReveal.value = reveal * (1 - state.selection * .65 * (1 - lift));
     });
+    group.updateMatrixWorld(true);
     const front = items[Math.max(0, Math.min(items.length - 1, Math.round(state.target)))];
     state.ready = !!front && !!images.get(front.preview) && reveal > .005;
   }

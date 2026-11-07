@@ -13,7 +13,7 @@
 .im-filter[aria-pressed="true"] { color: #cae8d5; border-color: #7eb69170; background: #152c20; }
 .im-filter:hover { color: #e6f2e9; }
 .im-orbit__stage { position: absolute; inset: 135px -35px 190px; pointer-events: auto; touch-action: pan-y; user-select: none; -webkit-user-select: none; outline-offset: -15px; }
-.im-orbit__fallback { position: absolute; top: calc(50svh - 135px); left: 50%; transform: translate(-50%,-50%); width: min(81svh,86vw); aspect-ratio: 3 / 2; display: grid; place-items: center; pointer-events: none; transition: opacity .4s; }
+.im-orbit__fallback { position: absolute; top: calc(50svh - 135px); left: 50%; transform: translate(-50%,-50%); width: min(81svh,86vw); aspect-ratio: 3 / 2; display: grid; place-items: center; pointer-events: none; transition: opacity .4s, transform .9s cubic-bezier(.16,1,.3,1), box-shadow .9s; }
 .im-orbit__fallback img { width: 100%; height: 100%; min-height: 0; object-fit: contain; }
 .im-orbit__fallback a { display: block; width: 100%; height: 100%; pointer-events: auto; }
 .im-orbit__image-error { display: flex; width: 100%; height: 100%; flex-direction: column; align-items: center; justify-content: center; gap: 14px; background: #0b1713; border: 1px solid #99c6ae38; color: #aac2b3; font-size: 13px; }
@@ -36,6 +36,15 @@
 .im-orbit__counter b { color: #c1e2cd; font-size: 14px; font-weight: 400; }
 .im-orbit__counter i { font-style: normal; color: #4d735b; }
 .im-orbit__tools { position: relative; pointer-events: auto; }
+.im-orbit__filters[hidden] { display: none; }
+.im-orbit__back { position: absolute; top: 100px; right: 0; min-height: 44px; display: flex; align-items: center; gap: 14px; pointer-events: auto; color: #bddfc9; font-size: 12px; }
+.im-orbit__back > span { font: 20px sans-serif; }
+.im-work-track[data-selected="true"] .im-orbit__fallback { transform: translate(-50%,-50%) scale(1.065); box-shadow: 0 0 70px #a4c9ed12; }
+.im-work-track[data-selected="true"] .im-orbit__captions li:not([hidden]) .im-orbit__project-link { animation: im-project-focus .7s cubic-bezier(.16,1,.3,1) both; }
+.im-work-track[data-selected="true"] .im-orbit__captions li:not([hidden]) > p { animation: im-project-focus .7s .08s cubic-bezier(.16,1,.3,1) both; }
+.im-work-track[data-selected="true"] .im-orbit__project-meta { color: #c5e3ce; }
+.im-orbit__controls > p { max-width: 40%; line-height: 1.8; }
+@keyframes im-project-focus { from { opacity: 0; transform: translateY(15px); filter: blur(5px); } to { opacity: 1; transform: translateY(0); filter: blur(0); } }
 .im-orbit__tool-sheet { position: absolute; bottom: 48px; left: 0; min-width: 210px; padding: 18px; background: #0b1713ef; border: 1px solid #99c6ae38; box-shadow: 0 20px 45px #0006; }
 .im-orbit__navigation { display: flex; justify-content: space-between; gap: 20px; }
 .im-orbit__navigation button { width: 44px; height: 44px; border: 1px solid #779e834d; color: #c5e3ce; font: 22px sans-serif; }
@@ -52,6 +61,7 @@
   .im-orbit__head h2 { font-size: 12px; }
   .im-orbit__head > span { font-size: 9px; letter-spacing: 1px; }
   .im-orbit__filters { top: 82px; }
+  .im-orbit__back { top: 82px; }
   .im-orbit__stage { inset: 135px -20px 180px; }
   .im-orbit__captions { bottom: 128px; width: 100%; min-height: 95px; }
   .im-orbit__project-link { gap: 20px; min-height: 55px; }
@@ -74,8 +84,13 @@
 @media (prefers-reduced-motion:reduce) {
   .im-work-track { height: auto; }
   .im-work.im-work--orbit { position: relative; height: 100svh; }
+  .im-orbit__fallback { transition: none; }
+  .im-work-track[data-selected="true"] .im-orbit__fallback { transform: translate(-50%,-50%); box-shadow: 0 0 0 1px #a4c9ed55; }
+  .im-work-track[data-selected="true"] .im-orbit__captions li:not([hidden]) .im-orbit__project-link,
+  .im-work-track[data-selected="true"] .im-orbit__captions li:not([hidden]) > p { animation: none; }
 }
 @media (forced-colors:active) {
   .im-orbit__fallback { opacity: 1 !important; }
+  .im-orbit__stage[data-ready="true"] .im-orbit__fallback a { pointer-events: auto; }
   .im-orbit__filter-options,.im-orbit__tool-sheet { background: Canvas; border-color: CanvasText; }
 }
