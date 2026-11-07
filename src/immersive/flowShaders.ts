@@ -164,6 +164,7 @@ export const particleVertex = /* glsl */ `
     vec4 mv = modelViewMatrix * vec4(p, 1.0);
     gl_Position = projectionMatrix * mv;
     gl_PointSize = clamp((1.45 + s.z * 1.8) * uDpr * 10.0 / max(1.0, -mv.z), 1.0, 6.0);
+    gl_PointSize = mix(gl_PointSize, (4.0 + s.y * 7.0) * uDpr, step(.985, s.z));
     vec3 silver = mix(vec3(.54, .63, .47), vec3(.24, .6, .94), min(uChapter, 1.0));
     vec3 amber = mix(vec3(.67, .65, .8), vec3(.92, .38, .75), min(uChapter, 1.0));
     float warmth = smoothstep(.58, .95, s.w + sin(uTime * .12 + s.x * 6.0) * .12);

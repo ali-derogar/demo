@@ -259,6 +259,8 @@ export function Stage({ progressRef, workRef }: { progressRef: RefObject<ScenePr
       const work = workRef.current;
       workBlend += ((reduced ? 0 : timeline?.workBlend ?? 0) - workBlend) * ease;
       panelMix += ((timeline?.overlay ? 1 : 0) - panelMix) * ease;
+      const fov = 34 + workBlend * 20;
+      if (Math.abs(camera.fov - fov) > .01) { camera.fov = fov; camera.updateProjectionMatrix(); }
       const position = reduced ? 0 : MathUtils.clamp(chapter + panelMix * (timeline?.overlay === 'contact' ? 2 : 1), 0, 3);
       if (work && !reduced && ((timeline?.progress ?? 0) > .12 || workBlend > .001)) orbit.advance(work, dt);
       const intro = reduced ? 1 : MathUtils.smoothstep(elapsed, 0, 2.6);
@@ -271,7 +273,7 @@ export function Stage({ progressRef, workRef }: { progressRef: RefObject<ScenePr
         eye.lerp(nextEye, workBlend);
         aim.lerp(nextAim, workBlend);
       }
-      camera.position.lerp(eye, firstFrame || reduced ? 1 : ease);
+      camera.position.lerp(eye, firstFrame || reduced ? 1 : workBlend > .95 ? 1 - Math.exp(-dt * 14) : ease);
       camera.lookAt(aim);
       camera.rotateZ(-.025 * workBlend * (1 - (work?.selection ?? 0)));
       camera.updateMatrixWorld();
@@ -355,7 +357,7 @@ export function Stage({ progressRef, workRef }: { progressRef: RefObject<ScenePr
         flowPass.uniforms.uTime.value = elapsed;
         burst *= Math.exp(-dt * 8);
       }
-      if (backdrop && workBlend > .02 && (!lowPower || captureFrame++ % 2 === 0)) {
+      if (backdrop && workBlend > .02 && (work?.selection ?? 0) < .98 && (!lowPower || captureFrame++ % 2 === 0)) {
         const visible = orbit.group.visible;
         orbit.group.visible = false;
         renderer.setRenderTarget(backdrop); renderer.clear(); renderer.render(scene, camera); renderer.setRenderTarget(null);

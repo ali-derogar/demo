@@ -185,3 +185,22 @@ test('mobile fallback and reduced motion keep two-step selection, Enter, scroll 
   await env.action(() => env.w.scrollTo({ top: env.scroll + 40 }));
   assert.equal(env.q('.im-work-track').dataset.selected, 'false');
 });
+
+test('desktop categories stay visible, and selection exposes the real project preview and details', async (t) => {
+  const env = await app(t, { hash: '#demos', width: 1440, height: 900, reduced: true });
+  const filters = env.q('.im-orbit__filters');
+  assert.equal(filters.dataset.persistent, 'true'); assert.equal(filters.open, true);
+  await env.action(() => env.q('.im-orbit__stage').dispatchEvent(new Event('pointerdown', { bubbles: true })));
+  assert.equal(filters.open, true, 'outside clicks do not collapse the desktop list');
+  await env.action(() => env.q('.im-orbit__captions li:not([hidden]) a').click());
+  const preview = env.q('.im-orbit__detail-image');
+  assert.equal(preview.getAttribute('href'), '/demos/fashion/');
+  assert.equal(preview.querySelector('img').getAttribute('src'), '/images/previews/fashion.webp');
+  assert.ok(env.q('.im-orbit__detail-highlights').textContent.length > 0);
+  let click;
+  await env.action(() => { click = new MouseEvent('click', { bubbles: true, cancelable: true, button: 0 }); preview.dispatchEvent(click); });
+  assert.equal(click.defaultPrevented, false);
+  await env.action(() => env.w.document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true })));
+  assert.equal(env.q('.im-work-track').dataset.selected, 'false'); assert.equal(filters.hidden, false); assert.equal(filters.open, true);
+  assert.ok(env.q('.im-nav__links .im-sound-control'), 'the audio control belongs to the reference-style navigation');
+});
