@@ -1,7 +1,7 @@
 import { useEffect, type RefObject } from 'react';
 
 export function closeGalleryMenu(menu: HTMLDetailsElement | null, restoreFocus = true) {
-  if (!menu?.open) return;
+  if (!menu?.open || menu.dataset.persistent === 'true') return;
   menu.open = false;
   if (restoreFocus) menu.querySelector('summary')?.focus({ preventScroll: true });
 }
@@ -16,7 +16,7 @@ export function useGalleryMenus(container: RefObject<HTMLElement>) {
     };
     const onKey = (event: KeyboardEvent) => {
       if (event.key !== 'Escape' || document.querySelector('dialog[open]')) return;
-      const menu = menus.find((item) => item.open);
+      const menu = menus.find((item) => item.open && item.dataset.persistent !== 'true');
       if (menu) { event.preventDefault(); closeGalleryMenu(menu); }
     };
     const onToggle = (event: Event) => {

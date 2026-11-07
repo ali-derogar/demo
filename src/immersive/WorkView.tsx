@@ -1,11 +1,13 @@
 import { useCallback, useEffect, useMemo, useRef, useState, type MutableRefObject, type MouseEvent as ReactMouseEvent, type PointerEvent as ReactPointerEvent } from 'react';
-import { useReducedMotionPreference } from '../lib/useMedia';
+import { AnimatePresence } from 'motion/react';
+import { useMediaQuery, useReducedMotionPreference } from '../lib/useMedia';
 import { faDigit } from '../lib/fa';
 import { getLenis } from '../lib/useSmoothScroll';
 import { subscribeRaf } from '../lib/raf';
 import { projects, categories, type DemoCategory } from '../data/projects';
 import { clampProject, projectFromScroll, releaseProject, scrollForProject, type OrbitMotion } from './orbit';
 import { closeGalleryMenu, useGalleryMenus } from './useGalleryMenus';
+import { ProjectPreview } from './ProjectPreview';
 import '../styles/orbit.css';
 
 export function WorkView({ motionRef }: { motionRef: MutableRefObject<OrbitMotion> }) {
@@ -14,6 +16,7 @@ export function WorkView({ motionRef }: { motionRef: MutableRefObject<OrbitMotio
   const [selected, setSelected] = useState<number | null>(null);
   const [failedPreview, setFailedPreview] = useState<string | null>(null);
   const reduced = useReducedMotionPreference();
+  const desktop = useMediaQuery('(min-width: 1024px) and (min-height: 700px)');
   const shown = useMemo(() => filter === 'all' ? projects : projects.filter((project) => project.category === filter), [filter]);
   const trackRef = useRef<HTMLDivElement>(null);
   const stickyRef = useRef<HTMLDivElement>(null);
@@ -24,6 +27,9 @@ export function WorkView({ motionRef }: { motionRef: MutableRefObject<OrbitMotio
   const linksRef = useRef<(HTMLAnchorElement | null)[]>([]);
   const metricsRef = useRef({ start: 0, travel: 1 });
   const dragRef = useRef({ id: -1, x: 0, y: 0, start: 0, lastX: 0, lastTime: 0, speed: 0 });
+  const selectedProject = selected === null ? null : shown[selected];
+
+  useEffect(() => { if (filtersRef.current) filtersRef.current.open = desktop; }, [desktop]);
 
   const clearSelection = useCallback(() => {
     motionRef.current.selectedIndex = null;
@@ -71,12 +77,14 @@ export function WorkView({ motionRef }: { motionRef: MutableRefObject<OrbitMotio
     let lastY = -1;
     let current = 0;
     let wasReady = false;
+    let hadLabels = false;
     const unsubscribe = reduced ? () => {} : subscribeRaf(() => {
       const state = motionRef.current;
       const y = window.scrollY;
       const { start, travel } = metricsRef.current;
       state.interactive = y >= start - window.innerHeight * .2 && y <= start + travel + window.innerHeight * .4;
       if (region && state.ready !== wasReady) { region.dataset.ready = String(state.ready); wasReady = state.ready; }
+      if (region && !!state.labelsReady !== hadLabels) { region.dataset.labels = String(!!state.labelsReady); hadLabels = !!state.labelsReady; }
       if (y !== lastY && !state.dragging) {
         const { start, travel } = metricsRef.current;
         state.target = projectFromScroll(y, start, travel, shown.length);
@@ -203,8 +211,8 @@ export function WorkView({ motionRef }: { motionRef: MutableRefObject<OrbitMotio
     <div className="im-work-track" ref={trackRef} data-selected={selected !== null} style={{ ['--orbit-steps' as string]: shown.length - 1 }}>
       <div className="im-work im-shell im-work--orbit" ref={stickyRef}>
         <header className="im-orbit__head"><h2 id="im-work-title">نمونه‌کارها</h2><span dir="ltr">SELECTED WORK / {String(shown.length).padStart(2, '0')}</span></header>
-        <details className="im-orbit__filters" ref={filtersRef} hidden={selected !== null}>
-          <summary data-cursor="link">دسته‌بندی<span aria-hidden="true">+</span></summary>
+        <details className="im-orbit__filters" ref={filtersRef} hidden={selected !== null} data-persistent={desktop}>
+          <summary data-cursor="link" tabIndex={desktop ? -1 : undefined} onClick={(event) => { if (desktop) event.preventDefault(); }}>چه کاری را می‌خواهید ببینید؟<span aria-hidden="true">+</span></summary>
           <div className="im-orbit__filter-options" role="group" aria-label="دسته‌بندی نمونه‌کارها">
             {categories.map((category) => <button key={category.value} type="button" className="im-filter" aria-pressed={filter === category.value} onClick={() => changeFilter(category.value)} data-cursor="link">{category.label}</button>)}
           </div>
@@ -229,12 +237,16 @@ export function WorkView({ motionRef }: { motionRef: MutableRefObject<OrbitMotio
           </a></div>
           <span className="im-orbit__axis" aria-hidden="true">+</span>
         </div>
+        <AnimatePresence>
+          {selectedProject && <ProjectPreview key={selectedProject.id} project={selectedProject} reduced={reduced} onDismiss={() => { motionRef.current.blockClickUntil = performance.now() + 350; clearSelection(); }} />}
+        </AnimatePresence>
         <ul className="im-orbit__captions">
           {shown.map((project, index) => (
             <li key={project.id} hidden={index !== active} role="group" aria-roledescription="اسلاید" aria-label={faDigit(index + 1) + ' از ' + faDigit(shown.length)}>
               <div className="im-orbit__project-meta"><span style={{ color: project.accent }}>{project.categoryLabel}</span><span dir="ltr">PROJECT / {String(projects.indexOf(project) + 1).padStart(2, '0')}</span></div>
               <a ref={(element) => { linksRef.current[index] = element; }} href={project.url} target="_blank" rel="noopener noreferrer" className="im-orbit__project-link" data-cursor="cta" onClick={(event) => activate(index, event)} aria-current={selected === index ? 'true' : undefined}><h3>{project.title.split('؛')[0]}</h3><span>{selected === index ? 'ورود به تجربه' : 'انتخاب پروژه'} <span aria-hidden="true">↖</span></span></a>
               <p>{project.tagline}</p>
+              {selected === index && <ul className="im-orbit__detail-highlights">{project.highlights.slice(0, 2).map((highlight) => <li key={highlight}>{highlight}</li>)}</ul>}
             </li>
           ))}
         </ul>

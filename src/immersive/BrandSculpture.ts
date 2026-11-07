@@ -1,15 +1,18 @@
 import {
-  CatmullRomCurve3, CylinderGeometry, ExtrudeGeometry, Group, Mesh,
+  CatmullRomCurve3, CylinderGeometry, DoubleSide, ExtrudeGeometry, Group, Mesh,
   MeshBasicMaterial, MeshPhysicalMaterial, Path, Shape, SphereGeometry,
   TorusGeometry, TubeGeometry, Vector3, type BufferGeometry, type Material,
 } from 'three';
+import { ribbonGeometry } from './ribbonGeometry';
 
 /** The existing robot mark, modelled as a chrome medallion rather than AT's logo. */
 export function createBrandSculpture() {
   const group = new Group();
   const chrome = new MeshPhysicalMaterial({
-    color: 0xaadacb, metalness: .94, roughness: .17,
+    color: 0xd3d4dc, metalness: .96, roughness: .14,
     clearcoat: 1, clearcoatRoughness: .12, envMapIntensity: 1.7,
+    iridescence: .75, iridescenceThicknessRange: [130, 460],
+    side: DoubleSide,
   });
   const light = new MeshBasicMaterial({ color: 0x84e5bd, transparent: true, opacity: .5, toneMapped: false });
   const geometries = new Set<BufferGeometry>();
@@ -58,6 +61,13 @@ export function createBrandSculpture() {
   leftEar.position.set(-.68, -.01, .065);
   const rightEar = add(new CylinderGeometry(.025, .025, .19, 10));
   rightEar.position.set(.68, -.01, .065);
+  for (const side of [-1, 1]) {
+    add(ribbonGeometry((t) => new Vector3(
+      side * Math.cos(t * Math.PI) * (.96 + t * .12),
+      -.36 - t * 6.8,
+      side * Math.sin(t * Math.PI) * .65,
+    ), (t) => .035 + Math.sin(t * Math.PI) * .018, (t) => side * (t * Math.PI * 1.3 - .3), 120));
+  }
   return {
     group,
     dispose() { geometries.forEach((geometry) => geometry.dispose()); materials.forEach((material) => material.dispose()); },

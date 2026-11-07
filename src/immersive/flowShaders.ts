@@ -7,6 +7,33 @@ export const fullscreenVertex = /* glsl */ `
   }
 `;
 
+export const atmosphereVertex = /* glsl */ `
+  varying vec2 vUv;
+  void main() { vUv = uv; gl_Position = vec4(position.xy, .999, 1.0); }
+`;
+export const atmosphereFragment = /* glsl */ `
+  uniform float uTime;
+  uniform float uWork;
+  uniform float uPanel;
+  uniform float uEncodeOutput;
+  varying vec2 vUv;
+  void main() {
+    vec2 p = vUv * 2.0 - 1.0;
+    vec2 green = p - vec2(.9 + sin(uTime * .035) * .15, .8);
+    vec2 violet = p - vec2(-.8, -.75);
+    vec2 blue = p - vec2(.85, -.9);
+    vec3 color = vec3(.003, .005, .007);
+    color += vec3(.014, .055, .052) * exp(-dot(green, green) * .65);
+    color += mix(vec3(.028, .016, .065), vec3(.055, .018, .075), uWork) * exp(-dot(violet, violet) * .8);
+    color += vec3(.012, .032, .055) * exp(-dot(blue, blue) * 1.1);
+    color *= 1.0 - uPanel * .24;
+    float grain = fract(sin(dot(gl_FragCoord.xy, vec2(12.9898, 78.233))) * 43758.5453);
+    color += (grain - .5) * .003;
+    if (uEncodeOutput > .5) color = pow(max(color, .0), vec3(1.0 / 2.2));
+    gl_FragColor = vec4(color, 1.0);
+  }
+`;
+
 export const shapeField = /* glsl */ `
   const float TAU = 6.28318530718;
   float hash21(vec2 p) {
@@ -44,14 +71,17 @@ export const shapeField = /* glsl */ `
     portal.xy += across * vec2(cos(twist), sin(twist)) * .12;
     portal.z += across * sin(twist) * .16;
     portal += (s.z - .5) * .055;
+    vec3 drift = vec3((s.x - .5) * 13.0, (s.y - .5) * 12.0 - 1.0, (s.w - .5) * 9.0);
+    drift += currentField(drift * .3, t * .13) * .25;
+    portal = mix(portal, drift, step(.64, s.z));
 
     float spiral = phase + across * 3.5;
+    float petal = 1.6 + s.z * .7 + sin(across * 27.0 + phase * .5) * .55;
     vec3 vortex = vec3(
-      cos(spiral) * (1.9 + s.z * .5),
-      across * 4.5,
-      sin(spiral) * (1.9 + s.z * .5)
+      cos(spiral) * petal,
+      across * 6.8 - 3.5,
+      sin(spiral) * petal
     );
-    vortex.xy = turn(-.35) * vortex.xy;
     float latitude = across * .9;
     float radius = sqrt(max(.01, 1.0 - latitude * latitude)) * 2.8;
     vec3 orbit = vec3(cos(phase) * radius, latitude * 2.8, sin(phase) * radius);
@@ -134,11 +164,11 @@ export const particleVertex = /* glsl */ `
     vec4 mv = modelViewMatrix * vec4(p, 1.0);
     gl_Position = projectionMatrix * mv;
     gl_PointSize = clamp((1.45 + s.z * 1.8) * uDpr * 10.0 / max(1.0, -mv.z), 1.0, 6.0);
-    vec3 silver = vec3(.28, .82, .58);
-    vec3 amber = vec3(.6, .56, .92);
+    vec3 silver = mix(vec3(.54, .63, .47), vec3(.24, .6, .94), min(uChapter, 1.0));
+    vec3 amber = mix(vec3(.67, .65, .8), vec3(.92, .38, .75), min(uChapter, 1.0));
     float warmth = smoothstep(.58, .95, s.w + sin(uTime * .12 + s.x * 6.0) * .12);
     vColor = mix(silver, amber, warmth) * (1.1 + s.z * .7);
-    vAlpha = (.4 + s.y * .6) * uReveal * exp(-max(-mv.z - 10.0, 0.0) * .035);
+    vAlpha = (.2 + s.y * .6) * uReveal * exp(-max(-mv.z - 10.0, 0.0) * .035);
   }
 `;
 

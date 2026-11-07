@@ -67,7 +67,7 @@ export function ImmersiveApp() {
       const phase = Math.min(1, Math.max(0, y / Math.max(1, workTop)));
       hero?.style.setProperty('--home-exit', Math.min(1, blend * 1.5).toFixed(4));
       progressRef.current.workBlend = blend;
-      progressRef.current.position = blend;
+      progressRef.current.position = phase;
       progressRef.current.progress = phase;
       const chapter = blend > .55 ? 'work' : 'home';
       progressRef.current.chapter = chapter;

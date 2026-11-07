@@ -3,7 +3,7 @@ import {
   ACESFilmicToneMapping, AdditiveBlending, BufferGeometry,
   Color, DataTexture, DirectionalLight, Float32BufferAttribute, Group,
   HalfFloatType, HemisphereLight, LinearFilter, MathUtils,
-  PerspectiveCamera, Plane, PMREMGenerator,
+  Mesh, PerspectiveCamera, Plane, PlaneGeometry, PMREMGenerator,
   Points, RGBAFormat, Raycaster, Scene, ShaderMaterial, SRGBColorSpace,
   Vector2, Vector3, Vector4, WebGLRenderer, WebGLRenderTarget,
 } from 'three';
@@ -17,6 +17,7 @@ import { FullScreenQuad } from 'three/addons/postprocessing/Pass.js';
 import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
 import { createWorkOrbit } from './WorkOrbit';
 import { createBrandSculpture } from './BrandSculpture';
+import { createWorkSculpture } from './WorkSculpture';
 import { FrameQuality } from './frameQuality';
 import type { OrbitMotion } from './orbit';
 import { getPointer, subscribeRaf } from '../lib/raf';
@@ -26,6 +27,7 @@ import type { SceneProgress } from './types';
 import {
   fluidStep, flowComposite, fullscreenVertex, particleFragment,
   particleVertex, positionStep, velocityStep,
+  atmosphereFragment, atmosphereVertex,
 } from './flowShaders';
 
 /** Stateful GPU particles, advected pointer wakes, bloom and scroll morphing. */
@@ -104,6 +106,15 @@ export function Stage({ progressRef, workRef }: { progressRef: RefObject<ScenePr
     world.add(particles);
 
     const canFloat = renderer.extensions.has('EXT_color_buffer_float');
+    const atmosphereGeometry = new PlaneGeometry(2, 2);
+    const atmosphereUniforms = { uTime: { value: 0 }, uWork: { value: 0 }, uPanel: { value: 0 }, uEncodeOutput: { value: canFloat ? 0 : 1 } };
+    const atmosphereMaterial = new ShaderMaterial({
+      uniforms: atmosphereUniforms, vertexShader: atmosphereVertex, fragmentShader: atmosphereFragment,
+      depthTest: false, depthWrite: false, toneMapped: false,
+    });
+    const atmosphere = new Mesh(atmosphereGeometry, atmosphereMaterial);
+    atmosphere.frustumCulled = false; atmosphere.renderOrder = -1000;
+    scene.add(atmosphere);
     let gpu: GPUComputationRenderer | null = null;
     let velocityVariable: ReturnType<GPUComputationRenderer['addVariable']> | null = null;
     let positionVariable: ReturnType<GPUComputationRenderer['addVariable']> | null = null;
@@ -143,8 +154,12 @@ export function Stage({ progressRef, workRef }: { progressRef: RefObject<ScenePr
     const brand = createBrandSculpture();
     const signature = brand.group;
     world.add(signature);
-    const orbit = createWorkOrbit(renderer, canFloat);
+    const orbit = createWorkOrbit(renderer, canFloat, lowPower);
     scene.add(orbit.group);
+    const sculpture = createWorkSculpture(lowPower);
+    scene.add(sculpture.group);
+    let backdrop: WebGLRenderTarget | null = canFloat ? new WebGLRenderTarget(1, 1, { minFilter: LinearFilter, magFilter: LinearFilter }) : null;
+    let captureFrame = 0;
     let environment: WebGLRenderTarget | null = null;
     if (canFloat) {
       const room = new RoomEnvironment();
@@ -249,8 +264,8 @@ export function Stage({ progressRef, workRef }: { progressRef: RefObject<ScenePr
       const intro = reduced ? 1 : MathUtils.smoothstep(elapsed, 0, 2.6);
       const input = getPointer();
       const active = !reduced && !lowPower && !timeline?.overlay && input.active;
-      eye.set(active ? input.nx * .18 : 0, .1 + (active ? input.ny * .1 : 0), (compact ? 16.4 : 12.4) + (1 - intro) * 2.5);
-      aim.set(0, .1, 0);
+      eye.set(active ? input.nx * .18 : 0, .1 - chapter * .45 + (active ? input.ny * .1 : 0), (compact ? 16.4 : 12.4) - chapter * 1.2 + (1 - intro) * 2.5);
+      aim.set(0, .1 - chapter * .6, 0);
       if (work && workBlend > .001) {
         orbit.cameraPose(work, camera.aspect, camera.fov, nextEye, nextAim);
         eye.lerp(nextEye, workBlend);
@@ -260,8 +275,8 @@ export function Stage({ progressRef, workRef }: { progressRef: RefObject<ScenePr
       camera.lookAt(aim);
       camera.rotateZ(-.025 * workBlend * (1 - (work?.selection ?? 0)));
       camera.updateMatrixWorld();
-      world.position.set(nextAim.x * workBlend * .2, .6 * (1 - workBlend) + nextAim.y * workBlend, -3 * workBlend);
-      world.rotation.y = reduced ? -.08 : Math.sin(elapsed * .14) * .08 + (1 - intro) * .45;
+      world.position.set(nextAim.x * panelMix * workBlend, .6 * (1 - workBlend) + nextAim.y * panelMix * workBlend, (nextAim.z - 3) * panelMix * workBlend);
+      world.rotation.y = reduced ? -.08 : Math.sin(elapsed * .14) * .08 + (1 - intro) * .45 + chapter * .6 * (1 - workBlend);
       world.rotation.z = reduced ? 0 : Math.sin(elapsed * .19) * .025;
       world.updateMatrixWorld(true);
       if (work && !reduced) orbit.update(
@@ -270,6 +285,12 @@ export function Stage({ progressRef, workRef }: { progressRef: RefObject<ScenePr
         workBlend > .95 && work.interactive && !timeline?.overlay,
       );
       if (bloom) bloom.strength = .6 * (1 - workBlend) + .12 * workBlend;
+      sculpture.material.opacity = .88 * workBlend * (1 - panelMix * .8) * (1 - (work?.selection ?? 0) * .88);
+      sculpture.group.visible = sculpture.material.opacity > .005;
+      sculpture.group.rotation.y = reduced ? 0 : elapsed * .06;
+      atmosphereUniforms.uTime.value = elapsed;
+      atmosphereUniforms.uWork.value = workBlend;
+      atmosphereUniforms.uPanel.value = panelMix;
 
       previousUv.copy(pointerUv);
       if (active) pointerUv.set(input.x / Math.max(1, wrap.clientWidth), 1 - input.y / Math.max(1, wrap.clientHeight));
@@ -313,7 +334,7 @@ export function Stage({ progressRef, workRef }: { progressRef: RefObject<ScenePr
       }
       particleUniforms.uTime.value = elapsed;
       particleUniforms.uChapter.value = position;
-      particleUniforms.uReveal.value = (reduced ? 1 : MathUtils.smoothstep(elapsed, .05, 1.3)) * (1 - workBlend * .84) * (1 - panelMix * .3);
+      particleUniforms.uReveal.value = (reduced ? .25 : MathUtils.smoothstep(elapsed, .05, 2.2)) * (.24 + workBlend * .64) * (1 - panelMix * .3) * (1 - (work?.selection ?? 0) * .86);
       signature.rotation.y = reduced ? -.15 : Math.sin(elapsed * .45) * .35;
       signature.rotation.z = reduced ? 0 : Math.sin(elapsed * .28) * .06;
       signature.position.y = reduced ? 0 : Math.sin(elapsed * .6) * .1;
@@ -334,6 +355,13 @@ export function Stage({ progressRef, workRef }: { progressRef: RefObject<ScenePr
         flowPass.uniforms.uTime.value = elapsed;
         burst *= Math.exp(-dt * 8);
       }
+      if (backdrop && workBlend > .02 && (!lowPower || captureFrame++ % 2 === 0)) {
+        const visible = orbit.group.visible;
+        orbit.group.visible = false;
+        renderer.setRenderTarget(backdrop); renderer.clear(); renderer.render(scene, camera); renderer.setRenderTarget(null);
+        orbit.group.visible = visible;
+        orbit.setBackdrop(backdrop.texture);
+      }
       if (composer) composer.render(dt);
       else renderer.render(scene, camera);
       if (firstFrame) { firstFrame = false; setStatus('ready'); }
@@ -346,6 +374,7 @@ export function Stage({ progressRef, workRef }: { progressRef: RefObject<ScenePr
           renderer.setPixelRatio(dpr);
           composer?.setPixelRatio(dpr);
           particleUniforms.uDpr.value = dpr;
+          orbit.resize(wrap.clientWidth, wrap.clientHeight, dpr);
           if (bloom) { composer?.removePass(bloom); bloom.dispose(); bloom = null; }
           if (lowPower || level === 2) {
             if (flowPass) { composer?.removePass(flowPass); flowPass.dispose(); flowPass = null; }
@@ -353,6 +382,7 @@ export function Stage({ progressRef, workRef }: { progressRef: RefObject<ScenePr
             fluidMaterial?.dispose(); fluidMaterial = null;
             flowRead?.dispose(); flowRead = null;
             flowWrite?.dispose(); flowWrite = null;
+            backdrop?.dispose(); backdrop = null; orbit.clearBackdrop();
           }
         }
       }
@@ -368,6 +398,8 @@ export function Stage({ progressRef, workRef }: { progressRef: RefObject<ScenePr
       composer?.setSize(width, height);
       camera.aspect = width / height;
       camera.updateProjectionMatrix();
+      orbit.resize(width, height, dpr);
+      backdrop?.setSize(Math.max(1, Math.floor(width * (lowPower ? .35 : .5))), Math.max(1, Math.floor(height * (lowPower ? .35 : .5))));
       fluidUniforms.uAspect.value = width / height;
       if (reduced) renderFrame(0, 16);
     };
@@ -402,7 +434,8 @@ export function Stage({ progressRef, workRef }: { progressRef: RefObject<ScenePr
       canvas.removeEventListener('webglcontextlost', onContextLost);
       gpu?.dispose();
       geometry.dispose(); particleMaterial.dispose();
-      brand.dispose(); orbit.dispose(); environment?.dispose(); emptyTexture.dispose();
+      brand.dispose(); sculpture.dispose(); orbit.dispose(); environment?.dispose(); emptyTexture.dispose(); backdrop?.dispose();
+      atmosphereGeometry.dispose(); atmosphereMaterial.dispose();
       if (workRef.current) workRef.current.ready = false;
       flowRead?.dispose(); flowWrite?.dispose();
       fluidQuad?.dispose(); fluidMaterial?.dispose();

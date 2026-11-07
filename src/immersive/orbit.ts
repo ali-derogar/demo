@@ -7,27 +7,29 @@ export interface OrbitMotion {
   dragging: boolean;
   blockClickUntil: number;
   ready: boolean;
+  labelsReady?: boolean;
   interactive: boolean;
   selectedIndex: number | null;
   selection: number;
   onPick?: (index: number) => void;
 }
 
-export const ORBIT_RADIUS = 6.6;
-export const ORBIT_PITCH = 1.05;
-export const ORBIT_CARD_WIDTH = 4.5;
+export const ORBIT_RADIUS = 3.8;
+export const ORBIT_PITCH = .84;
+export const ORBIT_CARD_WIDTH = 5.4;
 export const ORBIT_CARD_HEIGHT = 3;
+export const ORBIT_CURVE_RADIUS = 12;
 
 export function clampProject(position: number, count: number): number {
   return Math.max(0, Math.min(Math.max(0, count - 1), position));
 }
 
 /** Logical project order is a helix; camera travel follows the same curve. */
-export function orbitPose(position: number, count: number) {
-  const angle = position * (Math.PI * 2 / Math.max(count, 5));
+export function orbitPose(position: number, count: number, portrait = false) {
+  const angle = position * Math.PI / 180 * (portrait ? 35 : 50);
   return {
     x: Math.sin(angle) * ORBIT_RADIUS,
-    y: -position * ORBIT_PITCH,
+    y: -position * (portrait ? 1.12 : ORBIT_PITCH) * Math.min(7, Math.max(1, count)) / 7,
     z: Math.cos(angle) * ORBIT_RADIUS,
     angle,
   };
