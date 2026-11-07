@@ -43,6 +43,7 @@ export function ImmersiveApp() {
   useEffect(() => {
     const main = mainRef.current;
     if (!main) return;
+    const hero = main.querySelector<HTMLElement>('.im-home');
     let bounds: number[] = [];
     let lastY = -1;
     let current: ViewId = 'home';
@@ -61,6 +62,9 @@ export function ImmersiveApp() {
       const y = Math.max(0, window.scrollY);
       if (y === lastY) return;
       lastY = y;
+      const heroTravel = Math.max(1, bounds[1] - window.innerHeight);
+      const exit = Math.min(1, y / heroTravel);
+      hero?.style.setProperty('--home-exit', exit.toFixed(4));
       let index = 0;
       while (index < bounds.length - 1 && y >= bounds[index + 1]) index++;
       const end = bounds[index + 1] ?? Math.max(bounds[index] + 1, main.scrollHeight - window.innerHeight);

@@ -20,7 +20,7 @@ export function HomeView() {
         <a href="#demos" className="im-scroll-cue" data-cursor="link"><span className="im-scroll-cue__line" aria-hidden="true" /><span>برای کشف بیشتر، اسکرول کنید</span><span aria-hidden="true">↓</span></a>
         <span className="im-home__coordinates" dir="ltr" aria-hidden="true"><span>01 / 04</span><i /><span>CODE MEETS EXPERIENCE</span></span>
       </div>
-      <div className="im-scene-caption" aria-hidden="true"><span className="im-scene-caption__cross">+</span><span dir="ltr">FORM / SPACE / LOGIC</span><span>منطق، شکل می‌گیرد.</span></div>
+      <div className="im-scene-caption" aria-hidden="true"><span className="im-scene-caption__cross">+</span><span dir="ltr">FORM IN MOTION</span><span>با حرکت نشانگر، فضا را تغییر دهید.</span></div>
     </div>
   );
 }
