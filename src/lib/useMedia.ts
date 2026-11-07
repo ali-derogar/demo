@@ -16,3 +16,8 @@ export function useMediaQuery(query: string): boolean {
 
   return matches;
 }
+
+/** Updates live when the OS/browser motion preference changes. */
+export function useReducedMotionPreference(): boolean {
+  return useMediaQuery('(prefers-reduced-motion: reduce)');
+}

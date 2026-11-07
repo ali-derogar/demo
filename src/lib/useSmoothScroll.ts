@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import Lenis from 'lenis';
-import { useReducedMotion } from 'motion/react';
+import { useReducedMotionPreference } from './useMedia';
 import { subscribeRaf } from './raf';
 
 let instance: Lenis | null = null;
@@ -20,13 +20,17 @@ export function scrollToSection(element: HTMLElement): void {
 }
 
 /** Native touch scrolling; wheel smoothing and anchors share the scene's RAF. */
-export function useSmoothScroll(): void {
-  const reduced = useReducedMotion();
+export function useSmoothScroll(handleAnchors = true): void {
+  const reduced = useReducedMotionPreference();
   useEffect(() => {
     const smoothWheel = !reduced && window.matchMedia('(hover: hover) and (pointer: fine)').matches;
     const lenis = smoothWheel ? new Lenis({ autoRaf: false, duration: 1.05, smoothWheel: true, syncTouch: false }) : null;
     instance = lenis;
+    if (document.querySelector('.im-info-panel[open]')) lenis?.stop();
     const unsubscribe = lenis ? subscribeRaf((time) => lenis.raf(time)) : () => {};
+    if (!handleAnchors) {
+      return () => { unsubscribe(); lenis?.destroy(); instance = null; };
+    }
     const previousRestoration = history.scrollRestoration;
     history.scrollRestoration = 'manual';
 
@@ -83,5 +87,5 @@ export function useSmoothScroll(): void {
       lenis?.destroy();
       instance = null;
     };
-  }, [reduced]);
+  }, [reduced, handleAnchors]);
 }

@@ -11,6 +11,7 @@ export function AboutView() {
       </header>
       <div className="im-about__cols">
         <div className="im-about__narrative">
+          <p className="im-about__manifesto">کدِ تمیز، ظاهرِ زنده.</p>
           {profile.summary.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
           <div className="im-about__stats">
             <div className="im-stat"><b dir="ltr">{experienceStat.prefix}{faDigit(experienceStat.value)}</b><span>{experienceStat.label}</span></div>

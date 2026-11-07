@@ -32,17 +32,18 @@ export const shapeField = /* glsl */ `
     float phase = s.x * TAU + t * (.28 + s.w * .06);
     float cs = cos(phase);
     float sn = sin(phase);
-    // Rounded architectural loops, twisted into two continuously flowing ribbons.
+    // Two living strands emerge beneath the medallion and weave downward.
+    float side = lane * 2.0 - 1.0;
     vec3 portal = vec3(
-      sign(cs) * pow(abs(cs), .68) * 2.05,
-      sign(sn) * pow(abs(sn), .68) * 2.5,
-      sin(phase * 2.0 + t * .28 + lane * 2.8) * .85
+      side * (.45 + .8 * cs) + sn * .6,
+      -1.15 - (1.0 - cs) * 2.2,
+      side * sn * .65 + cos(phase * 2.0 + t * .25) * .18
     );
-    float twist = phase * 2.0 - t * .62 + lane * 3.14;
-    portal.xy += across * vec2(cos(twist), sin(twist)) * .42;
-    portal.z += across * sin(twist) * .48;
-    portal.xy = turn((lane - .5) * .64 + sin(t * .22) * .12) * portal.xy;
-    portal += (s.z - .5) * .12;
+    float twist = phase * 3.0 - t * .45 + lane * 3.14;
+    portal.x += sin(phase * 2.0 + t * .32) * .18;
+    portal.xy += across * vec2(cos(twist), sin(twist)) * .12;
+    portal.z += across * sin(twist) * .16;
+    portal += (s.z - .5) * .055;
 
     float spiral = phase + across * 3.5;
     vec3 vortex = vec3(
@@ -133,8 +134,8 @@ export const particleVertex = /* glsl */ `
     vec4 mv = modelViewMatrix * vec4(p, 1.0);
     gl_Position = projectionMatrix * mv;
     gl_PointSize = clamp((1.45 + s.z * 1.8) * uDpr * 10.0 / max(1.0, -mv.z), 1.0, 6.0);
-    vec3 silver = vec3(.58, .77, .84);
-    vec3 amber = vec3(1.0, .64, .29);
+    vec3 silver = vec3(.28, .82, .58);
+    vec3 amber = vec3(.6, .56, .92);
     float warmth = smoothstep(.58, .95, s.w + sin(uTime * .12 + s.x * 6.0) * .12);
     vColor = mix(silver, amber, warmth) * (1.1 + s.z * .7);
     vAlpha = (.4 + s.y * .6) * uReveal * exp(-max(-mv.z - 10.0, 0.0) * .035);
@@ -206,7 +207,7 @@ export const flowComposite = /* glsl */ `
     color.r = texture2D(tDiffuse, clamp(uv + displacement * .18, .001, .999)).r;
     color.b = texture2D(tDiffuse, clamp(uv - displacement * .18, .001, .999)).b;
     float mist = sin(vUv.x * 17.0 + vUv.y * 11.0 + uTime * .65 + field.z * 4.0) * .5 + .5;
-    color += mix(vec3(.16, .29, .34), vec3(.5, .28, .1), mist) * field.z * .07 * uStrength;
+    color += mix(vec3(.08, .3, .18), vec3(.23, .14, .36), mist) * field.z * .07 * uStrength;
     float vignette = 1.0 - smoothstep(.3, .85, length((vUv - .5) * vec2(.9, 1.0))) * .35;
     gl_FragColor = vec4(color * vignette, 1.0);
   }

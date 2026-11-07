@@ -1,10 +1,9 @@
 import { useEffect, useRef, useState, type RefObject } from 'react';
-import { useReducedMotion } from 'motion/react';
 import {
-  ACESFilmicToneMapping, AdditiveBlending, BoxGeometry, BufferGeometry,
+  ACESFilmicToneMapping, AdditiveBlending, BufferGeometry,
   Color, DataTexture, DirectionalLight, Float32BufferAttribute, Group,
-  HalfFloatType, HemisphereLight, LinearFilter, MathUtils, Mesh,
-  MeshBasicMaterial, MeshStandardMaterial, PerspectiveCamera, Plane,
+  HalfFloatType, HemisphereLight, LinearFilter, MathUtils,
+  PerspectiveCamera, Plane, PMREMGenerator,
   Points, RGBAFormat, Raycaster, Scene, ShaderMaterial, SRGBColorSpace,
   Vector2, Vector3, Vector4, WebGLRenderer, WebGLRenderTarget,
 } from 'three';
@@ -15,26 +14,24 @@ import { ShaderPass } from 'three/addons/postprocessing/ShaderPass.js';
 import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
 import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
 import { FullScreenQuad } from 'three/addons/postprocessing/Pass.js';
+import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+import { createWorkOrbit } from './WorkOrbit';
+import { createBrandSculpture } from './BrandSculpture';
+import type { OrbitMotion } from './orbit';
 import { getPointer, subscribeRaf } from '../lib/raf';
-import { useMediaQuery } from '../lib/useMedia';
+import { useMediaQuery, useReducedMotionPreference } from '../lib/useMedia';
+import { BrandMark } from '../components/BrandMark';
 import type { SceneProgress } from './types';
 import {
   fluidStep, flowComposite, fullscreenVertex, particleFragment,
   particleVertex, positionStep, velocityStep,
 } from './flowShaders';
 
-const STOPS = [
-  { eye: [0.4, 0.9, 12.8], aim: [-0.3, 0.2, 0] },
-  { eye: [-1.4, 0.4, 10.5], aim: [-1.3, 0, -0.4] },
-  { eye: [1.2, 1.1, 12], aim: [-0.5, 0, 0] },
-  { eye: [-0.3, 0.7, 12.5], aim: [-0.5, 0.1, 0] },
-];
-
 /** Stateful GPU particles, advected pointer wakes, bloom and scroll morphing. */
-export function Stage({ progressRef }: { progressRef: RefObject<SceneProgress> }) {
+export function Stage({ progressRef, workRef }: { progressRef: RefObject<SceneProgress>; workRef: RefObject<OrbitMotion> }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const wrapRef = useRef<HTMLDivElement>(null);
-  const reduced = useReducedMotion();
+  const reduced = useReducedMotionPreference();
   const lowPower = useMediaQuery('(max-width: 767px), (pointer: coarse)');
   const [status, setStatus] = useState<'loading' | 'ready' | 'fallback'>('loading');
 
@@ -56,11 +53,11 @@ export function Stage({ progressRef }: { progressRef: RefObject<SceneProgress> }
     let dpr = Math.min(window.devicePixelRatio || 1, lowPower ? 1 : 1.5);
     renderer.setPixelRatio(dpr);
     const scene = new Scene();
-    scene.background = new Color(0x080b0d);
-    const camera = new PerspectiveCamera(43, 1, .1, 80);
+    scene.background = new Color(0x030606);
+    const camera = new PerspectiveCamera(34, 1, .1, 120);
     let compact = window.innerWidth < 768;
     const world = new Group();
-    world.position.set(compact ? -.55 : -2.55, compact ? 3.1 : .3, 0);
+    world.position.set(0, .6, 0);
     scene.add(world);
 
     const side = lowPower ? 96 : 192;
@@ -134,29 +131,25 @@ export function Stage({ progressRef }: { progressRef: RefObject<SceneProgress> }
       }
     }
 
-    // The original architectural identity becomes a small suspended signature
-    // inside the particle field rather than a mostly static foreground object.
-    const signature = new Group();
+    const brand = createBrandSculpture();
+    const signature = brand.group;
     world.add(signature);
-    const cube = new BoxGeometry(1, 1, 1);
-    const silver = new MeshStandardMaterial({ color: 0xabb9c0, metalness: .65, roughness: .22 });
-    const amber = new MeshBasicMaterial({ color: 0xf7c684, toneMapped: false });
-    function bar(w: number, h: number, x: number, y: number, material = silver as MeshStandardMaterial | MeshBasicMaterial) {
-      const mesh = new Mesh(cube, material);
-      mesh.scale.set(w, h, .16);
-      mesh.position.set(x, y, .1);
-      signature.add(mesh);
+    const orbit = createWorkOrbit(renderer, canFloat);
+    scene.add(orbit.group);
+    let environment: WebGLRenderTarget | null = null;
+    if (canFloat) {
+      const room = new RoomEnvironment();
+      const pmrem = new PMREMGenerator(renderer);
+      environment = pmrem.fromScene(room, .05);
+      scene.environment = environment.texture;
+      room.dispose();
+      pmrem.dispose();
     }
-    bar(.09, 1.45, -.58, 0);
-    bar(.09, 1.45, .58, 0);
-    bar(.43, .09, -.4, .72); bar(.43, .09, .4, -.72);
-    bar(.43, .09, -.4, -.72); bar(.43, .09, .4, .72);
-    bar(.035, .83, 0, 0, amber);
     scene.add(new HemisphereLight(0xc8e3ed, 0x12100d, 3));
     const key = new DirectionalLight(0xe7f1f8, 4);
     key.position.set(-2, 4, 6);
     scene.add(key);
-    const rim = new DirectionalLight(0xe2ac68, 3);
+    const rim = new DirectionalLight(0xa4c9ed, 3);
     rim.position.set(4, -2, 1);
     scene.add(rim);
 
@@ -207,6 +200,8 @@ export function Stage({ progressRef }: { progressRef: RefObject<SceneProgress> }
     let firstFrame = true;
     let elapsed = reduced ? 8 : 0;
     let chapter = progressRef.current?.position ?? 0;
+    let workBlend = reduced ? 0 : progressRef.current?.workBlend ?? 0;
+    let panelMix = 0;
     let energy = 0;
     let burst = 0;
     let pointerWasActive = false;
@@ -225,7 +220,7 @@ export function Stage({ progressRef }: { progressRef: RefObject<SceneProgress> }
     let pendingClick = false;
 
     const onPointerDown = (event: PointerEvent) => {
-      if (reduced) return;
+      if (reduced || progressRef.current?.overlay) return;
       clickUv.set(event.clientX / Math.max(1, window.innerWidth), 1 - event.clientY / Math.max(1, window.innerHeight));
       pendingClick = true;
     };
@@ -236,24 +231,36 @@ export function Stage({ progressRef }: { progressRef: RefObject<SceneProgress> }
       if (!reduced) elapsed += dt;
       const ease = 1 - Math.exp(-dt * 6);
       chapter += ((progressRef.current?.position ?? 0) - chapter) * ease;
-      const position = reduced ? 0 : MathUtils.clamp(chapter, 0, 3);
-      const index = Math.min(2, Math.floor(position));
-      const blend = MathUtils.smoothstep(position - index, 0, 1);
-      eye.fromArray(STOPS[index].eye).lerp(nextEye.fromArray(STOPS[index + 1].eye), blend);
-      aim.fromArray(STOPS[index].aim).lerp(nextAim.fromArray(STOPS[index + 1].aim), blend);
+      const timeline = progressRef.current;
+      const work = workRef.current;
+      workBlend += ((reduced ? 0 : timeline?.workBlend ?? 0) - workBlend) * ease;
+      panelMix += ((timeline?.overlay ? 1 : 0) - panelMix) * ease;
+      const position = reduced ? 0 : MathUtils.clamp(chapter + panelMix * (timeline?.overlay === 'contact' ? 2 : 1), 0, 3);
+      if (work && !reduced && ((timeline?.progress ?? 0) > .12 || workBlend > .001)) orbit.advance(work, dt);
       const intro = reduced ? 1 : MathUtils.smoothstep(elapsed, 0, 2.6);
-      eye.z += (1 - intro) * 3;
       const input = getPointer();
-      const active = !reduced && !lowPower && input.active;
-      eye.x += active ? input.nx * .42 : 0;
-      eye.y += active ? input.ny * .2 : 0;
-      if (compact) { eye.z += 4; aim.x = -.3; aim.y += .45; }
+      const active = !reduced && !lowPower && !timeline?.overlay && input.active;
+      eye.set(active ? input.nx * .18 : 0, .1 + (active ? input.ny * .1 : 0), (compact ? 16.4 : 12.4) + (1 - intro) * 2.5);
+      aim.set(0, .1, 0);
+      if (work && workBlend > .001) {
+        orbit.cameraPose(work, camera.aspect, camera.fov, nextEye, nextAim);
+        eye.lerp(nextEye, workBlend);
+        aim.lerp(nextAim, workBlend);
+      }
       camera.position.lerp(eye, firstFrame || reduced ? 1 : ease);
       camera.lookAt(aim);
+      camera.rotateZ(-.025 * workBlend);
       camera.updateMatrixWorld();
-      world.rotation.y = reduced ? -.08 : Math.sin(elapsed * .14) * .1 + (1 - intro) * .45;
-      world.rotation.z = reduced ? 0 : Math.sin(elapsed * .19) * .035;
+      world.position.set(nextAim.x * workBlend * .2, .6 * (1 - workBlend) + nextAim.y * workBlend, -3 * workBlend);
+      world.rotation.y = reduced ? -.08 : Math.sin(elapsed * .14) * .08 + (1 - intro) * .45;
+      world.rotation.z = reduced ? 0 : Math.sin(elapsed * .19) * .025;
       world.updateMatrixWorld(true);
+      if (work && !reduced) orbit.update(
+        work, camera, elapsed, dt,
+        MathUtils.smoothstep(workBlend, .2, .96) * (1 - panelMix * .7),
+        workBlend > .95 && work.interactive && !timeline?.overlay,
+      );
+      if (bloom) bloom.strength = .6 * (1 - workBlend) + .12 * workBlend;
 
       previousUv.copy(pointerUv);
       if (active) pointerUv.set(input.x / Math.max(1, wrap.clientWidth), 1 - input.y / Math.max(1, wrap.clientHeight));
@@ -297,11 +304,13 @@ export function Stage({ progressRef }: { progressRef: RefObject<SceneProgress> }
       }
       particleUniforms.uTime.value = elapsed;
       particleUniforms.uChapter.value = position;
-      particleUniforms.uReveal.value = reduced ? 1 : MathUtils.smoothstep(elapsed, .05, 1.3);
+      particleUniforms.uReveal.value = (reduced ? 1 : MathUtils.smoothstep(elapsed, .05, 1.3)) * (1 - workBlend * .84) * (1 - panelMix * .3);
       signature.rotation.y = reduced ? -.15 : Math.sin(elapsed * .45) * .35;
       signature.rotation.z = reduced ? 0 : Math.sin(elapsed * .28) * .06;
       signature.position.y = reduced ? 0 : Math.sin(elapsed * .6) * .1;
-      signature.scale.setScalar(1 - Math.sin(Math.min(position, 1) * Math.PI / 2) * .35);
+      signature.scale.setScalar(Math.max(.001, 1 - workBlend) * (1 - panelMix * .16));
+      signature.visible = workBlend < .995;
+      if (flowPass) flowPass.uniforms.uStrength.value = 1 - panelMix * .8;
 
       if (fluidQuad && flowRead && flowWrite && flowPass) {
         fluidUniforms.uPrevious.value = flowRead.texture;
@@ -320,7 +329,7 @@ export function Stage({ progressRef }: { progressRef: RefObject<SceneProgress> }
       else renderer.render(scene, camera);
       if (firstFrame) { firstFrame = false; setStatus('ready'); }
 
-      if (!reduced && sampleFrames < 180) {
+      if (!reduced) {
         sampleTime += delta;
         sampleFrames++;
         if (sampleFrames === 180 && sampleTime / sampleFrames > 24) {
@@ -330,6 +339,7 @@ export function Stage({ progressRef }: { progressRef: RefObject<SceneProgress> }
           particleUniforms.uDpr.value = dpr;
           if (bloom) bloom.enabled = false;
         }
+        if (sampleFrames === 180) { sampleFrames = 0; sampleTime = 0; }
       }
     };
 
@@ -338,7 +348,7 @@ export function Stage({ progressRef }: { progressRef: RefObject<SceneProgress> }
       const width = wrap.clientWidth;
       const height = Math.max(1, wrap.clientHeight);
       compact = width < 768;
-      world.position.set(compact ? -.55 : -2.55, compact ? 3.1 : .3, 0);
+      world.position.set(0, .6, 0);
       renderer.setSize(width, height, false);
       composer?.setSize(width, height);
       camera.aspect = width / height;
@@ -354,8 +364,17 @@ export function Stage({ progressRef }: { progressRef: RefObject<SceneProgress> }
       event.preventDefault();
       lost = true;
       unsubscribe();
+      if (workRef.current) workRef.current.ready = false;
       setStatus('fallback');
     };
+    const onProjectClick = (event: MouseEvent) => {
+      const work = workRef.current;
+      if (!work || workBlend < .95 || progressRef.current?.overlay || work.dragging || performance.now() < work.blockClickUntil) return;
+      if (!(event.target as Element | null)?.closest?.('.im-orbit__stage')) return;
+      const index = orbit.hitTest(camera, event.clientX, event.clientY, wrap.clientWidth, wrap.clientHeight);
+      if (index >= 0) work.onPick?.(index);
+    };
+    window.addEventListener('click', onProjectClick);
     window.addEventListener('pointerdown', onPointerDown, { passive: true });
     canvas.addEventListener('webglcontextlost', onContextLost);
     return () => {
@@ -363,21 +382,23 @@ export function Stage({ progressRef }: { progressRef: RefObject<SceneProgress> }
       unsubscribe();
       observer.disconnect();
       window.removeEventListener('pointerdown', onPointerDown);
+      window.removeEventListener('click', onProjectClick);
       canvas.removeEventListener('webglcontextlost', onContextLost);
       gpu?.dispose();
       geometry.dispose(); particleMaterial.dispose();
-      cube.dispose(); silver.dispose(); amber.dispose(); emptyTexture.dispose();
+      brand.dispose(); orbit.dispose(); environment?.dispose(); emptyTexture.dispose();
+      if (workRef.current) workRef.current.ready = false;
       flowRead?.dispose(); flowWrite?.dispose();
       fluidQuad?.dispose(); fluidMaterial?.dispose();
       composer?.passes.forEach((pass) => pass.dispose());
       composer?.dispose();
       renderer.dispose();
     };
-  }, [reduced, lowPower, progressRef]);
+  }, [reduced, lowPower, progressRef, workRef]);
 
   return (
     <div className="im-stage" ref={wrapRef} data-status={status} aria-hidden="true">
-      <div className="im-portal-fallback" />
+      <div className="im-brand-fallback"><BrandMark /></div>
       <canvas ref={canvasRef} className="im-stage__canvas" />
       <div className="im-stage__vignette" />
     </div>

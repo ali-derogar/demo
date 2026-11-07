@@ -16,6 +16,8 @@ export const orbitVertex = /* glsl */ `
 
 export const orbitFragment = /* glsl */ `
   uniform sampler2D uImage;
+  uniform float uReveal;
+  uniform float uEncodeOutput;
   uniform float uLoaded;
   uniform float uFocus;
   uniform float uHover;
@@ -33,8 +35,9 @@ export const orbitFragment = /* glsl */ `
     color += vec3(.8, .9, 1.0) * sheen;
     color *= 1.0 - vEdge * .09;
     if (!gl_FrontFacing) color *= .2;
-    gl_FragColor = vec4(mix(vec3(.06, .075, .08), color, uLoaded), 1.0);
-    #include <tonemapping_fragment>
-    #include <colorspace_fragment>
+    if (uReveal < .005) discard;
+    color = mix(vec3(.025, .04, .045), color, uLoaded);
+    if (uEncodeOutput > .5) color = pow(max(color, .0), vec3(1.0 / 2.2));
+    gl_FragColor = vec4(color, uReveal);
   }
 `;

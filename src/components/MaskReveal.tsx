@@ -1,5 +1,6 @@
 import { useRef, type ReactNode } from 'react';
-import { m, useInView, useReducedMotion } from 'motion/react';
+import { m, useInView } from 'motion/react';
+import { useReducedMotionPreference } from '../lib/useMedia';
 
 interface Props {
   children: ReactNode;
@@ -14,7 +15,7 @@ interface Props {
  * روی «کاهش حرکت» متن بدون انیمیشن و کاملاً دیده می‌شود.
  */
 export function MaskLine({ children, className, delay = 0, when = 'view' }: Props) {
-  const reduced = useReducedMotion();
+  const reduced = useReducedMotionPreference();
   const wrapRef = useRef<HTMLSpanElement>(null);
   // whileInView اینجا کار نمی‌کند: هدفِ ناظر همان spanِ جابه‌شده است که داخل
   // پرده‌ی overflow:hidden خودش کاملاً بریده می‌شود، پس هرگز «دیده» نمی‌شود.

@@ -1,12 +1,11 @@
 import { useEffect, useRef } from 'react';
-import { useReducedMotion } from 'motion/react';
-import { useMediaQuery } from '../lib/useMedia';
+import { useMediaQuery, useReducedMotionPreference } from '../lib/useMedia';
 import { getPointer, subscribeRaf } from '../lib/raf';
 
 /** Pointer decoration uses the same frame loop as Lenis and the scene. */
 export function CustomCursor() {
   const fine = useMediaQuery('(hover: hover) and (pointer: fine)');
-  const reduced = useReducedMotion();
+  const reduced = useReducedMotionPreference();
   const enabled = fine && !reduced;
   const dotRef = useRef<HTMLSpanElement>(null);
   const ringRef = useRef<HTMLSpanElement>(null);

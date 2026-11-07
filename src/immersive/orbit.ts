@@ -1,8 +1,14 @@
+import type { DemoProject } from '../data/projects';
+
 export interface OrbitMotion {
+  items: DemoProject[];
   target: number;
   position: number;
   dragging: boolean;
   blockClickUntil: number;
+  ready: boolean;
+  interactive: boolean;
+  onPick?: (index: number) => void;
 }
 
 export const ORBIT_RADIUS = 6.6;

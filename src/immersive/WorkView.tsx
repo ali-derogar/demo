@@ -1,5 +1,5 @@
-import { Suspense, lazy, useCallback, useEffect, useMemo, useRef, useState, type PointerEvent as ReactPointerEvent } from 'react';
-import { useReducedMotion } from 'motion/react';
+import { useCallback, useEffect, useMemo, useRef, useState, type MutableRefObject, type PointerEvent as ReactPointerEvent } from 'react';
+import { useReducedMotionPreference } from '../lib/useMedia';
 import { faDigit } from '../lib/fa';
 import { getLenis } from '../lib/useSmoothScroll';
 import { subscribeRaf } from '../lib/raf';
@@ -7,18 +7,14 @@ import { projects, categories, type DemoCategory } from '../data/projects';
 import { clampProject, projectFromScroll, releaseProject, scrollForProject, type OrbitMotion } from './orbit';
 import '../styles/orbit.css';
 
-const WorkOrbit = lazy(() => import('./WorkOrbit').then((module) => ({ default: module.WorkOrbit })));
-
-export function WorkView() {
+export function WorkView({ motionRef }: { motionRef: MutableRefObject<OrbitMotion> }) {
   const [filter, setFilter] = useState<DemoCategory>('all');
   const [active, setActive] = useState(0);
-  const [near, setNear] = useState(false);
-  const reduced = useReducedMotion();
+  const reduced = useReducedMotionPreference();
   const shown = useMemo(() => filter === 'all' ? projects : projects.filter((project) => project.category === filter), [filter]);
   const trackRef = useRef<HTMLDivElement>(null);
   const stickyRef = useRef<HTMLDivElement>(null);
   const linksRef = useRef<(HTMLAnchorElement | null)[]>([]);
-  const motionRef = useRef<OrbitMotion>({ target: 0, position: 0, dragging: false, blockClickUntil: 0 });
   const metricsRef = useRef({ start: 0, travel: 1 });
   const dragRef = useRef({ id: -1, x: 0, y: 0, start: 0, lastX: 0, lastTime: 0, speed: 0 });
 
@@ -47,16 +43,12 @@ export function WorkView() {
 
   useEffect(() => {
     const track = trackRef.current;
-    if (!track) return;
-    const observer = new IntersectionObserver(([entry]) => { if (entry.isIntersecting) setNear(true); }, { rootMargin: '600px' });
-    observer.observe(track);
-    return () => observer.disconnect();
-  }, []);
-
-  useEffect(() => {
-    const track = trackRef.current;
     const sticky = stickyRef.current;
     if (!track || !sticky) return;
+    motionRef.current.items = shown;
+    motionRef.current.ready = false;
+    const region = track.querySelector<HTMLElement>('.im-orbit__stage');
+    if (region) region.dataset.ready = 'false';
     measure();
     const observer = new ResizeObserver(measure);
     observer.observe(track);
@@ -67,6 +59,10 @@ export function WorkView() {
     const unsubscribe = reduced ? () => {} : subscribeRaf(() => {
       const state = motionRef.current;
       const y = window.scrollY;
+      const { start, travel } = metricsRef.current;
+      state.interactive = y >= start - window.innerHeight * .2 && y <= start + travel + window.innerHeight * .4;
+      const region = track.querySelector<HTMLElement>('.im-orbit__stage');
+      if (region) region.dataset.ready = String(state.ready);
       if (y !== lastY && !state.dragging) {
         const { start, travel } = metricsRef.current;
         state.target = projectFromScroll(y, start, travel, shown.length);
@@ -80,7 +76,7 @@ export function WorkView() {
       observer.disconnect();
       window.removeEventListener('resize', measure);
     };
-  }, [measure, reduced, shown]);
+  }, [measure, reduced, shown, motionRef]);
 
   const changeFilter = (value: DemoCategory) => {
     motionRef.current.target = 0;
@@ -142,24 +138,22 @@ export function WorkView() {
     go(releaseProject(motionRef.current.target, speed, shown.length));
     if (event.currentTarget.hasPointerCapture(event.pointerId)) event.currentTarget.releasePointerCapture(event.pointerId);
   };
-  const onPick = (index: number) => {
-    if (index === active && Math.abs(motionRef.current.position - index) < .3) linksRef.current[index]?.click();
-    else go(index);
-  };
+  useEffect(() => {
+    motionRef.current.onPick = (index: number) => linksRef.current[index]?.click();
+    return () => { motionRef.current.onPick = undefined; };
+  }, [motionRef, shown]);
 
   return (
     <div className="im-work-track" ref={trackRef} style={{ ['--orbit-steps' as string]: shown.length - 1 }}>
       <div className="im-work im-shell im-work--orbit" ref={stickyRef}>
-        <header className="im-orbit__head">
-          <div><p className="im-kicker"><span className="im-section-number">۰۲ /</span> منتخب تجربه‌ها</p><h2 id="im-work-title">جهان‌های ساخته‌شده.</h2></div>
-          <span className="im-orbit__edition" dir="ltr" aria-hidden="true">SELECTED WORK / EXPLORE THE ORBIT</span>
-        </header>
-        <div className="im-orbit__filters" role="group" aria-label="دسته‌بندی نمونه‌کارها">
-          <div className="im-orbit__filter-buttons">{categories.map((category) => <button key={category.value} type="button" className="im-filter" aria-pressed={filter === category.value} onClick={() => changeFilter(category.value)} data-cursor="link">{category.label}</button>)}</div>
-          <label className="im-orbit__select"><span>دسته‌بندی</span><select value={filter} onChange={(event) => changeFilter(event.target.value)}>{categories.map((category) => <option key={category.value} value={category.value}>{category.label}</option>)}</select></label>
-          <span className="im-work__count">{faDigit(shown.length)} تجربه</span>
-        </div>
-        <div className="im-orbit__stage" tabIndex={0} role="region" aria-roledescription="گالری چرخشی" aria-label="نمونه‌کارهای سه‌بعدی" aria-describedby="im-orbit-help" data-cursor="drag"
+        <header className="im-orbit__head"><h2 id="im-work-title">نمونه‌کارها</h2><span dir="ltr">SELECTED WORK / {String(shown.length).padStart(2, '0')}</span></header>
+        <details className="im-orbit__filters">
+          <summary data-cursor="link">دسته‌بندی<span aria-hidden="true">+</span></summary>
+          <div className="im-orbit__filter-options" role="group" aria-label="دسته‌بندی نمونه‌کارها">
+            {categories.map((category) => <button key={category.value} type="button" className="im-filter" aria-pressed={filter === category.value} onClick={() => changeFilter(category.value)} data-cursor="link">{category.label}</button>)}
+          </div>
+        </details>
+        <div className="im-orbit__stage" tabIndex={0} role="region" aria-roledescription="گالری چرخشی" aria-label="نمونه‌کارهای سه‌بعدی" aria-describedby="im-orbit-help" data-cursor="drag" data-ready="false"
           onPointerDown={onPointerDown} onPointerMove={onPointerMove} onPointerUp={(event) => finishDrag(event)} onPointerCancel={(event) => finishDrag(event, true)}
           onLostPointerCapture={(event) => finishDrag(event, true)}
           onKeyDown={(event) => {
@@ -171,7 +165,6 @@ export function WorkView() {
             if (next !== undefined) { event.preventDefault(); go(next); }
           }}>
           <div className="im-orbit__fallback" aria-hidden="true"><img src={shown[active]?.preview} alt="" width="1200" height="800" decoding="async" loading="lazy" /></div>
-          <Suspense fallback={null}>{near && !reduced && <WorkOrbit items={shown} motionRef={motionRef} onPick={onPick} />}</Suspense>
           <span className="im-orbit__axis" aria-hidden="true">+</span>
         </div>
         <ul className="im-orbit__captions">
@@ -184,15 +177,19 @@ export function WorkView() {
           ))}
         </ul>
         <div className="im-orbit__controls">
-          <p id="im-orbit-help"><span aria-hidden="true">↔</span> اسکرول کنید یا تصویرها را بکشید<span className="im-sr-only">. برای انتخاب با کیبورد، از کلیدهای پیکان چپ و راست استفاده کنید.</span></p>
-          <div className="im-orbit__navigation">
-            <button type="button" onClick={() => go(Math.round(motionRef.current.target) - 1)} disabled={active === 0} aria-label="پروژهٔ قبلی" data-cursor="link">→</button>
-            <span className="im-orbit__counter" aria-live="polite" aria-atomic="true"><b>{faDigit(String(active + 1).padStart(2, '0'))}</b><i>/</i>{faDigit(String(shown.length).padStart(2, '0'))}</span>
-            <button type="button" onClick={() => go(Math.round(motionRef.current.target) + 1)} disabled={active === shown.length - 1} aria-label="پروژهٔ بعدی" data-cursor="link">←</button>
-          </div>
-          <label className="im-orbit__scrubber"><span className="im-sr-only">انتخاب پروژه</span><input type="range" min={0} max={Math.max(0, shown.length - 1)} step={1} value={active} disabled={shown.length === 1} aria-valuetext={shown[active]?.title} onChange={(event) => go(Number(event.target.value), true)} /></label>
+          <p id="im-orbit-help">اسکرول کنید یا بکشید<span className="im-sr-only">. برای انتخاب با کیبورد، از کلیدهای پیکان چپ و راست استفاده کنید.</span></p>
+          <span className="im-orbit__counter" aria-live="polite" aria-atomic="true"><b>{faDigit(String(active + 1).padStart(2, '0'))}</b><i>/</i>{faDigit(String(shown.length).padStart(2, '0'))}</span>
+          <details className="im-orbit__tools">
+            <summary data-cursor="link">انتخاب پروژه <span aria-hidden="true">↔</span></summary>
+            <div className="im-orbit__tool-sheet">
+              <div className="im-orbit__navigation">
+                <button type="button" onClick={() => go(Math.round(motionRef.current.target) - 1)} disabled={active === 0} aria-label="پروژهٔ قبلی" data-cursor="link">→</button>
+                <button type="button" onClick={() => go(Math.round(motionRef.current.target) + 1)} disabled={active === shown.length - 1} aria-label="پروژهٔ بعدی" data-cursor="link">←</button>
+              </div>
+              <label className="im-orbit__scrubber"><span className="im-sr-only">انتخاب پروژه</span><input type="range" min={0} max={Math.max(0, shown.length - 1)} step={1} value={active} disabled={shown.length === 1} aria-valuetext={shown[active]?.title} onChange={(event) => go(Number(event.target.value), true)} /></label>
+            </div>
+          </details>
         </div>
-        <a href="#about" className="im-orbit__continue" data-cursor="link">پشتِ این تجربه‌ها <span aria-hidden="true">↓</span></a>
       </div>
     </div>
   );

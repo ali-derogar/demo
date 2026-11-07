@@ -1,4 +1,5 @@
 export type ViewId = 'home' | 'work' | 'about' | 'contact';
+export type PanelId = 'about' | 'contact';
 
 export const NAV_ITEMS: { id: ViewId; anchor: string; label: string }[] = [
   { id: 'home', anchor: 'home', label: 'خانه' },
@@ -7,9 +8,11 @@ export const NAV_ITEMS: { id: ViewId; anchor: string; label: string }[] = [
   { id: 'contact', anchor: 'contact', label: 'تماس' },
 ];
 
-/** Mutable scene input: scroll frames never go through React state. */
+/** One mutable timeline for the camera, particles, gallery and overlay mood. */
 export interface SceneProgress {
   chapter: ViewId;
   position: number;
   progress: number;
+  workBlend: number;
+  overlay: PanelId | null;
 }
