@@ -1,62 +1,56 @@
-import { useEffect, useState } from 'react';
-import { m, useMotionValue, useReducedMotion, useSpring } from 'motion/react';
+import { useEffect, useRef } from 'react';
+import { useReducedMotion } from 'motion/react';
 import { useMediaQuery } from '../lib/useMedia';
 import { getPointer, subscribeRaf } from '../lib/raf';
 
-type Variant = 'default' | 'link' | 'cta' | 'text';
-
-/**
- * نشانگر سفارشی: نقطه‌ی دنبال‌کننده + حلقه‌ی فنردار.
- * فقط روی دستگاه با pointer دقیق و hover فعال می‌شود؛ روی لمسی هیچ رندر نمی‌کند
- * و نشانگر بومی مخفی نمی‌شود.
- */
+/** Pointer decoration uses the same frame loop as Lenis and the scene. */
 export function CustomCursor() {
   const fine = useMediaQuery('(hover: hover) and (pointer: fine)');
   const reduced = useReducedMotion();
-  const x = useMotionValue(-100);
-  const y = useMotionValue(-100);
-  const ringX = useSpring(x, { stiffness: 320, damping: 28, mass: 0.4 });
-  const ringY = useSpring(y, { stiffness: 320, damping: 28, mass: 0.4 });
-  const [variant, setVariant] = useState<Variant>('default');
+  const enabled = fine && !reduced;
+  const dotRef = useRef<HTMLSpanElement>(null);
+  const ringRef = useRef<HTMLSpanElement>(null);
 
   useEffect(() => {
-    if (!fine) return;
-    document.documentElement.classList.add('has-custom-cursor');
-    const unsubscribe = subscribeRaf(() => {
+    const dot = dotRef.current;
+    const ring = ringRef.current;
+    if (!enabled || !dot || !ring) return;
+    let x = 0;
+    let y = 0;
+    let visible = false;
+    const unsubscribe = subscribeRaf((_time, delta) => {
       const pointer = getPointer();
-      x.set(pointer.x);
-      y.set(pointer.y);
+      if (visible !== pointer.active) {
+        visible = pointer.active;
+        document.documentElement.classList.toggle('has-custom-cursor', visible);
+        dot.style.opacity = ring.style.opacity = visible ? '1' : '0';
+        x = pointer.x;
+        y = pointer.y;
+      }
+      if (!visible) return;
+      const easing = 1 - Math.exp(-delta / 70);
+      x += (pointer.x - x) * easing;
+      y += (pointer.y - y) * easing;
+      dot.style.transform = 'translate3d(' + pointer.x + 'px,' + pointer.y + 'px,0)';
+      ring.style.transform = 'translate3d(' + x + 'px,' + y + 'px,0)';
     });
-    return () => {
-      unsubscribe();
-      document.documentElement.classList.remove('has-custom-cursor');
-    };
-  }, [fine, x, y]);
-
-  useEffect(() => {
-    if (!fine) return;
     const onOver = (event: PointerEvent) => {
-      const el = (event.target as Element | null)?.closest?.('[data-cursor]');
-      const value = (el?.getAttribute('data-cursor') as Variant | null) ?? 'default';
-      setVariant(value);
+      const element = (event.target as Element | null)?.closest?.('[data-cursor]');
+      ring.dataset.variant = element?.getAttribute('data-cursor') ?? 'default';
     };
     window.addEventListener('pointerover', onOver, { passive: true });
-    return () => window.removeEventListener('pointerover', onOver);
-  }, [fine]);
+    return () => {
+      unsubscribe();
+      window.removeEventListener('pointerover', onOver);
+      document.documentElement.classList.remove('has-custom-cursor');
+    };
+  }, [enabled]);
 
-  if (!fine) return null;
-
+  if (!enabled) return null;
   return (
     <>
-      <m.span className="cursor cursor--dot" style={{ x, y }} aria-hidden="true" />
-      {!reduced && (
-        <m.span
-          className="cursor cursor--ring"
-          data-variant={variant}
-          style={{ x: ringX, y: ringY }}
-          aria-hidden="true"
-        />
-      )}
+      <span ref={dotRef} className="cursor cursor--dot" style={{ opacity: 0 }} aria-hidden="true" />
+      <span ref={ringRef} className="cursor cursor--ring" data-variant="default" style={{ opacity: 0 }} aria-hidden="true" />
     </>
   );
 }

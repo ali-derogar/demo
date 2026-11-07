@@ -333,17 +333,93 @@
 
 /* --------------------------- هیرو --------------------------- */
 .v2-hero {
+  position: relative;
   min-height: 100vh;
   min-height: 100svh;
-  display: grid;
-  grid-template-columns: 1.05fr 0.95fr;
-  gap: clamp(2rem, 5vw, 4rem);
+  /* هدرِ sticky در جریان است؛ هیرو زیرِ نوارِ شیشه‌ای می‌لغزد تا صحنه تمام‌bleed شود */
+  margin-top: calc(-1 * var(--header-size));
+  display: flex;
+  flex-direction: column;
   align-items: center;
-  /* روی موبایل دو ردیف می‌شود؛ بدون این، ردیف‌های auto فضای خالی را بین
-     متن و کلاژ پخش می‌کردند و یک گودالِ وسطِ هیرو باز می‌ماند. */
-  align-content: center;
-  padding-block: calc(var(--header-size) + 40px) 60px;
+  justify-content: center;
+  overflow: hidden;
+  padding-block: calc(var(--header-size) + 5vh) 12vh;
+  isolation: isolate;
+}
+
+/* صحنه‌ی غوطه‌ورِ WebGL: تمام‌bleed پشتِ کپی */
+.v2-stage {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+}
+.v2-stage__canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+/* نورِ حجمیِ پخته‌شده از گوشه‌ها؛ استاتیک و ارزان (بدون رسترِ هر-فریم) */
+.v2-stage__glow {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  mix-blend-mode: screen;
+  background:
+    radial-gradient(60% 46% at 78% -6%, color-mix(in srgb, var(--cyan) 30%, transparent), transparent 70%),
+    radial-gradient(52% 42% at 16% -4%, color-mix(in srgb, var(--violet) 26%, transparent), transparent 72%),
+    radial-gradient(70% 50% at 50% 118%, color-mix(in srgb, var(--magenta) 12%, transparent), transparent 70%);
+}
+/* محو شدنِ کفِ صحنه به سکشن بعدی تا درزِ بوم دیده نشود */
+.v2-stage__fade {
+  position: absolute;
+  inset-inline: 0;
+  bottom: 0;
+  height: 22%;
+  pointer-events: none;
+  background: linear-gradient(to top, var(--ink), transparent);
+}
+
+/* هسته‌ی CSS برای حالتِ بدون WebGL */
+.v2-stage--flat {
+  background:
+    radial-gradient(46% 34% at 50% 30%, color-mix(in srgb, var(--cyan) 20%, transparent), transparent 70%),
+    radial-gradient(60% 46% at 78% -6%, color-mix(in srgb, var(--violet) 22%, transparent), transparent 70%);
+}
+.v2-core-fallback {
+  position: absolute;
+  top: 26%;
+  left: 50%;
+  width: clamp(180px, 30vw, 320px);
+  aspect-ratio: 1;
+  translate: -50% -50%;
+  border-radius: 50%;
+  background: radial-gradient(circle, color-mix(in srgb, var(--cyan) 55%, transparent), color-mix(in srgb, var(--violet) 30%, transparent) 46%, transparent 72%);
+  filter: blur(2px);
+  box-shadow: 0 0 120px 30px color-mix(in srgb, var(--cyan) 22%, transparent);
+}
+
+/* lockupِ تایپوگرافیِ مرکزی با scrimِ خوانایی */
+.v2-hero__lockup {
   position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  max-inline-size: 62rem;
+  margin-top: 16vh;
+}
+.v2-hero__lockup::before {
+  content: "";
+  position: absolute;
+  inset: -14% -10%;
+  z-index: -1;
+  background: radial-gradient(58% 60% at 50% 50%, rgba(6, 6, 12, 0.72), transparent 78%);
+  pointer-events: none;
+}
+.v2-hero__kicker {
+  justify-content: center;
 }
 .v2-hero__title {
   font-size: clamp(2.7rem, 7.6vw, 5.6rem);
@@ -363,6 +439,7 @@
 .v2-hero__actions {
   display: flex;
   flex-wrap: wrap;
+  justify-content: center;
   gap: 0.9rem;
   margin-top: 2rem;
 }
@@ -394,7 +471,11 @@
   .v2-btn--ghost:hover { border-color: var(--cyan); color: var(--cyan); }
 }
 .v2-hero__cue {
-  margin-top: 2.6rem;
+  position: absolute;
+  bottom: calc(20px + env(safe-area-inset-bottom));
+  left: 50%;
+  translate: -50% 0;
+  z-index: 1;
   display: inline-flex;
   align-items: center;
   gap: 0.6rem;
@@ -426,163 +507,19 @@
   100% { opacity: 0; transform: translate(-50%, 12px); }
 }
 
-/* کلاژ شناور
-   سه پیش‌نمایش از سه پروژه، نوردهی‌شان یکی نیست (میانگینِ روشنایی: nabz≈18،
-   cars≈116، sekke≈30). بدون تراز، عکسِ ماشینِ سفید تمامِ توجه را از تیتر
-   می‌دزدید؛ پس هر کارت فقط `--collage-bright` خودش را دارد و بقیه‌ی تیمار
-   مشترک است. رنگِ لبه و هاله هم از accentِ خودِ همان پروژه می‌آید. */
-.v2-collage {
-  position: relative;
-  height: clamp(430px, 56vh, 600px);
-  will-change: transform;
-}
-.v2-collage__item {
-  position: absolute;
-  margin: 0;
-  border-radius: 18px;
-  overflow: hidden;
-  border: 1px solid color-mix(in srgb, var(--collage-accent, var(--violet)) 26%, var(--glass-line));
-  background: #0a0a12;
-  box-shadow:
-    0 28px 64px rgba(0, 0, 0, 0.62),
-    0 16px 52px -18px color-mix(in srgb, var(--collage-accent, var(--violet)) 42%, transparent);
-}
-.v2-collage__item img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  filter: brightness(var(--collage-bright, 1)) saturate(1.1) contrast(1.05);
-}
-/* پرده‌ی مشترک: بالا برای خوانا شدنِ نوارِ کارت، پایین برای برچسب */
-.v2-collage__item::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background:
-    linear-gradient(180deg, rgba(5, 5, 9, 0.74), transparent 26%, transparent 46%, rgba(5, 5, 9, 0.82)),
-    radial-gradient(
-      110% 70% at 88% 8%,
-      color-mix(in srgb, var(--collage-accent, var(--violet)) 22%, transparent),
-      transparent 58%
-    );
-}
-.v2-collage__bar {
-  position: absolute;
-  inset-inline: 0;
-  inset-block-start: 0;
-  z-index: 1;
-  display: flex;
-  align-items: center;
-  padding: 0.62rem 0.9rem;
-}
-.v2-collage__dots {
-  flex: none;
-  inline-size: 5px;
-  block-size: 5px;
-  border-radius: 50%;
-  margin-inline-end: 0.6rem;
-  background: var(--collage-accent, var(--cyan));
-  box-shadow:
-    9px 0 0 color-mix(in srgb, var(--collage-accent, var(--cyan)) 45%, #55566b),
-    18px 0 0 color-mix(in srgb, var(--collage-accent, var(--cyan)) 22%, #55566b);
-}
-.v2-collage__label {
-  font-size: 0.7rem;
-  font-weight: 700;
-  letter-spacing: 0.02em;
-  color: rgba(233, 236, 255, 0.76);
-}
-.v2-collage__item--1 {
-  top: 0;
-  left: 0;
-  width: 66%;
-  height: 54%;
-  z-index: 1;
-  --collage-bright: 1.14;
-  transform: rotate(-2.5deg);
-  animation: v2float1 9s var(--ease) infinite alternate;
-}
-.v2-collage__item--2 {
-  top: 27%;
-  right: 0;
-  width: 57%;
-  height: 46%;
-  z-index: 2;
-  --collage-bright: 0.56;
-  transform: rotate(3deg);
-  animation: v2float2 11s var(--ease) infinite alternate;
-}
-.v2-collage__item--3 {
-  bottom: 0;
-  left: 12%;
-  width: 62%;
-  height: 44%;
-  z-index: 3;
-  --collage-bright: 1.08;
-  transform: rotate(1.6deg);
-  animation: v2float3 8s var(--ease) infinite alternate;
-}
-@keyframes v2float1 { to { translate: 0 -14px; } }
-@keyframes v2float2 { to { translate: 0 12px; } }
-@keyframes v2float3 { to { translate: 0 -10px; } }
-
-/* اسپات‌لایت: با هاور روی یک کارت، دو تای دیگر عقب می‌روند.
-   :has لازم است؛ بدون آن، صرفِ ورودِ ماوس به کانتینر همه را کم‌نور می‌کرد
-   و در فاصله‌ی بین کارت‌ها صفحه چشمک می‌زد. */
-@media (hover: hover) and (pointer: fine) {
-  .v2-collage__item {
-    transition:
-      scale 0.5s var(--ease-out-expo),
-      opacity 0.4s var(--ease),
-      box-shadow 0.5s var(--ease);
-  }
-  .v2-collage:has(.v2-collage__item:hover) .v2-collage__item {
-    opacity: 0.4;
-  }
-  .v2-collage__item:hover {
-    opacity: 1 !important;
-    scale: 1.045;
-    z-index: 4;
-    box-shadow:
-      0 34px 84px rgba(0, 0, 0, 0.72),
-      0 20px 62px -16px color-mix(in srgb, var(--collage-accent, var(--violet)) 62%, transparent);
-  }
-}
-
+/* --------------------- هیرو: واکنش‌گرا --------------------- */
 @media (max-width: 900px) {
-  .v2-hero { grid-template-columns: 1fr; }
-
-  /* روی گوشی، آبجکت‌های مطلقِ کلاژ کل صفحه‌ی اول را می‌گرفتند و تیتر زیرِ
-     تایم‌اسکرول می‌رفت. اینجا کلاژ به یک ردیفِ فشرده تبدیل می‌شود که بعد از
-     متن می‌آید. */
-  .v2-collage {
-    height: auto;
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 0.6rem;
-    margin-block-start: 2rem;
-  }
-  .v2-collage__item {
-    position: static;
-    width: auto;
-    height: clamp(96px, 24vw, 132px);
-    transform: none;
-    animation: none;
-    border-radius: 12px;
-  }
-  .v2-collage__bar { padding: 0.4rem 0.5rem; }
-  .v2-collage__label { display: none; }
-  .v2-collage__dots { margin-inline-end: 0; }
+  .v2-hero__lockup { margin-top: 20vh; }
+  .v2-hero__title { font-size: clamp(2.3rem, 9vw, 3.6rem); }
 }
 
-/* داکِ موبایل (۱۲px فاصله + ۶۶px قد) روی ردیفِ کلاژِ هیرو می‌نشست و
-   ۴۳px از پایینش را می‌پوشاند. چون هیرو با align-content:center وسط‌چین
-   می‌شود، paddingِ تنِ پایین فقط نصفِ مقدارش را جابه‌جا می‌کرد؛ پس بالا
-   هم جمع شد تا کلاژ به بالای داک برسد. */
+/* داکِ موبایل پایینِ صفحه می‌نشیند؛ cue و lockup نباید زیرش بروند */
 @media (max-width: 720px) {
   .v2-hero {
-    padding-block: calc(var(--header-size) + 0.75rem) calc(152px + env(safe-area-inset-bottom));
+    padding-block: calc(var(--header-size) + 2vh) calc(120px + env(safe-area-inset-bottom));
   }
+  .v2-hero__lockup { margin-top: 18vh; }
+  .v2-hero__cue { bottom: calc(96px + env(safe-area-inset-bottom)); }
 }
 
 /* --------------------- توانمندی: اسکرول افقی --------------------- */
@@ -1153,10 +1090,7 @@
 @media (prefers-reduced-motion: reduce) {
   .v2-aurora span,
   .v2-kicker__pulse,
-  .v2-hero__mouse::after,
-  .v2-collage__item--1,
-  .v2-collage__item--2,
-  .v2-collage__item--3 {
+  .v2-hero__mouse::after {
     animation: none !important;
   }
 
@@ -1182,9 +1116,6 @@
     margin-bottom: 1.5rem;
   }
   .v2-shot img { transform: none !important; }
-
-  .v2-collage { height: auto; display: grid; gap: 0.8rem; grid-template-columns: repeat(3, 1fr); }
-  .v2-collage__item { position: static; width: auto; height: 120px; transform: none; }
 
   .v2-row__link,
   .v2-row__link::before,
@@ -1254,7 +1185,8 @@
   .v2-noise,
   .v2-aurora,
   .v2-grid,
-  .v2-stars { display: none; }
+  .v2-stars,
+  .v2-stage { display: none; }
   .v2-cap,
   .v2-stack__card,
   .v2-row__link,
@@ -1588,7 +1520,8 @@ button {
   }
   .v2-noise,
   .v2-aurora,
-  .v2-stars { display: none; }
+  .v2-stars,
+  .v2-stage { display: none; }
 }
 
 @media (prefers-reduced-motion: reduce) {
