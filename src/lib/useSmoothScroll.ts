@@ -8,7 +8,9 @@ export function getLenis(): Lenis | null { return instance; }
 
 function absoluteTop(element: HTMLElement): number {
   const size = Number.parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--header-size')) || 84;
-  return Math.max(0, element.getBoundingClientRect().top + window.scrollY - size - 16);
+  // The pinned portfolio already reserves header space inside its viewport.
+  const offset = element.id === 'demos' ? 0 : size + 16;
+  return Math.max(0, element.getBoundingClientRect().top + window.scrollY - offset);
 }
 
 export function scrollToSection(element: HTMLElement): void {
