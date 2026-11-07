@@ -1,4 +1,4 @@
-import { Component, Suspense, lazy, useCallback, useEffect, useRef, useState, type ReactNode } from 'react';
+import { Component, Suspense, lazy, useCallback, useEffect, useRef, useState, useSyncExternalStore, type ReactNode } from 'react';
 import { LazyMotion, domAnimation } from 'motion/react';
 import { CustomCursor } from '../components/CustomCursor';
 import { BrandMark } from '../components/BrandMark';
@@ -26,7 +26,7 @@ class SceneBoundary extends Component<{ children: ReactNode }, { failed: boolean
 
 export function ImmersiveApp() {
   const [view, setView] = useState<ViewId>('home');
-  const [muted, setMuted] = useState(true);
+  const audio = useSyncExternalStore(ambient.subscribe, ambient.getSnapshot, ambient.getSnapshot);
   const mainRef = useRef<HTMLElement>(null);
   const progressRef = useRef<SceneProgress>({ chapter: 'home', position: 0, progress: 0, workBlend: 0, overlay: null });
   const workRef = useRef<OrbitMotion>({ items: projects, target: 0, position: 0, dragging: false, blockClickUntil: 0, ready: false, interactive: false });
@@ -35,8 +35,9 @@ export function ImmersiveApp() {
 
   useEffect(() => {
     document.documentElement.classList.add('im-root');
-    return () => { document.documentElement.classList.remove('im-root'); ambient.dispose(); };
+    return () => { document.documentElement.classList.remove('im-root'); };
   }, []);
+  useEffect(() => ambient.attach(), []);
   useEffect(() => {
     progressRef.current.overlay = panel;
     ambient.setView(panel ?? view);
@@ -76,10 +77,8 @@ export function ImmersiveApp() {
   }, []);
 
   const toggleAudio = useCallback(() => {
-    const next = !muted;
-    ambient.setMuted(next);
-    setMuted(next);
-  }, [muted]);
+    ambient.setMuted(ambient.getSnapshot().enabled);
+  }, []);
 
   return (
     <LazyMotion features={domAnimation} strict>
@@ -87,7 +86,7 @@ export function ImmersiveApp() {
         <CustomCursor />
         <SceneBoundary><Suspense fallback={<StageFallback />}><Stage progressRef={progressRef} workRef={workRef} /></Suspense></SceneBoundary>
         <a className="skip-link" href="#im-main">پرش به محتوا</a>
-        <ImmersiveNav view={panel ?? view} muted={muted} onToggleAudio={toggleAudio} />
+        <ImmersiveNav view={panel ?? view} audio={audio} onToggleAudio={toggleAudio} />
         <main id="im-main" ref={mainRef} tabIndex={-1}>
           <section id="home" className="im-chapter" aria-labelledby="im-home-title"><HomeView /></section>
           <section id="demos" className="im-chapter im-chapter--work" aria-labelledby="im-work-title"><WorkView motionRef={workRef} /></section>

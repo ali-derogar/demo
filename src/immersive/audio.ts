@@ -5,14 +5,22 @@ import type { ViewId } from './types';
  * هم‌ضرب است. صدا فقط چیزی را همراهی می‌کند که روی صفحه دیده می‌شود
  * (ضربانِ هسته و ته‌رنگِ هر نما)، نه نویزِ مستقل.
  *
- * موتور پیش‌فرض خاموش است و فقط با انتخاب صریح کلید صدا ساخته می‌شود.
- * حرکت موس، پیمایش و کلیدهای دیگر هیچ صدایی را فعال نمی‌کنند.
+ * ترجیح کاربر و وضعیت واقعی AudioContext جدا هستند. صدا در اولین ورود
+ * فعال است؛ اگر autoplay مسدود باشد، اولین تعامل معتبر آن را آزاد می‌کند.
  *
  * همه‌ی ساختن‌ها داخل try/catch است؛ اگر WebAudio نباشد، موتور بی‌صدا
  * کار می‌کند و هیچ‌چیز نمی‌شکند.
  */
 
 type AudioCtor = typeof AudioContext;
+export type AudioPhase = 'pending' | 'playing' | 'paused' | 'muted' | 'unavailable';
+export interface AudioSnapshot { enabled: boolean; phase: AudioPhase; }
+export const AUDIO_PREFERENCE_KEY = 'persianbotyar:audio-enabled';
+
+function readPreference() {
+  try { return window.localStorage.getItem(AUDIO_PREFERENCE_KEY) !== 'false'; }
+  catch { return true; }
+}
 
 function getAudioCtor(): AudioCtor | null {
   if (typeof window === 'undefined') return null;
@@ -28,7 +36,7 @@ const VIEW_VOICE: Record<ViewId, { base: number; cutoff: number }> = {
   contact: { base: 58, cutoff: 700 },
 };
 
-class AmbientEngine {
+export class AmbientEngine {
   private ctx: AudioContext | null = null;
   private master: GainNode | null = null;
   private filter: BiquadFilterNode | null = null;
@@ -37,10 +45,24 @@ class AmbientEngine {
   private breath: OscillatorNode | null = null;
   private built = false;
   private failed = false;
-  private muted = true;
+  private enabled = readPreference();
   private view: ViewId = 'home';
+  private generation = 0;
+  private listeners = new Set<() => void>();
+  private snapshot: AudioSnapshot = { enabled: this.enabled, phase: this.enabled ? 'pending' : 'muted' };
 
-  /** ساختِ گرافِ صوتی؛ فقط یک‌بار و فقط وقتی کاربر اجازه‌ی gesture داده */
+  getSnapshot = () => this.snapshot;
+  subscribe = (listener: () => void) => { this.listeners.add(listener); return () => { this.listeners.delete(listener); }; };
+
+  private publish = () => {
+    const phase: AudioPhase = this.failed ? 'unavailable' : !this.enabled ? 'muted'
+      : document.hidden ? 'paused' : this.ctx?.state === 'running' ? 'playing' : 'pending';
+    if (this.snapshot.enabled === this.enabled && this.snapshot.phase === phase) return;
+    this.snapshot = { enabled: this.enabled, phase };
+    this.listeners.forEach((listener) => listener());
+  };
+
+  /** ساختِ گرافِ صوتی؛ autoplay ممکن است Context را تا اولین تعامل معلق نگه دارد. */
   private build() {
     if (this.built || this.failed) return;
     const Ctor = getAudioCtor();
@@ -50,6 +72,8 @@ class AmbientEngine {
     }
     try {
       const ctx = new Ctor();
+      this.ctx = ctx;
+      ctx.onstatechange = this.onStateChange;
       const master = ctx.createGain();
       master.gain.value = 0;
       master.connect(ctx.destination);
@@ -92,7 +116,6 @@ class AmbientEngine {
       oscB.start();
       breath.start();
 
-      this.ctx = ctx;
       this.master = master;
       this.filter = filter;
       this.oscA = oscA;
@@ -100,30 +123,80 @@ class AmbientEngine {
       this.breath = breath;
       this.built = true;
     } catch {
+      this.clearGraph();
       this.failed = true;
     }
+  }
+
+  private onStateChange = () => {
+    if (this.ctx?.state === 'closed') this.failed = true;
+    this.applyGain(); this.publish();
+  };
+
+  /** A pending autoplay resume must never prevent a new resume inside a gesture. */
+  unlock = () => {
+    if (!this.enabled || document.hidden) { this.publish(); return; }
+    this.build();
+    const ctx = this.ctx;
+    const generation = this.generation;
+    if (ctx && ctx.state !== 'running' && ctx.state !== 'closed') {
+      void ctx.resume().then(() => {
+        if (generation !== this.generation || ctx !== this.ctx) return;
+        this.applyGain(); this.publish();
+      }).catch(() => { if (generation === this.generation) this.publish(); });
+    }
+    this.applyGain();
+    this.publish();
+  };
+
+  attach() {
+    const onGesture = (event: Event) => {
+      if (!event.isTrusted || (event.target as Element | null)?.closest?.('[data-audio-control]')) return;
+      if (event instanceof KeyboardEvent && (event.repeat || event.metaKey || event.ctrlKey || event.altKey || ['Escape', 'Shift', 'Control', 'Alt', 'Meta'].includes(event.key))) return;
+      if (this.snapshot.phase === 'pending') this.unlock();
+    };
+    const onVisibility = () => {
+      if (document.hidden) {
+        this.applyGain();
+        const ctx = this.ctx;
+        void ctx?.suspend().then(() => {
+          // A rapid tab switch can finish suspension after the visible resume.
+          if (ctx === this.ctx && ctx.state === 'suspended' && this.enabled && !document.hidden) this.unlock();
+        }).catch(() => {});
+        this.publish();
+      } else this.unlock();
+    };
+    window.addEventListener('click', onGesture, true);
+    window.addEventListener('keydown', onGesture, true);
+    document.addEventListener('visibilitychange', onVisibility);
+    this.unlock();
+    return () => {
+      window.removeEventListener('click', onGesture, true);
+      window.removeEventListener('keydown', onGesture, true);
+      document.removeEventListener('visibilitychange', onVisibility);
+      this.dispose();
+    };
   }
 
   /** بلندیِ هدف بر پایه‌ی وضعیتِ خاموش/روشن؛ fade برای جلوگیری از کلیک */
   private applyGain() {
     if (!this.ctx || !this.master) return;
-    const target = this.muted ? 0 : 0.05;
+    const target = !this.enabled || document.hidden || this.ctx.state !== 'running' ? 0 : 0.05;
     const now = this.ctx.currentTime;
     this.master.gain.cancelScheduledValues(now);
     this.master.gain.setTargetAtTime(target, now, 0.6);
   }
 
   setMuted(muted: boolean) {
-    this.muted = muted;
-    if (!muted) {
-      this.build();
-      if (this.ctx && this.ctx.state === 'suspended') void this.ctx.resume().then(() => this.applyGain()).catch(() => {});
-    }
+    this.enabled = !muted;
+    try { window.localStorage.setItem(AUDIO_PREFERENCE_KEY, String(this.enabled)); } catch { /* Storage can be denied. */ }
+    if (this.enabled) this.unlock();
     this.applyGain();
+    this.publish();
   }
 
   isMuted() {
-    return this.muted;
+    return !this.enabled;
   }
 
   /** تغییرِ نرمِ ته‌رنگِ صوتی با تغییرِ نما */
@@ -137,15 +210,11 @@ class AmbientEngine {
     this.oscB.frequency.setTargetAtTime(base * 1.5, now, 0.8);
   }
 
-  dispose() {
-    try {
-      this.oscA?.stop();
-      this.oscB?.stop();
-      this.breath?.stop();
-      void this.ctx?.close();
-    } catch {
-      /* noop */
+  private clearGraph() {
+    for (const oscillator of [this.oscA, this.oscB, this.breath]) {
+      try { oscillator?.stop(); } catch { /* Already stopped. */ }
     }
+    if (this.ctx) { this.ctx.onstatechange = null; void this.ctx.close().catch(() => {}); }
     this.ctx = null;
     this.master = null;
     this.filter = null;
@@ -153,6 +222,13 @@ class AmbientEngine {
     this.oscB = null;
     this.breath = null;
     this.built = false;
+  }
+
+  dispose() {
+    this.generation++;
+    this.clearGraph();
+    this.failed = false;
+    this.publish();
   }
 }
 

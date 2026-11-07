@@ -1,0 +1,36 @@
+import assert from 'node:assert/strict';
+import test from 'node:test';
+import React, { act } from 'react';
+import { createRoot } from 'react-dom/client';
+import { source, environment } from './helpers.mjs';
+import { renderers } from './renderer.mock.mjs';
+
+test('context restoration rebuilds Stage once, releases the old renderer and preserves gallery position', async (t) => {
+  const env = await environment();
+  const { Stage } = await source('src/immersive/Stage.tsx', { three: new URL('./renderer.mock.mjs', import.meta.url).href });
+  const { projects } = await source('src/data/projects.ts');
+  const progressRef = { current: { chapter: 'work', position: 1, progress: 1, workBlend: 1, overlay: 'contact' } };
+  const workRef = { current: { items: projects, target: 3.2, position: 3.2, dragging: false, blockClickUntil: 0, ready: false, interactive: false } };
+  const root = createRoot(env.q('#root'));
+  const action = async (callback) => { await act(async () => { callback(); await env.settle(); }); };
+  t.after(async () => { try { await action(() => root.unmount()); assert.deepEqual(env.errors, []); assert.ok(renderers.every((renderer) => renderer.disposed)); } finally { env.cleanup(); } });
+  await action(() => root.render(React.createElement(React.StrictMode, null, React.createElement(Stage, { progressRef, workRef }))));
+  await action(() => {});
+  assert.equal(env.q('.im-stage').dataset.status, 'ready');
+  assert.equal(renderers.filter((renderer) => !renderer.disposed).length, 1);
+  const previous = renderers.at(-1);
+  const eye = previous.camera.toArray();
+  const canvas = env.q('canvas');
+  const lost = new Event('webglcontextlost', { cancelable: true });
+  await action(() => canvas.dispatchEvent(lost));
+  assert.equal(lost.defaultPrevented, true);
+  assert.equal(env.q('.im-stage').dataset.status, 'fallback');
+  await action(() => canvas.dispatchEvent(new Event('webglcontextrestored')));
+  await action(() => {});
+  assert.equal(env.q('.im-stage').dataset.status, 'ready');
+  assert.equal(previous.disposed, true);
+  assert.equal(renderers.filter((renderer) => !renderer.disposed).length, 1);
+  assert.equal(workRef.current.position, 3.2); assert.equal(workRef.current.target, 3.2);
+  assert.equal(progressRef.current.overlay, 'contact');
+  renderers.at(-1).camera.toArray().forEach((value, index) => assert.ok(Math.abs(value - eye[index]) < 1e-9));
+});

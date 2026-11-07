@@ -17,6 +17,7 @@ import { FullScreenQuad } from 'three/addons/postprocessing/Pass.js';
 import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
 import { createWorkOrbit } from './WorkOrbit';
 import { createBrandSculpture } from './BrandSculpture';
+import { FrameQuality } from './frameQuality';
 import type { OrbitMotion } from './orbit';
 import { getPointer, subscribeRaf } from '../lib/raf';
 import { useMediaQuery, useReducedMotionPreference } from '../lib/useMedia';
@@ -34,6 +35,14 @@ export function Stage({ progressRef, workRef }: { progressRef: RefObject<ScenePr
   const reduced = useReducedMotionPreference();
   const lowPower = useMediaQuery('(max-width: 767px), (pointer: coarse)');
   const [status, setStatus] = useState<'loading' | 'ready' | 'fallback'>('loading');
+  const [generation, setGeneration] = useState(0);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    const restore = () => setGeneration((value) => value + 1);
+    canvas?.addEventListener('webglcontextrestored', restore);
+    return () => canvas?.removeEventListener('webglcontextrestored', restore);
+  }, []);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -205,8 +214,8 @@ export function Stage({ progressRef, workRef }: { progressRef: RefObject<ScenePr
     let energy = 0;
     let burst = 0;
     let pointerWasActive = false;
-    let sampleFrames = 0;
-    let sampleTime = 0;
+    const quality = new FrameQuality(lowPower);
+    wrap.dataset.quality = '0';
     const lastPointer = new Vector3();
     const nextPointer = new Vector3();
     const ndc = new Vector2();
@@ -330,16 +339,22 @@ export function Stage({ progressRef, workRef }: { progressRef: RefObject<ScenePr
       if (firstFrame) { firstFrame = false; setStatus('ready'); }
 
       if (!reduced) {
-        sampleTime += delta;
-        sampleFrames++;
-        if (sampleFrames === 180 && sampleTime / sampleFrames > 24) {
-          dpr = 1;
+        const level = quality.sample(delta);
+        if (level !== null) {
+          wrap.dataset.quality = String(level);
+          dpr = Math.min(window.devicePixelRatio || 1, lowPower || level === 2 ? 1 : 1.25);
           renderer.setPixelRatio(dpr);
           composer?.setPixelRatio(dpr);
           particleUniforms.uDpr.value = dpr;
-          if (bloom) bloom.enabled = false;
+          if (bloom) { composer?.removePass(bloom); bloom.dispose(); bloom = null; }
+          if (lowPower || level === 2) {
+            if (flowPass) { composer?.removePass(flowPass); flowPass.dispose(); flowPass = null; }
+            fluidQuad?.dispose(); fluidQuad = null;
+            fluidMaterial?.dispose(); fluidMaterial = null;
+            flowRead?.dispose(); flowRead = null;
+            flowWrite?.dispose(); flowWrite = null;
+          }
         }
-        if (sampleFrames === 180) { sampleFrames = 0; sampleTime = 0; }
       }
     };
 
@@ -368,6 +383,7 @@ export function Stage({ progressRef, workRef }: { progressRef: RefObject<ScenePr
       setStatus('fallback');
     };
     const onProjectClick = (event: MouseEvent) => {
+      if (event.defaultPrevented || (event.target as Element | null)?.closest?.('a')) return;
       const work = workRef.current;
       if (!work || workBlend < .95 || progressRef.current?.overlay || work.dragging || performance.now() < work.blockClickUntil) return;
       if (!(event.target as Element | null)?.closest?.('.im-orbit__stage')) return;
@@ -394,7 +410,7 @@ export function Stage({ progressRef, workRef }: { progressRef: RefObject<ScenePr
       composer?.dispose();
       renderer.dispose();
     };
-  }, [reduced, lowPower, progressRef, workRef]);
+  }, [reduced, lowPower, progressRef, workRef, generation]);
 
   return (
     <div className="im-stage" ref={wrapRef} data-status={status} aria-hidden="true">

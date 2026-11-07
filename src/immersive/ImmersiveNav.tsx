@@ -1,9 +1,12 @@
 import { profile } from '../data/profile';
 import type { ViewId } from './types';
+import type { AudioSnapshot } from './audio';
 
-interface Props { view: ViewId; muted: boolean; onToggleAudio: () => void; }
+interface Props { view: ViewId; audio: AudioSnapshot; onToggleAudio: () => void; }
 
-export function ImmersiveNav({ view, muted, onToggleAudio }: Props) {
+export function ImmersiveNav({ view, audio, onToggleAudio }: Props) {
+  const label = audio.phase === 'unavailable' ? 'صدا در دسترس نیست' : !audio.enabled ? 'صدا خاموش'
+    : audio.phase === 'playing' ? 'صدا روشن' : audio.phase === 'paused' ? 'صدا متوقف' : 'صدا آمادهٔ پخش';
   return (
     <>
       <header className="im-nav">
@@ -16,8 +19,8 @@ export function ImmersiveNav({ view, muted, onToggleAudio }: Props) {
       <nav className="im-secondary-nav" aria-label="دسترسی‌های تکمیلی">
         <a href="#about" aria-current={view === 'about' ? 'location' : undefined} data-cursor="link">دربارهٔ من</a><span aria-hidden="true">/</span><span>{profile.location}</span>
       </nav>
-      <button type="button" className="im-sound-control" onClick={onToggleAudio} aria-pressed={!muted} aria-label={muted ? 'روشن کردن صدا' : 'خاموش کردن صدا'} data-cursor="link">
-        <span className="im-sound-bars" data-muted={muted} aria-hidden="true"><i /><i /><i /><i /></span><span>{muted ? 'صدا خاموش' : 'صدا روشن'}</span>
+      <button type="button" className="im-sound-control" onClick={onToggleAudio} disabled={audio.phase === 'unavailable'} aria-pressed={audio.enabled} aria-label={audio.phase === 'unavailable' ? label : audio.enabled ? 'خاموش کردن صدا' : 'روشن کردن صدا'} data-audio-control data-cursor="link">
+        <span className="im-sound-bars" data-muted={audio.phase !== 'playing'} aria-hidden="true"><i /><i /><i /><i /></span><span>{label}</span>
       </button>
     </>
   );
