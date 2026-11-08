@@ -111,6 +111,10 @@ test('context recovery retains an open project, its transition and shared enviro
   assert.ok(sculpture.children[0].material.opacity > .3);
   const originalParticles = previous.scene.getObjectByName('home-world').children.find((item) => item.isPoints);
   assert.ok(originalParticles.material.uniforms.uReveal.value > 0, 'the original particle field remains visible');
+  assert.ok(originalParticles.material.uniforms.uProjectMix.value > .5, 'the column stars are gathering behind the selected project');
+  assert.equal(originalParticles.material.uniforms.uProjectDepth.value, presentation.depth);
+  let starFields = 0; previous.scene.traverse((object) => { if (object.isPoints) starFields++; });
+  assert.equal(starFields, 1, 'selection keeps a single star field');
   await action(() => env.q('canvas').dispatchEvent(new Event('webglcontextlost', { cancelable: true })));
   assert.equal(presentation.ready, false);
   assert.equal(presentation.surface, 'fallback');
@@ -122,4 +126,36 @@ test('context recovery retains an open project, its transition and shared enviro
   assert.ok(renderers.at(-1).camera.distanceTo(camera) < 1e-9);
   assert.notEqual(renderers.at(-1).scene.getObjectByName('project-environment'), previousSurroundings);
   assert.equal(renderers.filter((renderer) => !renderer.disposed).length, 1);
+});
+
+test('first selection moves the same star mesh behind the project and binds a returning mouse field', async (t) => {
+  const env = await environment({ width: 1440, height: 900 });
+  const { Stage } = await source('src/immersive/Stage.tsx', { three: new URL('./renderer.mock.mjs', import.meta.url).href });
+  const { projects } = await source('src/data/projects.ts');
+  const { createPresentation } = await source('src/immersive/projectPresentation.ts');
+  const presentation = createPresentation();
+  const progressRef = { current: { chapter: 'work', position: 1, progress: 1, workBlend: 1, overlay: null } };
+  const workRef = { current: { items: projects, target: 0, position: 0, dragging: false, blockClickUntil: 0, ready: false, interactive: false, selectedIndex: null, selection: 0, presentation } };
+  const root = createRoot(env.q('#root'));
+  const action = async (fn) => { await act(async () => { await fn(); await env.settle(); }); };
+  t.after(async () => { try { await action(() => root.unmount()); assert.deepEqual(env.errors, []); } finally { env.cleanup(); } });
+  await action(() => root.render(React.createElement(Stage, { progressRef, workRef })));
+  const scene = renderers.at(-1).scene;
+  const stars = scene.getObjectByName('home-world').children.find((item) => item.isPoints);
+  const geometry = stars.geometry;
+  assert.equal(stars.material.uniforms.uProjectMix.value, 0);
+  await action(() => { Object.assign(presentation, { projectId: 'fashion', phase: 'opening', progress: .4 }); workRef.current.selectedIndex = 0; });
+  assert.ok(stars.material.uniforms.uProjectMix.value > 0 && stars.material.uniforms.uProjectMix.value < 1);
+  await action(() => {
+    presentation.phase = 'open'; presentation.progress = 1;
+    const event = new MouseEvent('pointermove', { bubbles: true, clientX: 900, clientY: 300 });
+    Object.defineProperty(event, 'pointerType', { value: 'mouse' }); window.dispatchEvent(event);
+  });
+  assert.equal(stars.geometry, geometry); assert.equal(stars.material.uniforms.uProjectMix.value, 1);
+  assert.ok(stars.material.uniforms.uStarPointer.value.w > 0);
+  assert.ok(stars.material.uniforms.uProjectFrame.value.z > 0);
+  await action(async () => { document.documentElement.dispatchEvent(new Event('pointerleave')); await env.advance(1100); });
+  assert.ok(stars.material.uniforms.uStarPointer.value.w < .001);
+  await action(() => { presentation.projectId = null; presentation.progress = 0; presentation.phase = 'closed'; workRef.current.selectedIndex = null; });
+  assert.equal(stars.geometry, geometry); assert.equal(stars.material.uniforms.uProjectMix.value, 0);
 });

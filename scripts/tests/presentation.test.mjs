@@ -112,23 +112,38 @@ test('texture loading never turns the live scene into an opaque project page', a
   assert.equal(page.dataset.ready, 'true'); assert.equal(page.dataset.surface, 'webgl');
 });
 
-test('project environment respects particle budgets, full-screen distribution, quality reduction and disposal', async (t) => {
+test('the project glaze reuses the main star field rather than creating another particle cloud', async (t) => {
   const env = await environment(); t.after(() => env.cleanup());
   const { createProjectEnvironment } = await source('src/immersive/ProjectEnvironment.ts');
   for (const mobile of [false, true]) {
     const scene = createProjectEnvironment(mobile, false, new Texture());
-    assert.equal(scene.budget, mobile ? 6144 : 24576);
-    const points = scene.group.children.find((item) => item.isPoints);
-    assert.equal(points.geometry.attributes.position.count, scene.budget);
-    scene.setQuality(1); assert.equal(points.geometry.drawRange.count, scene.budget / 2);
-    const uv = points.geometry.attributes.aSample;
-    const y = Array.from({ length: scene.budget / 2 }, (_, i) => uv.getY(i));
-    assert.ok(Math.max(...y) - Math.min(...y) > .95, 'lower quality keeps points across the whole image');
-    scene.setQuality(2); assert.equal(points.geometry.drawRange.count, scene.budget / 4);
+    assert.equal(scene.group.children.filter((item) => item.isPoints).length, 0);
+    assert.equal(scene.group.children.length, 1);
+    const surface = scene.group.children[0];
+    scene.setQuality(1); assert.equal(surface.material.uniforms.uDetail.value, 0);
     let disposed = 0;
-    for (const object of scene.group.children) {
-      object.geometry.addEventListener('dispose', () => disposed++); object.material.addEventListener('dispose', () => disposed++);
-    }
-    scene.dispose(); assert.equal(disposed, 4);
+    surface.geometry.addEventListener('dispose', () => disposed++); surface.material.addEventListener('dispose', () => disposed++);
+    scene.dispose(); assert.equal(disposed, 2);
   }
+});
+
+test('star repulsion has a bounded pixel radius, follows smoothly and returns after pointer leave', async () => {
+  const { createStarPointer } = await source('src/immersive/projectStars.ts');
+  const field = createStarPointer();
+  const input = { x: 600, y: 200, active: true, nx: 0, ny: 0 };
+  for (let i = 0; i < 60; i++) field.update(input, 1440, 900, 1 / 60, true);
+  assert.deepEqual(field.viewport.toArray(), [1440, 900]);
+  assert.equal(field.pointer.x, 600); assert.equal(field.pointer.y, 700, 'pointer coordinates match the bottom-up star projection');
+  assert.equal(field.pointer.z, 150); assert.ok(field.pointer.w > .99 && field.pointer.w <= 1);
+  field.update({ ...input, x: 1000 }, 1440, 900, 1 / 60, true);
+  assert.ok(field.pointer.x > 600 && field.pointer.x < 1000, 'movement is damped instead of teleporting the particle field');
+  const before = field.pointer.w;
+  field.update({ ...input, active: false }, 1440, 900, 1 / 60, true);
+  assert.ok(field.pointer.w > 0 && field.pointer.w < before);
+  for (let i = 0; i < 60; i++) field.update(input, 1440, 900, 1 / 60, false);
+  assert.ok(field.pointer.w < .001, 'repelled stars relax back instead of staying displaced');
+  const mobile = createStarPointer();
+  for (let i = 0; i < 60; i++) mobile.update(input, 390, 844, 1 / 60, false);
+  assert.equal(mobile.pointer.w, 0, 'coarse pointers do not require hover');
+  assert.equal(mobile.pointer.z, 90);
 });
