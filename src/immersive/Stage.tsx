@@ -319,7 +319,8 @@ export function Stage({ progressRef, workRef, onReady }: { progressRef: RefObjec
       camera.lookAt(aim);
       camera.rotateZ((lowPower ? -.008 : -.015) * workBlend * (1 - (work?.selection ?? 0)));
       camera.updateMatrixWorld();
-      world.position.set(nextAim.x * panelMix * workBlend, (compact ? 1.2 : .6) * (1 - workBlend) + nextAim.y * panelMix * workBlend, (nextAim.z - 3) * panelMix * workBlend);
+      const heroHeight = compact && stableHeight > 640 ? 1.2 : .6;
+      world.position.set(nextAim.x * panelMix * workBlend, heroHeight * (1 - workBlend) + nextAim.y * panelMix * workBlend, (nextAim.z - 3) * panelMix * workBlend);
       heroAngle += (heroTarget - heroAngle) * ease;
       world.rotation.y = reduced ? -.08 : Math.sin(elapsed * .14) * .08 + (1 - intro) * .45 + (chapter * .6 + heroAngle) * (1 - workBlend);
       world.rotation.z = reduced ? 0 : Math.sin(elapsed * .19) * .025;

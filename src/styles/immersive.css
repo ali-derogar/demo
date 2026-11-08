@@ -249,6 +249,10 @@ html.has-custom-cursor .im-info-panel a,html.has-custom-cursor .im-info-panel bu
   .im-home__actions { grid-template-columns: 1fr; gap: 6px; }
   .im-home__actions a { min-height: 42px; padding-block: 6px; }
 }
+@media (max-width:767px) and (min-height:541px) and (max-height:640px) {
+  .im-home__scene { top: 44%; width: min(60vw,210px); }
+  .im-home__gesture,.im-home__scene-caption { display: none; }
+}
 @media (prefers-reduced-motion:reduce) {
   *,*::before,*::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
   #home { min-height: 100svh; }
