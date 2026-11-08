@@ -110,7 +110,8 @@ if (command === 'search') {
     console.error(`✖ هیچ رکورد مانیفست با «${only}» مطابقت نداشت`);
     process.exit(1);
   }
-  await cmdBuild(slots);
+  await cmdBuild(slots.filter((slot) => !slot.out.startsWith('public/images/previews/')));
+  if (!process.exitCode) await import('./generate-previews.mjs');
 } else {
   console.log('usage: node scripts/fetch-images.mjs <search|build> [...]');
 }

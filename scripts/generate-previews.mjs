@@ -37,8 +37,8 @@ for (const [index, project] of projects.entries()) {
   const used = new Set();
   const photo = async (path, x,y,w,h, extra='') => {
     used.add(path);
-    const bytes = await readFile(join(root, 'public', path));
-    return `<image xlink:href="data:image/webp;base64,${bytes.toString('base64')}" x="${x}" y="${y}" width="${w}" height="${h}" preserveAspectRatio="xMidYMid slice" ${extra}/>`;
+    const bytes = await sharp(await readFile(join(root, 'public', path))).png().toBuffer();
+    return `<image xlink:href="data:image/png;base64,${bytes.toString('base64')}" x="${x}" y="${y}" width="${w}" height="${h}" preserveAspectRatio="xMidYMid slice" ${extra}/>`;
   };
   const titleBlock = (x,y,size=66,max=18,color=ink,weight=500) => wrap(title,max).slice(0,3).map((row,i)=>text(row,x,y+i*size*1.45,size,color,weight)).join('');
   const button = (x,y,label=cta,color=accent,labelColor=bg) => rect(x-252,y,252,58,color,layout==='athletic'?0:6)+text(label,x-26,y+38,22,labelColor,600);
@@ -140,11 +140,11 @@ for (const [index, project] of projects.entries()) {
     <text x="80" y="930" fill="#99aaa5" font-size="14" font-family="sans-serif" letter-spacing="2">PERSIANBOTYAR / SELECTED WORK</text>
   </svg>`;
   const output = `public/images/previews/${project.id}.webp`;
-  const bytes = await sharp(Buffer.from(svg)).webp({ quality: 90 }).toBuffer();
+  const bytes = await sharp(Buffer.from(svg)).resize(1200,800).webp({ quality: 90 }).toBuffer();
   await writeFile(join(root,output),bytes);
   const upstream = JSON.parse(await readFile(join(root, `public${project.url}assets/ATTRIBUTION.json`),'utf8'));
   const sources = [...used].map((path) => ({ path, ...upstream.find((row) => basename(row.file) === basename(path)) }));
-  const row = { out:output,file:`${project.id}.webp`,demo:project.id,title:`طرح گرافیکی رابط ${project.title.split('؛')[0]}`,artist:`persianbotyar (layout); ${[...new Set(sources.map(s=>s.artist))].join('; ')}`,license:[...new Set(sources.map(s=>s.license))].join(' / '),source:sources[0]?.source,derivedFrom:[...used].map(path=>`public${path}`),sources,width:1440,height:960,bytes:bytes.length,format:'webp',generator:'scripts/generate-previews.mjs' };
+  const row = { out:output,file:`${project.id}.webp`,demo:project.id,title:`طرح گرافیکی رابط ${project.title.split('؛')[0]}`,artist:`persianbotyar (layout); ${[...new Set(sources.map(s=>s.artist))].join('; ')}`,license:[...new Set(sources.map(s=>s.license))].join(' / '),source:sources[0]?.source,derivedFrom:[...used].map(path=>`public${path}`),sources,width:1200,height:800,bytes:bytes.length,format:'webp',generator:'scripts/generate-previews.mjs' };
   credits = credits.filter((item)=>item.out!==output); credits.push(row); manifest.push(row);
   console.log(`${project.id}: ${Math.round(bytes.length/1024)} KB`);
   document.defaultView.close();

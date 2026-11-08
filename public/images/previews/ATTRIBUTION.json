@@ -20,9 +20,9 @@
         "source": "https://commons.wikimedia.org/wiki/File:Street_Style_of_2018_2019_in_Tehran_2.jpg"
       }
     ],
-    "width": 1440,
-    "height": 960,
-    "bytes": 20912,
+    "width": 1200,
+    "height": 800,
+    "bytes": 52706,
     "format": "webp",
     "generator": "scripts/generate-previews.mjs"
   },
@@ -47,9 +47,9 @@
         "source": "https://commons.wikimedia.org/wiki/File:Aronald_Classic_Columbus.Ohio_USA_3_(24912310643).jpg"
       }
     ],
-    "width": 1440,
-    "height": 960,
-    "bytes": 26080,
+    "width": 1200,
+    "height": 800,
+    "bytes": 52782,
     "format": "webp",
     "generator": "scripts/generate-previews.mjs"
   },
@@ -74,9 +74,9 @@
         "source": "https://commons.wikimedia.org/wiki/File:2014_Lamborghini_Huracan_4.jpg"
       }
     ],
-    "width": 1440,
-    "height": 960,
-    "bytes": 24262,
+    "width": 1200,
+    "height": 800,
+    "bytes": 77452,
     "format": "webp",
     "generator": "scripts/generate-previews.mjs"
   },
@@ -101,9 +101,9 @@
         "source": "https://commons.wikimedia.org/wiki/File%3ADecorative%20candle%20and%20flowers.jpg"
       }
     ],
-    "width": 1440,
-    "height": 960,
-    "bytes": 26084,
+    "width": 1200,
+    "height": 800,
+    "bytes": 63154,
     "format": "webp",
     "generator": "scripts/generate-previews.mjs"
   },
@@ -128,9 +128,9 @@
         "source": "https://commons.wikimedia.org/wiki/File:Coffee_preparation_in_a_modern_cafe_with_steaming_equipment_and_skilled_barista_at_work_during_the_morning_rush_hour.jpg"
       }
     ],
-    "width": 1440,
-    "height": 960,
-    "bytes": 19134,
+    "width": 1200,
+    "height": 800,
+    "bytes": 39322,
     "format": "webp",
     "generator": "scripts/generate-previews.mjs"
   },
@@ -158,9 +158,9 @@
         "slot": "hero"
       }
     ],
-    "width": 1440,
-    "height": 960,
-    "bytes": 26916,
+    "width": 1200,
+    "height": 800,
+    "bytes": 66836,
     "format": "webp",
     "generator": "scripts/generate-previews.mjs"
   },
@@ -188,9 +188,9 @@
         "slot": "نگارگرِ خوشنویسی (صفحه‌ی گلستان سعدی، خط نستعلیق)"
       }
     ],
-    "width": 1440,
-    "height": 960,
-    "bytes": 22842,
+    "width": 1200,
+    "height": 800,
+    "bytes": 76178,
     "format": "webp",
     "generator": "scripts/generate-previews.mjs"
   },
@@ -218,9 +218,9 @@
         "slot": "پس‌زمینه‌ی سرصفحه — نمایش نور"
       }
     ],
-    "width": 1440,
-    "height": 960,
-    "bytes": 49302,
+    "width": 1200,
+    "height": 800,
+    "bytes": 74462,
     "format": "webp",
     "generator": "scripts/generate-previews.mjs"
   },
@@ -248,9 +248,9 @@
         "slot": "کارت شمش — شمش‌های طلا"
       }
     ],
-    "width": 1440,
-    "height": 960,
-    "bytes": 27278,
+    "width": 1200,
+    "height": 800,
+    "bytes": 48644,
     "format": "webp",
     "generator": "scripts/generate-previews.mjs"
   }

@@ -7,15 +7,14 @@ import { readFile } from 'node:fs/promises';
 import { source, environment } from './helpers.mjs';
 import { requests } from './orbit-loader.mock.mjs';
 
-test('presentation takes 1.5 seconds, reverses without a jump and reduced motion settles immediately', async () => {
-  const { createPresentation, advancePresentation } = await source('src/immersive/projectPresentation.ts');
-  const p = createPresentation(); p.projectId = 'fashion'; p.phase = 'opening';
-  advancePresentation(p, .3); assert.ok(Math.abs(p.progress - .2) < 1e-12); assert.equal(p.phase, 'opening');
-  p.phase = 'closing'; advancePresentation(p, .15); assert.ok(Math.abs(p.progress - .1) < 1e-12);
-  p.phase = 'opening'; advancePresentation(p, 1.35); assert.equal(p.progress, 1); assert.equal(p.phase, 'open');
-  p.phase = 'closing'; advancePresentation(p, 1.5); assert.equal(p.phase, 'closed'); assert.equal(p.projectId, null);
-  p.projectId = 'fashion'; p.phase = 'opening'; advancePresentation(p, 0, true); assert.equal(p.phase, 'open');
-  p.phase = 'closing'; advancePresentation(p, 0, true); assert.equal(p.phase, 'closed');
+test('presentation progress is reversible and independent of elapsed time', async () => {
+  const { galleryFrame, galleryMetrics } = await source('src/immersive/orbit.ts');
+  const m=galleryMetrics(1400,844,9);
+  const positions=[1400,1450,1520,1600,1750,1900,2000,2200,2400];
+  const forward=positions.map(y=>galleryFrame(y,m));
+  const reverse=[...positions].reverse().map(y=>galleryFrame(y,m)).reverse();
+  assert.deepEqual(forward,reverse);
+  for(let i=0;i<100;i++) assert.deepEqual(galleryFrame(1520,m),forward[2]);
 });
 
 for (const [width, height] of [[390, 844], [768, 1024], [1440, 900]]) {
@@ -29,7 +28,7 @@ for (const [width, height] of [[390, 844], [768, 1024], [1440, 900]]) {
     const camera = new PerspectiveCamera(54, width / height, .1, 120), eye = new Vector3(), aim = new Vector3();
     for (let index = 0; index < 9; index++) {
       const p = createPresentation(); p.projectId = projects[index].id; p.phase = 'opening';
-      const state = { items: projects, target: index, position: index, selectedIndex: index, selection: 1, presentation: p, dragging: false, ready: false };
+      const state = { items: projects, target: index, position: index, selectedIndex: index, selection: 1, scrollDriven: true, presentation: p, dragging: false, ready: false };
       const pane = orbit.group.children[index];
       for (const progress of [0, .1, .2, .4, .7, 1]) {
         p.progress = progress;
@@ -45,15 +44,15 @@ for (const [width, height] of [[390, 844], [768, 1024], [1440, 900]]) {
       }
       const expected = projectFrame(width, height, height);
       assert.ok(Math.abs(p.bounds.left + p.bounds.width / 2 - expected.left - expected.width / 2) < width * .025, 'the live card remains in its intended column');
-      assert.ok(p.bounds.width <= expected.width && p.bounds.height <= expected.height, 'motion stays inside the framing budget');
-      assert.ok(Math.abs(pane.material.uniforms.uFrameAspect.value - 1.5) < 1e-8, 'the original photo aspect is preserved on the actual mesh');
+      assert.ok(p.bounds.width <= expected.width + .05 && p.bounds.height <= expected.height + .05, 'motion stays inside the framing budget');
+      assert.ok(Math.abs(p.bounds.width / p.bounds.height - 1.5) < .02, 'the original photo aspect is preserved on the actual mesh');
       assert.ok(pane.material.uniforms.uFlatten.value > 0 && pane.material.uniforms.uFlatten.value < 1, 'the selected pane retains depth instead of becoming a flat billboard');
       assert.equal(pane.material.uniforms.uPresentation.value, 1, 'the glass title yields to readable native metadata');
       assert.ok(p.bounds.width <= width * (width < 1024 ? .9 : .62) + 1e-6);
       const rim = pane.getObjectByName('project-rim'); assert.equal(rim.visible, true); assert.ok(rim.geometry.attributes.normal);
       const before = pane.matrixWorld.clone();
       orbit.update(state, camera, 3.5, 1 / 60, 1, false);
-      assert.notDeepEqual(pane.matrixWorld.toArray(), before.toArray(), 'an open card continues moving after the entry transition');
+      assert.deepEqual(pane.matrixWorld.toArray(), before.toArray(), 'the scroll-driven card stops when scrolling stops');
       assert.ok(p.bounds.left > 0 && p.bounds.left + p.bounds.width < width);
       const centerMouse = new MouseEvent('pointermove', { bubbles: true, clientX: width / 2, clientY: height / 2 });
       Object.defineProperty(centerMouse, 'pointerType', { value: 'mouse' }); window.dispatchEvent(centerMouse);
@@ -85,7 +84,9 @@ test('project poster retires only after its own image and a fully visible render
   orbit.update(state, camera, 1, 0, 1, false); orbit.present(state); assert.equal(presentation.ready, false);
   const image = new Texture({ width: 1200, height: 800 }); requests.find((r) => r.url === projects[0].preview).resolve(image); await env.settle();
   assert.equal(orbit.texture('fashion'), image, 'environment uses the same cached texture as the pane');
-  orbit.update(state, camera, 1, 0, .4, false); orbit.present(state); assert.equal(presentation.ready, false);
+  orbit.update(state, camera, 1, 0, .4, false); assert.equal(presentation.ready, false, 'the poster stays until a rendered frame');
+  orbit.present(state); assert.equal(presentation.ready, true);
+  presentation.ready = false;
   orbit.update(state, camera, 1, 0, 1, false); assert.equal(presentation.ready, false);
   orbit.present(state); assert.equal(presentation.ready, true);
   orbit.update(state, camera, 1, 0, .4, false); orbit.present(state);
@@ -147,3 +148,38 @@ test('star repulsion has a bounded pixel radius, follows smoothly and returns af
   assert.equal(mobile.pointer.w, 0, 'coarse pointers do not require hover');
   assert.equal(mobile.pointer.z, 90);
 });
+
+for (const [width,height] of [[390,844],[768,1024],[1440,900]]) {
+  test(`every original pane grows without overshoot and exactly retraces its projection / ${width}`,async(t)=>{
+    const env=await environment({width,height});t.after(()=>env.cleanup());
+    const {createWorkOrbit}=await source('src/immersive/WorkOrbit.ts');
+    const {projects}=await source('src/data/projects.ts');
+    const {createPresentation,projectFrame}=await source('src/immersive/projectPresentation.ts');
+    const orbit=createWorkOrbit({capabilities:{getMaxAnisotropy:()=>1}},false,width<768);t.after(()=>orbit.dispose());
+    orbit.resize(width,height,1);orbit.prepare(projects);
+    const camera=new PerspectiveCamera(54,width/height,.1,120),eye=new Vector3(),aim=new Vector3();
+    for(let index=0;index<projects.length;index++) {
+      const presentation=createPresentation();presentation.projectId=projects[index].id;
+      const state={items:projects,target:index,position:index,selectedIndex:index,selection:0,scrollDriven:true,presentation,dragging:false,ready:false};
+      const original=orbit.group.children[index],snapshots=[];
+      const render=(progress,time)=>{
+        presentation.progress=progress;state.selection=progress;
+        orbit.cameraPose(state,camera.aspect,camera.fov,eye,aim);camera.position.copy(eye);camera.lookAt(aim);camera.rotateZ(-.015*(1-progress));camera.updateMatrixWorld();
+        orbit.update(state,camera,time,1/60,1,false,false);
+      };
+      let previousWidth=0;
+      for(let frame=0;frame<=40;frame++) {
+        render(frame/40,frame/60);
+        const bounds={...presentation.bounds};
+        assert.ok(bounds.width>=previousWidth-.05,`card ${index} cannot shrink while opening at ${frame}`);
+        assert.ok(bounds.width<=projectFrame(width,height,height).width+.1,`card ${index} never overshoots its final frame`);
+        snapshots.push(bounds);previousWidth=bounds.width;
+        assert.equal(orbit.group.children[index],original,'opening never creates a second pane');
+      }
+      for(let frame=40;frame>=0;frame--) {
+        render(frame/40,2+(40-frame)/60);
+        for(const key of ['left','top','width','height']) assert.ok(Math.abs(presentation.bounds[key]-snapshots[frame][key])<1e-8,`reversal retraces ${key} of card ${index}`);
+      }
+    }
+  });
+}

@@ -15,6 +15,7 @@ import { createProjectRim } from './ProjectRim';
 /** Scene module only: renderer, camera, post-processing and RAF belong to Stage. */
 export function createWorkOrbit(renderer: WebGLRenderer, linearOutput: boolean, mobile = false) {
   const group = new Group();
+  group.name = 'work-orbit';
   const rim = createProjectRim();
   group.visible = false;
   const geometry = new PlaneGeometry(ORBIT_CARD_WIDTH, ORBIT_CARD_HEIGHT, 40, 8);
@@ -37,12 +38,13 @@ export function createWorkOrbit(renderer: WebGLRenderer, linearOutput: boolean, 
   let stableHeight = 1;
   const labels = new Map<string, ReturnType<typeof createProjectLabel>>();
   let portrait = false;
+  let disposed = false;
   const loader = new TextureLoader();
   const images = createResourceQueue<Texture>((url) => new Promise((resolve, reject) => {
     loader.load(url, (texture) => {
       texture.colorSpace = SRGBColorSpace;
       texture.anisotropy = Math.min(4, renderer.capabilities.getMaxAnisotropy());
-      renderer.initTexture?.(texture);
+      if (!disposed) renderer.initTexture?.(texture);
       resolve(texture);
     }, undefined, reject);
   }), (texture) => texture.dispose());
@@ -61,6 +63,7 @@ export function createWorkOrbit(renderer: WebGLRenderer, linearOutput: boolean, 
   const destination = new Vector3();
   const projected = new Vector3();
   const caseTilt = new Vector2();
+  const rimNeutral = new Color('#d8e0df');
   const drawOrder: typeof panels = [];
 
   function prepare(next: DemoProject[]) {
@@ -143,7 +146,20 @@ export function createWorkOrbit(renderer: WebGLRenderer, linearOutput: boolean, 
     return (hit?.object.userData.index as number | undefined) ?? -1;
   }
 
+  function boundsFor(panel: typeof panels[number], camera: PerspectiveCamera, flatten: number) {
+    let left = Infinity, top = Infinity, right = -Infinity, bottom = -Infinity;
+    panel.updateMatrixWorld(true);
+    for (const x of [-ORBIT_CARD_WIDTH / 2, 0, ORBIT_CARD_WIDTH / 2]) for (const y of [-ORBIT_CARD_HEIGHT / 2, 0, ORBIT_CARD_HEIGHT / 2]) {
+      projected.set(Math.sin(x / ORBIT_CURVE_RADIUS) * ORBIT_CURVE_RADIUS * (1 - flatten) + x * flatten, y,
+        (Math.cos(x / ORBIT_CURVE_RADIUS) - 1) * ORBIT_CURVE_RADIUS * (1 - flatten)).applyMatrix4(panel.matrixWorld).project(camera);
+      const px = (projected.x + 1) * cssSize.value.x / 2, py = (1 - projected.y) * cssSize.value.y / 2;
+      left = Math.min(left, px); right = Math.max(right, px); top = Math.min(top, py); bottom = Math.max(bottom, py);
+    }
+    return { left, top, width: right - left, height: bottom - top };
+  }
+
   function update(state: OrbitMotion, camera: PerspectiveCamera, time: number, dt: number, reveal: number, interactive: boolean, pointerEffects = true) {
+    state.reveal = reveal;
     group.visible = reveal > .005;
     const pointer = getPointer();
     const hover = interactive && !state.dragging && pointer.active
@@ -157,8 +173,9 @@ export function createWorkOrbit(renderer: WebGLRenderer, linearOutput: boolean, 
     const neighborReveal = 1 - smoothRange(progress, 0, .2);
     let hero: typeof panels[number] | undefined;
     const pointerEnabled = pointerEffects && !mobile && pointer.active && !!presentation?.projectId && presentation.phase !== 'closing';
-    caseTilt.x += ((pointerEnabled ? Math.max(-1, Math.min(1, pointer.nx)) : 0) - caseTilt.x) * ease;
-    caseTilt.y += ((pointerEnabled ? Math.max(-1, Math.min(1, pointer.ny)) : 0) - caseTilt.y) * ease;
+    const tiltEase = state.scrollDriven ? 1 : ease;
+    caseTilt.x += ((pointerEnabled ? Math.max(-1, Math.min(1, pointer.nx)) : 0) - caseTilt.x) * tiltEase;
+    caseTilt.y += ((pointerEnabled ? Math.max(-1, Math.min(1, pointer.ny)) : 0) - caseTilt.y) * tiltEase;
     panels.forEach((panel, index) => {
       const uniforms = panel.material.uniforms;
       const selected = state.selectedIndex === index ? 1 : 0;
@@ -181,13 +198,28 @@ export function createWorkOrbit(renderer: WebGLRenderer, linearOutput: boolean, 
       if (isHero) {
         hero = panel;
         const frame = projectFrame(cssSize.value.x, cssSize.value.y, stableHeight, imageAspect);
-        const halfHeight = Math.tan(camera.fov * Math.PI / 360) * 4.8;
-        destination.set(((frame.left + frame.width / 2) / cssSize.value.x * 2 - 1) * halfHeight * camera.aspect,
-          (1 - (frame.top + frame.height / 2) / cssSize.value.y * 2) * halfHeight, -4.8).applyMatrix4(camera.matrixWorld);
-        panel.position.lerp(destination, heroMix);
-        panel.quaternion.slerp(camera.quaternion, heroMix);
-        panel.scale.x += (frame.width / cssSize.value.x * halfHeight * 2 * camera.aspect / ORBIT_CARD_WIDTH - panel.scale.x) * heroMix;
-        panel.scale.y += (frame.height / cssSize.value.y * halfHeight * 2 / ORBIT_CARD_HEIGHT - panel.scale.y) * heroMix;
+        const base = boundsFor(panel, camera, 0);
+        const target = { left: base.left + (frame.left - base.left) * heroMix, top: base.top + (frame.top - base.top) * heroMix,
+          width: base.width + (frame.width - base.width) * heroMix, height: base.height + (frame.height - base.height) * heroMix };
+        const baseDepth = -center.copy(panel.position).applyMatrix4(camera.matrixWorldInverse).z;
+        const depth = baseDepth + (4.8 - baseDepth) * heroMix;
+        const halfHeight = Math.tan(camera.fov * Math.PI / 360) * depth;
+        if (heroMix > 0) {
+          destination.set(((target.left + target.width / 2) / cssSize.value.x * 2 - 1) * halfHeight * camera.aspect,
+            (1 - (target.top + target.height / 2) / cssSize.value.y * 2) * halfHeight, -depth).applyMatrix4(camera.matrixWorld);
+          panel.position.copy(destination);
+          panel.quaternion.slerp(camera.quaternion, heroMix);
+          panel.scale.set(target.width / cssSize.value.x * halfHeight * 2 * camera.aspect / ORBIT_CARD_WIDTH,
+            target.height / cssSize.value.y * halfHeight * 2 / ORBIT_CARD_HEIGHT, 1);
+          // Correct the small projected curvature margin in screen space. This
+          // avoids the mid-transition overshoot of independent world/scale lerps.
+          for (let pass = 0; pass < 2; pass++) {
+            panel.updateMatrixWorld(true);
+            const actual = boundsFor(panel, camera, flatten);
+            panel.scale.x *= target.width / actual.width;
+            panel.scale.y *= target.height / actual.height;
+          }
+        }
         destination.set((state.scrollDriven ? 0 : Math.cos(time * .48) * .025) + caseTilt.x * .025, (state.scrollDriven ? 0 : Math.sin(time * .8) * .035) + caseTilt.y * .015, 0).applyQuaternion(camera.quaternion);
         panel.position.addScaledVector(destination, heroMix);
         panel.rotateY(((state.scrollDriven ? 0 : Math.sin(time * .26) * .012) + caseTilt.x * .015) * heroMix);
@@ -197,8 +229,8 @@ export function createWorkOrbit(renderer: WebGLRenderer, linearOutput: boolean, 
       uniforms.uFrameAspect.value = ORBIT_CARD_WIDTH * panel.scale.x / (ORBIT_CARD_HEIGHT * panel.scale.y);
       const focus = Math.exp(-Math.pow(index - state.position, 2) * 1.6);
       uniforms.uFocus.value += (focus - uniforms.uFocus.value) * ease;
-      uniforms.uHover.value += ((hover === index ? 1 : 0) - uniforms.uHover.value) * ease;
-      uniforms.uSpeed.value += (speed - uniforms.uSpeed.value) * ease;
+      uniforms.uHover.value = mobile ? 0 : uniforms.uHover.value + ((hover === index ? 1 : 0) - uniforms.uHover.value) * ease;
+      uniforms.uSpeed.value = mobile || state.scrollDriven ? 0 : uniforms.uSpeed.value + (speed - uniforms.uSpeed.value) * ease;
       uniforms.uTime.value = time;
       uniforms.uReveal.value = reveal * (isHero ? 1 : presentation?.projectId ? neighborReveal : selected ? 1 : 1 - .7 * Math.max(0, state.selection - lift));
     });
@@ -206,6 +238,7 @@ export function createWorkOrbit(renderer: WebGLRenderer, linearOutput: boolean, 
     if (hero) {
       if (rim.mesh.parent !== hero) hero.add(rim.mesh);
       rim.mesh.material.opacity = smoothRange(progress, .05, .5) * .72;
+      rim.mesh.material.color.set(items[hero.userData.index].accent).lerp(rimNeutral, .6);
     }
     group.updateMatrixWorld(true);
     const frontIndex = Math.max(0, Math.min(items.length - 1, Math.round(state.target)));
@@ -213,15 +246,8 @@ export function createWorkOrbit(renderer: WebGLRenderer, linearOutput: boolean, 
     const activePane = hero ?? panels[frontIndex];
     if (activePane) {
       if (hero && presentation) presentation.depth = -center.copy(hero.position).applyMatrix4(camera.matrixWorldInverse).z;
-      let left = Infinity, top = Infinity, right = -Infinity, bottom = -Infinity;
-      for (const x of [-ORBIT_CARD_WIDTH / 2, 0, ORBIT_CARD_WIDTH / 2]) for (const y of [-ORBIT_CARD_HEIGHT / 2, 0, ORBIT_CARD_HEIGHT / 2]) {
-        projected.set(Math.sin(x / ORBIT_CURVE_RADIUS) * ORBIT_CURVE_RADIUS * (1 - flatten) + x * flatten, y,
-          (Math.cos(x / ORBIT_CURVE_RADIUS) - 1) * ORBIT_CURVE_RADIUS * (1 - (hero ? flatten : 0))).applyMatrix4(activePane.matrixWorld).project(camera);
-        const px = (projected.x + 1) * cssSize.value.x / 2, py = (1 - projected.y) * cssSize.value.y / 2;
-        left = Math.min(left, px); right = Math.max(right, px); top = Math.min(top, py); bottom = Math.max(bottom, py);
-      }
       const bounds = state.bounds ?? (state.bounds = { left: 0, top: 0, width: 0, height: 0 });
-      Object.assign(bounds, { left, top, width: right - left, height: bottom - top });
+      Object.assign(bounds, boundsFor(activePane, camera, hero ? flatten : 0));
       if (hero && presentation) presentation.bounds = bounds;
       activePane.material.uniforms.uMediaSize.value.set(bounds.width, bounds.height);
     }
@@ -273,6 +299,7 @@ export function createWorkOrbit(renderer: WebGLRenderer, linearOutput: boolean, 
     setBackdrop(texture: Texture) { backdrop.value = texture; backdropReady.value = 1; },
     clearBackdrop() { backdrop.value = placeholder; backdropReady.value = 0; },
     dispose() {
+      disposed = true;
       geometry.dispose();
       rim.dispose();
       placeholder.dispose();

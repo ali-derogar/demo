@@ -324,7 +324,7 @@ export function Stage({ progressRef, workRef }: { progressRef: RefObject<ScenePr
       world.updateMatrixWorld(true);
       if (work && !reduced) orbit.update(
         work, camera, elapsed, dt,
-        MathUtils.smoothstep(workBlend, .2, .96) * (1 - panelMix * .7),
+        MathUtils.smoothstep(workBlend, .9, 1) * (1 - panelMix * .7),
         workBlend > .95 && work.interactive && !timeline?.overlay,
         !lowPower && !timeline?.overlay,
       );
@@ -419,7 +419,7 @@ export function Stage({ progressRef, workRef }: { progressRef: RefObject<ScenePr
       projectEnvironment.setFlow(flowRead?.texture);
       const project = work?.items.find((item) => item.id === presentation?.projectId);
       projectEnvironment.update(presentation, project, project ? orbit.texture(project.id) : undefined, camera, elapsed, panelMix);
-      if (backdrop && workBlend > .02 && (!lowPower || captureFrame++ % 2 === 0)) {
+      if (backdrop && (firstFrame || workBlend > .02) && (!lowPower || captureFrame++ % 2 === 0)) {
         const visible = orbit.group.visible;
         orbit.group.visible = false;
         renderer.setRenderTarget(backdrop); renderer.clear(); renderer.render(scene, camera); renderer.setRenderTarget(null);
@@ -428,9 +428,9 @@ export function Stage({ progressRef, workRef }: { progressRef: RefObject<ScenePr
       }
       if (composer) composer.render(dt);
       else renderer.render(scene, camera);
-      if (work && !reduced) orbit.present(work);
       if (presentationState) presentationState.surface = reduced ? 'reduced' : 'webgl';
-      if (firstFrame) { firstFrame = false; setStatus('ready'); }
+      if (firstFrame) { firstFrame = false; wrap.dataset.status = 'ready'; setStatus('ready'); }
+      if (work && !reduced) orbit.present(work);
 
       if (!reduced) {
         const level = quality.sample(delta);

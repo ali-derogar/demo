@@ -13,6 +13,7 @@ async function app(t, options) {
   env.action = async (callback) => { await act(async () => { await callback(); await env.settle(); }); };
   t.after(async () => { try { await env.action(() => root.unmount()); assert.deepEqual(env.errors, []); } finally { env.cleanup(); } });
   await env.action(() => root.render(React.createElement(React.StrictMode, null, React.createElement(App))));
+  await env.action(() => {});
   return env;
 }
 
@@ -90,7 +91,7 @@ test('gallery menus, keyboard, cancelled touch, filtering and all nine demo link
   assert.equal(new Set(links.map((link) => link.href)).size, 9);
   links.forEach((link) => { assert.match(link.getAttribute('href'), /^\/demos\/\w+\/$/); assert.equal(link.target, '_blank'); });
   const stage = env.q('.im-orbit__stage');
-  await env.action(() => stage.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowLeft', bubbles: true, cancelable: true })));
+  await env.action(() => stage.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true, cancelable: true })));
   assert.equal(env.q('input[type="range"]').value, '1');
   const pointer = (type, x, y, buttons = 1) => {
     const event = new MouseEvent(type, { bubbles: true, cancelable: true, buttons, clientX: x, clientY: y, button: 0 });
@@ -100,7 +101,7 @@ test('gallery menus, keyboard, cancelled touch, filtering and all nine demo link
   await env.action(() => { pointer('pointerdown', 300, 300); pointer('pointermove', 303, 350); pointer('pointercancel', 303, 350, 0); });
   assert.equal(env.scroll, before);
   await env.action(() => { pointer('pointerdown', 300, 300); pointer('pointermove', 100, 302); pointer('pointercancel', 100, 302, 0); });
-  assert.equal(env.q('input[type="range"]').value, '2');
+  assert.equal(env.q('input[type="range"]').value, '0', 'leftward dragging goes toward the previous project without snapping');
   const filters = env.q('.im-orbit__filters');
   await env.action(() => { filters.open = true; filters.querySelector('summary').focus(); });
   await env.action(() => document.activeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true })));
@@ -148,9 +149,10 @@ test('all nine projects enter a routed presentation, then open their native demo
     await env.action(() => { first = click(link); });
     assert.equal(first.defaultPrevented, true);
     assert.match(location.hash, /^#work\//);
-    assert.equal(env.scroll, y, 'opening does not change the saved gallery scroll');
+    assert.ok(env.scroll > y, 'clicking moves to the open point of the same scroll timeline');
+    assert.equal(history.state.imGallery.scrollY, y, 'the source scroll is retained for Back');
     const presentation = env.q('.im-project'); assert.ok(presentation);
-    assert.equal(env.q('#im-main').hasAttribute('inert'), true);
+    assert.equal(env.q('#im-main').hasAttribute('inert'), false);
     assert.equal(document.querySelectorAll('canvas').length, 1, 'there is only one shared scene surface');
     const entry = env.q('.im-project__hitarea');
     assert.equal(entry.getAttribute('href'), link.getAttribute('href'));
@@ -173,10 +175,10 @@ test('touch fallback, keyboard entry, image errors and Escape work with reduced 
   await env.action(() => stage.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true, cancelable: true })));
   assert.equal(env.q('.im-project').dataset.phase, 'open');
   assert.equal(env.q('.im-project').dataset.ready, 'false');
-  assert.equal(document.body.style.overflow, 'hidden');
+  assert.equal(document.body.style.overflow, '');
   const wheel = new Event('wheel', { bubbles: true, cancelable: true });
   await env.action(() => document.body.dispatchEvent(wheel));
-  assert.equal(wheel.defaultPrevented, true, 'wheel cannot dismiss or scroll the underlying gallery');
+  assert.equal(wheel.defaultPrevented, false, 'vertical wheel input remains native while the project is open');
   assert.ok(env.q('.im-project'));
   await env.action(() => env.q('.im-project__poster img').dispatchEvent(new Event('error')));
   assert.ok(env.q('.im-project__image-error'));
@@ -206,27 +208,25 @@ test('desktop presentation retains the same Stage and desktop filters return aft
   assert.ok(env.q('.im-nav__links .im-sound-control'));
 });
 
-for (const width of [390, 768, 1440]) {
-  test(`entry hold and stable gallery metrics survive presentation and address bar resize / ${width}px`, async (t) => {
-    const env = await app(t, { hash: '#demos', width });
-    const track = env.q('.im-work-track'), h = env.q('.im-work--orbit').offsetHeight;
-    assert.equal(env.q('input[type="range"]').value, '0');
-    assert.ok(Math.abs(parseFloat(track.style.height) - h * 7.06) < .001);
-    await env.action(() => env.w.scrollTo({ top: env.workTop + .7 * h }));
-    assert.equal(env.q('input[type="range"]').value, '0');
-    const entryY = env.scroll;
-    await env.action(() => env.q('.im-orbit__fallback a').click());
-    assert.equal(env.scroll, entryY); assert.ok(env.q('.im-project'));
-    await env.action(() => env.advance(1600));
-    assert.equal(env.q('.im-project').dataset.phase, 'open');
-    await env.action(() => env.q('.im-project__actions button').click());
-    await env.action(() => env.advance(1700));
-    assert.equal(env.q('.im-project'), null); assert.equal(env.scroll, entryY);
-    await env.action(() => env.w.scrollTo({ top: env.workTop + (.8 + 3 * .62) * h }));
-    assert.equal(env.q('input[type="range"]').value, '3');
-    const y = env.scroll, trackHeight = track.style.height;
-    await env.action(() => { Object.defineProperty(env.w, 'innerHeight', { value: h + 80, configurable: true }); env.w.dispatchEvent(new Event('resize')); env.resolveFonts(); });
-    assert.equal(track.style.height, trackHeight); assert.equal(env.scroll, y); assert.equal(env.q('input[type="range"]').value, '3');
+for (const width of [390,768,1440]) {
+  test(`scroll presentation and stable metrics survive toolbar resizing / ${width}px`, async(t)=>{
+    const env=await app(t,{hash:'#demos',width});
+    const track=env.q('.im-work-track'),h=env.q('.im-work--orbit').offsetHeight;
+    assert.ok(Math.abs(parseFloat(track.style.height)-h*11.4)<.001);
+    await env.action(()=>env.w.scrollTo({top:env.workTop+.15*h}));
+    assert.ok(env.q('.im-project'));
+    const progress=env.q('.im-project').style.getPropertyValue('--project-progress');
+    await env.action(()=>env.advance(1800));
+    assert.equal(env.q('.im-project').style.getPropertyValue('--project-progress'),progress,'time alone cannot complete the transition');
+    await env.action(()=>env.w.scrollTo({top:env.workTop+.4*h}));
+    assert.equal(env.q('.im-project').dataset.phase,'open');
+    await env.action(()=>env.q('.im-project__actions button').click());
+    assert.equal(env.q('.im-project'),null); assert.equal(env.scroll,env.workTop);
+    await env.action(()=>env.w.scrollTo({top:env.workTop+3*1.2*h}));
+    assert.equal(env.q('input[type="range"]').value,'3');
+    const y=env.scroll,trackHeight=track.style.height;
+    await env.action(()=>{Object.defineProperty(env.w,'innerHeight',{value:h+80,configurable:true});env.w.dispatchEvent(new Event('resize'));env.resolveFonts();});
+    assert.equal(track.style.height,trackHeight);assert.equal(env.scroll,y);assert.equal(env.q('input[type="range"]').value,'3');
   });
 }
 
@@ -238,7 +238,7 @@ for (const id of ['fashion','sports','cars','store','cafe','travel','maktab','na
     const y = env.scroll;
     await env.action(() => env.q('.im-project__actions button').click());
     await env.action(() => env.advance(50));
-    assert.equal(location.hash, '#demos'); assert.equal(env.q('.im-project'), null); assert.equal(env.scroll, y);
+    assert.equal(location.hash, '#demos'); assert.equal(env.q('.im-project'), null); assert.ok(env.scroll < y, 'a direct route closes to its collapsed card');
   });
 }
 
@@ -258,7 +258,7 @@ test('single-project filter, nested panels and Back/Forward preserve presentatio
   assert.equal(env.q('dialog').open, true); assert.ok(env.q('.im-project')); assert.equal(document.body.style.overflow, 'hidden');
   await env.action(() => env.q('.im-info-panel__close').click());
   assert.equal(location.hash, '#work/fashion'); assert.equal(env.q('dialog').open, false);
-  assert.equal(env.q('.im-project').dataset.phase, 'open'); assert.equal(document.body.style.overflow, 'hidden');
+  assert.equal(env.q('.im-project').dataset.phase, 'open'); assert.equal(document.body.style.overflow, '');
   await env.action(() => history.back()); await env.action(() => env.advance(50));
   assert.equal(env.q('.im-project'), null); assert.equal(document.body.style.overflow, '');
   assert.equal(env.scroll, y); assert.equal(document.querySelectorAll('.im-orbit__project-link').length, 1);
@@ -275,15 +275,16 @@ test('single-project filter, nested panels and Back/Forward preserve presentatio
 
 test('changing reduced motion while a project is open keeps its route, scroll and presentation', async (t) => {
   const env = await app(t, { hash: '#demos' });
+  const sourceY = env.scroll;
   await env.action(() => env.q('.im-orbit__project-link').click());
   const y = env.scroll;
   await env.action(() => env.setReduced(true));
   await env.action(() => env.advance(32));
   assert.equal(location.hash, '#work/fashion'); assert.equal(env.scroll, y);
-  assert.equal(env.q('.im-project').dataset.phase, 'open'); assert.equal(document.body.style.overflow, 'hidden');
+  assert.equal(env.q('.im-project').dataset.phase, 'open'); assert.equal(document.body.style.overflow, '');
   await env.action(() => env.setReduced(false));
   assert.equal(location.hash, '#work/fashion'); assert.equal(env.scroll, y);
   await env.action(() => env.q('.im-project__actions button').click());
   await env.action(() => env.advance(1700));
-  assert.equal(env.q('.im-project'), null); assert.equal(env.scroll, y);
+  assert.equal(env.q('.im-project'), null); assert.equal(env.scroll, sourceY);
 });

@@ -35,6 +35,7 @@ export function useSceneNavigation(workRef: MutableRefObject<OrbitMotion>) {
 
   useLayoutEffect(() => {
     const work = workRef.current;
+    work.onProjectChange = setProjectId;
     const presentation = work.presentation ?? (work.presentation = createPresentation());
     let restoreTimer = 0, traversalUrl = '', routeProject: string | null = null;
     let returnTo: GallerySnapshot | undefined, requestedClose = false, focusOnArrival = false;
@@ -71,12 +72,16 @@ export function useSceneNavigation(workRef: MutableRefObject<OrbitMotion>) {
         if (shouldFocus && (immediate || reducedRef.current || !lenis)) focus(target);
       }
     };
-    const showProject = (id: string, snapshot?: GallerySnapshot, immediate = true) => {
+    const showProject = (id: string, snapshot?: GallerySnapshot, immediate = true, savedY?: number) => {
       routeProject = id; requestedClose = false;
       returnTo = snapshot ?? work.gallery?.forProject(id);
       if (snapshot && work.gallery?.capture().filter !== snapshot.filter) work.gallery?.restore(snapshot);
       presentation.source = 'navigation';
       work.gallery?.open(id, immediate);
+      if (savedY !== undefined && Number.isFinite(savedY)) {
+        const current = work.gallery?.capture();
+        if (current) work.gallery?.restore({ ...current, filter: snapshot?.filter ?? current.filter, scrollY: savedY });
+      }
     };
     const synchronize = (restoreSnapshot: boolean, deferred = true) => {
       requestedClose = false;
@@ -92,7 +97,11 @@ export function useSceneNavigation(workRef: MutableRefObject<OrbitMotion>) {
         return;
       }
       const navigate = () => {
-        if (id) { showProject(id, gallerySnapshot(state().imGallery)); return; }
+        if (id) {
+          const y = restoreSnapshot ? positions.get(currentEntry) ?? state().imScroll : undefined;
+          showProject(id, gallerySnapshot(state().imGallery), true, typeof y === 'number' ? y : undefined);
+          return;
+        }
         routeProject = null; focusOnArrival = false; presentation.source = 'scroll';
         const snapshot = restoreSnapshot ? positions.get(currentEntry) ?? state().imScroll : undefined;
         const savedY = typeof snapshot === 'number' && Number.isFinite(snapshot) ? snapshot : undefined;
@@ -171,9 +180,11 @@ export function useSceneNavigation(workRef: MutableRefObject<OrbitMotion>) {
     window.addEventListener('scroll', recordScroll, { passive: true });
     if (!initialized.current) { initialized.current = true; synchronize(navigationType() === 'back_forward', false); }
     else routeProject = projectFromHash(location.hash);
+    setProjectId(presentation.projectId);
     recordScroll();
     return () => {
       window.clearTimeout(restoreTimer); unsubscribe();
+      work.onProjectChange = undefined;
       document.removeEventListener('click', onClick, true);
       window.removeEventListener('popstate', onPopState); window.removeEventListener('hashchange', onHashChange);
       window.removeEventListener('pagehide', remember); window.removeEventListener('pageshow', onPageShow); window.removeEventListener('scroll', recordScroll);

@@ -6,6 +6,8 @@ export interface GallerySnapshot {
   target: number;
   position: number;
   scrollY: number;
+  viewport?: number;
+  start?: number;
 }
 
 export interface OrbitMotion {
@@ -21,7 +23,9 @@ export interface OrbitMotion {
   selection: number;
   scrollDriven?: boolean;
   bounds?: { left: number; top: number; width: number; height: number };
+  reveal?: number;
   onFrame?: () => void;
+  onProjectChange?: (id: string | null) => void;
   onPick?: (index: number) => void;
   presentation?: ProjectPresentation;
   gallery?: {
@@ -52,7 +56,7 @@ export function clampProject(position: number, count: number): number {
 
 /** Logical project order is a helix; camera travel follows the same curve. */
 export function orbitPose(position: number, count: number, portrait = false) {
-  const angle = position * Math.PI / 180 * (portrait ? 35 : 50);
+  const angle = position * Math.PI / 180 * (portrait ? 45 : 50);
   return {
     x: Math.sin(angle) * ORBIT_RADIUS,
     y: -position * (portrait ? 1.12 : ORBIT_PITCH) * Math.min(7, Math.max(1, count)) / 7,
@@ -100,9 +104,11 @@ export function galleryFrame(scrollY: number, metrics: GalleryMetrics) {
   const index = Math.min(Math.max(0, metrics.count - 1), Math.floor(local / metrics.step));
   const within = local - index * metrics.step;
   const end = metrics.opening + metrics.hold + metrics.closing;
-  const progress = within < metrics.opening ? within / metrics.opening
+  let progress = within < metrics.opening ? within / metrics.opening
     : within <= metrics.opening + metrics.hold ? 1
     : within < end ? 1 - (within - metrics.opening - metrics.hold) / metrics.closing : 0;
+  if (progress < 1e-10) progress = 0;
+  if (progress > 1 - 1e-10) progress = 1;
   const position = clampProject(index + Math.max(0, within - end) / metrics.passage, metrics.count);
   return { index, position, progress, phase: progress <= 0 ? 'closed' as const : progress >= 1 ? 'open' as const : within < metrics.opening ? 'opening' as const : 'closing' as const };
 }

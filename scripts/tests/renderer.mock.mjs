@@ -7,9 +7,10 @@ export class WebGLRenderer {
   capabilities = { getMaxAnisotropy: () => 1 };
   disposed = false;
   frames = 0;
+  sizes = [];
   constructor({ canvas }) { this.domElement = canvas; renderers.push(this); }
   setPixelRatio(value) { this.pixelRatio = value; }
-  setSize() {}
+  setSize(width, height) { this.sizes.push([width, height]); }
   render(scene, camera) { this.frames++; this.camera = camera.position.clone(); this.scene = scene; }
   dispose() { this.disposed = true; }
 }

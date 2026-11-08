@@ -63,11 +63,15 @@ if (missingFiles.length) {
   process.exit(1);
 }
 
-// تصاویر پیش‌نمایش گالری از تصویر آغازین همان دمو ساخته می‌شوند
+// Authored covers keep their own source/derivative attribution when synchronizing images.
+const covers = JSON.parse(await readFile(join(ROOT, 'public/images/previews/ATTRIBUTION.json'), 'utf8').catch(() => '[]'));
+// Legacy covers may still derive directly from a demo hero.
 for (const slug of DEMOS) {
   const abs = join(ROOT, 'public', 'images', 'previews', `${slug}.webp`);
   const meta = await sharp(abs).metadata().catch(() => null);
   if (!meta) continue;
+  const authored = covers.find((row) => row.demo === slug);
+  if (authored) { rows.push({ ...authored, width: meta.width, height: meta.height, bytes: (await stat(abs)).size }); continue; }
   const heroRows = rows.filter((r) => r.demo === slug && /^hero/i.test(r.file));
   const source = heroRows.sort((a, b) => (b.width ?? 0) - (a.width ?? 0))[0];
   rows.push({
@@ -94,7 +98,7 @@ const manifest = `/**
  * برای بازسازی همه‌ی تصویرها: node scripts/fetch-images.mjs build
  * (توجه: ابعاد/کیفیت هر مقصد همان چیزی است که در مخزن موجود است.)
  */
-export const manifest = ${JSON.stringify(rows.map((r) => ({ out: r.out, title: r.title, width: r.width, format: r.format === 'jpeg' ? 'jpeg' : 'webp', cover: true, quality: 80 })), null, 2)};
+export const manifest = ${JSON.stringify(rows.filter((r) => !r.generator).map((r) => ({ out: r.out, title: r.title, width: r.width, format: r.format === 'jpeg' ? 'jpeg' : 'webp', cover: true, quality: 80 })), null, 2)};
 `;
 await writeFile(join(ROOT, 'scripts', 'image-manifest.mjs'), manifest);
 

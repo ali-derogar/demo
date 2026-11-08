@@ -105,3 +105,4 @@
 }
 
 .im-work-track[data-presenting="true"] .im-orbit__captions { visibility: hidden; pointer-events: none; }
+.im-orbit__fallback { opacity: var(--card-opacity,1); }

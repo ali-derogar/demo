@@ -55,8 +55,10 @@ export function WorkView({ motionRef, onSelect }: { motionRef: MutableRefObject<
     const presentation = state.presentation!;
     region.dataset.ready = String(state.ready);
     region.dataset.labels = String(!!state.labelsReady);
-    region.dataset.presenting = String(!!presentation.projectId);
-    region.dataset.inRange = String(window.scrollY >= metricsRef.current.start - metricsRef.current.viewport * .8);
+    region.dataset.presenting = String(!!presentation.projectId && document.querySelector('.im-project')?.getAttribute('data-project') === presentation.projectId);
+    region.dataset.inRange = String(window.scrollY >= metricsRef.current.start - metricsRef.current.viewport * .08);
+    const entry = Math.max(0, Math.min(1, (window.scrollY - metricsRef.current.start) / (metricsRef.current.viewport * .08) + 1));
+    region.style.setProperty('--card-opacity', String(presentation.surface === 'webgl' ? state.reveal ?? entry : entry));
     const bounds = state.bounds;
     if (bounds) {
       region.style.setProperty('--card-left', `${bounds.left}px`);
@@ -79,7 +81,8 @@ export function WorkView({ motionRef, onSelect }: { motionRef: MutableRefObject<
     const presentation = state.presentation!;
     const progress = reduced ? (frame.progress >= .5 ? 1 : 0) : frame.progress;
     const id = progress > .00001 ? state.items[frame.index]?.id ?? null : null;
-    if (presentation.projectId !== id) {
+    const changed = presentation.projectId !== id;
+    if (changed) {
       presentation.ready = false;
       presentation.bounds = null;
       presentation.projectId = id;
@@ -90,14 +93,16 @@ export function WorkView({ motionRef, onSelect }: { motionRef: MutableRefObject<
     state.selection = progress;
     state.interactive = window.scrollY >= metricsRef.current.start - metricsRef.current.viewport * .2 && window.scrollY <= metricsRef.current.start + metricsRef.current.travel;
     if (presentation.surface !== 'webgl') {
-      const rest = galleryCardFrame(window.innerWidth, metricsRef.current.viewport);
-      const expanded = projectFrame(window.innerWidth, window.innerHeight, metricsRef.current.viewport);
+      const width = document.documentElement.clientWidth || window.innerWidth;
+      const rest = galleryCardFrame(width, metricsRef.current.viewport);
+      const expanded = projectFrame(width, window.innerHeight, metricsRef.current.viewport);
       const mix = smoothRange(progress, .2, 1);
       state.bounds = { left: rest.left + (expanded.left - rest.left) * mix, top: rest.top + (expanded.top - rest.top) * mix,
         width: rest.width + (expanded.width - rest.width) * mix, height: rest.height + (expanded.height - rest.height) * mix };
       if (id) presentation.bounds = state.bounds;
     }
     syncFrame();
+    if (changed) state.onProjectChange?.(id);
   }, [motionRef, reduced, syncFrame]);
 
   const go = useCallback((index: number, immediate = false) => {
@@ -118,18 +123,21 @@ export function WorkView({ motionRef, onSelect }: { motionRef: MutableRefObject<
       setFilter(next.length ? snapshot.filter : 'all');
       state.dragging = false;
       measure();
-      scrollTo(snapshot.scrollY);
+      const oldViewport = snapshot.viewport;
+      const y = oldViewport && snapshot.start !== undefined && snapshot.scrollY >= snapshot.start
+        ? metricsRef.current.start + (snapshot.scrollY - snapshot.start) / oldViewport * metricsRef.current.viewport : snapshot.scrollY;
+      scrollTo(y);
       sample();
     };
     state.gallery = {
-      capture: () => ({ filter, target: state.target, position: state.position, scrollY: window.scrollY }),
+      capture: () => ({ filter, target: state.target, position: state.position, scrollY: window.scrollY, viewport: metricsRef.current.viewport, start: metricsRef.current.start }),
       restore,
       forProject: (id) => {
         const included = shown.some((project) => project.id === id);
         const items = included ? shown : projects;
         const index = Math.max(0, items.findIndex((project) => project.id === id));
         const metrics = galleryMetrics(metricsRef.current.start, metricsRef.current.viewport, items.length);
-        return { filter: included ? filter : 'all', target: index, position: index, scrollY: scrollForProject(index, metrics) };
+        return { filter: included ? filter : 'all', target: index, position: index, scrollY: scrollForProject(index, metrics), viewport: metrics.viewport, start: metrics.start };
       },
       open: (id, immediate = true) => {
         if (!state.items.some((project) => project.id === id)) { state.items = projects; setFilter('all'); }
@@ -184,8 +192,8 @@ export function WorkView({ motionRef, onSelect }: { motionRef: MutableRefObject<
       if (isScrollLocked() || event.ctrlKey || (event.target as Element | null)?.closest('input,textarea,select,.im-project__info')) return;
       const metrics = metricsRef.current;
       if (window.scrollY < metrics.start || window.scrollY > metrics.start + metrics.travel) return;
-      if (performance.now() > wheelUntil) wheelAxis = Math.abs(event.deltaX) > Math.abs(event.deltaY) * 1.1 ? 'x' : 'y';
-      wheelUntil = performance.now() + 160;
+      if (event.timeStamp > wheelUntil) wheelAxis = Math.abs(event.deltaX) > Math.abs(event.deltaY) * 1.1 ? 'x' : 'y';
+      wheelUntil = event.timeStamp + 160;
       if (wheelAxis !== 'x') return;
       event.preventDefault();
       const scale = event.deltaMode === 1 ? 16 : event.deltaMode === 2 ? metrics.viewport : 1;

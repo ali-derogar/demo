@@ -69,7 +69,14 @@ export async function environment({ hash = '#home', type = 'navigate', width = 3
     media: query, addEventListener(_, callback) { if (query.includes('prefers-reduced-motion')) media.add(callback); },
     removeEventListener(_, callback) { media.delete(callback); }, addListener() {}, removeListener() {},
   });
-  class ResizeObserver { observe() {} unobserve() {} disconnect() {} }
+  const resizeObservers = new Set();
+  class ResizeObserver {
+    targets = new Set();
+    constructor(callback) { this.callback = callback; resizeObservers.add(this); }
+    observe(target) { this.targets.add(target); }
+    unobserve(target) { this.targets.delete(target); }
+    disconnect() { this.targets.clear(); resizeObservers.delete(this); }
+  }
   class IntersectionObserver { constructor(callback) { this.callback = callback; } observe(target) { this.callback([{ target, isIntersecting: true, intersectionRatio: 1 }]); } disconnect() {} unobserve() {} }
   for (const [key, value] of Object.entries({ ResizeObserver, IntersectionObserver })) { w[key] = value; expose(key, value); }
   let resolveFonts;
@@ -80,7 +87,7 @@ export async function environment({ hash = '#home', type = 'navigate', width = 3
   w.HTMLElement.prototype.setPointerCapture = function (id) { this.captureId = id; };
   w.HTMLElement.prototype.hasPointerCapture = function (id) { return this.captureId === id; };
   w.HTMLElement.prototype.releasePointerCapture = function () { this.captureId = -1; };
-  const workTop = height * 1.65;
+  let workTop = height * 1.65;
   Object.defineProperty(w.HTMLElement.prototype, 'clientWidth', { get() { return width; } });
   Object.defineProperty(w.HTMLElement.prototype, 'clientHeight', { get() { return height; } });
   Object.defineProperty(w.HTMLElement.prototype, 'offsetHeight', { get() {
@@ -96,9 +103,15 @@ export async function environment({ hash = '#home', type = 'navigate', width = 3
   const previousError = console.error;
   console.error = (...args) => { if (!String(args[0]).includes('Error creating WebGL context')) previousError(...args); };
   return {
-    w, errors, frames, workTop, q: (selector) => w.document.querySelector(selector),
+    w, errors, frames, get workTop() { return workTop; }, q: (selector) => w.document.querySelector(selector),
     get scroll() { return scroll; },
     resolveFonts,
+    setViewport(nextWidth, nextHeight, toolbarOnly = false) {
+      if (!toolbarOnly) { width = nextWidth; height = nextHeight; workTop = height * 1.65; }
+      Object.defineProperties(w, { innerWidth: { value: nextWidth, configurable: true }, innerHeight: { value: nextHeight, configurable: true } });
+      w.dispatchEvent(new w.Event('resize'));
+      resizeObservers.forEach((observer) => observer.callback([...observer.targets].map((target) => ({ target }))));
+    },
     async advance(milliseconds) {
       for (let elapsed = 0; elapsed < milliseconds; elapsed += 16) {
         const batch = [...frames.values()]; frames.clear(); time += 16; batch.forEach((callback) => callback(time));

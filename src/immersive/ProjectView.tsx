@@ -17,7 +17,7 @@ export function ProjectView({ project, motionRef, onClose }: { project: DemoProj
     let previous = '', ready: boolean | undefined, phase = '', surface = '', progress = -1;
     const frame = () => {
       const state = motionRef.current.presentation!;
-      const bounds = state.bounds ?? projectFrame(window.innerWidth, window.innerHeight, sticky?.offsetHeight || window.innerHeight);
+      const bounds = state.bounds ?? projectFrame(document.documentElement.clientWidth || window.innerWidth, window.innerHeight, sticky?.offsetHeight || window.innerHeight);
       const key = [bounds.left, bounds.top, bounds.width, bounds.height].map((value) => value.toFixed(2)).join(':');
       if (key !== previous) {
         previous = key;
@@ -30,6 +30,7 @@ export function ProjectView({ project, motionRef, onClose }: { project: DemoProj
       if (progress !== state.progress) { root.style.setProperty('--project-progress', String(state.progress)); progress = state.progress; }
     };
     frame();
+    motionRef.current.onFrame?.();
     motionRef.current.presentation!.onFrame = frame;
     const unsubscribe = subscribeRaf(frame);
     const escape = (event: KeyboardEvent) => {

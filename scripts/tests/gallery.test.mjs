@@ -4,24 +4,22 @@ import { PerspectiveCamera, Vector3, Texture } from 'three';
 import { source, environment } from './helpers.mjs';
 import { requests } from './orbit-loader.mock.mjs';
 
-test('gallery metrics hold the first and last projects and invert every drag/button coordinate', async () => {
-  const { galleryMetrics, projectFromScroll, scrollForProject } = await source('src/immersive/orbit.ts');
-  for (const viewport of [844, 1024, 900]) {
-    const m = galleryMetrics(1700, viewport, 9);
-    assert.equal(m.entry, .8 * viewport);
-    assert.equal(m.step, .62 * viewport);
-    for (const y of [m.start - 100, m.start, m.start + .4 * viewport, m.start + .8 * viewport]) assert.equal(projectFromScroll(y, m), 0);
-    for (let position = 0; position <= 8; position += .125) assert.ok(Math.abs(projectFromScroll(scrollForProject(position, m), m) - position) < 1e-10);
-    const last = scrollForProject(8, m);
-    assert.ok(Math.abs(m.start + m.travel - last - .3 * viewport) < 1e-9);
-    assert.equal(projectFromScroll(last + .15 * viewport, m), 8);
-    assert.equal(projectFromScroll(m.start + m.travel + 100, m), 8);
-    assert.equal(m.height, viewport + m.travel);
-    for (const reduced of [false, true]) {
-      const one = galleryMetrics(1700, viewport, 1, reduced);
-      assert.equal(one.travel, 0); assert.equal(projectFromScroll(8000, one), 0);
+test('gallery coordinates preserve card positions and the full open/hold/return cycle, including one project', async () => {
+  const { galleryMetrics, projectFromScroll, scrollForProject, galleryFrame } = await source('src/immersive/orbit.ts');
+  for (const viewport of [844,1024,900]) for (const count of [1,9]) for (const reduced of [false,true]) {
+    const m = galleryMetrics(1700,viewport,count,reduced);
+    assert.equal(m.opening,.3*viewport); assert.equal(m.hold,.2*viewport); assert.equal(m.closing,.3*viewport); assert.equal(m.passage,.4*viewport);
+    for (let position=0;position<=count-1;position+=.125) assert.ok(Math.abs(projectFromScroll(scrollForProject(position,m),m)-position)<1e-10);
+    for (let index=0;index<count;index++) {
+      const y=scrollForProject(index,m);
+      assert.equal(galleryFrame(y,m).progress,0);
+      assert.ok(Math.abs(galleryFrame(y+.15*viewport,m).progress-.5)<1e-10);
+      assert.equal(galleryFrame(scrollForProject(index,m,true),m).progress,1);
+      assert.ok(Math.abs(galleryFrame(y+.65*viewport,m).progress-.5)<1e-10);
+      assert.ok(galleryFrame(y+.8*viewport,m).progress<1e-10);
     }
-    assert.equal(galleryMetrics(1700, viewport, 9, true).travel, 0);
+    assert.equal(projectFromScroll(m.start+m.travel+100,m),count-1);
+    assert.equal(m.height,viewport+m.travel);
   }
 });
 
@@ -119,7 +117,8 @@ test('first three images preload with two requests; poster survives slow texture
   assert.equal(state.ready, false, 'other loaded cards cannot hide the first poster');
   requests[0].resolve(new Texture()); await env.settle();
   orbit.update(state, camera, 1, 1 / 60, .5, false); orbit.present(state);
-  assert.equal(state.ready, false, 'entry reveal must finish first');
+  assert.equal(state.ready, true, 'a visible rendered texture retires its poster during entry, without drawing a second copy');
+  state.ready = false;
   orbit.update(state, camera, 1, 1 / 60, 1, false);
   assert.equal(state.ready, false, 'texture preparation is not a rendered frame');
   orbit.present(state); assert.equal(state.ready, true);

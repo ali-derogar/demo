@@ -140,6 +140,8 @@ test('first selection moves the same star mesh behind the project and binds a re
   const action = async (fn) => { await act(async () => { await fn(); await env.settle(); }); };
   t.after(async () => { try { await action(() => root.unmount()); assert.deepEqual(env.errors, []); } finally { env.cleanup(); } });
   await action(() => root.render(React.createElement(Stage, { progressRef, workRef })));
+  await action(() => {});
+  assert.equal(env.q('.im-stage').dataset.status, 'ready');
   const scene = renderers.at(-1).scene;
   const stars = scene.getObjectByName('home-world').children.find((item) => item.isPoints);
   const geometry = stars.geometry;
@@ -158,4 +160,25 @@ test('first selection moves the same star mesh behind the project and binds a re
   assert.ok(stars.material.uniforms.uStarPointer.value.w < .001);
   await action(() => { presentation.projectId = null; presentation.progress = 0; presentation.phase = 'closed'; workRef.current.selectedIndex = null; });
   assert.equal(stars.geometry, geometry); assert.equal(stars.material.uniforms.uProjectMix.value, 0);
+});
+
+test('mobile toolbar resize reuses the drawing buffer and first gallery entry reuses warmed panes', async(t)=>{
+  const env=await environment({width:390,height:844});
+  const {Stage}=await source('src/immersive/Stage.tsx',{three:new URL('./renderer.mock.mjs',import.meta.url).href});
+  const {projects}=await source('src/data/projects.ts');
+  const {createPresentation}=await source('src/immersive/projectPresentation.ts');
+  const progressRef={current:{chapter:'home',position:0,progress:0,workBlend:0,overlay:null}};
+  const workRef={current:{items:projects,target:0,position:0,dragging:false,blockClickUntil:0,ready:false,interactive:false,selectedIndex:null,selection:0,scrollDriven:true,presentation:createPresentation()}};
+  const root=createRoot(env.q('#root'));
+  const action=async(fn)=>act(async()=>{fn();await env.settle();});
+  t.after(async()=>{try{await action(()=>root.unmount());assert.deepEqual(env.errors,[]);}finally{env.cleanup();}});
+  await action(()=>root.render(React.createElement(Stage,{progressRef,workRef})));await action(()=>{});
+  const renderer=renderers.at(-1),panes=[...renderer.scene.getObjectByName('work-orbit').children],sizeCount=renderer.sizes.length;
+  assert.equal(panes.length,9,'materials and geometry exist before the first scroll');
+  await action(()=>env.setViewport(390,924,true));
+  assert.equal(renderer.sizes.length,sizeCount,'hiding browser chrome never reallocates the drawing buffer');
+  await action(()=>{Object.assign(progressRef.current,{chapter:'work',position:1,progress:1,workBlend:1});});
+  assert.deepEqual(renderer.scene.getObjectByName('work-orbit').children,panes,'entry cannot recreate a second card surface');
+  await action(()=>env.setViewport(844,390));
+  assert.equal(renderer.sizes.length,sizeCount+1,'orientation resizes the buffer once');
 });

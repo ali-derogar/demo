@@ -13,7 +13,8 @@
     "fetch:images": "node scripts/fetch-images.mjs build",
     "search:images": "node scripts/fetch-images.mjs search",
     "sync:images": "node scripts/sync-images.mjs",
-    "check:site": "node scripts/check-site.mjs"
+    "check:site": "node scripts/check-site.mjs",
+    "generate:previews": "node scripts/generate-previews.mjs"
   },
   "dependencies": {
     "@fontsource-variable/vazirmatn": "^5.3.0",
