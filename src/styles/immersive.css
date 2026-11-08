@@ -196,8 +196,9 @@ html.has-custom-cursor .im-info-panel a,html.has-custom-cursor .im-info-panel bu
   .im-experience[aria-busy="false"] .im-home__headline,.im-experience[aria-busy="false"] .im-home__identity h1 { animation: im-home-arrive .9s .08s var(--ease) both; }
   .im-experience[aria-busy="false"] .im-home__identity > p,.im-experience[aria-busy="false"] .im-home__actions { animation: im-home-arrive .9s .22s var(--ease) both; }
   .im-experience:not([data-chapter="home"]) .im-home__orbits,.im-experience:not([data-chapter="home"]) .im-home__aura,.im-experience:not([data-chapter="home"]) .im-home__scroll-line::after { animation-play-state: paused; }
-  .im-brand-fallback { width: 140px; }
+  .im-brand-fallback { top: 40%; width: 170px; }
   .im-brand-fallback svg { width: 62px; height: 62px; }
+  .im-experience:has(.im-stage[data-status="fallback"]) .im-home__gesture,.im-experience:has(.im-stage--flat) .im-home__gesture { display: none; }
   .im-info-panel__sheet { padding-top: 90px; }
   .im-info-panel__close { top: 20px; right: 22px; }
   .im-shell { width: calc(100% - 40px); }
@@ -251,6 +252,7 @@ html.has-custom-cursor .im-info-panel a,html.has-custom-cursor .im-info-panel bu
 }
 @media (max-width:767px) and (min-height:541px) and (max-height:640px) {
   .im-home__scene { top: 44%; width: min(60vw,210px); }
+  .im-brand-fallback { top: 44%; width: 130px; }
   .im-home__gesture,.im-home__scene-caption { display: none; }
 }
 @media (prefers-reduced-motion:reduce) {
