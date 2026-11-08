@@ -89,3 +89,29 @@ test('dragging the home sculpture rotates it while vertical touch remains native
   await action(() => { pointer('pointerdown', 700, 400); vertical = pointer('pointermove', 702, 450); pointer('pointerup', 702, 450); });
   assert.equal(vertical.defaultPrevented, false);
 });
+
+test('context recovery retains an open project, its transition and shared environment', async (t) => {
+  const env = await environment({ width: 1440, height: 900 });
+  const { Stage } = await source('src/immersive/Stage.tsx', { three: new URL('./renderer.mock.mjs', import.meta.url).href });
+  const { projects } = await source('src/data/projects.ts');
+  const { createPresentation } = await source('src/immersive/projectPresentation.ts');
+  const presentation = createPresentation(); Object.assign(presentation, { projectId: 'cars', phase: 'opening', progress: .65 });
+  const progressRef = { current: { chapter: 'work', position: 1, progress: 1, workBlend: 1, overlay: null } };
+  const workRef = { current: { items: projects, target: 2, position: 2, dragging: false, blockClickUntil: 0, ready: false, interactive: false, selectedIndex: 2, selection: 1, presentation } };
+  const root = createRoot(env.q('#root'));
+  const action = async (callback) => { await act(async () => { callback(); await env.settle(); }); };
+  t.after(async () => { try { await action(() => root.unmount()); assert.deepEqual(env.errors, []); } finally { env.cleanup(); } });
+  await action(() => root.render(React.createElement(Stage, { progressRef, workRef })));
+  await action(() => {});
+  const previous = renderers.at(-1), camera = previous.camera.clone();
+  const previousSurroundings = previous.scene.getObjectByName('project-environment'); assert.equal(previousSurroundings.visible, true);
+  await action(() => env.q('canvas').dispatchEvent(new Event('webglcontextlost', { cancelable: true })));
+  assert.equal(presentation.ready, false);
+  await action(() => env.q('canvas').dispatchEvent(new Event('webglcontextrestored')));
+  await action(() => {});
+  assert.equal(presentation.projectId, 'cars'); assert.equal(presentation.phase, 'opening'); assert.equal(presentation.progress, .65);
+  assert.equal(workRef.current.position, 2); assert.equal(previous.disposed, true);
+  assert.ok(renderers.at(-1).camera.distanceTo(camera) < 1e-9);
+  assert.notEqual(renderers.at(-1).scene.getObjectByName('project-environment'), previousSurroundings);
+  assert.equal(renderers.filter((renderer) => !renderer.disposed).length, 1);
+});

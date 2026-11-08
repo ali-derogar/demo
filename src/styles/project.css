@@ -1,4 +1,5 @@
 /* Native content stays sharp over the refractive GPU scene. */
+.im-experience[data-project-open="true"] #im-main { visibility: hidden; }
 .im-project { position: fixed; inset: 0; z-index: 5; pointer-events: none; --project-progress: 0; }
 .im-project::before { content: ''; position: absolute; inset: 0; pointer-events: none; background: radial-gradient(ellipse at 65% 42%,transparent 15%,#030a0cb3 70%),radial-gradient(ellipse at 80% 20%,color-mix(in srgb,var(--project-accent) 18%,transparent),transparent 60%),#03090a77; opacity: 1; transition: opacity .5s; }
 .im-project[data-ready="true"]::before { opacity: 0; }

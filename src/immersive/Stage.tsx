@@ -377,7 +377,10 @@ export function Stage({ progressRef, workRef }: { progressRef: RefObject<ScenePr
       signature.position.y = reduced ? 0 : Math.sin(elapsed * .6) * .1;
       signature.scale.setScalar(Math.max(.001, 1 - workBlend) * (1 - panelMix * .16));
       signature.visible = workBlend < .995;
-      if (flowPass) flowPass.uniforms.uStrength.value = presentation?.projectId ? 0 : 1 - panelMix * .8;
+      if (flowPass) {
+        flowPass.enabled = !presentation?.projectId;
+        flowPass.uniforms.uStrength.value = 1 - panelMix * .8;
+      }
 
       if (fluidQuad && flowRead && flowWrite && flowPass) {
         fluidUniforms.uPrevious.value = flowRead.texture;

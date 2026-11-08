@@ -9,13 +9,13 @@ import '../styles/project.css';
 /** Accessible controls over the shared GPU presentation; the poster is a real fallback. */
 export function ProjectView({ project, motionRef, onClose }: { project: DemoProject; motionRef: MutableRefObject<OrbitMotion>; onClose: () => void }) {
   const rootRef = useRef<HTMLElement>(null);
-  const closeRef = useRef<HTMLButtonElement>(null);
+  const entryRef = useRef<HTMLAnchorElement>(null);
   const [failed, setFailed] = useState(false);
   useLayoutEffect(() => {
     const root = rootRef.current!;
     const sticky = document.querySelector<HTMLElement>('.im-work--orbit');
     const unlock = acquireScrollLock();
-    closeRef.current?.focus({ preventScroll: true });
+    entryRef.current?.focus({ preventScroll: true });
     let previous = '', ready: boolean | undefined, phase = '', progress = -1;
     const frame = () => {
       const state = motionRef.current.presentation!;
@@ -41,7 +41,7 @@ export function ProjectView({ project, motionRef, onClose }: { project: DemoProj
   }, [motionRef, onClose, project.id]);
 
   return <section ref={rootRef} className="im-project" role="region" aria-labelledby="im-project-title" data-project={project.id} data-ready="false" style={{ ['--project-accent' as string]: project.accent }}>
-    <a className="im-project__hitarea" href={project.url} target="_blank" rel="noopener noreferrer" aria-label={`ورود به تجربهٔ ${project.title.split('؛')[0]}`}>
+    <a ref={entryRef} className="im-project__hitarea" href={project.url} target="_blank" rel="noopener noreferrer" aria-label={`ورود به تجربهٔ ${project.title.split('؛')[0]}`}>
       <div className="im-project__poster" aria-hidden="true">
         {failed ? <span className="im-project__image-error">تصویر در دسترس نیست<span>ورود به تجربه ↖</span></span> : <img src={project.preview} alt="" width="1200" height="800" onError={() => setFailed(true)} draggable={false} />}
       </div>
@@ -53,7 +53,7 @@ export function ProjectView({ project, motionRef, onClose }: { project: DemoProj
       <p className="im-project__technologies" dir="ltr">{project.technologies.join(' / ')}</p>
       <div className="im-project__actions">
         <a href={project.url} target="_blank" rel="noopener noreferrer">ورود به تجربه <span aria-hidden="true">↗</span></a>
-        <button ref={closeRef} type="button" onClick={onClose}>بازگشت به گالری <span aria-hidden="true">↶</span></button>
+        <button type="button" onClick={onClose}>بازگشت به گالری <span aria-hidden="true">↶</span></button>
       </div>
       <span className="im-sr-only">برای بستن معرفی، Escape را بزنید. تصویر و دکمهٔ ورود، دمو را در تب جدید باز می‌کنند.</span>
     </div>

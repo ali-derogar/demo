@@ -83,9 +83,9 @@ export function ImmersiveApp() {
 
   return (
     <LazyMotion features={domAnimation} strict>
-      <div className="im-experience" data-chapter={panel ?? view}>
+      <div className="im-experience" data-chapter={panel ?? view} data-project-open={projectId !== null}>
         <SceneBoundary><Suspense fallback={<StageFallback />}><Stage progressRef={progressRef} workRef={workRef} /></Suspense></SceneBoundary>
-        <a className="skip-link" href="#im-main">پرش به محتوا</a>
+        <a className="skip-link" href={projectId ? '#im-project-title' : '#im-main'}>پرش به محتوا</a>
         <ImmersiveNav view={panel ?? view} audio={audio} onToggleAudio={toggleAudio} />
         <main id="im-main" ref={mainRef} tabIndex={-1} {...(projectId ? { inert: '', 'aria-hidden': true } : {})}>
           <section id="home" className="im-chapter" aria-labelledby="im-home-title"><HomeView /></section>

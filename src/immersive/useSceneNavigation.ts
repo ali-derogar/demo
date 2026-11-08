@@ -36,6 +36,7 @@ export function useSceneNavigation(workRef: MutableRefObject<OrbitMotion>) {
   useLayoutEffect(() => {
     let restoreTimer = 0, traversalUrl = '';
     let afterClose: (() => void) | undefined;
+    let requestedClose = false;
     let returnTo: GallerySnapshot | undefined;
     const work = workRef.current;
     const presentation = work.presentation ?? (work.presentation = createPresentation());
@@ -83,7 +84,7 @@ export function useSceneNavigation(workRef: MutableRefObject<OrbitMotion>) {
       work.selectedIndex = work.items.findIndex((project) => project.id === id);
       work.target = Math.max(0, work.selectedIndex); work.dragging = false;
       if (presentation.projectId !== id || presentation.phase === 'closed') {
-        presentation.projectId = id; presentation.progress = 0; presentation.ready = false; presentation.bounds = null;
+        presentation.projectId = id; presentation.progress = 0; presentation.ready = work.ready && work.selectedIndex === Math.round(work.position); presentation.bounds = null;
       }
       if (presentation.phase !== 'open') presentation.phase = 'opening';
       advancePresentation(presentation, 0, reducedRef.current);
@@ -97,6 +98,7 @@ export function useSceneNavigation(workRef: MutableRefObject<OrbitMotion>) {
       work.selectedIndex = null;
     };
     const synchronize = (restoreSnapshot: boolean, deferred = true) => {
+      requestedClose = false;
       window.clearTimeout(restoreTimer);
       let id = projectFromHash(location.hash);
       if (location.hash.startsWith('#work/') && !id) history.replaceState({ ...state(), imProject: undefined }, '', '#demos');
@@ -132,6 +134,11 @@ export function useSceneNavigation(workRef: MutableRefObject<OrbitMotion>) {
       const anchor = (event.target as Element | null)?.closest?.('a[href^="#"]') as HTMLAnchorElement | null;
       if (!anchor || anchor.hasAttribute('download') || (anchor.target && anchor.target !== '_self')) return;
       const hash = anchor.getAttribute('href') ?? '', next = panelFromHash(hash), id = projectFromHash(hash);
+      if (anchor.classList.contains('skip-link')) {
+        const target = document.getElementById(hash.slice(1));
+        if (target) { event.preventDefault(); focus(target); }
+        return;
+      }
       if (!next && !id && !document.getElementById(hash.slice(1))) return;
       event.preventDefault(); traversalUrl = ''; window.clearTimeout(restoreTimer);
       const wasPanel = panelRef.current !== null;
@@ -151,12 +158,14 @@ export function useSceneNavigation(workRef: MutableRefObject<OrbitMotion>) {
       if (!projects.some((p) => p.id === id) || panelRef.current) return;
       if (presentation.projectId === id && presentation.phase !== 'closing') return;
       const snapshot = work.gallery?.capture();
+      requestedClose = false;
       remember(); currentEntry = entryId();
       history.pushState({ imEntry: currentEntry, imProject: id, imProjectEntry: true, imGallery: snapshot, imScroll: window.scrollY }, '', `#work/${id}`);
       showProject(id, snapshot);
     };
     actions.current.close = () => {
-      if (panelRef.current || !presentation.projectId) return;
+      if (requestedClose || presentation.phase === 'closing' || panelRef.current || !presentation.projectId) return;
+      requestedClose = true;
       if (state().imProjectEntry) history.back();
       else {
         const snapshot = returnTo ?? work.gallery?.forProject(presentation.projectId);
