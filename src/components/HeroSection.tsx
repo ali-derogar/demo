@@ -37,15 +37,14 @@ export function HeroSection() {
         </p>
 
         <h1 className="v2-hero__title" id="hero-title">
-          <MaskLine when="load">کدِ تمیز،</MaskLine>
+          <MaskLine when="load">بک‌اند پایتون</MaskLine>
           <MaskLine className="v2-hero__grad" delay={0.12} when="load">
-            ظاهرِ زنده
+            و طراحی سایت
           </MaskLine>
         </h1>
 
         <p className="v2-hero__lead">
-          هر اسکرول، یک لایه از کار را باز می‌کند. از بک‌اند پایتون و مدل‌های یادگیری ماشین تا
-          اپ موبایل و رابط‌هایی که کاربر لمس می‌کند.
+          من علی دروگرم. سرویس‌های وب، ربات تلگرام و سایت می‌سازم. چند نمونه از کارهایم را اینجا می‌بینید.
         </p>
 
         <div className="v2-hero__actions">

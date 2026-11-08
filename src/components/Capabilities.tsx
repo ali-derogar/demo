@@ -102,7 +102,7 @@ export function Capabilities() {
             توانمندی‌ها
           </p>
           <h2 id="caps-title" className="v2-h2">
-            با اسکرول، افقی جابه‌جا شو
+            مهارت‌ها و ابزارهایی که با آن‌ها کار می‌کنم
           </h2>
           <div className="v2-hscroll__bar" aria-hidden="true">
             <i />

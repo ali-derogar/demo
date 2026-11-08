@@ -46,13 +46,12 @@ export function ContactView() {
     <div className="im-contact im-shell">
       <div className="im-contact__inner">
         <header className="im-contact__head">
-          <p className="im-kicker"><span className="im-section-number">۰۴ /</span> فصلِ بعدی، با شما</p>
+          <p className="im-kicker"><span className="im-section-number">۰۴ /</span> تماس با من</p>
           <h2 id="im-contact-title" className="im-section-title im-contact__title">
             <MaskLine>بیایید</MaskLine><MaskLine className="im-contact__accent">حرف بزنیم.</MaskLine>
           </h2>
           <p className="im-contact__lead">
-            برای سفارش پروژه، همکاری یا یک گفت‌وگوی ساده؛ از هر راهی که راحت‌ترید
-            پیام بدهید، معمولاً همان روز جواب می‌دهم.
+            برای سفارش سایت یا همکاری، در تلگرام پیام بدهید یا جزئیات پروژه را ایمیل کنید.
           </p>
         </header>
 

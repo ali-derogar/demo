@@ -12,6 +12,7 @@ export function ProjectView({ project, motionRef, onClose }: { project: DemoProj
   const entryRef = useRef<HTMLAnchorElement>(null);
   const [failed, setFailed] = useState(false);
   useLayoutEffect(() => {
+    setFailed(false);
     const root = rootRef.current!;
     const sticky = document.querySelector<HTMLElement>('.im-work--orbit');
     const unlock = acquireScrollLock();
@@ -41,21 +42,21 @@ export function ProjectView({ project, motionRef, onClose }: { project: DemoProj
   }, [motionRef, onClose, project.id]);
 
   return <section ref={rootRef} className="im-project" role="region" aria-labelledby="im-project-title" data-project={project.id} data-ready="false" style={{ ['--project-accent' as string]: project.accent }}>
-    <a ref={entryRef} className="im-project__hitarea" href={project.url} target="_blank" rel="noopener noreferrer" aria-label={`ورود به تجربهٔ ${project.title.split('؛')[0]}`}>
+    <a ref={entryRef} className="im-project__hitarea" href={project.url} target="_blank" rel="noopener noreferrer" aria-label={`دیدن سایت ${project.title.split('؛')[0]}`}>
       <div className="im-project__poster" aria-hidden="true">
-        {failed ? <span className="im-project__image-error">تصویر در دسترس نیست<span>ورود به تجربه ↖</span></span> : <img src={project.preview} alt="" width="1200" height="800" onError={() => setFailed(true)} draggable={false} />}
+        {failed ? <span className="im-project__image-error">تصویر بارگذاری نشد<span>دیدن سایت ↖</span></span> : <img key={project.preview} src={project.preview} alt="" width="1200" height="800" onError={() => setFailed(true)} draggable={false} />}
       </div>
     </a>
     <div className="im-project__info" data-lenis-prevent data-scroll-lock-allow>
       <p className="im-project__category">{project.categoryLabel}</p>
       <h2 id="im-project-title">{project.title.split('؛')[0]}</h2>
       <p className="im-project__description">{project.description}</p>
-      <p className="im-project__technologies" dir="ltr">{project.technologies.join(' / ')}</p>
+      <p className="im-project__technologies"><span>ساخته‌شده با</span> <bdi dir="ltr">{project.technologies.join(' · ')}</bdi></p>
       <div className="im-project__actions">
-        <a href={project.url} target="_blank" rel="noopener noreferrer">ورود به تجربه <span aria-hidden="true">↗</span></a>
+        <a href={project.url} target="_blank" rel="noopener noreferrer">دیدن سایت <span aria-hidden="true">↗</span></a>
         <button type="button" onClick={onClose}>بازگشت به گالری <span aria-hidden="true">↶</span></button>
       </div>
-      <span className="im-sr-only">برای بستن معرفی، Escape را بزنید. تصویر و دکمهٔ ورود، دمو را در تب جدید باز می‌کنند.</span>
+      <span className="im-sr-only">با Escape به گالری برگردید. لینک «دیدن سایت» نمونه‌کار را در تب جدید باز می‌کند.</span>
     </div>
   </section>;
 }

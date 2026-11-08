@@ -181,6 +181,9 @@ test('touch fallback, keyboard entry, image errors and Escape work with reduced 
   await env.action(() => env.q('.im-project__poster img').dispatchEvent(new Event('error')));
   assert.ok(env.q('.im-project__image-error'));
   assert.equal(env.q('.im-project__actions a').getAttribute('href'), '/demos/fashion/');
+  await env.action(() => { history.pushState({}, '', '#work/sports'); env.w.dispatchEvent(new Event('hashchange')); });
+  assert.equal(env.q('.im-project__image-error'), null, 'an image error does not leak into the next project');
+  assert.equal(env.q('.im-project__poster img').getAttribute('src'), '/images/previews/sports.webp');
   await env.action(() => document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true })));
   await env.action(() => env.advance(50));
   assert.equal(env.q('.im-project'), null); assert.equal(document.body.style.overflow, '');
@@ -260,10 +263,27 @@ test('single-project filter, nested panels and Back/Forward preserve presentatio
   assert.equal(env.q('.im-project'), null); assert.equal(document.body.style.overflow, '');
   assert.equal(env.scroll, y); assert.equal(document.querySelectorAll('.im-orbit__project-link').length, 1);
   assert.equal(document.activeElement, opener);
+  await env.action(() => env.q('.im-filter').click());
+  assert.equal(document.querySelectorAll('.im-orbit__project-link').length, 9);
   await env.action(() => history.forward());
   assert.equal(location.hash, '#work/fashion'); assert.equal(env.q('.im-project').dataset.project, 'fashion');
   assert.equal(document.querySelectorAll('.im-orbit__project-link').length, 1);
   await env.action(() => env.w.dispatchEvent(new env.w.PageTransitionEvent('pagehide', { persisted: true })));
   await env.action(() => env.w.dispatchEvent(new env.w.PageTransitionEvent('pageshow', { persisted: true })));
   assert.equal(env.q('.im-project').dataset.phase, 'open');
+});
+
+test('changing reduced motion while a project is open keeps its route, scroll and presentation', async (t) => {
+  const env = await app(t, { hash: '#demos' });
+  await env.action(() => env.q('.im-orbit__project-link').click());
+  const y = env.scroll;
+  await env.action(() => env.setReduced(true));
+  await env.action(() => env.advance(32));
+  assert.equal(location.hash, '#work/fashion'); assert.equal(env.scroll, y);
+  assert.equal(env.q('.im-project').dataset.phase, 'open'); assert.equal(document.body.style.overflow, 'hidden');
+  await env.action(() => env.setReduced(false));
+  assert.equal(location.hash, '#work/fashion'); assert.equal(env.scroll, y);
+  await env.action(() => env.q('.im-project__actions button').click());
+  await env.action(() => env.advance(1700));
+  assert.equal(env.q('.im-project'), null); assert.equal(env.scroll, y);
 });

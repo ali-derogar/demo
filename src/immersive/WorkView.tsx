@@ -214,7 +214,7 @@ export function WorkView({ motionRef, onSelect }: { motionRef: MutableRefObject<
       <div className="im-work im-shell im-work--orbit" ref={stickyRef}>
         <header className="im-orbit__head"><h2 id="im-work-title">نمونه‌کارها</h2><span dir="ltr">SELECTED WORK / {String(shown.length).padStart(2, '0')}</span></header>
         <details className="im-orbit__filters" ref={filtersRef} data-persistent={desktop}>
-          <summary data-cursor="link" tabIndex={desktop ? -1 : undefined} onClick={(event) => { if (desktop) event.preventDefault(); }}>چه کاری را می‌خواهید ببینید؟<span aria-hidden="true">+</span></summary>
+          <summary data-cursor="link" tabIndex={desktop ? -1 : undefined} onClick={(event) => { if (desktop) event.preventDefault(); }}>دسته‌بندی نمونه‌کارها<span aria-hidden="true">+</span></summary>
           <div className="im-orbit__filter-options" role="group" aria-label="دسته‌بندی نمونه‌کارها">
             {categories.map((category) => <button key={category.value} type="button" className="im-filter" aria-pressed={filter === category.value} onClick={() => changeFilter(category.value)} data-cursor="link">{category.label}</button>)}
           </div>
@@ -234,7 +234,7 @@ export function WorkView({ motionRef, onSelect }: { motionRef: MutableRefObject<
             if (next !== undefined) { event.preventDefault(); go(next); }
           }}>
           <div className="im-orbit__fallback" aria-hidden="true"><a href={shown[active]?.url} target="_blank" rel="noopener noreferrer" tabIndex={-1} draggable={false} onClick={(event) => activate(active, event)}>
-            {failedPreview === shown[active]?.preview && <span className="im-orbit__image-error">پیش‌نمایش در دسترس نیست<span>ورود به تجربه ↖</span></span>}
+            {failedPreview === shown[active]?.preview && <span className="im-orbit__image-error">تصویر بارگذاری نشد<span>دیدن سایت ↖</span></span>}
             <img src={shown[active]?.preview} hidden={failedPreview === shown[active]?.preview} onError={() => setFailedPreview(shown[active]?.preview ?? null)} onLoad={() => setFailedPreview(null)} alt="" width="1200" height="800" decoding="async" loading="eager" draggable={false} />
           </a></div>
           <span className="im-orbit__axis" aria-hidden="true">+</span>
@@ -243,16 +243,16 @@ export function WorkView({ motionRef, onSelect }: { motionRef: MutableRefObject<
           {shown.map((project, index) => (
             <li key={project.id} hidden={index !== active} role="group" aria-roledescription="اسلاید" aria-label={faDigit(index + 1) + ' از ' + faDigit(shown.length)}>
               <div className="im-orbit__project-meta"><span style={{ color: project.accent }}>{project.categoryLabel}</span><span dir="ltr">PROJECT / {String(projects.indexOf(project) + 1).padStart(2, '0')}</span></div>
-              <a id={`project-link-${project.id}`} ref={(element) => { linksRef.current[index] = element; }} href={project.url} target="_blank" rel="noopener noreferrer" className="im-orbit__project-link" data-cursor="cta" onClick={(event) => activate(index, event)}><h3>{project.title.split('؛')[0]}</h3><span>انتخاب پروژه <span aria-hidden="true">↖</span></span></a>
+              <a id={`project-link-${project.id}`} ref={(element) => { linksRef.current[index] = element; }} href={project.url} target="_blank" rel="noopener noreferrer" className="im-orbit__project-link" data-cursor="cta" onClick={(event) => activate(index, event)}><h3>{project.title.split('؛')[0]}</h3><span>معرفی سایت <span aria-hidden="true">↖</span></span></a>
               <p>{project.tagline}</p>
             </li>
           ))}
         </ul>
         <div className="im-orbit__controls">
-          <p id="im-orbit-help" aria-live="polite">اسکرول کنید یا بکشید<span className="im-sr-only">. پیکان‌ها برای جابه‌جایی، Enter برای انتخاب یا بازکردن، Escape برای بازگشت به گالری.</span></p>
+          <p id="im-orbit-help" aria-live="polite">اسکرول کنید یا بکشید<span className="im-sr-only">. با کلیدهای پیکان جابه‌جا شوید و با Enter معرفی سایت را باز کنید.</span></p>
           <span className="im-orbit__counter" aria-live="polite" aria-atomic="true"><b>{faDigit(String(active + 1).padStart(2, '0'))}</b><i>/</i>{faDigit(String(shown.length).padStart(2, '0'))}</span>
           <details className="im-orbit__tools" ref={toolsRef}>
-            <summary data-cursor="link">انتخاب پروژه <span aria-hidden="true">↔</span></summary>
+            <summary data-cursor="link">معرفی سایت <span aria-hidden="true">↔</span></summary>
             <div className="im-orbit__tool-sheet">
               <div className="im-orbit__navigation">
                 <button type="button" onClick={() => choose(Math.round(motionRef.current.target) - 1)} disabled={active === 0} aria-label="پروژهٔ قبلی" data-cursor="link">→</button>

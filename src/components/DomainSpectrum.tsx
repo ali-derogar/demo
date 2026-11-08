@@ -19,16 +19,15 @@ export function DomainSpectrum() {
             <span className="v2-kicker__n" aria-hidden="true">
               ۰۴
             </span>
-            طیفِ حوزه‌ها
+            موضوع نمونه‌کارها
           </p>
           <h2 id="spectrum-title" className="v2-h2">
-            به‌جای عدد،
+            سایت‌هایی برای
             <br />
-            رنگ‌ها را بشمار
+            کسب‌وکارهای مختلف
           </h2>
           <p className="v2-spectrum__lead">
-            هر ردیف یک صنف است و همان رنگِ دموی خودش را دارد. از مد و خودرو تا مالی و رویداد؛ روی
-            هر ردیف بروی، مستقیم به همان نمونه‌کار می‌رسی.
+            از فهرست زیر، نمونهٔ مربوط به کارتان را باز کنید؛ از فروشگاه و آموزشگاه تا کافه و سایت‌های مالی.
           </p>
           <p className="v2-spectrum__years">
             <MaskLine className="v2-spectrum__years-num" when="view">

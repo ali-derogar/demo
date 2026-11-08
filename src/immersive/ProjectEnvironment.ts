@@ -22,6 +22,7 @@ export function createProjectEnvironment(mobile: boolean, linearOutput: boolean,
   const uniforms = {
     uImage: { value: placeholder }, uLoaded: { value: 0 }, uFlow: { value: placeholder }, uFlowReady: { value: 0 },
     uTime: { value: 0 }, uReveal: { value: 0 }, uDpr: { value: 1 },
+    uDetail: { value: mobile ? 0 : 1 },
     uEncodeOutput: { value: linearOutput ? 0 : 1 }, uAccent: { value: new Color('#8ba9a6') },
     uExtent: { value: new Vector2(1, 1) }, uFrame: { value: new Vector4(.2, .2, .6, .6) },
   };
@@ -48,7 +49,7 @@ export function createProjectEnvironment(mobile: boolean, linearOutput: boolean,
       if (previousId !== project.id) { previousId = project.id; uniforms.uAccent.value.set(project.accent); }
     },
     setFlow(texture?: Texture) { uniforms.uFlow.value = texture ?? placeholder; uniforms.uFlowReady.value = texture ? 1 : 0; },
-    setQuality(level: number) { geometry.setDrawRange(0, Math.floor(budget / (level === 2 ? 4 : 2))); },
+    setQuality(level: number) { geometry.setDrawRange(0, Math.floor(budget / (level === 2 ? 4 : 2))); uniforms.uDetail.value = 0; },
     dispose() { geometry.dispose(); surfaceGeometry.dispose(); surfaceMaterial.dispose(); pointsMaterial.dispose(); },
   };
 }

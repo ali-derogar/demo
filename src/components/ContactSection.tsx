@@ -48,8 +48,8 @@ export function ContactSection() {
   return (
     <section className="v2-contact shell" id="contact" aria-labelledby="contact-title">
       <h2 className="v2-contact__title" id="contact-title">
-        <MaskLine>بیا پروژه‌ی بعدی را</MaskLine>{' '}
-        <MaskLine className="v2-contact__grad">بسازیم</MaskLine>
+        <MaskLine>برای همکاری</MaskLine>{' '}
+        <MaskLine className="v2-contact__grad">پیام بدهید</MaskLine>
       </h2>
 
       {telegram && (

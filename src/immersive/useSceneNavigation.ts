@@ -77,6 +77,7 @@ export function useSceneNavigation(workRef: MutableRefObject<OrbitMotion>) {
       afterClose = undefined;
       if (!presentation.projectId) focusRef.current = document.activeElement as HTMLElement | null;
       returnTo = snapshot ?? work.gallery?.forProject(id);
+      if (snapshot && work.gallery?.capture().filter !== snapshot.filter) work.gallery?.restore(snapshot);
       if (!work.items.some((project) => project.id === id) || !snapshot) {
         const direct = work.gallery?.forProject(id);
         if (direct) work.gallery?.restore(direct);

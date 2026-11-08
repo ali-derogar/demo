@@ -10,6 +10,7 @@ export const projectSurfaceFragment = /* glsl */ `
   uniform float uReveal;
   uniform float uLoaded;
   uniform float uEncodeOutput;
+  uniform float uDetail;
   uniform vec3 uAccent;
   uniform vec4 uFrame;
   varying vec2 vUv;
@@ -30,7 +31,8 @@ export const projectSurfaceFragment = /* glsl */ `
     vec3 media = mix(mix(paletteA, paletteB, p.x), paletteC, .35 + .15 * sin(p.y * 4.0));
     vec2 edge = abs(vUv - .5) * 2.0;
     float perimeter = smoothstep(.35, 1.0, max(edge.x, edge.y));
-    float facets = noise(p * 96.0 + uTime * .015) * .7 + noise(p * 37.0) * .3;
+    float facets = noise(p * 96.0 + uTime * .015);
+    if (uDetail > .5) facets = facets * .7 + noise(p * 37.0) * .3;
     vec3 normal = normalize(vec3(-vec2(dFdx(facets), dFdy(facets)) * 70.0, 1.0));
     float glint = pow(max(0.0, dot(normal, normalize(vec3(-.4, .6, 1.0)))), 24.0);
     float mist = .5 + .5 * sin(p.x * 6.0 + p.y * 5.0 + uTime * .06);

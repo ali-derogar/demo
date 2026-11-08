@@ -8,7 +8,7 @@ export function HomeView() {
         <p>{profile.name}<span aria-hidden="true"> / </span>{profile.title}</p>
       </div>
       <a href="#demos" className="im-home__explore" data-cursor="link">
-        <span>اسکرول کنید</span><span className="im-home__scroll-line" aria-hidden="true" /><span>کارها را کشف کنید</span>
+        <span>اسکرول کنید</span><span className="im-home__scroll-line" aria-hidden="true" /><span>دیدن نمونه‌کارها</span>
       </a>
     </div>
   );

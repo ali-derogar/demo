@@ -3,7 +3,7 @@
   "private": true,
   "version": "1.0.0",
   "type": "module",
-  "description": "گالری نمونه‌کارهای فرانت‌اند به زبان فارسی با چهار دوی مستقل",
+  "description": "نمونه‌کارهای طراحی و ساخت سایت به زبان فارسی",
   "scripts": {
     "test": "node --test scripts/tests/*.test.mjs",
     "dev": "vite",

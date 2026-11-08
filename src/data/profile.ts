@@ -48,13 +48,13 @@ export interface TimelineNode {
  */
 export const aboutTimeline: TimelineNode[] = [
   { title: 'کارشناسی مهندسی کامپیوتر', meta: 'دانشگاه یادگار امام (ره)' },
-  { title: 'سمتِ سرور', meta: 'پایتون · FastAPI · Django · Celery · PostgreSQL' },
+  { title: 'توسعهٔ بک‌اند', meta: 'پایتون · FastAPI · Django · Celery · PostgreSQL' },
   {
     title: 'persianbotyar',
     meta: 'ربات تلگرام و سرویس برای فروشگاه‌های اینترنتی ایران',
   },
-  { title: 'اپ موبایل و مدلِ یادگیری', meta: 'BeeWare · pandas · scikit-learn' },
-  { title: 'رابطِ کاربری', meta: 'طراحی و کدِ همه‌ی سایت‌های این گالری' },
+  { title: 'اپلیکیشن موبایل و یادگیری ماشین', meta: 'BeeWare · pandas · scikit-learn' },
+  { title: 'طراحی رابط کاربری', meta: 'طراحی و پیاده‌سازی سایت‌های این گالری' },
 ];
 
 export type ContactKind = 'github' | 'telegram' | 'email' | 'phone';
@@ -78,9 +78,9 @@ export const profile = {
   tagline: ['Python', 'FastAPI · Django', 'Machine Learning', 'BeeWare'],
   location: 'تهران، ایران',
   summary: [
-    'پنج سال است مهندسی نرم‌افزار می‌کنم و بیشترِ این پنج سال را سمتِ سرور گذشته‌ام: سرویس‌های FastAPI و Django، صف‌های پردازشِ کارهای سنگین با Celery و Redis، و دیتابیس‌هایی که باید زیر بارِ واقعی جواب بدهند. نام persianbotyar از همین‌جا آمده است؛ ربات‌ها و سرویس‌هایی که برای فروشگاه‌های اینترنتی ایرانی می‌سازم.',
-    'اما کارم فقط نوشتن API نیست. خودم هم رابط می‌چینم و همه‌ی سایت‌های این گالری طرح و کدِ دستِ خودم است. دلیلش ساده است: وقتی سرویسی را می‌سازم که قرار است کسی با آن کار کند، می‌خواهم از همان اول بدانم آخرین چیزی که کاربر می‌بیند چه خواهد بود.',
-    'در این سال‌ها یک چیز را خوب یاد گرفته‌ام: کدِ خوب، کدِ باهوش نیست؛ کدِ قابل‌فهم است. تست نوشتن، مستند کردن و ساده‌نگه‌داشتنِ معماری را بخشی از خودِ کار می‌دانم، نه کارِ اضافه. چیزی که تحویل می‌دهم باید شش ماه بعد هم برای نفرِ بعدی روشن باشد.',
+    'من علی دروگرم، مهندس نرم‌افزار در تهران. پنج سال است بیشتر روی بک‌اند پایتون کار می‌کنم؛ از ساخت API با FastAPI و Django تا پردازش کارهای زمان‌بر با Celery و مدیریت پایگاه داده.',
+    'در کنار بک‌اند، ربات تلگرام، اپلیکیشن موبایل و رابط کاربری هم می‌سازم. اینجا چند نمونه از سایت‌هایی را می‌بینید که طراحی و پیاده‌سازی کرده‌ام.',
+    'تست و مستندات را همراه کد آماده می‌کنم تا نگهداری و ادامهٔ کار برای خودم یا برنامه‌نویس بعدی راحت باشد.',
   ],
 } as const;
 
@@ -155,12 +155,12 @@ export interface Capability {
 
 /** شش توانمندی اصلی؛ در بخش اسکرول افقیِ پین‌شده نمایش داده می‌شود */
 export const capabilities: Capability[] = [
-  { id: 'backend', n: '۰۱', title: 'بک‌اند پایتون', text: 'سرویس‌های مقیاس‌پذیر و RESTful با FastAPI و Django.', tags: ['FastAPI', 'Django', 'gRPC', 'Pydantic'], icon: 'cpu', tone: 'cyan' },
-  { id: 'queue', n: '۰۲', title: 'صف و مقیاس', text: 'پردازش ناهمگام کارهای سنگین با صف‌های توزیع‌شده.', tags: ['Celery', 'Redis', 'RabbitMQ'], icon: 'layers', tone: 'violet' },
-  { id: 'ai', n: '۰۳', title: 'هوش مصنوعی و ML', text: 'تحلیل داده و مدل‌سازی تا یادگیری عمیق.', tags: ['NumPy', 'pandas', 'scikit-learn', 'Deep Learning'], icon: 'sparkles', tone: 'magenta' },
-  { id: 'mobile', n: '۰۴', title: 'اپلیکیشن موبایل', text: 'دو اپ با BeeWare ساخته‌ام؛ پایتون در هر دو پلتفرم.', tags: ['BeeWare', 'Toga', 'Briefcase'], icon: 'phone', tone: 'amber' },
-  { id: 'automation', n: '۰۵', title: 'ربات و اتوماسیون', text: 'ربات تلگرام و خط‌لوله‌های خزش داده.', tags: ['Pyrogram', 'Playwright', 'BeautifulSoup'], icon: 'bot', tone: 'gold' },
-  { id: 'frontend', n: '۰۶', title: 'رابط کاربری', text: 'همان سایت‌هایی که در این گالری می‌بینید؛ تمیز و دقیق.', tags: ['React', 'Vite', 'TypeScript', 'CSS'], icon: 'code', tone: 'cyan' },
+  { id: 'backend', n: '۰۱', title: 'بک‌اند پایتون', text: 'ساخت API و سرویس‌های وب با FastAPI و Django.', tags: ['FastAPI', 'Django', 'gRPC', 'Pydantic'], icon: 'cpu', tone: 'cyan' },
+  { id: 'queue', n: '۰۲', title: 'پردازش پس‌زمینه', text: 'اجرای کارهای زمان‌بر با Celery، Redis و RabbitMQ.', tags: ['Celery', 'Redis', 'RabbitMQ'], icon: 'layers', tone: 'violet' },
+  { id: 'ai', n: '۰۳', title: 'هوش مصنوعی و ML', text: 'تحلیل داده و آموزش مدل‌های یادگیری ماشین.', tags: ['NumPy', 'pandas', 'scikit-learn', 'Deep Learning'], icon: 'sparkles', tone: 'magenta' },
+  { id: 'mobile', n: '۰۴', title: 'اپلیکیشن موبایل', text: 'ساخت اپلیکیشن موبایل با پایتون و BeeWare.', tags: ['BeeWare', 'Toga', 'Briefcase'], icon: 'phone', tone: 'amber' },
+  { id: 'automation', n: '۰۵', title: 'ربات و اتوماسیون', text: 'ساخت ربات تلگرام و ابزارهای جمع‌آوری داده از وب.', tags: ['Pyrogram', 'Playwright', 'BeautifulSoup'], icon: 'bot', tone: 'gold' },
+  { id: 'frontend', n: '۰۶', title: 'رابط کاربری', text: 'ساخت رابط سایت با HTML، CSS، JavaScript و React.', tags: ['React', 'Vite', 'TypeScript', 'CSS'], icon: 'code', tone: 'cyan' },
 ];
 
 /**
@@ -189,7 +189,7 @@ export const contactLinks: ContactLink[] = [
     label: 'تلگرام',
     value: '@armin1129',
     href: 'https://t.me/armin1129',
-    note: 'سریع‌ترین راه برای گفت‌وگو و سفارش پروژه.',
+    note: 'برای صحبت دربارهٔ پروژه، اینجا پیام بدهید.',
     external: true,
   },
   {
@@ -204,7 +204,7 @@ export const contactLinks: ContactLink[] = [
     label: 'ایمیل',
     value: 'Aliderogar1129@gmail.com',
     href: 'mailto:Aliderogar1129@gmail.com',
-    note: 'برای مکاتبه‌ی رسمی و ارسال جزئیات پروژه.',
+    note: 'جزئیات پروژه را می‌توانید ایمیل کنید.',
     external: false,
   },
   {
@@ -212,7 +212,7 @@ export const contactLinks: ContactLink[] = [
     label: 'تماس',
     value: '+۹۸ ۹۲۱ ۱۲۲ ۱۹۰۷',
     href: 'tel:+989211221907',
-    note: 'مستقیم و تلفنی، ساعت کاری تهران.',
+    note: 'برای گفت‌وگوی تلفنی.',
     external: false,
   },
 ];

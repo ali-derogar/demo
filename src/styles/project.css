@@ -13,7 +13,8 @@
 .im-project__category { color: #a5c6c4; font-size: 11px; margin-bottom: 8px; }
 .im-project__info h2 { color: #f0f2ed; font-size: clamp(24px,2.5vw,38px); font-weight: 350; line-height: 1.5; margin-bottom: 16px; }
 .im-project__description { font-size: 12px; line-height: 2.3; color: #c1ccca; }
-.im-project__technologies { color: #779f9c; font: 9px/2 monospace; text-align: right; margin-top: 15px; overflow-wrap: anywhere; }
+.im-project__technologies { color: #9db7b4; font-size: 11px; text-align: right; margin-top: 15px; overflow-wrap: anywhere; }
+.im-project__technologies bdi { display: block; font: 11px/2 monospace; color: #bed0cd; }
 .im-project__actions { display: flex; flex-wrap: wrap; gap: 8px 20px; margin-top: 14px; }
 .im-project__actions a,.im-project__actions button { display: flex; gap: 12px; align-items: center; min-height: 44px; font-size: 12px; padding: 0; color: #d7e9e3; }
 .im-project__actions a { text-decoration: underline; text-underline-offset: 6px; }
