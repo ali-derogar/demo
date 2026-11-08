@@ -41,6 +41,10 @@ for (const [width, height] of [[320, 568], [390, 500], [390, 844], [768, 1024], 
         const b = p.bounds;
         assert.ok(b && [b.left, b.top, b.width, b.height].every(Number.isFinite));
         assert.ok(b.left > 0 && b.top > 0 && b.left + b.width < width && b.top + b.height < height, `card ${index} remains inside the viewport at ${progress}`);
+        if (width < 768 && width <= height) {
+          assert.ok(b.top >= 132, 'the actual mobile pane stays below the gallery heading and filters');
+          assert.ok(b.top + b.height <= height - (height > 650 ? 310 : 260) + 3, 'the actual pane leaves room for the persistent caption throughout its transition');
+        }
       }
       const expected = projectFrame(width, height, height);
       assert.ok(Math.abs(p.bounds.left + p.bounds.width / 2 - expected.left - expected.width / 2) < width * .025, 'the live card remains in its intended column');

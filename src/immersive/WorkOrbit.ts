@@ -9,7 +9,7 @@ import { ORBIT_CARD_HEIGHT, ORBIT_CARD_WIDTH, ORBIT_CURVE_RADIUS, ORBIT_RADIUS, 
 import { orbitFragment, orbitVertex } from './orbitShaders';
 import { createResourceQueue } from './resourceQueue';
 import { createProjectLabel } from './projectLabel';
-import { projectFrame, smoothRange } from './projectPresentation';
+import { galleryCardFrame, projectFrame, smoothRange } from './projectPresentation';
 import { createProjectRim } from './ProjectRim';
 
 /** Scene module only: renderer, camera, post-processing and RAF belong to Stage. */
@@ -130,7 +130,8 @@ export function createWorkOrbit(renderer: WebGLRenderer, linearOutput: boolean, 
     const pose = orbitPose(state.position, Math.max(1, state.items.length), portrait);
     const halfFov = Math.tan(fov * Math.PI / 360);
     const compact = cssSize.value.x < 1024 && cssSize.value.x <= stableHeight;
-    const widthFraction = state.scrollDriven && compact
+    const phoneFrame = state.scrollDriven && cssSize.value.x < 768 && compact ? galleryCardFrame(cssSize.value.x, stableHeight) : null;
+    const widthFraction = phoneFrame ? phoneFrame.width / cssSize.value.x : state.scrollDriven && compact
       ? Math.min(.82, projectFrame(cssSize.value.x, cssSize.value.y, stableHeight).width * .9 / cssSize.value.x) : .82;
     const distance = Math.max(
       ORBIT_CARD_HEIGHT / (2 * halfFov * .54),
@@ -138,6 +139,11 @@ export function createWorkOrbit(renderer: WebGLRenderer, linearOutput: boolean, 
     ) * (state.scrollDriven ? 1 : 1 - state.selection * (portrait ? .015 : .08));
     eye.set(Math.sin(pose.angle) * (ORBIT_RADIUS + distance), pose.y + .18, Math.cos(pose.angle) * (ORBIT_RADIUS + distance));
     aim.set(pose.x, pose.y, pose.z);
+    if (phoneFrame) {
+      const offset = ((phoneFrame.top + phoneFrame.height / 2) / cssSize.value.y - .5) * 2 * distance * halfFov;
+      eye.y += offset;
+      aim.y += offset;
+    }
     if (!state.scrollDriven) aim.y += state.selection * .06;
   }
 

@@ -16,9 +16,10 @@ function scrollTo(top: number, immediate = true) {
   else window.scrollTo({ top, behavior: immediate ? 'instant' : 'smooth' });
 }
 
-export function WorkView({ motionRef, onSelect }: { motionRef: MutableRefObject<OrbitMotion>; onSelect: (id: string) => void }) {
+export function WorkView({ motionRef, onSelect, onClose }: { motionRef: MutableRefObject<OrbitMotion>; onSelect: (id: string) => void; onClose: () => void }) {
   const [filter, setFilter] = useState<DemoCategory>('all');
   const [active, setActive] = useState(0);
+  const [presenting, setPresenting] = useState(false);
   const [failedPreview, setFailedPreview] = useState<string | null>(null);
   const reduced = useReducedMotionPreference();
   const desktop = useMediaQuery('(min-width: 1024px) and (min-height: 700px)');
@@ -79,8 +80,14 @@ export function WorkView({ motionRef, onSelect }: { motionRef: MutableRefObject<
     const index = Math.round(clampProject(frame.position, state.items.length));
     setActive((previous) => previous === index ? previous : index);
     const presentation = state.presentation!;
-    const progress = reduced ? (frame.progress >= .5 ? 1 : 0) : frame.progress;
+    // Native scrolling rounds fractional sticky boundaries to CSS pixels.
+    const rawProgress = frame.progress <= .75 / Math.min(metricsRef.current.opening, metricsRef.current.closing) ? 0 : frame.progress;
+    const progress = reduced ? (rawProgress >= .5 ? 1 : 0) : rawProgress;
     const id = progress > .00001 ? state.items[frame.index]?.id ?? null : null;
+    setPresenting((previous) => previous === !!id ? previous : !!id);
+    const duration = index === state.items.length - 1 ? metricsRef.current.opening + metricsRef.current.hold + metricsRef.current.closing : metricsRef.current.step;
+    const stepProgress = Math.max(0, Math.min(1, (window.scrollY - metricsRef.current.start - index * metricsRef.current.step) / duration));
+    trackRef.current?.style.setProperty('--step-progress', String(stepProgress));
     const changed = presentation.projectId !== id;
     if (changed) {
       presentation.ready = false;
@@ -161,8 +168,8 @@ export function WorkView({ motionRef, onSelect }: { motionRef: MutableRefObject<
     let wheelAxis = '', wheelUntil = 0;
     const down = (event: PointerEvent) => {
       const target = event.target as Element | null;
-      if (event.button !== 0 || isScrollLocked() || !target?.closest('.im-orbit__stage,.im-project')) return;
-      if (target.closest('button,input,textarea,select,summary,.im-project__actions a')) return;
+      if (event.button !== 0 || isScrollLocked() || !target?.closest('.im-orbit__stage,.im-orbit__captions,.im-project')) return;
+      if (target.closest('button,input,textarea,select,summary,.im-project__actions a,.im-orbit__visit')) return;
       drag = { id: event.pointerId, x: event.clientX, y: event.clientY, start: window.scrollY, target, horizontal: false };
     };
     const move = (event: PointerEvent) => {
@@ -241,9 +248,10 @@ export function WorkView({ motionRef, onSelect }: { motionRef: MutableRefObject<
   };
 
   return (
-    <div className="im-work-track" ref={trackRef} data-selected="false" style={{ ['--orbit-count' as string]: shown.length }}>
+    <div className="im-work-track" ref={trackRef} data-selected="false" style={{ ['--orbit-count' as string]: shown.length, ['--orbit-accent' as string]: shown[active]?.accent ?? shown[0]?.accent }}>
       <div className="im-work im-shell im-work--orbit" ref={stickyRef}>
-        <header className="im-orbit__head"><h2 id="im-work-title">نمونه‌کارها</h2><span dir="ltr">SELECTED WORK / {String(shown.length).padStart(2, '0')}</span></header>
+        <div className="im-orbit__ambience" aria-hidden="true" />
+        <header className="im-orbit__head"><h2 id="im-work-title">نمونه‌کارها</h2><span dir="ltr">SELECTED WORK / {String(shown.length).padStart(2, '0')}</span><p className="im-orbit__subtitle">هر پروژه، یک تجربهٔ تازه</p></header>
         <details className="im-orbit__filters" ref={filtersRef} data-persistent={desktop}>
           <summary data-cursor="link" tabIndex={desktop ? -1 : undefined} onClick={(event) => { if (desktop) event.preventDefault(); }}>دسته‌بندی نمونه‌کارها<span aria-hidden="true">+</span></summary>
           <div className="im-orbit__filter-options" role="group" aria-label="دسته‌بندی نمونه‌کارها">
@@ -271,12 +279,25 @@ export function WorkView({ motionRef, onSelect }: { motionRef: MutableRefObject<
         <ul className="im-orbit__captions">
           {shown.map((project, index) => (
             <li key={project.id} hidden={index !== active} role="group" aria-roledescription="اسلاید" aria-label={faDigit(index + 1) + ' از ' + faDigit(shown.length)}>
-              <div className="im-orbit__project-meta"><span style={{ color: project.accent }}>{project.categoryLabel}</span><span dir="ltr">PROJECT / {String(projects.indexOf(project) + 1).padStart(2, '0')}</span></div>
+              <div className="im-orbit__project-meta"><span style={{ ['--category-accent' as string]: project.accent }}>{project.categoryLabel}</span><span dir="ltr">PROJECT / {String(projects.indexOf(project) + 1).padStart(2, '0')}</span></div>
               <a id={`project-link-${project.id}`} ref={(element) => { linksRef.current[index] = element; }} href={project.url} target="_blank" rel="noopener noreferrer" className="im-orbit__project-link" data-cursor="cta" onClick={(event) => activate(index, event)}><h3>{project.title.split('؛')[0]}</h3><span>معرفی سایت <span aria-hidden="true">↖</span></span></a>
               <p>{project.tagline}</p>
+              <div className="im-orbit__mobile-actions">
+                <a className="im-orbit__visit" href={project.url} target="_blank" rel="noopener noreferrer">دیدن سایت <span aria-hidden="true">↗</span></a>
+                <button type="button" onClick={onClose} hidden={!presenting}>بازگشت به گالری <span aria-hidden="true">↶</span></button>
+                <span className="im-orbit__preview-note" hidden={presenting}>آمادهٔ کشف<span aria-hidden="true">✳</span></span>
+              </div>
             </li>
           ))}
         </ul>
+        <nav className="im-orbit__mobile-nav" aria-label="مرور نمونه‌کارها">
+          <button type="button" onClick={() => choose(Math.round(motionRef.current.target) - 1)} disabled={active === 0} aria-label="نمونه‌کار قبلی"><span aria-hidden="true">←</span></button>
+          <div className="im-orbit__journey">
+            <div className="im-orbit__journey-label"><span>بکشید یا اسکرول کنید</span><span className="im-orbit__mobile-counter" aria-live="polite" aria-atomic="true"><b>{faDigit(String(active + 1).padStart(2, '0'))}</b><i>/</i>{faDigit(String(shown.length).padStart(2, '0'))}</span></div>
+            <div className="im-orbit__steps" aria-hidden="true">{shown.map((project, index) => <span key={project.id} data-state={index < active ? 'complete' : index === active ? 'current' : 'next'}><i /></span>)}</div>
+          </div>
+          <button type="button" onClick={() => choose(Math.round(motionRef.current.target) + 1)} disabled={active === shown.length - 1} aria-label="نمونه‌کار بعدی"><span aria-hidden="true">→</span></button>
+        </nav>
         <div className="im-orbit__controls">
           <p id="im-orbit-help" aria-live="polite">اسکرول کنید یا بکشید<span className="im-sr-only">. با کلیدهای پیکان جابه‌جا شوید و با Enter معرفی سایت را باز کنید.</span></p>
           <span className="im-orbit__counter" aria-live="polite" aria-atomic="true"><b>{faDigit(String(active + 1).padStart(2, '0'))}</b><i>/</i>{faDigit(String(shown.length).padStart(2, '0'))}</span>

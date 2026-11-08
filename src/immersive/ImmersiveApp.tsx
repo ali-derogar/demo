@@ -98,7 +98,7 @@ export function ImmersiveApp() {
         <ImmersiveNav view={panel ?? view} audio={audio} onToggleAudio={toggleAudio} />
         <main id="im-main" ref={mainRef} tabIndex={-1}>
           <section id="home" className="im-chapter" aria-labelledby="im-home-title"><HomeView /></section>
-          <section id="demos" className="im-chapter im-chapter--work" aria-labelledby="im-work-title"><WorkView motionRef={workRef} onSelect={openProject} /></section>
+          <section id="demos" className="im-chapter im-chapter--work" aria-labelledby="im-work-title"><WorkView motionRef={workRef} onSelect={openProject} onClose={closeProject} /></section>
         </main>
         {projectId && <ProjectView project={projects.find((project) => project.id === projectId)!} motionRef={workRef} onClose={closeProject} />}
         <InfoPanel panel={loading ? null : panel} onClose={closePanel} />

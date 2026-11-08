@@ -44,3 +44,6 @@
 .im-project__hitarea { pointer-events: auto; }
 .im-project[data-phase="open"] .im-project__hitarea { cursor: pointer; }
 .im-project:not([data-phase="open"]) .im-project__hitarea { cursor: grab; }
+@media (max-width:767px) and (orientation:portrait) {
+  .im-project__info { display: none; }
+}
