@@ -294,7 +294,7 @@ export function WorkView({ motionRef, onSelect, onClose }: { motionRef: MutableR
               <a id={`project-link-${project.id}`} ref={(element) => { linksRef.current[index] = element; }} href={project.url} target="_blank" rel="noopener noreferrer" className="im-orbit__project-link" data-cursor="cta" onClick={(event) => activate(index, event)}><h3>{project.title.split('؛')[0]}</h3><span>معرفی سایت <span aria-hidden="true">↖</span></span></a>
               <p>{project.tagline}</p>
               <div className="im-orbit__mobile-actions">
-                <a className="im-orbit__visit" href={project.url} target="_blank" rel="noopener noreferrer">دیدن سایت <span aria-hidden="true">↗</span></a>
+                <a className="im-orbit__visit" href={project.url} target="_blank" rel="noopener noreferrer" aria-label={`دیدن سایت ${project.title.split('؛')[0]}`}>دیدن سایت <span aria-hidden="true">↗</span></a>
                 <button type="button" onClick={onClose} hidden={!presenting}>بازگشت به گالری <span aria-hidden="true">↶</span></button>
                 <span className="im-orbit__preview-note" hidden={presenting}>آمادهٔ کشف<span aria-hidden="true">✳</span></span>
               </div>

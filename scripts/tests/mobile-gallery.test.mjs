@@ -40,7 +40,11 @@ test('direct mobile controls browse all projects, reflect filters and finish the
   const height = env.q('.im-work--orbit').offsetHeight;
   await env.action(() => env.w.scrollTo({ top: env.workTop + (8 * 1.2 + .8) * height }));
   assert.ok(Math.abs(Number(env.q('.im-work-track').style.getPropertyValue('--step-progress')) - 1) < 1e-8);
-  await env.action(() => [...document.querySelectorAll('.im-filter')].find((button) => button.textContent === 'مد و پوشاک').click());
+  await env.action(() => {
+    [...document.querySelectorAll('.im-filter')].find((button) => button.textContent === 'مد و پوشاک').click();
+    env.w.scrollTo({ top: env.workTop + 8 }); // A final step from an interrupted native smooth scroll.
+  });
+  assert.ok(Math.abs(env.scroll - env.workTop) < 1e-8, 'filtering settles at its committed start after layout');
   assert.equal(next.disabled, true);
   assert.equal(previous.disabled, true);
   assert.equal(document.querySelectorAll('.im-orbit__steps > span').length, 1);

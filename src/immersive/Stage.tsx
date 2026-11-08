@@ -386,7 +386,7 @@ export function Stage({ progressRef, workRef, onReady }: { progressRef: RefObjec
       }
       particleUniforms.uTime.value = elapsed;
       particleUniforms.uChapter.value = position;
-      particleUniforms.uReveal.value = (reduced ? .25 : MathUtils.smoothstep(elapsed, .05, 2.2)) * (.24 + workBlend * .64) * (1 - panelMix * .3) * (presentation?.projectId ? 1 - projectMix * .1 : 1 - (work?.selection ?? 0) * .86);
+      particleUniforms.uReveal.value = (reduced ? .25 : MathUtils.smoothstep(elapsed, .05, 2.2)) * (.24 + workBlend * .64) * (1 - panelMix * .3) * (presentation?.projectId ? 1 - projectMix * .1 : 1 - (work?.selection ?? 0) * .86) * (lowPower ? 1 - workBlend * .55 : 1);
       particleUniforms.uProjectMix.value = reduced ? 0 : MathUtils.smoothstep(projectMix, .02, .9);
       particleUniforms.uProjectDepth.value = presentation?.depth ?? 8;
       const halfFov = Math.tan(camera.fov * Math.PI / 360);
