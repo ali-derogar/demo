@@ -14,11 +14,13 @@ export interface OrbitMotion {
   onPick?: (index: number) => void;
 }
 
-export const ORBIT_RADIUS = 3.8;
+export const ORBIT_RADIUS = 7.6;
 export const ORBIT_PITCH = .84;
 export const ORBIT_CARD_WIDTH = 5.4;
 export const ORBIT_CARD_HEIGHT = 3;
 export const ORBIT_CURVE_RADIUS = 12;
+export const ORBIT_HOVER_BEND = .018;
+export const ORBIT_SPEED_BEND = .025;
 
 export function insideOrbitCard(u: number, v: number): boolean {
   const x = Math.abs(u - .5) - .445, y = Math.abs(v - .5) - .445;
@@ -40,12 +42,33 @@ export function orbitPose(position: number, count: number, portrait = false) {
   };
 }
 
-export function projectFromScroll(scrollY: number, start: number, travel: number, count: number): number {
-  return clampProject((scrollY - start) / Math.max(1, travel) * (count - 1), count);
+export interface GalleryMetrics {
+  start: number;
+  viewport: number;
+  count: number;
+  entry: number;
+  step: number;
+  travel: number;
+  height: number;
 }
 
-export function scrollForProject(position: number, start: number, travel: number, count: number): number {
-  return start + clampProject(position, count) / Math.max(1, count - 1) * travel;
+/** Use the sticky's stable svh height, never the changing mobile visual viewport. */
+export function galleryMetrics(start: number, stickyHeight: number, count: number, reduced = false): GalleryMetrics {
+  const viewport = Math.max(1, stickyHeight);
+  const entry = reduced || count < 2 ? 0 : viewport * .8;
+  const step = reduced ? 0 : viewport * .62;
+  const exit = reduced || count < 2 ? 0 : viewport * .3;
+  const travel = entry + Math.max(0, count - 1) * step + exit;
+  return { start, viewport, count, entry, step, travel, height: viewport + travel };
+}
+
+export function projectFromScroll(scrollY: number, metrics: GalleryMetrics): number {
+  return clampProject((scrollY - metrics.start - metrics.entry) / Math.max(1, metrics.step), metrics.count);
+}
+
+export function scrollForProject(position: number, metrics: GalleryMetrics): number {
+  const next = clampProject(position, metrics.count);
+  return metrics.start + (next === 0 ? 0 : metrics.entry + next * metrics.step);
 }
 
 export function releaseProject(position: number, velocity: number, count: number): number {

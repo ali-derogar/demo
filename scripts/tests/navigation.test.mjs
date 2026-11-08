@@ -186,17 +186,19 @@ test('mobile fallback and reduced motion keep two-step selection, Enter, scroll 
   assert.equal(env.q('.im-work-track').dataset.selected, 'false');
 });
 
-test('desktop categories stay visible, and selection exposes the real project preview and details', async (t) => {
+test('desktop selection stays in the same stage, without a flat project overlay', async (t) => {
   const env = await app(t, { hash: '#demos', width: 1440, height: 900, reduced: true });
   const filters = env.q('.im-orbit__filters');
   assert.equal(filters.dataset.persistent, 'true'); assert.equal(filters.open, true);
   await env.action(() => env.q('.im-orbit__stage').dispatchEvent(new Event('pointerdown', { bubbles: true })));
   assert.equal(filters.open, true, 'outside clicks do not collapse the desktop list');
-  await env.action(() => env.q('.im-orbit__captions li:not([hidden]) a').click());
-  const preview = env.q('.im-orbit__detail-image');
+  const stage = env.q('.im-orbit__stage');
+  const preview = env.q('.im-orbit__captions li:not([hidden]) a');
+  await env.action(() => preview.click());
+  assert.equal(env.q('.im-orbit__stage'), stage, 'selection preserves the gallery and its native fallback');
+  assert.equal(env.q('.im-orbit__detail'), null);
   assert.equal(preview.getAttribute('href'), '/demos/fashion/');
-  assert.equal(preview.querySelector('img').getAttribute('src'), '/images/previews/fashion.webp');
-  assert.ok(env.q('.im-orbit__detail-highlights').textContent.length > 0);
+  assert.equal(env.q('.im-orbit__fallback img').getAttribute('src'), '/images/previews/fashion.webp');
   let click;
   await env.action(() => { click = new MouseEvent('click', { bubbles: true, cancelable: true, button: 0 }); preview.dispatchEvent(click); });
   assert.equal(click.defaultPrevented, false);
@@ -204,3 +206,31 @@ test('desktop categories stay visible, and selection exposes the real project pr
   assert.equal(env.q('.im-work-track').dataset.selected, 'false'); assert.equal(filters.hidden, false); assert.equal(filters.open, true);
   assert.ok(env.q('.im-nav__links .im-sound-control'), 'the audio control belongs to the reference-style navigation');
 });
+
+for (const width of [390, 768, 1440]) {
+  test(`gallery starts with project one, holds entry and keeps its coordinate during mobile chrome resize / ${width}px`, async (t) => {
+    const env = await app(t, { hash: '#demos', width });
+    const track = env.q('.im-work-track');
+    const stickyHeight = env.q('.im-work--orbit').offsetHeight;
+    assert.equal(env.q('input[type="range"]').value, '0');
+    assert.ok(Math.abs(parseFloat(track.style.height) - stickyHeight * 7.06) < .001);
+    await env.action(() => env.w.scrollTo({ top: env.workTop + .7 * stickyHeight }));
+    assert.equal(env.q('input[type="range"]').value, '0', 'the first card holds throughout entry');
+    const entryY = env.scroll;
+    await env.action(() => env.q('.im-orbit__fallback a').click());
+    assert.equal(env.scroll, entryY, 'selecting project one does not jump to the beginning of entry');
+    assert.equal(track.dataset.selected, 'true');
+    await env.action(() => env.w.scrollTo({ top: entryY + 4 }));
+    assert.equal(track.dataset.selected, 'false', 'native vertical touch exits selection even inside the entry hold');
+    await env.action(() => env.w.scrollTo({ top: env.workTop + (.8 + 3 * .62) * stickyHeight }));
+    assert.equal(env.q('input[type="range"]').value, '3');
+    const y = env.scroll, trackHeight = track.style.height;
+    await env.action(() => { Object.defineProperty(env.w, 'innerHeight', { value: stickyHeight + 80, configurable: true }); env.w.dispatchEvent(new Event('resize')); env.resolveFonts(); });
+    assert.equal(track.style.height, trackHeight, 'height follows the svh sticky, not the moving address bar');
+    assert.equal(env.scroll, y); assert.equal(env.q('input[type="range"]').value, '3');
+    await env.action(() => env.q('.im-orbit__captions li:not([hidden]) a').click());
+    assert.equal(track.dataset.selected, 'true');
+    await env.action(() => env.w.dispatchEvent(new PopStateEvent('popstate', { state: history.state })));
+    assert.equal(track.dataset.selected, 'false');
+  });
+}

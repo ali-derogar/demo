@@ -84,7 +84,7 @@ export async function environment({ hash = '#home', type = 'navigate', width = 3
   Object.defineProperty(w.HTMLElement.prototype, 'clientWidth', { get() { return width; } });
   Object.defineProperty(w.HTMLElement.prototype, 'clientHeight', { get() { return height; } });
   Object.defineProperty(w.HTMLElement.prototype, 'offsetHeight', { get() {
-    if (this.classList.contains('im-work-track')) return height + Number(this.style.getPropertyValue('--orbit-steps')) * height * .52;
+    if (this.classList.contains('im-work-track')) return parseFloat(this.style.height) || height * (1 + Number(this.style.getPropertyValue('--orbit-holds')) + Number(this.style.getPropertyValue('--orbit-steps')) * .62);
     if (this.classList.contains('im-work--orbit')) return height;
     return 400;
   } });

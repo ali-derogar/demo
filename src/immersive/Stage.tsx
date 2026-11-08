@@ -156,6 +156,7 @@ export function Stage({ progressRef, workRef }: { progressRef: RefObject<ScenePr
     const signature = brand.group;
     world.add(signature);
     const orbit = createWorkOrbit(renderer, canFloat, lowPower);
+    if (!reduced && workRef.current) orbit.preload(workRef.current.items);
     scene.add(orbit.group);
     const sculpture = createWorkSculpture(lowPower);
     scene.add(sculpture.group);
@@ -376,7 +377,7 @@ export function Stage({ progressRef, workRef }: { progressRef: RefObject<ScenePr
         flowPass.uniforms.uTime.value = elapsed;
         burst *= Math.exp(-dt * 8);
       }
-      if (backdrop && workBlend > .02 && (work?.selection ?? 0) < .98 && (!lowPower || captureFrame++ % 2 === 0)) {
+      if (backdrop && workBlend > .02 && (!lowPower || captureFrame++ % 2 === 0)) {
         const visible = orbit.group.visible;
         orbit.group.visible = false;
         renderer.setRenderTarget(backdrop); renderer.clear(); renderer.render(scene, camera); renderer.setRenderTarget(null);
@@ -385,6 +386,7 @@ export function Stage({ progressRef, workRef }: { progressRef: RefObject<ScenePr
       }
       if (composer) composer.render(dt);
       else renderer.render(scene, camera);
+      if (work && !reduced) orbit.present(work);
       if (firstFrame) { firstFrame = false; setStatus('ready'); }
 
       if (!reduced) {

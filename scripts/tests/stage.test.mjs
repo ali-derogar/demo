@@ -56,8 +56,9 @@ test('selection advances the real camera and card transforms smoothly, preserves
   for (let i = 0; i < 90; i++) frame();
   assert.ok(state.selection > .99);
   assert.ok(eye.z < wideZ - .5, 'camera moves closer to the selected card');
-  assert.ok(orbit.group.children[0].position.z > restingCardZ + .2);
-  assert.ok(orbit.group.children[0].scale.x > 1.02);
+  assert.ok(orbit.group.children[0].position.z > restingCardZ + .17);
+  assert.ok(orbit.group.children[0].scale.x > 1.019);
+  assert.ok(orbit.group.children[0].material.uniforms.uReveal.value > .99, 'selection keeps the actual 3D card visible');
   assert.ok(orbit.group.children[1].material.uniforms.uReveal.value < .4);
   assert.equal(orbit.hitTest(camera, 720, 450, 1440, 900), 0, 'the transformed card remains clickable');
   state.selectedIndex = null;

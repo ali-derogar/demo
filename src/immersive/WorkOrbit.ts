@@ -43,8 +43,13 @@ export function createWorkOrbit(renderer: WebGLRenderer, linearOutput: boolean, 
   let previousPosition: number | null = null;
   let priorityKey = '';
   let speed = 0;
+  let presented = false;
+  let pendingReady = false;
+  let pendingLabels = false;
   const ndc = new Vector2();
   const raycaster = new Raycaster();
+  const center = new Vector3();
+  const drawOrder: typeof panels = [];
 
   function prepare(next: DemoProject[]) {
     if (next === items) return;
@@ -52,6 +57,7 @@ export function createWorkOrbit(renderer: WebGLRenderer, linearOutput: boolean, 
     items = next;
     priorityKey = '';
     previousPosition = null;
+    presented = pendingReady = pendingLabels = false;
     panels = next.map((project, index) => {
       if (!labels.has(project.id)) labels.set(project.id, createProjectLabel(project, portrait, mobile));
       const label = labels.get(project.id);
@@ -67,7 +73,7 @@ export function createWorkOrbit(renderer: WebGLRenderer, linearOutput: boolean, 
           uAccent: { value: new Color(project.accent) },
         },
         vertexShader: orbitVertex, fragmentShader: orbitFragment,
-        side: DoubleSide, transparent: true, toneMapped: false,
+        side: DoubleSide, transparent: true, depthWrite: false, toneMapped: false,
       });
       const panel = new Mesh(geometry, material);
       material.forceSinglePass = true;
@@ -79,6 +85,7 @@ export function createWorkOrbit(renderer: WebGLRenderer, linearOutput: boolean, 
       group.add(panel);
       return panel;
     });
+    drawOrder.splice(0, drawOrder.length, ...panels);
   }
 
   function advance(state: OrbitMotion, dt: number) {
@@ -103,9 +110,9 @@ export function createWorkOrbit(renderer: WebGLRenderer, linearOutput: boolean, 
     const pose = orbitPose(state.position, Math.max(1, state.items.length), portrait);
     const halfFov = Math.tan(fov * Math.PI / 360);
     const distance = Math.max(
-      ORBIT_CARD_HEIGHT / (2 * halfFov * .62),
+      ORBIT_CARD_HEIGHT / (2 * halfFov * .54),
       ORBIT_CARD_WIDTH * (portrait ? .62 : 1) / (2 * halfFov * aspect * .9),
-    ) * (1 - state.selection * (aspect < .8 ? .025 : .12));
+    ) * (1 - state.selection * (portrait ? 0 : .08));
     eye.set(Math.sin(pose.angle) * (ORBIT_RADIUS + distance), pose.y + .18, Math.cos(pose.angle) * (ORBIT_RADIUS + distance));
     aim.set(pose.x, pose.y, pose.z);
     aim.y += state.selection * .06;
@@ -131,8 +138,8 @@ export function createWorkOrbit(renderer: WebGLRenderer, linearOutput: boolean, 
       uniforms.uSelected.value += (selected - uniforms.uSelected.value) * (1 - Math.exp(-dt * 6));
       const lift = uniforms.uSelected.value as number;
       const pose = panel.userData.pose as ReturnType<typeof orbitPose>;
-      panel.position.set(pose.x + Math.sin(pose.angle) * lift * .28, pose.y + lift * .06, pose.z + Math.cos(pose.angle) * lift * .28);
-      const scale = 1 + lift * .025;
+      panel.position.set(pose.x + Math.sin(pose.angle) * lift * .18, pose.y + lift * .06, pose.z + Math.cos(pose.angle) * lift * .18);
+      const scale = 1 + lift * .02;
       panel.scale.set(scale * (portrait ? .62 : 1), scale, scale);
       const texture = images.get(items[index].preview);
       uniforms.uImage.value = texture ?? placeholder;
@@ -142,16 +149,35 @@ export function createWorkOrbit(renderer: WebGLRenderer, linearOutput: boolean, 
       uniforms.uHover.value += ((hover === index ? 1 : 0) - uniforms.uHover.value) * ease;
       uniforms.uSpeed.value += (speed - uniforms.uSpeed.value) * ease;
       uniforms.uTime.value = time;
-      uniforms.uReveal.value = reveal * (1 - state.selection * .65 * (1 - lift)) * (1 - state.selection * .92);
+      uniforms.uReveal.value = reveal * (1 - state.selection * .7 * (1 - lift));
     });
     group.updateMatrixWorld(true);
-    const front = items[Math.max(0, Math.min(items.length - 1, Math.round(state.target)))];
-    state.ready = !!front && !!images.get(front.preview) && reveal > .005;
-    state.labelsReady = !!front && !!labels.get(front.id);
+    // Transparent panes cannot write depth. Paint far panes first in the current camera space.
+    drawOrder.forEach((panel) => {
+      panel.userData.depth = center.copy(panel.position).applyMatrix4(camera.matrixWorldInverse).z;
+    });
+    drawOrder.sort((a, b) => a.userData.depth - b.userData.depth);
+    drawOrder.forEach((panel, index) => { panel.renderOrder = index + 1; });
+    const frontIndex = Math.max(0, Math.min(items.length - 1, Math.round(state.target)));
+    const front = items[frontIndex];
+    const panel = panels[frontIndex];
+    if (panel) center.copy(panel.position).project(camera);
+    const inFrame = !!panel && Math.abs(center.x) < .35 && Math.abs(center.y) < .35 && center.z > -1 && center.z < 1;
+    pendingReady = !!front && !!images.get(front.preview) && reveal > .98 && (presented || inFrame);
+    pendingLabels = !!front && !!labels.get(front.id);
+    state.ready &&= pendingReady;
+    state.labelsReady &&= pendingLabels;
   }
 
   return {
     group, prepare, advance, cameraPose, update, hitTest,
+    preload(next: DemoProject[]) { images.prioritize(next.slice(0, 3).map((project) => project.preview)); },
+    /** Only retire the native poster after a complete, visible GPU frame. */
+    present(state: OrbitMotion) {
+      state.ready = pendingReady;
+      state.labelsReady = pendingLabels;
+      if (pendingReady) presented = true;
+    },
     resize(width: number, height: number, dpr: number) {
       viewSize.value.set(Math.max(1, width * dpr), Math.max(1, height * dpr));
       const nextPortrait = width / Math.max(1, height) < .8;
