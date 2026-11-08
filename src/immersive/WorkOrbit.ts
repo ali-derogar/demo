@@ -149,7 +149,7 @@ export function createWorkOrbit(renderer: WebGLRenderer, linearOutput: boolean, 
       uniforms.uHover.value += ((hover === index ? 1 : 0) - uniforms.uHover.value) * ease;
       uniforms.uSpeed.value += (speed - uniforms.uSpeed.value) * ease;
       uniforms.uTime.value = time;
-      uniforms.uReveal.value = reveal * (1 - state.selection * .7 * (1 - lift));
+      uniforms.uReveal.value = reveal * (selected ? 1 : 1 - .7 * Math.max(0, state.selection - lift));
     });
     group.updateMatrixWorld(true);
     // Transparent panes cannot write depth. Paint far panes first in the current camera space.

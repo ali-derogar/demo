@@ -1,3 +1,5 @@
+import { ORBIT_HOVER_BEND, ORBIT_SPEED_BEND } from './orbit';
+
 export const orbitVertex = /* glsl */ `
   uniform float uTime;
   uniform float uHover;
@@ -69,5 +71,3 @@ export const orbitFragment = /* glsl */ `
     gl_FragColor = vec4(color, uReveal * coverage);
   }
 `;
-import { ORBIT_HOVER_BEND, ORBIT_SPEED_BEND } from './orbit';
-
