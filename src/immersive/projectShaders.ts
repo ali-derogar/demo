@@ -12,7 +12,6 @@ export const projectSurfaceFragment = /* glsl */ `
   uniform float uEncodeOutput;
   uniform float uDetail;
   uniform vec3 uAccent;
-  uniform vec4 uFrame;
   varying vec2 vUv;
   float hash(vec2 p) { return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
   float noise(vec2 p) {
@@ -43,58 +42,5 @@ export const projectSurfaceFragment = /* glsl */ `
     if (uEncodeOutput > .5) color = pow(max(color, .0), vec3(1.0 / 2.2));
     // Glaze the existing world; leave its sculpture, haze and particles visible.
     gl_FragColor = vec4(color, uReveal * (.08 + perimeter * .3));
-  }
-`;
-export const projectParticlesVertex = /* glsl */ `
-  attribute vec2 aSample;
-  attribute float aSeed;
-  uniform sampler2D uImage;
-  uniform sampler2D uFlow;
-  uniform float uFlowReady;
-  uniform float uTime;
-  uniform float uReveal;
-  uniform float uDpr;
-  uniform float uLoaded;
-  uniform vec2 uExtent;
-  uniform vec4 uFrame;
-  uniform vec3 uAccent;
-  varying vec3 vColor;
-  varying float vAlpha;
-  void main() {
-    vec2 screen = (aSample - .5) * 2.7;
-    screen.x += .2;
-    screen += vec2(sin(aSeed * 419.0), cos(aSeed * 317.0)) * .075;
-    vec2 screenUv = clamp(screen * .5 + .5, .001, .999);
-    vec2 wake = texture2D(uFlow, screenUv).xy * uFlowReady;
-    wake /= max(1.0, length(wake));
-    float depth = 5.9 + aSeed * 3.0;
-    vec3 p = vec3(screen * uExtent * depth, -depth);
-    p.xy += vec2(sin(aSeed * 41.0 + uTime * .22), cos(aSeed * 53.0 + uTime * .18)) * .1;
-    p.xy += wake * .28;
-    p.z += sin(aSeed * 77.0 + uTime * .2) * .18;
-    vec3 media = texture2D(uImage, aSample).rgb;
-    vColor = mix(uAccent * .3, media, uLoaded) * (.12 + aSeed * .5);
-    vec2 relative = (screenUv - uFrame.xy) / max(uFrame.zw, vec2(.01));
-    float center = step(.03, relative.x) * step(relative.x, .97) * step(.03, relative.y) * step(relative.y, .97);
-    float edge = smoothstep(.2, .95, length(screen));
-    float metadata = (1.0 - smoothstep(.2, .34, screenUv.x)) * (1.0 - smoothstep(.5, .7, screenUv.y));
-    float cluster = .3 + .7 * pow(.5 + .5 * sin(screen.y * 21.0 + sin(screen.x * 15.0) * 2.0), 3.0);
-    vAlpha = uReveal * (1.0 - center) * edge * (.025 + aSeed * .18) * cluster * (1.0 - metadata * .8);
-    vec4 mv = modelViewMatrix * vec4(p, 1.0);
-    gl_Position = projectionMatrix * mv;
-    gl_PointSize = clamp((.7 + aSeed * 1.8 + length(wake)) * uDpr * 6.0 / max(1.0, -mv.z), 1.0, 4.0);
-  }
-`;
-export const projectParticlesFragment = /* glsl */ `
-  uniform float uEncodeOutput;
-  varying vec3 vColor;
-  varying float vAlpha;
-  void main() {
-    vec2 p = abs(gl_PointCoord - .5) * 2.0;
-    float shape = max(p.x, p.y);
-    if (shape > .95 || vAlpha < .001) discard;
-    vec3 color = vColor * (.6 + .4 * gl_PointCoord.y);
-    if (uEncodeOutput > .5) color = pow(max(color, .0), vec3(1.0 / 2.2));
-    gl_FragColor = vec4(color, vAlpha * (1.0 - smoothstep(.6, 1.0, shape)));
   }
 `;

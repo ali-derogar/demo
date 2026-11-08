@@ -208,6 +208,7 @@ export function createWorkOrbit(renderer: WebGLRenderer, linearOutput: boolean, 
     }
     group.updateMatrixWorld(true);
     if (hero && presentation) {
+      presentation.depth = -center.copy(hero.position).applyMatrix4(camera.matrixWorldInverse).z;
       let left = Infinity, top = Infinity, right = -Infinity, bottom = -Infinity;
       for (const x of [-ORBIT_CARD_WIDTH / 2, 0, ORBIT_CARD_WIDTH / 2]) for (const y of [-ORBIT_CARD_HEIGHT / 2, 0, ORBIT_CARD_HEIGHT / 2]) {
         projected.set(Math.sin(x / ORBIT_CURVE_RADIUS) * ORBIT_CURVE_RADIUS * (1 - flatten) + x * flatten, y,

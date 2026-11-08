@@ -1,3 +1,5 @@
+import { projectStarField } from './projectStars';
+
 /** Original motion shaders; no reference-site code or visual assets are reused. */
 export const fullscreenVertex = /* glsl */ `
   varying vec2 vUv;
@@ -150,6 +152,7 @@ export const particleVertex = /* glsl */ `
   varying vec3 vColor;
   varying float vAlpha;
   ${shapeField}
+  ${projectStarField}
   void main() {
     vec4 s = seeds(aLookup);
     vec3 p;
@@ -162,14 +165,20 @@ export const particleVertex = /* glsl */ `
       p += currentField(p, uTime * .4) * .08;
     }
     vec4 mv = modelViewMatrix * vec4(p, 1.0);
+    mv.xyz = mix(mv.xyz, projectStarPosition(s, uTime), uProjectMix);
     gl_Position = projectionMatrix * mv;
     gl_PointSize = clamp((1.45 + s.z * 1.8) * uDpr * 10.0 / max(1.0, -mv.z), 1.0, 6.0);
     gl_PointSize = mix(gl_PointSize, (4.0 + s.y * 7.0) * uDpr, step(.985, s.z));
+    float projectSize = clamp((1.0 + s.z * 2.5) * uDpr * 7.0 / max(5.0, -mv.z), 1.0, 5.0);
+    gl_PointSize = mix(gl_PointSize, projectSize, uProjectMix);
     vec3 silver = mix(vec3(.54, .63, .47), vec3(.24, .6, .94), min(uChapter, 1.0));
     vec3 amber = mix(vec3(.67, .65, .8), vec3(.92, .38, .75), min(uChapter, 1.0));
     float warmth = smoothstep(.58, .95, s.w + sin(uTime * .12 + s.x * 6.0) * .12);
     vColor = mix(silver, amber, warmth) * (1.1 + s.z * .7);
     vAlpha = (.2 + s.y * .6) * uReveal * exp(-max(-mv.z - 10.0, 0.0) * .035);
+    vec2 screenUv = gl_Position.xy / max(.001, gl_Position.w) * .5 + .5;
+    float metadata = (1.0 - smoothstep(.2, .34, screenUv.x)) * (1.0 - smoothstep(.5, .7, screenUv.y));
+    vAlpha *= 1.0 - metadata * uProjectMix * .65;
   }
 `;
 

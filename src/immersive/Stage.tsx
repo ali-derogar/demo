@@ -20,6 +20,7 @@ import { createBrandSculpture } from './BrandSculpture';
 import { createWorkSculpture } from './WorkSculpture';
 import { createProjectEnvironment } from './ProjectEnvironment';
 import { FrameQuality } from './frameQuality';
+import { createStarPointer } from './projectStars';
 import type { OrbitMotion } from './orbit';
 import { getPointer, subscribeRaf } from '../lib/raf';
 import { useMediaQuery, useReducedMotionPreference } from '../lib/useMedia';
@@ -93,6 +94,7 @@ export function Stage({ progressRef, workRef }: { progressRef: RefObject<ScenePr
     const pointer = new Vector3(999, 999, 0);
     const pointerVelocity = new Vector3();
     const pulse = new Vector4(0, 0, -100, 0);
+    const starPointer = createStarPointer();
     const particleUniforms = {
       uPositions: { value: emptyTexture as import('three').Texture },
       uSimulation: { value: 0 },
@@ -101,6 +103,9 @@ export function Stage({ progressRef, workRef }: { progressRef: RefObject<ScenePr
       uDpr: { value: dpr },
       uReveal: { value: reduced ? 1 : 0 },
       uPointer: { value: pointer },
+      uProjectMix: { value: 0 }, uProjectFrame: { value: new Vector4(.3, .2, .6, .6) },
+      uProjectExtent: { value: new Vector2(1, 1) }, uProjectDepth: { value: 8 },
+      uStarPointer: { value: starPointer.pointer }, uStarViewport: { value: starPointer.viewport },
     };
     const particleMaterial = new ShaderMaterial({
       uniforms: particleUniforms, vertexShader: particleVertex, fragmentShader: particleFragment,
@@ -108,6 +113,7 @@ export function Stage({ progressRef, workRef }: { progressRef: RefObject<ScenePr
     });
     const particles = new Points(geometry, particleMaterial);
     particles.frustumCulled = false;
+    particles.renderOrder = -2;
     world.add(particles);
 
     const canFloat = renderer.extensions.has('EXT_color_buffer_float');
@@ -376,7 +382,14 @@ export function Stage({ progressRef, workRef }: { progressRef: RefObject<ScenePr
       }
       particleUniforms.uTime.value = elapsed;
       particleUniforms.uChapter.value = position;
-      particleUniforms.uReveal.value = (reduced ? .25 : MathUtils.smoothstep(elapsed, .05, 2.2)) * (.24 + workBlend * .64) * (1 - panelMix * .3) * (presentation?.projectId ? 1 - projectMix * .65 : 1 - (work?.selection ?? 0) * .86);
+      particleUniforms.uReveal.value = (reduced ? .25 : MathUtils.smoothstep(elapsed, .05, 2.2)) * (.24 + workBlend * .64) * (1 - panelMix * .3) * (presentation?.projectId ? 1 - projectMix * .1 : 1 - (work?.selection ?? 0) * .86);
+      particleUniforms.uProjectMix.value = reduced ? 0 : MathUtils.smoothstep(projectMix, .02, .9);
+      particleUniforms.uProjectDepth.value = presentation?.depth ?? 8;
+      const halfFov = Math.tan(camera.fov * Math.PI / 360);
+      particleUniforms.uProjectExtent.value.set(halfFov * camera.aspect, halfFov);
+      const projectBounds = presentation?.bounds;
+      if (projectBounds) particleUniforms.uProjectFrame.value.set(projectBounds.left / viewportWidth, 1 - (projectBounds.top + projectBounds.height) / viewportHeight, projectBounds.width / viewportWidth, projectBounds.height / viewportHeight);
+      starPointer.update(input, viewportWidth, viewportHeight, dt, active && !!presentation?.projectId && presentation.phase !== 'closing');
       signature.rotation.y = reduced ? -.15 : Math.sin(elapsed * .45) * .35;
       signature.rotation.z = reduced ? 0 : Math.sin(elapsed * .28) * .06;
       signature.position.y = reduced ? 0 : Math.sin(elapsed * .6) * .1;
@@ -404,7 +417,7 @@ export function Stage({ progressRef, workRef }: { progressRef: RefObject<ScenePr
       orbit.setFlow(flowRead?.texture);
       projectEnvironment.setFlow(flowRead?.texture);
       const project = work?.items.find((item) => item.id === presentation?.projectId);
-      projectEnvironment.update(presentation, project, project ? orbit.texture(project.id) : undefined, camera, elapsed, viewportWidth, viewportHeight, dpr, panelMix);
+      projectEnvironment.update(presentation, project, project ? orbit.texture(project.id) : undefined, camera, elapsed, panelMix);
       if (backdrop && workBlend > .02 && (!lowPower || captureFrame++ % 2 === 0)) {
         const visible = orbit.group.visible;
         orbit.group.visible = false;

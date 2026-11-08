@@ -4,6 +4,7 @@ export interface ProjectPresentation {
   progress: number;
   ready: boolean;
   surface: 'pending' | 'webgl' | 'fallback' | 'reduced';
+  depth?: number;
   bounds: { left: number; top: number; width: number; height: number } | null;
 }
 
