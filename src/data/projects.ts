@@ -1,5 +1,13 @@
 export type DemoCategory = 'fashion' | 'sports' | 'cars' | 'store' | (string & {});
 
+export interface ProjectVisual {
+  surface: string;
+  foreground: string;
+  muted: string;
+  image: string;
+  layout: 'editorial' | 'athletic' | 'automotive' | 'retail' | 'cafe' | 'travel' | 'craft' | 'festival' | 'finance';
+}
+
 export interface DemoProject {
   /** شناسه‌ی یکتا؛ همان نام پوشه‌ی داخل public/demos */
   id: string;
@@ -18,6 +26,7 @@ export interface DemoProject {
   keywords: string[];
   highlights: string[];
   accent: string;
+  visual: ProjectVisual;
 }
 
 /**
@@ -29,6 +38,7 @@ export interface DemoProject {
 export const projects: DemoProject[] = [
   {
     id: 'fashion',
+    visual: { surface: '#f4f1ea', foreground: '#211d18', muted: '#6e6759', image: '/demos/fashion/assets/img/hero-01.webp', layout: 'editorial' },
     title: 'آینه؛ سایت مد و پوشاک',
     tagline: 'مجموعه‌های لباس، عکس‌ها و معرفی مدل‌ها',
     description:
@@ -36,7 +46,7 @@ export const projects: DemoProject[] = [
     category: 'fashion',
     categoryLabel: 'مد و پوشاک',
     preview: '/images/previews/fashion.webp',
-    previewAlt: 'صفحه‌ی سایت آینه با عکس مدل و مجموعه‌های لباس',
+    previewAlt: 'طرح گرافیکی رابط «آینه» با رنگ‌ها، تصاویر و محتوای همان سایت',
     url: '/demos/fashion/',
     technologies: ['HTML', 'CSS', 'JavaScript'],
     keywords: [
@@ -59,6 +69,7 @@ export const projects: DemoProject[] = [
   },
   {
     id: 'sports',
+    visual: { surface: '#0b0d0b', foreground: '#f2f4ec', muted: '#a7ada0', image: '/demos/sports/assets/img/hero-01.webp', layout: 'athletic' },
     title: 'پیکان؛ سایت باشگاه ورزشی',
     tagline: 'برنامه‌ی کلاس‌ها و ثبت‌نام باشگاه',
     description:
@@ -66,7 +77,7 @@ export const projects: DemoProject[] = [
     category: 'sports',
     categoryLabel: 'ورزش و تناسب اندام',
     preview: '/images/previews/sports.webp',
-    previewAlt: 'صفحه‌ی سایت پیکان با عکس ورزشکار و برنامه‌های تمرینی',
+    previewAlt: 'طرح گرافیکی رابط «پیکان» با رنگ‌ها، تصاویر و محتوای همان سایت',
     url: '/demos/sports/',
     technologies: ['HTML', 'CSS', 'JavaScript'],
     keywords: [
@@ -89,6 +100,7 @@ export const projects: DemoProject[] = [
   },
   {
     id: 'cars',
+    visual: { surface: '#0b0e13', foreground: '#eef2f8', muted: '#98a4b6', image: '/demos/cars/assets/img/hero.webp', layout: 'automotive' },
     title: 'ماشین‌نما؛ نمایشگاه خودرو',
     tagline: 'دیدن مشخصات و مقایسه‌ی خودروها',
     description:
@@ -96,7 +108,7 @@ export const projects: DemoProject[] = [
     category: 'cars',
     categoryLabel: 'خودرو',
     preview: '/images/previews/cars.webp',
-    previewAlt: 'صفحه‌ی نمایشگاه ماشین‌نما با عکس خودرو و مشخصاتش',
+    previewAlt: 'طرح گرافیکی رابط «ماشین‌نما» با رنگ‌ها، تصاویر و محتوای همان سایت',
     url: '/demos/cars/',
     technologies: ['HTML', 'CSS', 'JavaScript'],
     keywords: [
@@ -118,6 +130,7 @@ export const projects: DemoProject[] = [
   },
   {
     id: 'store',
+    visual: { surface: '#f7f3ec', foreground: '#2c2723', muted: '#756a60', image: '/demos/store/assets/img/hero-01.webp', layout: 'retail' },
     title: 'لوازم؛ فروشگاه اینترنتی',
     tagline: 'پیدا کردن محصول و اضافه کردن به سبد خرید',
     description:
@@ -125,7 +138,7 @@ export const projects: DemoProject[] = [
     category: 'store',
     categoryLabel: 'فروشگاه اینترنتی',
     preview: '/images/previews/store.webp',
-    previewAlt: 'صفحه‌ی فروشگاه لوازم با محصولات و سبد خرید',
+    previewAlt: 'طرح گرافیکی رابط «لوازم» با رنگ‌ها، تصاویر و محتوای همان سایت',
     url: '/demos/store/',
     technologies: ['HTML', 'CSS', 'JavaScript'],
     keywords: [
@@ -148,6 +161,7 @@ export const projects: DemoProject[] = [
   },
   {
     id: 'cafe',
+    visual: { surface: '#171009', foreground: '#f0e6d6', muted: '#a2937e', image: '/demos/cafe/assets/img/hero-01.webp', layout: 'cafe' },
     title: 'بخار؛ کافه و صبحانه',
     tagline: 'منوی کافه، ساعت کاری و رزرو میز',
     description:
@@ -155,7 +169,7 @@ export const projects: DemoProject[] = [
     category: 'cafe',
     categoryLabel: 'کافه و رستوران',
     preview: '/images/previews/cafe.webp',
-    previewAlt: 'صفحه‌ی کافه بخار با عکس باریستا و منوی کافه',
+    previewAlt: 'طرح گرافیکی رابط «بخار» با رنگ‌ها، تصاویر و محتوای همان سایت',
     url: '/demos/cafe/',
     technologies: ['HTML', 'CSS', 'JavaScript'],
     keywords: [
@@ -178,6 +192,7 @@ export const projects: DemoProject[] = [
   },
   {
     id: 'travel',
+    visual: { surface: '#f6f3ec', foreground: '#12303a', muted: '#57707c', image: '/demos/travel/assets/img/hero-01.webp', layout: 'travel' },
     title: 'مسیر؛ آژانس مسافرتی',
     tagline: 'پیدا کردن تور و حساب کردن قیمت سفر',
     description:
@@ -185,7 +200,7 @@ export const projects: DemoProject[] = [
     category: 'travel',
     categoryLabel: 'سفر و گردشگری',
     preview: '/images/previews/travel.webp',
-    previewAlt: 'صفحه‌ی سایت مسیر با عکس سی‌وسه‌پل و فهرست مقصدها',
+    previewAlt: 'طرح گرافیکی رابط «مسیر» با رنگ‌ها، تصاویر و محتوای همان سایت',
     url: '/demos/travel/',
     technologies: ['HTML', 'CSS', 'JavaScript'],
     keywords: [
@@ -208,6 +223,7 @@ export const projects: DemoProject[] = [
   },
   {
     id: 'maktab',
+    visual: { surface: '#f7f0e2', foreground: '#2a2419', muted: '#6d6049', image: '/demos/maktab/assets/img/hero-01.webp', layout: 'craft' },
     title: 'مکتب‌خانه؛ آموزشگاه هنرهای سنتی',
     tagline: 'پیدا کردن دوره و دنبال کردن مشق‌ها',
     description:
@@ -215,7 +231,7 @@ export const projects: DemoProject[] = [
     category: 'education',
     categoryLabel: 'آموزش',
     preview: '/images/previews/maktab.webp',
-    previewAlt: 'صفحه‌ی سایت مکتب‌خانه با سرلوحه‌ی نستعلیق و فهرست دوره‌ها',
+    previewAlt: 'طرح گرافیکی رابط «مکتب‌خانه» با رنگ‌ها، تصاویر و محتوای همان سایت',
     url: '/demos/maktab/',
     technologies: ['HTML', 'CSS', 'JavaScript'],
     keywords: [
@@ -238,6 +254,7 @@ export const projects: DemoProject[] = [
   },
   {
     id: 'nabz',
+    visual: { surface: '#06050b', foreground: '#ece9f5', muted: '#a49fbd', image: '/demos/nabz/assets/img/hero-01.webp', layout: 'festival' },
     title: 'نبض؛ فستیوال موسیقی و هنر دیجیتال',
     tagline: 'دیدن برنامه‌ی شب‌ها و گرفتن بلیت',
     description:
@@ -245,7 +262,7 @@ export const projects: DemoProject[] = [
     category: 'event',
     categoryLabel: 'رویداد و موسیقی',
     preview: '/images/previews/nabz.webp',
-    previewAlt: 'صفحه‌ی سایت نبض با تایپوگرافی درشت و تصویر متحرک موسیقی',
+    previewAlt: 'طرح گرافیکی رابط «نبض» با رنگ‌ها، تصاویر و محتوای همان سایت',
     url: '/demos/nabz/',
     technologies: ['HTML', 'CSS', 'JavaScript'],
     keywords: [
@@ -269,6 +286,7 @@ export const projects: DemoProject[] = [
   },
   {
     id: 'sekke',
+    visual: { surface: '#0a0806', foreground: '#f2ece0', muted: '#a89b83', image: '/demos/sekke/assets/img/gold-bars.webp', layout: 'finance' },
     title: 'سکه؛ سایت صرافی',
     tagline: 'تابلوی نرخ طلا، سکه و ارز',
     description:
@@ -276,7 +294,7 @@ export const projects: DemoProject[] = [
     category: 'finance',
     categoryLabel: 'مالی و صرافی',
     preview: '/images/previews/sekke.webp',
-    previewAlt: 'صفحه‌ی سایت سکه با نرخِ درشتِ سکه امامی و تابلوی زنده‌ی طلا و ارز',
+    previewAlt: 'طرح گرافیکی رابط «سکه» با رنگ‌ها، تصاویر و محتوای همان سایت',
     url: '/demos/sekke/',
     technologies: ['HTML', 'CSS', 'JavaScript'],
     keywords: [

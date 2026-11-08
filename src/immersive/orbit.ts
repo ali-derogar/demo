@@ -19,19 +19,24 @@ export interface OrbitMotion {
   interactive: boolean;
   selectedIndex: number | null;
   selection: number;
+  scrollDriven?: boolean;
+  bounds?: { left: number; top: number; width: number; height: number };
+  onFrame?: () => void;
   onPick?: (index: number) => void;
   presentation?: ProjectPresentation;
   gallery?: {
     capture: () => GallerySnapshot;
     restore: (snapshot: GallerySnapshot) => void;
     forProject: (id: string) => GallerySnapshot;
+    open: (id: string, immediate?: boolean) => void;
+    collapse: () => void;
   };
 }
 
 export const ORBIT_RADIUS = 7.6;
 export const ORBIT_PITCH = .84;
-export const ORBIT_CARD_WIDTH = 5.4;
-export const ORBIT_CARD_HEIGHT = 3;
+export const ORBIT_CARD_WIDTH = 4.8;
+export const ORBIT_CARD_HEIGHT = 3.2;
 export const ORBIT_CURVE_RADIUS = 12;
 export const ORBIT_HOVER_BEND = .018;
 export const ORBIT_SPEED_BEND = .025;
@@ -62,30 +67,42 @@ export interface GalleryMetrics {
   count: number;
   entry: number;
   step: number;
+  opening: number;
+  hold: number;
+  closing: number;
+  passage: number;
   travel: number;
   height: number;
 }
 
 /** Use the sticky's stable svh height, never the changing mobile visual viewport. */
-export function galleryMetrics(start: number, stickyHeight: number, count: number, reduced = false): GalleryMetrics {
+export function galleryMetrics(start: number, stickyHeight: number, count: number, _reduced = false): GalleryMetrics {
   const viewport = Math.max(1, stickyHeight);
-  const entry = reduced || count < 2 ? 0 : viewport * .8;
-  const step = reduced ? 0 : viewport * .62;
-  const exit = reduced || count < 2 ? 0 : viewport * .3;
-  const travel = entry + Math.max(0, count - 1) * step + exit;
-  return { start, viewport, count, entry, step, travel, height: viewport + travel };
+  const opening = viewport * .3, hold = viewport * .2, closing = viewport * .3, passage = viewport * .4;
+  const step = opening + hold + closing + passage;
+  const travel = Math.max(0, count - 1) * step + (count ? opening + hold + closing : 0);
+  return { start, viewport, count, entry: 0, step, opening, hold, closing, passage, travel, height: viewport + travel };
 }
 
 export function projectFromScroll(scrollY: number, metrics: GalleryMetrics): number {
-  return clampProject((scrollY - metrics.start - metrics.entry) / Math.max(1, metrics.step), metrics.count);
+  return galleryFrame(scrollY, metrics).position;
 }
 
-export function scrollForProject(position: number, metrics: GalleryMetrics): number {
+export function scrollForProject(position: number, metrics: GalleryMetrics, open = false): number {
   const next = clampProject(position, metrics.count);
-  return metrics.start + (next === 0 ? 0 : metrics.entry + next * metrics.step);
+  const index = Math.floor(next), fraction = next - index;
+  return metrics.start + index * metrics.step + (open ? metrics.opening + metrics.hold / 2 : fraction ? metrics.opening + metrics.hold + metrics.closing + fraction * metrics.passage : 0);
 }
 
-export function releaseProject(position: number, velocity: number, count: number): number {
-  const momentum = Math.max(-.8, Math.min(.8, velocity * .16));
-  return Math.round(clampProject(position + momentum, count));
+/** Pure scroll sampling: reversing and stopping never need a second animation clock. */
+export function galleryFrame(scrollY: number, metrics: GalleryMetrics) {
+  const local = Math.max(0, Math.min(metrics.travel, scrollY - metrics.start));
+  const index = Math.min(Math.max(0, metrics.count - 1), Math.floor(local / metrics.step));
+  const within = local - index * metrics.step;
+  const end = metrics.opening + metrics.hold + metrics.closing;
+  const progress = within < metrics.opening ? within / metrics.opening
+    : within <= metrics.opening + metrics.hold ? 1
+    : within < end ? 1 - (within - metrics.opening - metrics.hold) / metrics.closing : 0;
+  const position = clampProject(index + Math.max(0, within - end) / metrics.passage, metrics.count);
+  return { index, position, progress, phase: progress <= 0 ? 'closed' as const : progress >= 1 ? 'open' as const : within < metrics.opening ? 'opening' as const : 'closing' as const };
 }

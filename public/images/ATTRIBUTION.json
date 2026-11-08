@@ -1862,126 +1862,255 @@
     "out": "public/images/previews/cafe.webp",
     "file": "cafe.webp",
     "demo": "cafe",
-    "title": "پیش‌نمایش گالری از File:Coffee preparation in a modern cafe with steaming equipment and skilled barista at work during the morning rush hour.jpg",
-    "artist": "Shixart1985",
+    "title": "طرح گرافیکی رابط بخار",
+    "artist": "persianbotyar (layout); Shixart1985",
     "license": "CC BY 2.0",
     "source": "https://commons.wikimedia.org/wiki/File:Coffee_preparation_in_a_modern_cafe_with_steaming_equipment_and_skilled_barista_at_work_during_the_morning_rush_hour.jpg",
-    "derivedFrom": "public/demos/cafe/assets/img/hero-01.webp",
-    "width": 1200,
-    "height": 800,
-    "bytes": 35208,
-    "format": "webp"
+    "derivedFrom": [
+      "public/demos/cafe/assets/img/hero-01.webp"
+    ],
+    "sources": [
+      {
+        "path": "/demos/cafe/assets/img/hero-01.webp",
+        "file": "img/hero-01.webp",
+        "title": "File:Coffee preparation in a modern cafe with steaming equipment and skilled barista at work during the morning rush hour.jpg",
+        "artist": "Shixart1985",
+        "license": "CC BY 2.0",
+        "source": "https://commons.wikimedia.org/wiki/File:Coffee_preparation_in_a_modern_cafe_with_steaming_equipment_and_skilled_barista_at_work_during_the_morning_rush_hour.jpg"
+      }
+    ],
+    "width": 1440,
+    "height": 960,
+    "bytes": 19134,
+    "format": "webp",
+    "generator": "scripts/generate-previews.mjs"
   },
   {
     "out": "public/images/previews/cars.webp",
     "file": "cars.webp",
     "demo": "cars",
-    "title": "پیش‌نمایش گالری از File:2014 Lamborghini Huracan 4.jpg",
-    "artist": "Calreyn88",
+    "title": "طرح گرافیکی رابط ماشین‌نما",
+    "artist": "persianbotyar (layout); Calreyn88",
     "license": "CC BY-SA 4.0",
     "source": "https://commons.wikimedia.org/wiki/File:2014_Lamborghini_Huracan_4.jpg",
-    "derivedFrom": "public/demos/cars/assets/img/hero.webp",
-    "width": 1200,
-    "height": 800,
-    "bytes": 133696,
-    "format": "webp"
+    "derivedFrom": [
+      "public/demos/cars/assets/img/hero.webp"
+    ],
+    "sources": [
+      {
+        "path": "/demos/cars/assets/img/hero.webp",
+        "file": "img/hero.webp",
+        "title": "File:2014 Lamborghini Huracan 4.jpg",
+        "artist": "Calreyn88",
+        "license": "CC BY-SA 4.0",
+        "source": "https://commons.wikimedia.org/wiki/File:2014_Lamborghini_Huracan_4.jpg"
+      }
+    ],
+    "width": 1440,
+    "height": 960,
+    "bytes": 24262,
+    "format": "webp",
+    "generator": "scripts/generate-previews.mjs"
   },
   {
     "out": "public/images/previews/fashion.webp",
     "file": "fashion.webp",
     "demo": "fashion",
-    "title": "پیش‌نمایش گالری از Street Style of 2018 2019 in Tehran 2.jpg",
-    "artist": "NiceIrn",
+    "title": "طرح گرافیکی رابط آینه",
+    "artist": "persianbotyar (layout); NiceIrn",
     "license": "CC0",
     "source": "https://commons.wikimedia.org/wiki/File:Street_Style_of_2018_2019_in_Tehran_2.jpg",
-    "derivedFrom": "public/demos/fashion/assets/img/hero-01.webp",
-    "width": 1200,
-    "height": 800,
-    "bytes": 54066,
-    "format": "webp"
+    "derivedFrom": [
+      "public/demos/fashion/assets/img/hero-01.webp"
+    ],
+    "sources": [
+      {
+        "path": "/demos/fashion/assets/img/hero-01.webp",
+        "file": "img/hero-01.webp",
+        "title": "Street Style of 2018 2019 in Tehran 2.jpg",
+        "artist": "NiceIrn",
+        "license": "CC0",
+        "source": "https://commons.wikimedia.org/wiki/File:Street_Style_of_2018_2019_in_Tehran_2.jpg"
+      }
+    ],
+    "width": 1440,
+    "height": 960,
+    "bytes": 20912,
+    "format": "webp",
+    "generator": "scripts/generate-previews.mjs"
   },
   {
     "out": "public/images/previews/maktab.webp",
     "file": "maktab.webp",
     "demo": "maktab",
-    "title": "پیش‌نمایش گالری از Sa'di's Bustan - Nasta'liq calligraphy style.jpg",
-    "artist": "Unknown Calligrapher",
+    "title": "طرح گرافیکی رابط مکتب‌خانه",
+    "artist": "persianbotyar (layout); Unknown Calligrapher",
     "license": "Public domain",
     "source": "https://commons.wikimedia.org/wiki/File:Sa%27di%27s_Bustan_-_Nasta%27liq_calligraphy_style.jpg",
-    "derivedFrom": "public/demos/maktab/assets/img/hero-01.webp",
-    "width": 1200,
-    "height": 800,
-    "bytes": 168914,
-    "format": "webp"
+    "derivedFrom": [
+      "public/demos/maktab/assets/img/hero-01.webp"
+    ],
+    "sources": [
+      {
+        "path": "/demos/maktab/assets/img/hero-01.webp",
+        "file": "img/hero-01.webp",
+        "title": "Sa'di's Bustan - Nasta'liq calligraphy style.jpg",
+        "artist": "Unknown Calligrapher",
+        "license": "Public domain",
+        "source": "https://commons.wikimedia.org/wiki/File:Sa%27di%27s_Bustan_-_Nasta%27liq_calligraphy_style.jpg",
+        "px": "1024x900",
+        "kb": 184,
+        "slot": "نگارگرِ خوشنویسی (صفحه‌ی گلستان سعدی، خط نستعلیق)"
+      }
+    ],
+    "width": 1440,
+    "height": 960,
+    "bytes": 22842,
+    "format": "webp",
+    "generator": "scripts/generate-previews.mjs"
   },
   {
     "out": "public/images/previews/nabz.webp",
     "file": "nabz.webp",
     "demo": "nabz",
-    "title": "پیش‌نمایش گالری از Pretty Lights at the Aragon Ballroom - 8 November 2013 - Light show.jpg",
-    "artist": "swimfinfan",
+    "title": "طرح گرافیکی رابط نبض",
+    "artist": "persianbotyar (layout); swimfinfan",
     "license": "CC BY-SA 2.0",
     "source": "https://commons.wikimedia.org/wiki/File:Pretty_Lights_at_the_Aragon_Ballroom_-_8_November_2013_-_Light_show.jpg",
-    "derivedFrom": "public/demos/nabz/assets/img/hero-01.webp",
-    "width": 1200,
-    "height": 800,
-    "bytes": 41816,
-    "format": "webp"
+    "derivedFrom": [
+      "public/demos/nabz/assets/img/hero-01.webp"
+    ],
+    "sources": [
+      {
+        "path": "/demos/nabz/assets/img/hero-01.webp",
+        "file": "img/hero-01.webp",
+        "title": "Pretty Lights at the Aragon Ballroom - 8 November 2013 - Light show.jpg",
+        "artist": "swimfinfan",
+        "license": "CC BY-SA 2.0",
+        "source": "https://commons.wikimedia.org/wiki/File:Pretty_Lights_at_the_Aragon_Ballroom_-_8_November_2013_-_Light_show.jpg",
+        "px": "1600x1200",
+        "kb": 131,
+        "slot": "پس‌زمینه‌ی سرصفحه — نمایش نور"
+      }
+    ],
+    "width": 1440,
+    "height": 960,
+    "bytes": 49302,
+    "format": "webp",
+    "generator": "scripts/generate-previews.mjs"
   },
   {
     "out": "public/images/previews/sekke.webp",
     "file": "sekke.webp",
     "demo": "sekke",
-    "title": "پیش‌نمایش گالری از تصویر همان دمو",
-    "artist": "—",
-    "license": "—",
-    "source": "",
-    "derivedFrom": "",
-    "width": 1200,
-    "height": 800,
-    "bytes": 33010,
-    "format": "webp"
+    "title": "طرح گرافیکی رابط سکه",
+    "artist": "persianbotyar (layout); Stevebidmead",
+    "license": "CC0",
+    "source": "https://commons.wikimedia.org/wiki/File:Gold_bullion_bars.jpg",
+    "derivedFrom": [
+      "public/demos/sekke/assets/img/gold-bars.webp"
+    ],
+    "sources": [
+      {
+        "path": "/demos/sekke/assets/img/gold-bars.webp",
+        "file": "img/gold-bars.webp",
+        "title": "Gold bullion bars.jpg",
+        "artist": "Stevebidmead",
+        "license": "CC0",
+        "source": "https://commons.wikimedia.org/wiki/File:Gold_bullion_bars.jpg",
+        "px": "1200x900",
+        "kb": 119,
+        "slot": "کارت شمش — شمش‌های طلا"
+      }
+    ],
+    "width": 1440,
+    "height": 960,
+    "bytes": 27278,
+    "format": "webp",
+    "generator": "scripts/generate-previews.mjs"
   },
   {
     "out": "public/images/previews/sports.webp",
     "file": "sports.webp",
     "demo": "sports",
-    "title": "پیش‌نمایش گالری از File:Aronald Classic Columbus.Ohio USA 3 (24912310643).jpg",
-    "artist": "Paula R. Lively",
+    "title": "طرح گرافیکی رابط پیکان",
+    "artist": "persianbotyar (layout); Paula R. Lively",
     "license": "CC BY 2.0",
     "source": "https://commons.wikimedia.org/wiki/File:Aronald_Classic_Columbus.Ohio_USA_3_(24912310643).jpg",
-    "derivedFrom": "public/demos/sports/assets/img/hero-01.webp",
-    "width": 1200,
-    "height": 800,
-    "bytes": 39478,
-    "format": "webp"
+    "derivedFrom": [
+      "public/demos/sports/assets/img/hero-01.webp"
+    ],
+    "sources": [
+      {
+        "path": "/demos/sports/assets/img/hero-01.webp",
+        "file": "img/hero-01.webp",
+        "title": "File:Aronald Classic Columbus.Ohio USA 3 (24912310643).jpg",
+        "artist": "Paula R. Lively",
+        "license": "CC BY 2.0",
+        "source": "https://commons.wikimedia.org/wiki/File:Aronald_Classic_Columbus.Ohio_USA_3_(24912310643).jpg"
+      }
+    ],
+    "width": 1440,
+    "height": 960,
+    "bytes": 26080,
+    "format": "webp",
+    "generator": "scripts/generate-previews.mjs"
   },
   {
     "out": "public/images/previews/store.webp",
     "file": "store.webp",
     "demo": "store",
-    "title": "پیش‌نمایش گالری از Decorative candle and flowers.jpg",
-    "artist": "Sindugab",
+    "title": "طرح گرافیکی رابط لوازم",
+    "artist": "persianbotyar (layout); Sindugab",
     "license": "CC0",
     "source": "https://commons.wikimedia.org/wiki/File%3ADecorative%20candle%20and%20flowers.jpg",
-    "derivedFrom": "public/demos/store/assets/img/hero-01.webp",
-    "width": 1200,
-    "height": 800,
-    "bytes": 59882,
-    "format": "webp"
+    "derivedFrom": [
+      "public/demos/store/assets/img/hero-01.webp"
+    ],
+    "sources": [
+      {
+        "path": "/demos/store/assets/img/hero-01.webp",
+        "file": "img/hero-01.webp",
+        "title": "Decorative candle and flowers.jpg",
+        "artist": "Sindugab",
+        "license": "CC0",
+        "source": "https://commons.wikimedia.org/wiki/File%3ADecorative%20candle%20and%20flowers.jpg"
+      }
+    ],
+    "width": 1440,
+    "height": 960,
+    "bytes": 26084,
+    "format": "webp",
+    "generator": "scripts/generate-previews.mjs"
   },
   {
     "out": "public/images/previews/travel.webp",
     "file": "travel.webp",
     "demo": "travel",
-    "title": "پیش‌نمایش گالری از Si-o-se Pol, Isfahan, Irán, 2016-09-19, DD 04-06 HDR.jpg",
-    "artist": "Diego Delso",
+    "title": "طرح گرافیکی رابط مسیر",
+    "artist": "persianbotyar (layout); Diego Delso",
     "license": "CC BY-SA 4.0",
     "source": "https://commons.wikimedia.org/wiki/File:Si-o-se_Pol,_Isfahan,_Ir%C3%A1n,_2016-09-19,_DD_04-06_HDR.jpg",
-    "derivedFrom": "public/demos/travel/assets/img/hero-01.webp",
-    "width": 1200,
-    "height": 800,
-    "bytes": 78368,
-    "format": "webp"
+    "derivedFrom": [
+      "public/demos/travel/assets/img/hero-01.webp"
+    ],
+    "sources": [
+      {
+        "path": "/demos/travel/assets/img/hero-01.webp",
+        "file": "img/hero-01.webp",
+        "title": "Si-o-se Pol, Isfahan, Irán, 2016-09-19, DD 04-06 HDR.jpg",
+        "artist": "Diego Delso",
+        "license": "CC BY-SA 4.0",
+        "source": "https://commons.wikimedia.org/wiki/File:Si-o-se_Pol,_Isfahan,_Ir%C3%A1n,_2016-09-19,_DD_04-06_HDR.jpg",
+        "px": "1920x1018",
+        "kb": 150,
+        "slot": "hero"
+      }
+    ],
+    "width": 1440,
+    "height": 960,
+    "bytes": 26916,
+    "format": "webp",
+    "generator": "scripts/generate-previews.mjs"
   }
 ]

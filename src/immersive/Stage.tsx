@@ -166,7 +166,7 @@ export function Stage({ progressRef, workRef }: { progressRef: RefObject<ScenePr
     const signature = brand.group;
     world.add(signature);
     const orbit = createWorkOrbit(renderer, canFloat, lowPower);
-    if (!reduced && workRef.current) orbit.preload(workRef.current.items);
+    if (!reduced && workRef.current) { orbit.prepare(workRef.current.items); orbit.preload(workRef.current.items); }
     scene.add(orbit.group);
     const projectEnvironment = createProjectEnvironment(lowPower, canFloat, emptyTexture);
     scene.add(projectEnvironment.group);
@@ -291,12 +291,13 @@ export function Stage({ progressRef, workRef }: { progressRef: RefObject<ScenePr
       const dt = Math.min(Math.max(delta / 1000, .001), 1 / 30);
       if (!reduced) elapsed += dt;
       const ease = 1 - Math.exp(-dt * 6);
-      chapter += ((progressRef.current?.position ?? 0) - chapter) * ease;
       const timeline = progressRef.current;
       const work = workRef.current;
+      chapter = work?.scrollDriven ? timeline?.position ?? 0 : chapter + ((timeline?.position ?? 0) - chapter) * ease;
       const presentation = work?.presentation;
       const projectMix = presentation?.progress ?? 0;
-      workBlend += ((reduced ? 0 : presentation?.projectId ? 1 : timeline?.workBlend ?? 0) - workBlend) * ease;
+      const nextWorkBlend = reduced ? 0 : presentation?.projectId ? 1 : timeline?.workBlend ?? 0;
+      workBlend = work?.scrollDriven ? nextWorkBlend : workBlend + (nextWorkBlend - workBlend) * ease;
       panelMix += ((timeline?.overlay ? 1 : 0) - panelMix) * ease;
       const fov = 34 + workBlend * 20;
       if (Math.abs(camera.fov - fov) > .01) { camera.fov = fov; camera.updateProjectionMatrix(); }
@@ -312,9 +313,9 @@ export function Stage({ progressRef, workRef }: { progressRef: RefObject<ScenePr
         eye.lerp(nextEye, workBlend);
         aim.lerp(nextAim, workBlend);
       }
-      camera.position.lerp(eye, firstFrame || reduced ? 1 : workBlend > .95 ? 1 - Math.exp(-dt * 14) : ease);
+      camera.position.lerp(eye, firstFrame || reduced || work?.scrollDriven ? 1 : workBlend > .95 ? 1 - Math.exp(-dt * 14) : ease);
       camera.lookAt(aim);
-      camera.rotateZ(-.025 * workBlend * (1 - (work?.selection ?? 0)));
+      camera.rotateZ((lowPower ? -.008 : -.015) * workBlend * (1 - (work?.selection ?? 0)));
       camera.updateMatrixWorld();
       world.position.set(nextAim.x * panelMix * workBlend, .6 * (1 - workBlend) + nextAim.y * panelMix * workBlend, (nextAim.z - 3) * panelMix * workBlend);
       heroAngle += (heroTarget - heroAngle) * ease;
@@ -459,7 +460,9 @@ export function Stage({ progressRef, workRef }: { progressRef: RefObject<ScenePr
       if (lost) return;
       const width = wrap.clientWidth;
       const height = Math.max(1, wrap.clientHeight);
-      viewportWidth = width; viewportHeight = height; stableHeight = gallerySticky?.offsetHeight || height;
+      const nextStableHeight = gallerySticky?.offsetHeight || height;
+      if (width === viewportWidth && height === viewportHeight && stableHeight === nextStableHeight) return;
+      viewportWidth = width; viewportHeight = height; stableHeight = nextStableHeight;
       compact = width < 768;
       world.position.set(0, .6, 0);
       renderer.setSize(width, height, false);
@@ -472,6 +475,13 @@ export function Stage({ progressRef, workRef }: { progressRef: RefObject<ScenePr
       if (reduced) renderFrame(0, 16);
     };
     resize();
+    // Compile every pane while the native loading surface is still visible.
+    // No new materials or labels should be created by the first scroll gesture.
+    if (!reduced && renderer.compileAsync) {
+      orbit.group.visible = true;
+      void renderer.compileAsync(scene, camera).catch(() => {});
+      orbit.group.visible = false;
+    }
     const observer = new ResizeObserver(resize);
     observer.observe(wrap);
     const unsubscribe = reduced ? () => {} : subscribeRaf(renderFrame);

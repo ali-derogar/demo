@@ -1,6 +1,5 @@
 import { useLayoutEffect, useRef, useState, type MutableRefObject } from 'react';
 import type { DemoProject } from '../data/projects';
-import { acquireScrollLock } from '../lib/scrollLock';
 import { subscribeRaf } from '../lib/raf';
 import type { OrbitMotion } from './orbit';
 import { projectFrame } from './projectPresentation';
@@ -15,8 +14,6 @@ export function ProjectView({ project, motionRef, onClose }: { project: DemoProj
     setFailed(false);
     const root = rootRef.current!;
     const sticky = document.querySelector<HTMLElement>('.im-work--orbit');
-    const unlock = acquireScrollLock();
-    entryRef.current?.focus({ preventScroll: true });
     let previous = '', ready: boolean | undefined, phase = '', surface = '', progress = -1;
     const frame = () => {
       const state = motionRef.current.presentation!;
@@ -33,17 +30,18 @@ export function ProjectView({ project, motionRef, onClose }: { project: DemoProj
       if (progress !== state.progress) { root.style.setProperty('--project-progress', String(state.progress)); progress = state.progress; }
     };
     frame();
+    motionRef.current.presentation!.onFrame = frame;
     const unsubscribe = subscribeRaf(frame);
     const escape = (event: KeyboardEvent) => {
       if (event.key !== 'Escape' || event.defaultPrevented || document.querySelector('dialog[open]')) return;
       event.preventDefault(); onClose();
     };
     document.addEventListener('keydown', escape);
-    return () => { unsubscribe(); unlock(); document.removeEventListener('keydown', escape); };
+    return () => { motionRef.current.presentation!.onFrame = undefined; unsubscribe(); document.removeEventListener('keydown', escape); };
   }, [motionRef, onClose, project.id]);
 
-  return <section ref={rootRef} className="im-project" role="region" aria-labelledby="im-project-title" data-project={project.id} data-ready="false" data-surface="pending" style={{ ['--project-accent' as string]: project.accent }}>
-    <a ref={entryRef} className="im-project__hitarea" href={project.url} target="_blank" rel="noopener noreferrer" aria-label={`دیدن سایت ${project.title.split('؛')[0]}`}>
+  return <section ref={rootRef} className="im-project" role="region" aria-labelledby="im-project-title" data-project={project.id} data-ready="false" data-surface="pending" style={{ ['--project-accent' as string]: project.accent, ['--project-surface' as string]: project.visual.surface }}>
+    <a ref={entryRef} className="im-project__hitarea" href={project.url} target="_blank" rel="noopener noreferrer" aria-label={`دیدن سایت ${project.title.split('؛')[0]}`} onClick={(event) => { if (motionRef.current.dragging || performance.now() < motionRef.current.blockClickUntil || motionRef.current.presentation!.progress < .95) event.preventDefault(); }}>
       <div className="im-project__poster" aria-hidden="true">
         {failed ? <span className="im-project__image-error">تصویر بارگذاری نشد<span>دیدن سایت ↖</span></span> : <img key={project.preview} src={project.preview} alt="" width="1200" height="800" onError={() => setFailed(true)} draggable={false} />}
       </div>

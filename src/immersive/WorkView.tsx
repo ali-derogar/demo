@@ -1,12 +1,20 @@
-import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, type MutableRefObject, type MouseEvent as ReactMouseEvent, type PointerEvent as ReactPointerEvent } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, type MutableRefObject, type MouseEvent as ReactMouseEvent } from 'react';
 import { useMediaQuery, useReducedMotionPreference } from '../lib/useMedia';
 import { faDigit } from '../lib/fa';
 import { getLenis } from '../lib/useSmoothScroll';
+import { isScrollLocked } from '../lib/scrollLock';
 import { subscribeRaf } from '../lib/raf';
 import { projects, categories, type DemoCategory } from '../data/projects';
-import { clampProject, galleryMetrics, projectFromScroll, releaseProject, scrollForProject, type OrbitMotion } from './orbit';
+import { clampProject, galleryFrame, galleryMetrics, scrollForProject, type OrbitMotion } from './orbit';
+import { galleryCardFrame, projectFrame, smoothRange } from './projectPresentation';
 import { closeGalleryMenu, useGalleryMenus } from './useGalleryMenus';
 import '../styles/orbit.css';
+
+function scrollTo(top: number, immediate = true) {
+  const lenis = getLenis();
+  if (lenis) lenis.scrollTo(top, { immediate, duration: .65 });
+  else window.scrollTo({ top, behavior: immediate ? 'instant' : 'smooth' });
+}
 
 export function WorkView({ motionRef, onSelect }: { motionRef: MutableRefObject<OrbitMotion>; onSelect: (id: string) => void }) {
   const [filter, setFilter] = useState<DemoCategory>('all');
@@ -20,174 +28,188 @@ export function WorkView({ motionRef, onSelect }: { motionRef: MutableRefObject<
   const stageRef = useRef<HTMLDivElement>(null);
   const filtersRef = useRef<HTMLDetailsElement>(null);
   const toolsRef = useRef<HTMLDetailsElement>(null);
-  useGalleryMenus(trackRef);
+  const measuredWidth = useRef(0);
   const linksRef = useRef<(HTMLAnchorElement | null)[]>([]);
-  const metricsRef = useRef(galleryMetrics(0, 1, shown.length, reduced));
-  const dragRef = useRef({ id: -1, x: 0, y: 0, start: 0, lastX: 0, lastTime: 0, speed: 0 });
-
+  const metricsRef = useRef(galleryMetrics(0, 1, shown.length));
+  useGalleryMenus(trackRef);
   useEffect(() => { if (filtersRef.current) filtersRef.current.open = desktop; }, [desktop]);
 
-  const clearSelection = useCallback(() => {
-    motionRef.current.selectedIndex = null;
-    if (reduced) motionRef.current.selection = 0;
-  }, [motionRef, reduced]);
-
   const measure = useCallback(() => {
-    const track = trackRef.current;
-    const sticky = stickyRef.current;
+    const track = trackRef.current, sticky = stickyRef.current;
     if (!track || !sticky) return;
-    const next = galleryMetrics(track.getBoundingClientRect().top + window.scrollY, sticky.offsetHeight, shown.length, reduced);
-    const height = `${next.height}px`;
-    if (track.style.height !== height) track.style.height = height;
     const previous = metricsRef.current;
-    if (next.start !== previous.start || next.viewport !== previous.viewport || next.count !== previous.count || next.travel !== previous.travel) metricsRef.current = next;
-  }, [shown.length, reduced]);
+    const next = galleryMetrics(track.getBoundingClientRect().top + window.scrollY, sticky.offsetHeight, motionRef.current.items.length);
+    track.style.height = `${next.height}px`;
+    metricsRef.current = next;
+    // Browser toolbar changes keep svh stable. A real orientation/width change
+    // preserves the same timeline coordinate, rather than the old pixel offset.
+    if (measuredWidth.current && measuredWidth.current !== window.innerWidth && window.scrollY >= previous.start && window.scrollY <= previous.start + previous.travel) {
+      scrollTo(next.start + (window.scrollY - previous.start) / previous.viewport * next.viewport);
+    }
+    measuredWidth.current = window.innerWidth;
+  }, [motionRef]);
+
+  const syncFrame = useCallback(() => {
+    const state = motionRef.current, region = stageRef.current;
+    if (!region) return;
+    const presentation = state.presentation!;
+    region.dataset.ready = String(state.ready);
+    region.dataset.labels = String(!!state.labelsReady);
+    region.dataset.presenting = String(!!presentation.projectId);
+    region.dataset.inRange = String(window.scrollY >= metricsRef.current.start - metricsRef.current.viewport * .8);
+    const bounds = state.bounds;
+    if (bounds) {
+      region.style.setProperty('--card-left', `${bounds.left}px`);
+      region.style.setProperty('--card-top', `${bounds.top}px`);
+      region.style.setProperty('--card-width', `${bounds.width}px`);
+      region.style.setProperty('--card-height', `${bounds.height}px`);
+    }
+    trackRef.current?.style.setProperty('--presentation-progress', String(presentation.progress));
+    trackRef.current?.setAttribute('data-presenting', String(!!presentation.projectId));
+  }, [motionRef]);
+
+  const sample = useCallback(() => {
+    const state = motionRef.current;
+    if (isScrollLocked()) return;
+    const frame = galleryFrame(window.scrollY, metricsRef.current);
+    state.scrollDriven = true;
+    state.target = state.position = frame.position;
+    const index = Math.round(clampProject(frame.position, state.items.length));
+    setActive((previous) => previous === index ? previous : index);
+    const presentation = state.presentation!;
+    const progress = reduced ? (frame.progress >= .5 ? 1 : 0) : frame.progress;
+    const id = progress > .00001 ? state.items[frame.index]?.id ?? null : null;
+    if (presentation.projectId !== id) {
+      presentation.ready = false;
+      presentation.bounds = null;
+      presentation.projectId = id;
+    }
+    presentation.progress = progress;
+    presentation.phase = progress === 0 ? 'closed' : progress === 1 ? 'open' : frame.phase;
+    state.selectedIndex = id ? frame.index : null;
+    state.selection = progress;
+    state.interactive = window.scrollY >= metricsRef.current.start - metricsRef.current.viewport * .2 && window.scrollY <= metricsRef.current.start + metricsRef.current.travel;
+    if (presentation.surface !== 'webgl') {
+      const rest = galleryCardFrame(window.innerWidth, metricsRef.current.viewport);
+      const expanded = projectFrame(window.innerWidth, window.innerHeight, metricsRef.current.viewport);
+      const mix = smoothRange(progress, .2, 1);
+      state.bounds = { left: rest.left + (expanded.left - rest.left) * mix, top: rest.top + (expanded.top - rest.top) * mix,
+        width: rest.width + (expanded.width - rest.width) * mix, height: rest.height + (expanded.height - rest.height) * mix };
+      if (id) presentation.bounds = state.bounds;
+    }
+    syncFrame();
+  }, [motionRef, reduced, syncFrame]);
 
   const go = useCallback((index: number, immediate = false) => {
-    clearSelection();
-    const next = clampProject(index, shown.length);
-    motionRef.current.target = next;
-    setActive(Math.round(next));
-    if (reduced) { motionRef.current.position = next; return; }
     measure();
-    const metrics = metricsRef.current;
-    const top = scrollForProject(next, metrics);
-    const lenis = getLenis();
-    if (lenis) lenis.scrollTo(top, { immediate, duration: .85 });
-    else window.scrollTo({ top, behavior: immediate ? 'instant' : 'smooth' });
-  }, [clearSelection, measure, motionRef, reduced, shown.length]);
-
-  useEffect(() => {
-    const track = trackRef.current;
-    const sticky = stickyRef.current;
-    if (!track || !sticky) return;
-    motionRef.current.items = shown;
-    motionRef.current.ready = false;
-    const region = stageRef.current;
-    if (region) { region.dataset.ready = 'false'; region.dataset.labels = 'false'; }
-    measure();
-    const observer = new ResizeObserver(measure);
-    observer.observe(track);
-    observer.observe(sticky);
-    window.addEventListener('resize', measure, { passive: true });
-    let lastY = -1;
-    let lastMetrics = metricsRef.current;
-    let current = 0;
-    let wasReady = false;
-    let hadLabels = false;
-    const unsubscribe = reduced ? () => {} : subscribeRaf(() => {
-      const state = motionRef.current;
-      const y = window.scrollY;
-      const metrics = metricsRef.current;
-      const { start, travel, viewport } = metrics;
-      state.interactive = y >= start - viewport * .2 && y <= start + travel + viewport * .4;
-      if (region && state.ready !== wasReady) { region.dataset.ready = String(state.ready); wasReady = state.ready; }
-      if (region && !!state.labelsReady !== hadLabels) { region.dataset.labels = String(!!state.labelsReady); hadLabels = !!state.labelsReady; }
-      if (state.presentation?.projectId) { state.interactive = false; return; }
-      if ((y !== lastY || metrics !== lastMetrics) && !state.dragging) {
-        state.target = projectFromScroll(y, metrics);
-        if (state.selectedIndex !== null && (!state.interactive || Math.abs(state.target - state.selectedIndex) > .12)) clearSelection();
-        lastY = y;
-        lastMetrics = metrics;
-      }
-      const index = Math.round(clampProject(state.target, shown.length));
-      if (index !== current) { current = index; setActive(index); }
-    });
-    return () => {
-      unsubscribe();
-      observer.disconnect();
-      window.removeEventListener('resize', measure);
-    };
-  }, [clearSelection, measure, reduced, shown, motionRef]);
+    scrollTo(scrollForProject(clampProject(index, shown.length), metricsRef.current), immediate || reduced);
+    if (immediate || reduced) sample();
+  }, [measure, reduced, sample, shown.length]);
 
   useLayoutEffect(() => {
-    measure();
     const state = motionRef.current;
+    state.items = shown;
+    state.onFrame = syncFrame;
+    measure();
+    sample();
+    const restore = (snapshot: ReturnType<NonNullable<OrbitMotion['gallery']>['capture']>) => {
+      const next = snapshot.filter === 'all' ? projects : projects.filter((project) => project.category === snapshot.filter);
+      state.items = next.length ? next : projects;
+      setFilter(next.length ? snapshot.filter : 'all');
+      state.dragging = false;
+      measure();
+      scrollTo(snapshot.scrollY);
+      sample();
+    };
     state.gallery = {
       capture: () => ({ filter, target: state.target, position: state.position, scrollY: window.scrollY }),
-      restore: (snapshot) => {
-        const next = snapshot.filter === 'all' ? projects : projects.filter((project) => project.category === snapshot.filter);
-        state.items = next.length ? next : projects;
-        state.target = clampProject(snapshot.target, state.items.length);
-        state.position = clampProject(snapshot.position, state.items.length);
-        state.dragging = false;
-        setFilter(next.length ? snapshot.filter : 'all'); setActive(Math.round(state.target));
-        const lenis = getLenis();
-        if (lenis) lenis.scrollTo(snapshot.scrollY, { immediate: true, force: true });
-        else window.scrollTo({ top: snapshot.scrollY, behavior: 'instant' });
-      },
+      restore,
       forProject: (id) => {
-        const index = Math.max(0, projects.findIndex((project) => project.id === id));
-        const metrics = galleryMetrics(trackRef.current!.getBoundingClientRect().top + window.scrollY, stickyRef.current!.offsetHeight, projects.length, reduced);
-        return { filter: 'all', target: index, position: index, scrollY: scrollForProject(index, metrics) };
+        const included = shown.some((project) => project.id === id);
+        const items = included ? shown : projects;
+        const index = Math.max(0, items.findIndex((project) => project.id === id));
+        const metrics = galleryMetrics(metricsRef.current.start, metricsRef.current.viewport, items.length);
+        return { filter: included ? filter : 'all', target: index, position: index, scrollY: scrollForProject(index, metrics) };
       },
+      open: (id, immediate = true) => {
+        if (!state.items.some((project) => project.id === id)) { state.items = projects; setFilter('all'); }
+        measure();
+        const index = Math.max(0, state.items.findIndex((project) => project.id === id));
+        scrollTo(scrollForProject(index, metricsRef.current, true), immediate || reduced);
+        if (immediate || reduced) sample();
+      },
+      collapse: () => { scrollTo(scrollForProject(Math.round(state.target), metricsRef.current)); sample(); },
     };
-    return () => { state.gallery = undefined; };
-  }, [filter, measure, motionRef, reduced]);
+    const observer = new ResizeObserver(measure);
+    observer.observe(trackRef.current!); observer.observe(stickyRef.current!);
+    window.addEventListener('resize', measure, { passive: true });
+    const unsubscribe = subscribeRaf(sample);
+    return () => { state.gallery = undefined; state.onFrame = undefined; observer.disconnect(); unsubscribe(); window.removeEventListener('resize', measure); };
+  }, [filter, measure, motionRef, reduced, sample, shown, syncFrame]);
+
+  useEffect(() => {
+    const state = motionRef.current;
+    let drag: { id: number; x: number; y: number; start: number; target: Element; horizontal: boolean } | null = null;
+    let wheelAxis = '', wheelUntil = 0;
+    const down = (event: PointerEvent) => {
+      const target = event.target as Element | null;
+      if (event.button !== 0 || isScrollLocked() || !target?.closest('.im-orbit__stage,.im-project__hitarea')) return;
+      drag = { id: event.pointerId, x: event.clientX, y: event.clientY, start: window.scrollY, target, horizontal: false };
+    };
+    const move = (event: PointerEvent) => {
+      if (!drag || drag.id !== event.pointerId) return;
+      if (event.pointerType === 'mouse' && event.buttons !== 1) { drag = null; state.dragging = false; return; }
+      const dx = event.clientX - drag.x, dy = event.clientY - drag.y;
+      if (!drag.horizontal) {
+        if (Math.abs(dy) > 10 && Math.abs(dy) > Math.abs(dx)) { drag = null; return; }
+        if (Math.abs(dx) < 10) return;
+        drag.horizontal = state.dragging = true;
+        drag.target.setPointerCapture?.(event.pointerId);
+      }
+      event.preventDefault();
+      state.blockClickUntil = performance.now() + 350;
+      const metrics = metricsRef.current;
+      scrollTo(Math.max(metrics.start, Math.min(metrics.start + metrics.travel, drag.start + dx / Math.max(180, window.innerWidth) * metrics.viewport)));
+      sample();
+    };
+    const end = (event: PointerEvent) => {
+      if (!drag || drag.id !== event.pointerId) return;
+      if (drag.horizontal) {
+        state.blockClickUntil = performance.now() + 350;
+        if (drag.target.hasPointerCapture?.(event.pointerId)) drag.target.releasePointerCapture(event.pointerId);
+      }
+      drag = null; state.dragging = false;
+    };
+    const wheel = (event: WheelEvent) => {
+      if (isScrollLocked() || event.ctrlKey || (event.target as Element | null)?.closest('input,textarea,select,.im-project__info')) return;
+      const metrics = metricsRef.current;
+      if (window.scrollY < metrics.start || window.scrollY > metrics.start + metrics.travel) return;
+      if (performance.now() > wheelUntil) wheelAxis = Math.abs(event.deltaX) > Math.abs(event.deltaY) * 1.1 ? 'x' : 'y';
+      wheelUntil = performance.now() + 160;
+      if (wheelAxis !== 'x') return;
+      event.preventDefault();
+      const scale = event.deltaMode === 1 ? 16 : event.deltaMode === 2 ? metrics.viewport : 1;
+      scrollTo(Math.max(metrics.start, Math.min(metrics.start + metrics.travel, window.scrollY + event.deltaX * scale)));
+      sample();
+    };
+    document.addEventListener('pointerdown', down);
+    document.addEventListener('pointermove', move, { passive: false });
+    document.addEventListener('pointerup', end); document.addEventListener('pointercancel', end);
+    document.addEventListener('lostpointercapture', end);
+    document.addEventListener('wheel', wheel, { passive: false });
+    return () => {
+      state.dragging = false;
+      document.removeEventListener('pointerdown', down); document.removeEventListener('pointermove', move);
+      document.removeEventListener('pointerup', end); document.removeEventListener('pointercancel', end);
+      document.removeEventListener('lostpointercapture', end); document.removeEventListener('wheel', wheel);
+    };
+  }, [motionRef, sample]);
 
   const changeFilter = (value: DemoCategory) => {
-    clearSelection();
-    motionRef.current.target = 0;
-    motionRef.current.position = 0;
-    motionRef.current.dragging = false;
-    setActive(0);
-    measure();
-    if (!reduced) {
-      const top = metricsRef.current.start;
-      const lenis = getLenis();
-      if (lenis) lenis.scrollTo(top, { immediate: true });
-      else window.scrollTo({ top, behavior: 'instant' });
-    }
+    scrollTo(metricsRef.current.start);
     setFilter(value);
     closeGalleryMenu(filtersRef.current, false);
     stageRef.current?.focus({ preventScroll: true });
-  };
-
-  const onPointerDown = (event: ReactPointerEvent<HTMLDivElement>) => {
-    if (event.button !== 0 || shown.length < 2 || reduced) return;
-    dragRef.current = {
-      id: event.pointerId, x: event.clientX, y: event.clientY,
-      start: motionRef.current.target, lastX: event.clientX,
-      lastTime: event.timeStamp, speed: 0,
-    };
-  };
-  const onPointerMove = (event: ReactPointerEvent<HTMLDivElement>) => {
-    const drag = dragRef.current;
-    if (drag.id !== event.pointerId) return;
-    if (event.pointerType === 'mouse' && event.buttons !== 1) {
-      drag.id = -1;
-      motionRef.current.dragging = false;
-      return;
-    }
-    const dx = event.clientX - drag.x;
-    const dy = event.clientY - drag.y;
-    const state = motionRef.current;
-    if (!state.dragging) {
-      if (Math.abs(dy) > 10 && Math.abs(dy) > Math.abs(dx) * 1.1) { clearSelection(); drag.id = -1; return; }
-      if (Math.abs(dx) < 7) return;
-      state.dragging = true;
-      clearSelection();
-      event.currentTarget.setPointerCapture(event.pointerId);
-    }
-    event.preventDefault();
-    const width = Math.max(180, event.currentTarget.clientWidth * .48);
-    const dt = Math.max(8, event.timeStamp - drag.lastTime) / 1000;
-    drag.speed = (drag.lastX - event.clientX) / width / dt;
-    drag.lastX = event.clientX;
-    drag.lastTime = event.timeStamp;
-    state.blockClickUntil = performance.now() + 350;
-    go(drag.start - dx / width, true);
-  };
-  const finishDrag = (event: ReactPointerEvent<HTMLDivElement>, cancelled = false) => {
-    const drag = dragRef.current;
-    if (drag.id !== event.pointerId) return;
-    drag.id = -1;
-    if (!motionRef.current.dragging) return;
-    motionRef.current.dragging = false;
-    motionRef.current.blockClickUntil = performance.now() + 350;
-    const speed = event.timeStamp - drag.lastTime > 100 || cancelled ? 0 : drag.speed;
-    go(releaseProject(motionRef.current.target, speed, shown.length));
-    if (event.currentTarget.hasPointerCapture(event.pointerId)) event.currentTarget.releasePointerCapture(event.pointerId);
   };
   useEffect(() => {
     motionRef.current.onPick = (index: number) => linksRef.current[index]?.click();
@@ -210,7 +232,7 @@ export function WorkView({ motionRef, onSelect }: { motionRef: MutableRefObject<
   };
 
   return (
-    <div className="im-work-track" ref={trackRef} data-selected="false" style={{ ['--orbit-steps' as string]: shown.length - 1, ['--orbit-holds' as string]: shown.length > 1 ? 1.1 : 0 }}>
+    <div className="im-work-track" ref={trackRef} data-selected="false" style={{ ['--orbit-count' as string]: shown.length }}>
       <div className="im-work im-shell im-work--orbit" ref={stickyRef}>
         <header className="im-orbit__head"><h2 id="im-work-title">نمونه‌کارها</h2><span dir="ltr">SELECTED WORK / {String(shown.length).padStart(2, '0')}</span></header>
         <details className="im-orbit__filters" ref={filtersRef} data-persistent={desktop}>
@@ -221,14 +243,12 @@ export function WorkView({ motionRef, onSelect }: { motionRef: MutableRefObject<
         </details>
 
         <div className="im-orbit__stage" ref={stageRef} tabIndex={0} role="region" aria-roledescription="گالری چرخشی" aria-label="نمونه‌کارهای سه‌بعدی" aria-describedby="im-orbit-help" data-cursor="drag" data-ready="false"
-          onPointerDown={onPointerDown} onPointerMove={onPointerMove} onPointerUp={(event) => finishDrag(event)} onPointerCancel={(event) => finishDrag(event, true)}
-          onLostPointerCapture={(event) => finishDrag(event, true)}
           onClick={(event) => { if (performance.now() < motionRef.current.blockClickUntil) { event.preventDefault(); event.stopPropagation(); } }}
           onKeyDown={(event) => {
             if (event.key === 'Enter') { event.preventDefault(); linksRef.current[Math.round(motionRef.current.target)]?.click(); return; }
             let next: number | undefined;
-            if (event.key === 'ArrowLeft') next = Math.round(motionRef.current.target) + 1;
-            if (event.key === 'ArrowRight') next = Math.round(motionRef.current.target) - 1;
+            if (event.key === 'ArrowLeft') next = Math.round(motionRef.current.target) - 1;
+            if (event.key === 'ArrowRight') next = Math.round(motionRef.current.target) + 1;
             if (event.key === 'Home') next = 0;
             if (event.key === 'End') next = shown.length - 1;
             if (next !== undefined) { event.preventDefault(); go(next); }
@@ -255,8 +275,8 @@ export function WorkView({ motionRef, onSelect }: { motionRef: MutableRefObject<
             <summary data-cursor="link">معرفی سایت <span aria-hidden="true">↔</span></summary>
             <div className="im-orbit__tool-sheet">
               <div className="im-orbit__navigation">
-                <button type="button" onClick={() => choose(Math.round(motionRef.current.target) - 1)} disabled={active === 0} aria-label="پروژهٔ قبلی" data-cursor="link">→</button>
-                <button type="button" onClick={() => choose(Math.round(motionRef.current.target) + 1)} disabled={active === shown.length - 1} aria-label="پروژهٔ بعدی" data-cursor="link">←</button>
+                <button type="button" onClick={() => choose(Math.round(motionRef.current.target) - 1)} disabled={active === 0} aria-label="پروژهٔ قبلی" data-cursor="link">←</button>
+                <button type="button" onClick={() => choose(Math.round(motionRef.current.target) + 1)} disabled={active === shown.length - 1} aria-label="پروژهٔ بعدی" data-cursor="link">→</button>
               </div>
               <label className="im-orbit__scrubber"><span className="im-sr-only">انتخاب پروژه</span><input type="range" min={0} max={Math.max(0, shown.length - 1)} step={1} value={active} disabled={shown.length === 1} aria-valuetext={shown[active]?.title} onChange={(event) => go(Number(event.target.value), true)} onPointerUp={() => closeGalleryMenu(toolsRef.current)} onKeyDown={(event) => { if (event.key === 'Enter') closeGalleryMenu(toolsRef.current); }} /></label>
             </div>

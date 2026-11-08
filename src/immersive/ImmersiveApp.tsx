@@ -50,10 +50,12 @@ export function ImmersiveApp() {
     if (!main) return;
     const hero = main.querySelector<HTMLElement>('.im-home');
     let workTop = 1;
+    let stableHeight = 1;
     let lastY = -1;
     let current: ViewId = 'home';
     const measure = () => {
       workTop = document.getElementById('demos')!.getBoundingClientRect().top + window.scrollY;
+      stableHeight = main.querySelector<HTMLElement>('.im-work--orbit')?.offsetHeight || window.innerHeight;
       lastY = -1;
     };
     measure();
@@ -64,8 +66,8 @@ export function ImmersiveApp() {
       const y = Math.max(0, window.scrollY);
       if (y === lastY) return;
       lastY = y;
-      const transitionStart = workTop - window.innerHeight * .8;
-      const blend = Math.min(1, Math.max(0, (y - transitionStart) / Math.max(1, window.innerHeight * .8)));
+      const transitionStart = workTop - stableHeight * .8;
+      const blend = Math.min(1, Math.max(0, (y - transitionStart) / Math.max(1, stableHeight * .8)));
       const phase = Math.min(1, Math.max(0, y / Math.max(1, workTop)));
       hero?.style.setProperty('--home-exit', Math.min(1, blend * 1.5).toFixed(4));
       progressRef.current.workBlend = blend;
@@ -88,7 +90,7 @@ export function ImmersiveApp() {
         <SceneBoundary onFailure={() => { if (workRef.current.presentation) { workRef.current.presentation.surface = 'fallback'; workRef.current.presentation.ready = false; } }}><Suspense fallback={<StageFallback />}><Stage progressRef={progressRef} workRef={workRef} /></Suspense></SceneBoundary>
         <a className="skip-link" href={projectId ? '#im-project-title' : '#im-main'}>پرش به محتوا</a>
         <ImmersiveNav view={panel ?? view} audio={audio} onToggleAudio={toggleAudio} />
-        <main id="im-main" ref={mainRef} tabIndex={-1} {...(projectId ? { inert: '', 'aria-hidden': true } : {})}>
+        <main id="im-main" ref={mainRef} tabIndex={-1}>
           <section id="home" className="im-chapter" aria-labelledby="im-home-title"><HomeView /></section>
           <section id="demos" className="im-chapter im-chapter--work" aria-labelledby="im-work-title"><WorkView motionRef={workRef} onSelect={openProject} /></section>
         </main>

@@ -1,5 +1,5 @@
 /* Native controls and captions float over the shared WebGL gallery. */
-.im-work-track { position: relative; height: calc(100svh + var(--orbit-holds,1.1) * 100svh + var(--orbit-steps,8) * 62svh); }
+.im-work-track { position: relative; height: calc(100svh + var(--orbit-count,9) * 80svh + (var(--orbit-count,9) - 1) * 40svh); }
 .im-work.im-work--orbit { position: sticky; top: 0; height: 100svh; width: calc(100% - 70px); padding: 0; pointer-events: none; }
 .im-orbit__head { position: absolute; top: 101px; left: 0; color: #98afa1; font-size: 9px; }
 .im-orbit__head h2 { font-size: 11px; font-weight: 400; margin-bottom: 5px; }
@@ -13,13 +13,14 @@
 .im-filter[aria-pressed="true"] { color: #cae8d5; border-color: #7eb69170; background: #152c20; }
 .im-filter:hover { color: #e6f2e9; }
 .im-orbit__stage { position: absolute; inset: 105px -35px 125px; pointer-events: auto; touch-action: pan-y; user-select: none; -webkit-user-select: none; outline-offset: -15px; }
-.im-orbit__fallback { position: absolute; top: calc(50svh - 105px); left: 50%; transform: translate(-50%,-50%); width: min(97.2svh,90vw); aspect-ratio: 9 / 5; display: grid; place-items: center; pointer-events: none; transition: opacity .4s, transform .9s cubic-bezier(.16,1,.3,1), box-shadow .9s; border-radius: 24px; overflow: hidden; }
-.im-orbit__fallback img { width: 100%; height: 100%; min-height: 0; object-fit: cover; }
+.im-orbit__fallback { position: fixed; top: var(--card-top,35svh); left: var(--card-left,9vw); width: var(--card-width,82vw); height: var(--card-height,54.67vw); display: grid; place-items: center; pointer-events: none; border-radius: 14px; overflow: hidden; visibility: hidden; }
+.im-orbit__stage[data-in-range="true"][data-ready="false"][data-presenting="false"] .im-orbit__fallback { visibility: visible; }
+.im-orbit__fallback img { width: 100%; height: 100%; min-height: 0; object-fit: contain; }
 .im-orbit__fallback a { display: block; width: 100%; height: 100%; pointer-events: auto; }
 .im-orbit__image-error { display: flex; width: 100%; height: 100%; flex-direction: column; align-items: center; justify-content: center; gap: 14px; background: #0b1713; border: 1px solid #99c6ae38; color: #aac2b3; font-size: 13px; }
 .im-orbit__image-error > span { font-size: 12px; color: #c5e3ce; }
 .im-orbit__stage[data-ready="true"] .im-orbit__fallback a { pointer-events: none; }
-.im-orbit__stage[data-ready="true"] .im-orbit__fallback { opacity: 0; }
+.im-orbit__stage[data-ready="true"] .im-orbit__fallback { visibility: hidden; }
 .im-orbit__axis { display: none; }
 .im-orbit__captions { position: absolute; bottom: 105px; right: 50%; transform: translateX(50%); width: min(700px,70%); min-height: 0; pointer-events: auto; text-shadow: 0 2px 15px #000; z-index: 4; }
 .im-orbit__project-meta { display: flex; justify-content: space-between; align-items: center; gap: 20px; font-size: 9px; }
@@ -72,7 +73,7 @@
   .im-orbit__filters { top: 82px; }
   .im-orbit__back { top: 82px; }
   .im-orbit__stage { inset: 120px -20px 160px; }
-  .im-orbit__fallback { top: calc(50svh - 120px); border-radius: 18px; }
+  .im-orbit__fallback { border-radius: 12px; }
   .im-orbit__captions { bottom: 128px; width: 100%; min-height: 0; }
   .im-orbit__project-link { gap: 20px; min-height: 55px; }
   .im-orbit__project-link h3 { font-size: 24px; }
@@ -85,9 +86,6 @@
   .im-orbit__counter b { font-size: 12px; }
   .im-orbit__filter-options { width: 240px; }
 }
-@media (max-aspect-ratio:4/5) {
-  .im-orbit__fallback { width: min(60.264svh,90vw); aspect-ratio: 1.116; }
-}
 @media (max-height:650px) {
   .im-orbit__captions { bottom: 110px; min-height: 0; }
   .im-orbit__project-link h3 { font-size: 22px; }
@@ -95,8 +93,6 @@
   .im-orbit__controls { bottom: 62px; }
 }
 @media (prefers-reduced-motion:reduce) {
-  .im-work-track { height: auto; }
-  .im-work.im-work--orbit { position: relative; height: 100svh; }
   .im-orbit__fallback { transition: none; }
   .im-work-track[data-selected="true"] .im-orbit__fallback { transform: translate(-50%,-50%); box-shadow: 0 0 0 1px #a4c9ed55; }
   .im-work-track[data-selected="true"] .im-orbit__captions li:not([hidden]) .im-orbit__project-link,
@@ -107,3 +103,5 @@
   .im-orbit__stage[data-ready="true"] .im-orbit__fallback a { pointer-events: auto; }
   .im-orbit__filter-options,.im-orbit__tool-sheet { background: Canvas; border-color: CanvasText; }
 }
+
+.im-work-track[data-presenting="true"] .im-orbit__captions { visibility: hidden; pointer-events: none; }
