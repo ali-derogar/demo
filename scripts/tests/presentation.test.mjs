@@ -1,6 +1,9 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import { PerspectiveCamera, Texture, Vector3 } from 'three';
+import React, { act } from 'react';
+import { createRoot } from 'react-dom/client';
+import { readFile } from 'node:fs/promises';
 import { source, environment } from './helpers.mjs';
 import { requests } from './orbit-loader.mock.mjs';
 
@@ -21,7 +24,7 @@ for (const [width, height] of [[390, 844], [768, 1024], [1440, 900]]) {
     const { createWorkOrbit } = await source('src/immersive/WorkOrbit.ts');
     const { projects } = await source('src/data/projects.ts');
     const { createPresentation, projectFrame } = await source('src/immersive/projectPresentation.ts');
-    const orbit = createWorkOrbit({ capabilities: { getMaxAnisotropy: () => 1 } }, false); t.after(() => orbit.dispose());
+    const orbit = createWorkOrbit({ capabilities: { getMaxAnisotropy: () => 1 } }, false, width < 768); t.after(() => orbit.dispose());
     orbit.resize(width, height, 1); orbit.prepare(projects);
     const camera = new PerspectiveCamera(54, width / height, .1, 120), eye = new Vector3(), aim = new Vector3();
     for (let index = 0; index < 9; index++) {
@@ -41,10 +44,28 @@ for (const [width, height] of [[390, 844], [768, 1024], [1440, 900]]) {
         assert.ok(b.left > 0 && b.top > 0 && b.left + b.width < width && b.top + b.height < height, `card ${index} remains inside the viewport at ${progress}`);
       }
       const expected = projectFrame(width, height, height);
-      for (const key of Object.keys(expected)) assert.ok(Math.abs(p.bounds[key] - expected[key]) < 1e-4, `project ${index}: projected ${key} matches native hit area`);
-      assert.ok(Math.abs(p.bounds.width / p.bounds.height - 1.5) < 1e-8, 'the original photo aspect is preserved');
+      assert.ok(Math.abs(p.bounds.left + p.bounds.width / 2 - expected.left - expected.width / 2) < width * .025, 'the live card remains in its intended column');
+      assert.ok(p.bounds.width <= expected.width && p.bounds.height <= expected.height, 'motion stays inside the framing budget');
+      assert.ok(Math.abs(pane.material.uniforms.uFrameAspect.value - 1.5) < 1e-8, 'the original photo aspect is preserved on the actual mesh');
+      assert.ok(pane.material.uniforms.uFlatten.value > 0 && pane.material.uniforms.uFlatten.value < 1, 'the selected pane retains depth instead of becoming a flat billboard');
       assert.equal(pane.material.uniforms.uPresentation.value, 1, 'the glass title yields to readable native metadata');
       assert.ok(p.bounds.width <= width * (width < 1024 ? .9 : .62) + 1e-6);
+      const rim = pane.getObjectByName('project-rim'); assert.equal(rim.visible, true); assert.ok(rim.geometry.attributes.normal);
+      const before = pane.matrixWorld.clone();
+      orbit.update(state, camera, 3.5, 1 / 60, 1, false);
+      assert.notDeepEqual(pane.matrixWorld.toArray(), before.toArray(), 'an open card continues moving after the entry transition');
+      assert.ok(p.bounds.left > 0 && p.bounds.left + p.bounds.width < width);
+      const centerMouse = new MouseEvent('pointermove', { bubbles: true, clientX: width / 2, clientY: height / 2 });
+      Object.defineProperty(centerMouse, 'pointerType', { value: 'mouse' }); window.dispatchEvent(centerMouse);
+      for (let frame = 0; frame < 60; frame++) orbit.update(state, camera, 3.5, 1 / 60, 1, false);
+      const neutral = pane.quaternion.clone();
+      const mouse = new MouseEvent('pointermove', { bubbles: true, clientX: width * .95, clientY: height * .2 });
+      Object.defineProperty(mouse, 'pointerType', { value: 'mouse' }); window.dispatchEvent(mouse);
+      for (let frame = 0; frame < 60; frame++) orbit.update(state, camera, 3.5, 1 / 60, 1, false);
+      if (width < 768) assert.ok(pane.quaternion.angleTo(neutral) < 1e-7, 'mobile does not depend on hover');
+      else assert.ok(pane.quaternion.angleTo(neutral) > .005, 'desktop pointer tilts the actual card');
+      assert.ok(p.bounds.left > 0 && p.bounds.left + p.bounds.width < width);
+      document.documentElement.dispatchEvent(new Event('pointerleave'));
     }
   });
 }
@@ -67,6 +88,28 @@ test('project poster retires only after its own image and a fully visible render
   orbit.update(state, camera, 1, 0, .4, false); orbit.present(state); assert.equal(presentation.ready, false);
   orbit.update(state, camera, 1, 0, 1, false); assert.equal(presentation.ready, false);
   orbit.present(state); assert.equal(presentation.ready, true);
+  orbit.update(state, camera, 1, 0, .4, false); orbit.present(state);
+  assert.equal(presentation.ready, true, 'dimming for an info panel must not replace the rendered card with an HTML poster');
+});
+
+test('texture loading never turns the live scene into an opaque project page', async (t) => {
+  const env = await environment({ width: 1440, height: 900 });
+  const { ProjectView } = await source('src/immersive/ProjectView.tsx');
+  const { projects } = await source('src/data/projects.ts');
+  const { createPresentation } = await source('src/immersive/projectPresentation.ts');
+  const presentation = createPresentation(); Object.assign(presentation, { projectId: 'fashion', progress: 1, phase: 'open', surface: 'webgl', ready: false });
+  const motionRef = { current: { presentation } }, root = createRoot(env.q('#root'));
+  const action = async (fn) => { await act(async () => { fn(); await env.settle(); }); };
+  t.after(async () => { try { await action(() => root.unmount()); assert.deepEqual(env.errors, []); } finally { env.cleanup(); } });
+  const style = document.createElement('style'); style.textContent = await readFile(new URL('../../src/styles/project.css', import.meta.url), 'utf8'); document.head.append(style);
+  await action(() => root.render(React.createElement(ProjectView, { project: projects[0], motionRef, onClose() {} })));
+  const page = env.q('.im-project');
+  assert.equal(page.dataset.ready, 'false'); assert.equal(page.dataset.surface, 'webgl');
+  assert.equal(getComputedStyle(page).backgroundColor, 'rgba(0, 0, 0, 0)', 'waiting for a texture leaves the original world visible');
+  await action(() => { presentation.surface = 'fallback'; });
+  assert.equal(page.dataset.surface, 'fallback'); assert.ok(env.q('.im-project__poster img'));
+  await action(() => { presentation.surface = 'webgl'; presentation.ready = true; });
+  assert.equal(page.dataset.ready, 'true'); assert.equal(page.dataset.surface, 'webgl');
 });
 
 test('project environment respects particle budgets, full-screen distribution, quality reduction and disposal', async (t) => {

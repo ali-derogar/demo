@@ -3,6 +3,7 @@ import { ribbonGeometry } from './ribbonGeometry';
 
 export function createWorkSculpture(mobile: boolean) {
   const group = new Group();
+  group.name = 'work-sculpture';
   group.visible = false;
   const material = new MeshPhysicalMaterial({
     color: 0xb4bacf, metalness: .9, roughness: .21, clearcoat: 1,

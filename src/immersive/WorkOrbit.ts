@@ -156,8 +156,8 @@ export function createWorkOrbit(renderer: WebGLRenderer, linearOutput: boolean, 
     const neighborReveal = 1 - smoothRange(progress, 0, .2);
     let hero: typeof panels[number] | undefined;
     const pointerEnabled = pointerEffects && !mobile && pointer.active && !!presentation?.projectId && presentation.phase !== 'closing';
-    caseTilt.x += ((pointerEnabled ? pointer.nx : 0) - caseTilt.x) * ease;
-    caseTilt.y += ((pointerEnabled ? pointer.ny : 0) - caseTilt.y) * ease;
+    caseTilt.x += ((pointerEnabled ? Math.max(-1, Math.min(1, pointer.nx)) : 0) - caseTilt.x) * ease;
+    caseTilt.y += ((pointerEnabled ? Math.max(-1, Math.min(1, pointer.ny)) : 0) - caseTilt.y) * ease;
     panels.forEach((panel, index) => {
       const uniforms = panel.material.uniforms;
       const selected = state.selectedIndex === index ? 1 : 0;

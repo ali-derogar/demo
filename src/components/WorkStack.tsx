@@ -102,9 +102,6 @@ export function WorkStack({ projects }: Props) {
                   <li key={item}>{item}</li>
                 ))}
               </ul>
-              <p className="v2-meta__tech" dir="ltr">
-                {project.technologies.join(' · ')}
-              </p>
               <a className="v2-meta__open" href={project.url} data-cursor="link">
                 باز کردن سایت
                 <span aria-hidden="true">←</span>

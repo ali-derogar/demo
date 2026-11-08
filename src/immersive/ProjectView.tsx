@@ -52,7 +52,6 @@ export function ProjectView({ project, motionRef, onClose }: { project: DemoProj
       <p className="im-project__category">{project.categoryLabel}</p>
       <h2 id="im-project-title">{project.title.split('؛')[0]}</h2>
       <p className="im-project__description">{project.description}</p>
-      <p className="im-project__technologies"><span>ساخته‌شده با</span> <bdi dir="ltr">{project.technologies.join(' · ')}</bdi></p>
       <div className="im-project__actions">
         <a href={project.url} target="_blank" rel="noopener noreferrer">دیدن سایت <span aria-hidden="true">↗</span></a>
         <button type="button" onClick={onClose}>بازگشت به گالری <span aria-hidden="true">↶</span></button>
