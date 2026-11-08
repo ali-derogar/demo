@@ -32,6 +32,7 @@ export function WorkView({ motionRef, onSelect, onClose }: { motionRef: MutableR
   const measuredWidth = useRef(0);
   const linksRef = useRef<(HTMLAnchorElement | null)[]>([]);
   const metricsRef = useRef(galleryMetrics(0, 1, shown.length));
+  const resetAfterFilter = useRef(false);
   useGalleryMenus(trackRef);
   useEffect(() => { if (filtersRef.current) filtersRef.current.open = desktop; }, [desktop]);
 
@@ -113,6 +114,7 @@ export function WorkView({ motionRef, onSelect, onClose }: { motionRef: MutableR
   }, [motionRef, reduced, syncFrame]);
 
   const go = useCallback((index: number, immediate = false) => {
+    resetAfterFilter.current = false;
     measure();
     scrollTo(scrollForProject(clampProject(index, shown.length), metricsRef.current), immediate || reduced);
     if (immediate || reduced) sample();
@@ -125,6 +127,7 @@ export function WorkView({ motionRef, onSelect, onClose }: { motionRef: MutableR
     measure();
     sample();
     const restore = (snapshot: ReturnType<NonNullable<OrbitMotion['gallery']>['capture']>) => {
+      resetAfterFilter.current = false;
       const next = snapshot.filter === 'all' ? projects : projects.filter((project) => project.category === snapshot.filter);
       state.items = next.length ? next : projects;
       setFilter(next.length ? snapshot.filter : 'all');
@@ -147,6 +150,7 @@ export function WorkView({ motionRef, onSelect, onClose }: { motionRef: MutableR
         return { filter: included ? filter : 'all', target: index, position: index, scrollY: scrollForProject(index, metrics), viewport: metrics.viewport, start: metrics.start };
       },
       open: (id, immediate = true) => {
+        resetAfterFilter.current = false;
         if (!state.items.some((project) => project.id === id)) { state.items = projects; setFilter('all'); }
         measure();
         const index = Math.max(0, state.items.findIndex((project) => project.id === id));
@@ -158,7 +162,12 @@ export function WorkView({ motionRef, onSelect, onClose }: { motionRef: MutableR
     const observer = new ResizeObserver(measure);
     observer.observe(trackRef.current!); observer.observe(stickyRef.current!);
     window.addEventListener('resize', measure, { passive: true });
-    const unsubscribe = subscribeRaf(sample);
+    const unsubscribe = subscribeRaf(() => {
+      // Cancel any final native smooth-scroll step after the filtered track
+      // has committed its new height, before accepting its return position.
+      if (resetAfterFilter.current) { resetAfterFilter.current = false; scrollTo(metricsRef.current.start); }
+      sample();
+    });
     return () => { state.gallery = undefined; state.onFrame = undefined; observer.disconnect(); unsubscribe(); window.removeEventListener('resize', measure); };
   }, [filter, measure, motionRef, reduced, sample, shown, syncFrame]);
 
@@ -222,6 +231,7 @@ export function WorkView({ motionRef, onSelect, onClose }: { motionRef: MutableR
   }, [motionRef, sample]);
 
   const changeFilter = (value: DemoCategory) => {
+    resetAfterFilter.current = true;
     scrollTo(metricsRef.current.start);
     setFilter(value);
     closeGalleryMenu(filtersRef.current, false);
@@ -237,6 +247,7 @@ export function WorkView({ motionRef, onSelect, onClose }: { motionRef: MutableR
     // Modified links retain the browser's explicit open-in-new-tab behavior.
     if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button !== 0) return;
     event.preventDefault();
+    if (resetAfterFilter.current) { resetAfterFilter.current = false; scrollTo(metricsRef.current.start); sample(); }
     closeGalleryMenu(filtersRef.current, false);
     closeGalleryMenu(toolsRef.current, false);
     onSelect(shown[index].id);
