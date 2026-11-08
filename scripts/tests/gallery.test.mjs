@@ -124,7 +124,10 @@ test('first three images preload with two requests; poster survives slow texture
   assert.equal(state.ready, false, 'texture preparation is not a rendered frame');
   orbit.present(state); assert.equal(state.ready, true);
   state.selectedIndex = 0;
-  for (let frame = 0; frame < 45; frame++) { orbit.advance(state, 1 / 60); orbit.update(state, camera, frame / 60, 1 / 60, 1, false); orbit.present(state); }
+  for (let frame = 0; frame < 45; frame++) {
+    orbit.advance(state, 1 / 60); orbit.update(state, camera, frame / 60, 1 / 60, 1, false); orbit.present(state);
+    assert.equal(orbit.group.children[0].material.uniforms.uReveal.value, 1, 'the selected pane stays fully visible throughout the transition');
+  }
   assert.ok(state.selection > .98, 'selection settles in about 700ms');
   assert.ok(orbit.group.children[0].material.uniforms.uReveal.value > .98, 'selected card never fades away');
   assert.ok(orbit.group.children[1].material.uniforms.uReveal.value < .35);

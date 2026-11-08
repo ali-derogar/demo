@@ -9,6 +9,7 @@ import { ORBIT_CARD_HEIGHT, ORBIT_CARD_WIDTH, ORBIT_CURVE_RADIUS, ORBIT_RADIUS, 
 import { orbitFragment, orbitVertex } from './orbitShaders';
 import { createResourceQueue } from './resourceQueue';
 import { createProjectLabel } from './projectLabel';
+import { projectFrame, smoothRange } from './projectPresentation';
 
 /** Scene module only: renderer, camera, post-processing and RAF belong to Stage. */
 export function createWorkOrbit(renderer: WebGLRenderer, linearOutput: boolean, mobile = false) {
@@ -28,6 +29,10 @@ export function createWorkOrbit(renderer: WebGLRenderer, linearOutput: boolean, 
   const backdrop = { value: placeholder as Texture };
   const backdropReady = { value: 0 };
   const viewSize = { value: new Vector2(1, 1) };
+  const cssSize = { value: new Vector2(1, 1) };
+  const flow = { value: placeholder as Texture };
+  const flowReady = { value: 0 };
+  let stableHeight = 1;
   const labels = new Map<string, ReturnType<typeof createProjectLabel>>();
   let portrait = false;
   const loader = new TextureLoader();
@@ -43,12 +48,15 @@ export function createWorkOrbit(renderer: WebGLRenderer, linearOutput: boolean, 
   let previousPosition: number | null = null;
   let priorityKey = '';
   let speed = 0;
+  let hoverIndex = -1;
   let presented = false;
   let pendingReady = false;
   let pendingLabels = false;
   const ndc = new Vector2();
   const raycaster = new Raycaster();
   const center = new Vector3();
+  const destination = new Vector3();
+  const projected = new Vector3();
   const drawOrder: typeof panels = [];
 
   function prepare(next: DemoProject[]) {
@@ -67,6 +75,10 @@ export function createWorkOrbit(renderer: WebGLRenderer, linearOutput: boolean, 
           uTime: { value: 0 }, uSpeed: { value: 0 }, uHover: { value: 0 },
           uFocus: { value: index === 0 ? 1 : 0 }, uReveal: { value: 0 },
           uSelected: { value: 0 },
+          uPresentation: { value: 0 }, uFlatten: { value: 0 },
+          uImageAspect: { value: 1.5 }, uFrameAspect: { value: 1.8 },
+          uMediaSize: { value: new Vector2(1, 1) }, uFlow: flow, uFlowReady: flowReady,
+          uCssSize: cssSize,
           uBackdrop: backdrop, uBackdropReady: backdropReady, uViewSize: viewSize,
           uTitle: { value: label?.texture ?? placeholder }, uTitleReady: { value: label ? 1 : 0 },
           uEncodeOutput: { value: linearOutput ? 0 : 1 },
@@ -97,10 +109,10 @@ export function createWorkOrbit(renderer: WebGLRenderer, linearOutput: boolean, 
     previousPosition = state.position;
     const target = Math.round(state.target);
     const current = Math.round(state.position);
-    const key = `${target}:${current}`;
+    const key = `${target}:${current}:${state.presentation?.projectId ?? ''}`;
     if (key !== priorityKey) {
       priorityKey = key;
-      const rank = (index: number) => index === target ? -2 : index === current ? -1 : Math.min(Math.abs(index - target), Math.abs(index - current));
+      const rank = (index: number) => items[index].id === state.presentation?.projectId ? -3 : index === target ? -2 : index === current ? -1 : Math.min(Math.abs(index - target), Math.abs(index - current));
       images.prioritize(items.map((project, index) => ({ url: project.preview, index }))
         .sort((a, b) => rank(a.index) - rank(b.index)).map((item) => item.url));
     }
@@ -112,7 +124,7 @@ export function createWorkOrbit(renderer: WebGLRenderer, linearOutput: boolean, 
     const distance = Math.max(
       ORBIT_CARD_HEIGHT / (2 * halfFov * .54),
       ORBIT_CARD_WIDTH * (portrait ? .62 : 1) / (2 * halfFov * aspect * .9),
-    ) * (1 - state.selection * (portrait ? 0 : .08));
+    ) * (1 - state.selection * (portrait ? .015 : .08));
     eye.set(Math.sin(pose.angle) * (ORBIT_RADIUS + distance), pose.y + .18, Math.cos(pose.angle) * (ORBIT_RADIUS + distance));
     aim.set(pose.x, pose.y, pose.z);
     aim.y += state.selection * .06;
@@ -122,7 +134,7 @@ export function createWorkOrbit(renderer: WebGLRenderer, linearOutput: boolean, 
     if (!group.visible) return -1;
     ndc.set(x / Math.max(1, width) * 2 - 1, 1 - y / Math.max(1, height) * 2);
     raycaster.setFromCamera(ndc, camera);
-    const hit = raycaster.intersectObjects(panels, false).find((item) => item.uv && insideOrbitCard(item.uv.x, item.uv.y));
+    const hit = raycaster.intersectObjects(panels, false).find((item) => item.object instanceof Mesh && item.object.material.uniforms.uReveal.value > .005 && item.uv && insideOrbitCard(item.uv.x, item.uv.y));
     return (hit?.object.userData.index as number | undefined) ?? -1;
   }
 
@@ -131,27 +143,64 @@ export function createWorkOrbit(renderer: WebGLRenderer, linearOutput: boolean, 
     const pointer = getPointer();
     const hover = interactive && !state.dragging && pointer.active
       ? hitTest(camera, pointer.x, pointer.y, window.innerWidth, window.innerHeight) : -1;
+    hoverIndex = hover;
     const ease = 1 - Math.exp(-dt * 8);
+    const presentation = state.presentation;
+    const progress = presentation?.progress ?? 0;
+    const heroMix = smoothRange(progress, .2, 1);
+    const neighborReveal = 1 - smoothRange(progress, 0, .2);
+    let hero: typeof panels[number] | undefined;
     panels.forEach((panel, index) => {
       const uniforms = panel.material.uniforms;
       const selected = state.selectedIndex === index ? 1 : 0;
       uniforms.uSelected.value += (selected - uniforms.uSelected.value) * (1 - Math.exp(-dt * 6));
       const lift = uniforms.uSelected.value as number;
       const pose = panel.userData.pose as ReturnType<typeof orbitPose>;
+      panel.rotation.set(0, pose.angle, 0);
       panel.position.set(pose.x + Math.sin(pose.angle) * lift * .18, pose.y + lift * .06, pose.z + Math.cos(pose.angle) * lift * .18);
       const scale = 1 + lift * .02;
       panel.scale.set(scale * (portrait ? .62 : 1), scale, scale);
       const texture = images.get(items[index].preview);
       uniforms.uImage.value = texture ?? placeholder;
       uniforms.uLoaded.value = texture ? 1 : 0;
+      const image = texture?.image as { width?: number; height?: number } | undefined;
+      const imageAspect = image?.width && image?.height ? image.width / image.height : 1.5;
+      uniforms.uImageAspect.value = imageAspect;
+      const isHero = items[index].id === presentation?.projectId;
+      uniforms.uPresentation.value = isHero ? smoothRange(progress, 0, .55) : 0;
+      uniforms.uFlatten.value = isHero ? heroMix : 0;
+      if (isHero) {
+        hero = panel;
+        const frame = projectFrame(cssSize.value.x, cssSize.value.y, stableHeight, imageAspect);
+        const halfHeight = Math.tan(camera.fov * Math.PI / 360) * 4.8;
+        destination.set(((frame.left + frame.width / 2) / cssSize.value.x * 2 - 1) * halfHeight * camera.aspect,
+          (1 - (frame.top + frame.height / 2) / cssSize.value.y * 2) * halfHeight, -4.8).applyMatrix4(camera.matrixWorld);
+        panel.position.lerp(destination, heroMix);
+        panel.quaternion.slerp(camera.quaternion, heroMix);
+        panel.scale.x += (frame.width / cssSize.value.x * halfHeight * 2 * camera.aspect / ORBIT_CARD_WIDTH - panel.scale.x) * heroMix;
+        panel.scale.y += (frame.height / cssSize.value.y * halfHeight * 2 / ORBIT_CARD_HEIGHT - panel.scale.y) * heroMix;
+        uniforms.uMediaSize.value.set(frame.width, frame.height);
+      }
+      uniforms.uFrameAspect.value = ORBIT_CARD_WIDTH * panel.scale.x / (ORBIT_CARD_HEIGHT * panel.scale.y);
       const focus = Math.exp(-Math.pow(index - state.position, 2) * 1.6);
       uniforms.uFocus.value += (focus - uniforms.uFocus.value) * ease;
       uniforms.uHover.value += ((hover === index ? 1 : 0) - uniforms.uHover.value) * ease;
       uniforms.uSpeed.value += (speed - uniforms.uSpeed.value) * ease;
       uniforms.uTime.value = time;
-      uniforms.uReveal.value = reveal * (selected ? 1 : 1 - .7 * Math.max(0, state.selection - lift));
+      uniforms.uReveal.value = reveal * (isHero ? 1 : presentation?.projectId ? neighborReveal : selected ? 1 : 1 - .7 * Math.max(0, state.selection - lift));
     });
     group.updateMatrixWorld(true);
+    if (hero && presentation) {
+      let left = Infinity, top = Infinity, right = -Infinity, bottom = -Infinity;
+      for (const x of [-ORBIT_CARD_WIDTH / 2, 0, ORBIT_CARD_WIDTH / 2]) for (const y of [-ORBIT_CARD_HEIGHT / 2, 0, ORBIT_CARD_HEIGHT / 2]) {
+        projected.set(Math.sin(x / ORBIT_CURVE_RADIUS) * ORBIT_CURVE_RADIUS * (1 - heroMix) + x * heroMix, y,
+          (Math.cos(x / ORBIT_CURVE_RADIUS) - 1) * ORBIT_CURVE_RADIUS * (1 - heroMix)).applyMatrix4(hero.matrixWorld).project(camera);
+        const px = (projected.x + 1) * cssSize.value.x / 2, py = (1 - projected.y) * cssSize.value.y / 2;
+        left = Math.min(left, px); right = Math.max(right, px); top = Math.min(top, py); bottom = Math.max(bottom, py);
+      }
+      const bounds = presentation.bounds ?? (presentation.bounds = { left: 0, top: 0, width: 0, height: 0 });
+      Object.assign(bounds, { left, top, width: right - left, height: bottom - top });
+    }
     // Transparent panes cannot write depth. Paint far panes first in the current camera space.
     drawOrder.forEach((panel) => {
       panel.userData.depth = center.copy(panel.position).applyMatrix4(camera.matrixWorldInverse).z;
@@ -171,14 +220,24 @@ export function createWorkOrbit(renderer: WebGLRenderer, linearOutput: boolean, 
 
   return {
     group, prepare, advance, cameraPose, update, hitTest,
+    hovered: () => hoverIndex,
     preload(next: DemoProject[]) { images.prioritize(next.slice(0, 3).map((project) => project.preview)); },
     /** Only retire the native poster after a complete, visible GPU frame. */
     present(state: OrbitMotion) {
       state.ready = pendingReady;
       state.labelsReady = pendingLabels;
       if (pendingReady) presented = true;
+      if (state.presentation?.projectId) {
+        const project = items.find((item) => item.id === state.presentation?.projectId);
+        const pane = panels.find((panel) => items[panel.userData.index]?.id === state.presentation?.projectId);
+        state.presentation.ready = group.visible && !!project && !!images.get(project.preview) && !!state.presentation.bounds && !!pane && pane.material.uniforms.uReveal.value > .98;
+      }
     },
-    resize(width: number, height: number, dpr: number) {
+    texture(id: string) { const project = items.find((item) => item.id === id); return project ? images.get(project.preview) : undefined; },
+    setFlow(texture?: Texture) { flow.value = texture ?? placeholder; flowReady.value = texture ? 1 : 0; },
+    resize(width: number, height: number, dpr: number, stickyHeight = height) {
+      stableHeight = stickyHeight;
+      cssSize.value.set(Math.max(1, width), Math.max(1, height));
       viewSize.value.set(Math.max(1, width * dpr), Math.max(1, height * dpr));
       const nextPortrait = width / Math.max(1, height) < .8;
       if (nextPortrait !== portrait) {

@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { getLenis } from '../lib/useSmoothScroll';
+import { acquireScrollLock } from '../lib/scrollLock';
 import { AboutView } from './AboutView';
 import { ContactView } from './ContactView';
 import type { PanelId } from './types';
@@ -12,16 +12,13 @@ export function InfoPanel({ panel, onClose }: { panel: PanelId | null; onClose: 
     const dialog = dialogRef.current;
     if (!dialog || !panel) return;
     const previousFocus = document.activeElement as HTMLElement | null;
-    const previousOverflow = document.body.style.overflow;
-    document.body.style.overflow = 'hidden';
-    getLenis()?.stop();
+    const unlock = acquireScrollLock();
     if (!dialog.open) dialog.showModal();
     dialog.scrollTop = 0;
     closeRef.current?.focus({ preventScroll: true });
     return () => {
       dialog.close();
-      document.body.style.overflow = previousOverflow;
-      getLenis()?.start();
+      unlock();
       if (previousFocus?.isConnected) previousFocus.focus({ preventScroll: true });
     };
   }, [panel]);
@@ -38,7 +35,7 @@ export function InfoPanel({ panel, onClose }: { panel: PanelId | null; onClose: 
         if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last?.focus(); }
         else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first?.focus(); }
       }}>
-      <div className="im-info-panel__sheet" data-lenis-prevent>
+      <div className="im-info-panel__sheet" data-lenis-prevent data-scroll-lock-allow>
         <button type="button" className="im-info-panel__close" ref={closeRef} onClick={onClose} aria-label="بستن پنل" data-cursor="link"><span>بستن</span><span aria-hidden="true">×</span></button>
         {panel === 'about' && <section id="about" tabIndex={0} aria-labelledby="im-about-title"><AboutView /></section>}
         {panel === 'contact' && <section id="contact" tabIndex={0} aria-labelledby="im-contact-title"><ContactView /></section>}

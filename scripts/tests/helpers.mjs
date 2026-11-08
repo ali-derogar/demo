@@ -99,6 +99,12 @@ export async function environment({ hash = '#home', type = 'navigate', width = 3
     w, errors, frames, workTop, q: (selector) => w.document.querySelector(selector),
     get scroll() { return scroll; },
     resolveFonts,
+    async advance(milliseconds) {
+      for (let elapsed = 0; elapsed < milliseconds; elapsed += 16) {
+        const batch = [...frames.values()]; frames.clear(); time += 16; batch.forEach((callback) => callback(time));
+      }
+      await new Promise((resolve) => setTimeout(resolve, 0));
+    },
     setReduced(value) { reduced = value; media.forEach((callback) => callback({ matches: value })); },
     async settle() {
       await new Promise((resolve) => setTimeout(resolve, 25));

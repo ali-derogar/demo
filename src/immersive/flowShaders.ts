@@ -195,6 +195,7 @@ export const fluidStep = /* glsl */ `
   uniform float uAspect;
   uniform float uActive;
   uniform float uBurst;
+  uniform float uProject;
   varying vec2 vUv;
   float segmentDistance(vec2 p, vec2 a, vec2 b) {
     vec2 d = b - a;
@@ -210,8 +211,8 @@ export const fluidStep = /* glsl */ `
     vec2 up = texture2D(uPrevious, sampleUv + vec2(0.0, uTexel.y)).xy;
     float curl = (right.y - left.y) - (up.x - down.x);
     flow.xy += vec2(-flow.y, flow.x) * curl * uDelta * 4.0;
-    flow.xy *= exp(-uDelta * 1.7);
-    flow.z *= exp(-uDelta * 1.2);
+    flow.xy *= exp(-uDelta * mix(1.7, 4.0, uProject));
+    flow.z *= exp(-uDelta * mix(1.2, 4.0, uProject));
     vec2 aspect = vec2(uAspect, 1.0);
     float distanceToStroke = segmentDistance(vUv * aspect, uPreviousPointer * aspect, uPointer * aspect);
     float brush = exp(-distanceToStroke * distanceToStroke / .0018) * uActive;

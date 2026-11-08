@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import Lenis from 'lenis';
 import { useReducedMotionPreference } from './useMedia';
 import { subscribeRaf } from './raf';
+import { isScrollLocked } from './scrollLock';
 
 let instance: Lenis | null = null;
 export function getLenis(): Lenis | null { return instance; }
@@ -26,7 +27,7 @@ export function useSmoothScroll(handleAnchors = true): void {
     const smoothWheel = !reduced && window.matchMedia('(hover: hover) and (pointer: fine)').matches;
     const lenis = smoothWheel ? new Lenis({ autoRaf: false, duration: 1.05, smoothWheel: true, syncTouch: false }) : null;
     instance = lenis;
-    if (document.querySelector('.im-info-panel[open]')) lenis?.stop();
+    if (isScrollLocked()) lenis?.stop();
     const unsubscribe = lenis ? subscribeRaf((time) => lenis.raf(time)) : () => {};
     if (!handleAnchors) {
       return () => { unsubscribe(); lenis?.destroy(); instance = null; };

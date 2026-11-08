@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState, type MutableRefObject, type MouseEvent as ReactMouseEvent, type PointerEvent as ReactPointerEvent } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, type MutableRefObject, type MouseEvent as ReactMouseEvent, type PointerEvent as ReactPointerEvent } from 'react';
 import { useMediaQuery, useReducedMotionPreference } from '../lib/useMedia';
 import { faDigit } from '../lib/fa';
 import { getLenis } from '../lib/useSmoothScroll';
@@ -8,10 +8,9 @@ import { clampProject, galleryMetrics, projectFromScroll, releaseProject, scroll
 import { closeGalleryMenu, useGalleryMenus } from './useGalleryMenus';
 import '../styles/orbit.css';
 
-export function WorkView({ motionRef }: { motionRef: MutableRefObject<OrbitMotion> }) {
+export function WorkView({ motionRef, onSelect }: { motionRef: MutableRefObject<OrbitMotion>; onSelect: (id: string) => void }) {
   const [filter, setFilter] = useState<DemoCategory>('all');
   const [active, setActive] = useState(0);
-  const [selected, setSelected] = useState<number | null>(null);
   const [failedPreview, setFailedPreview] = useState<string | null>(null);
   const reduced = useReducedMotionPreference();
   const desktop = useMediaQuery('(min-width: 1024px) and (min-height: 700px)');
@@ -24,16 +23,13 @@ export function WorkView({ motionRef }: { motionRef: MutableRefObject<OrbitMotio
   useGalleryMenus(trackRef);
   const linksRef = useRef<(HTMLAnchorElement | null)[]>([]);
   const metricsRef = useRef(galleryMetrics(0, 1, shown.length, reduced));
-  const selectionYRef = useRef<number | null>(null);
   const dragRef = useRef({ id: -1, x: 0, y: 0, start: 0, lastX: 0, lastTime: 0, speed: 0 });
 
   useEffect(() => { if (filtersRef.current) filtersRef.current.open = desktop; }, [desktop]);
 
   const clearSelection = useCallback(() => {
     motionRef.current.selectedIndex = null;
-    selectionYRef.current = null;
     if (reduced) motionRef.current.selection = 0;
-    setSelected(null);
   }, [motionRef, reduced]);
 
   const measure = useCallback(() => {
@@ -47,18 +43,15 @@ export function WorkView({ motionRef }: { motionRef: MutableRefObject<OrbitMotio
     if (next.start !== previous.start || next.viewport !== previous.viewport || next.count !== previous.count || next.travel !== previous.travel) metricsRef.current = next;
   }, [shown.length, reduced]);
 
-  const go = useCallback((index: number, immediate = false, preserveSelection = false) => {
-    if (!preserveSelection) clearSelection();
+  const go = useCallback((index: number, immediate = false) => {
+    clearSelection();
     const next = clampProject(index, shown.length);
     motionRef.current.target = next;
     setActive(Math.round(next));
-    if (reduced) { motionRef.current.position = next; if (preserveSelection) selectionYRef.current = window.scrollY; return; }
+    if (reduced) { motionRef.current.position = next; return; }
     measure();
     const metrics = metricsRef.current;
-    // Selecting project one during its entry hold must not jump back to the track start.
-    if (preserveSelection && next === 0 && window.scrollY >= metrics.start && window.scrollY <= metrics.start + metrics.entry) { selectionYRef.current = window.scrollY; return; }
     const top = scrollForProject(next, metrics);
-    if (preserveSelection) selectionYRef.current = top;
     const lenis = getLenis();
     if (lenis) lenis.scrollTo(top, { immediate, duration: .85 });
     else window.scrollTo({ top, behavior: immediate ? 'instant' : 'smooth' });
@@ -90,6 +83,7 @@ export function WorkView({ motionRef }: { motionRef: MutableRefObject<OrbitMotio
       state.interactive = y >= start - viewport * .2 && y <= start + travel + viewport * .4;
       if (region && state.ready !== wasReady) { region.dataset.ready = String(state.ready); wasReady = state.ready; }
       if (region && !!state.labelsReady !== hadLabels) { region.dataset.labels = String(!!state.labelsReady); hadLabels = !!state.labelsReady; }
+      if (state.presentation?.projectId) { state.interactive = false; return; }
       if ((y !== lastY || metrics !== lastMetrics) && !state.dragging) {
         state.target = projectFromScroll(y, metrics);
         if (state.selectedIndex !== null && (!state.interactive || Math.abs(state.target - state.selectedIndex) > .12)) clearSelection();
@@ -106,26 +100,30 @@ export function WorkView({ motionRef }: { motionRef: MutableRefObject<OrbitMotio
     };
   }, [clearSelection, measure, reduced, shown, motionRef]);
 
-  useEffect(() => {
-    const onWheel = () => {
-      if (motionRef.current.selectedIndex !== null && !document.querySelector('dialog[open]')) clearSelection();
+  useLayoutEffect(() => {
+    measure();
+    const state = motionRef.current;
+    state.gallery = {
+      capture: () => ({ filter, target: state.target, position: state.position, scrollY: window.scrollY }),
+      restore: (snapshot) => {
+        const next = snapshot.filter === 'all' ? projects : projects.filter((project) => project.category === snapshot.filter);
+        state.items = next.length ? next : projects;
+        state.target = clampProject(snapshot.target, state.items.length);
+        state.position = clampProject(snapshot.position, state.items.length);
+        state.dragging = false;
+        setFilter(next.length ? snapshot.filter : 'all'); setActive(Math.round(state.target));
+        const lenis = getLenis();
+        if (lenis) lenis.scrollTo(snapshot.scrollY, { immediate: true, force: true });
+        else window.scrollTo({ top: snapshot.scrollY, behavior: 'instant' });
+      },
+      forProject: (id) => {
+        const index = Math.max(0, projects.findIndex((project) => project.id === id));
+        const metrics = galleryMetrics(trackRef.current!.getBoundingClientRect().top + window.scrollY, stickyRef.current!.offsetHeight, projects.length, reduced);
+        return { filter: 'all', target: index, position: index, scrollY: scrollForProject(index, metrics) };
+      },
     };
-    const onEscape = (event: KeyboardEvent) => {
-      if (event.key !== 'Escape' || event.defaultPrevented || motionRef.current.selectedIndex === null || document.querySelector('dialog[open]')) return;
-      event.preventDefault();
-      clearSelection();
-      stageRef.current?.focus({ preventScroll: true });
-    };
-    const onScroll = () => {
-      if (motionRef.current.selectedIndex !== null && selectionYRef.current !== null && Math.abs(window.scrollY - selectionYRef.current) > 1) clearSelection();
-    };
-    const onHistory = () => clearSelection();
-    window.addEventListener('wheel', onWheel, { passive: true });
-    window.addEventListener('scroll', onScroll, { passive: true });
-    document.addEventListener('keydown', onEscape);
-    window.addEventListener('popstate', onHistory);
-    return () => { window.removeEventListener('wheel', onWheel); window.removeEventListener('scroll', onScroll); document.removeEventListener('keydown', onEscape); window.removeEventListener('popstate', onHistory); };
-  }, [clearSelection, motionRef, reduced]);
+    return () => { state.gallery = undefined; };
+  }, [filter, measure, motionRef, reduced]);
 
   const changeFilter = (value: DemoCategory) => {
     clearSelection();
@@ -200,15 +198,10 @@ export function WorkView({ motionRef }: { motionRef: MutableRefObject<OrbitMotio
     if (state.dragging || performance.now() < state.blockClickUntil) { event.preventDefault(); return; }
     // Modified links retain the browser's explicit open-in-new-tab behavior.
     if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button !== 0) return;
-    if (state.selectedIndex === index) return;
     event.preventDefault();
     closeGalleryMenu(filtersRef.current, false);
     closeGalleryMenu(toolsRef.current, false);
-    state.selectedIndex = index;
-    if (reduced) state.selection = 1;
-    setSelected(index);
-    // Pin the scroll coordinate immediately; the shared camera performs the transition.
-    go(index, true, true);
+    onSelect(shown[index].id);
   };
   const choose = (index: number) => {
     go(index);
@@ -217,17 +210,17 @@ export function WorkView({ motionRef }: { motionRef: MutableRefObject<OrbitMotio
   };
 
   return (
-    <div className="im-work-track" ref={trackRef} data-selected={selected !== null} style={{ ['--orbit-steps' as string]: shown.length - 1, ['--orbit-holds' as string]: shown.length > 1 ? 1.1 : 0 }}>
+    <div className="im-work-track" ref={trackRef} data-selected="false" style={{ ['--orbit-steps' as string]: shown.length - 1, ['--orbit-holds' as string]: shown.length > 1 ? 1.1 : 0 }}>
       <div className="im-work im-shell im-work--orbit" ref={stickyRef}>
         <header className="im-orbit__head"><h2 id="im-work-title">نمونه‌کارها</h2><span dir="ltr">SELECTED WORK / {String(shown.length).padStart(2, '0')}</span></header>
-        <details className="im-orbit__filters" ref={filtersRef} hidden={selected !== null} data-persistent={desktop}>
+        <details className="im-orbit__filters" ref={filtersRef} data-persistent={desktop}>
           <summary data-cursor="link" tabIndex={desktop ? -1 : undefined} onClick={(event) => { if (desktop) event.preventDefault(); }}>چه کاری را می‌خواهید ببینید؟<span aria-hidden="true">+</span></summary>
           <div className="im-orbit__filter-options" role="group" aria-label="دسته‌بندی نمونه‌کارها">
             {categories.map((category) => <button key={category.value} type="button" className="im-filter" aria-pressed={filter === category.value} onClick={() => changeFilter(category.value)} data-cursor="link">{category.label}</button>)}
           </div>
         </details>
-        {selected !== null && <button type="button" className="im-orbit__back" onClick={() => { clearSelection(); stageRef.current?.focus({ preventScroll: true }); }} data-cursor="link">بازگشت به گالری <span aria-hidden="true">↶</span></button>}
-        <div className="im-orbit__stage" ref={stageRef} tabIndex={0} role="region" aria-roledescription="گالری چرخشی" aria-label="نمونه‌کارهای سه‌بعدی" aria-describedby="im-orbit-help" data-cursor={selected !== null ? 'cta' : 'drag'} data-ready="false"
+
+        <div className="im-orbit__stage" ref={stageRef} tabIndex={0} role="region" aria-roledescription="گالری چرخشی" aria-label="نمونه‌کارهای سه‌بعدی" aria-describedby="im-orbit-help" data-cursor="drag" data-ready="false"
           onPointerDown={onPointerDown} onPointerMove={onPointerMove} onPointerUp={(event) => finishDrag(event)} onPointerCancel={(event) => finishDrag(event, true)}
           onLostPointerCapture={(event) => finishDrag(event, true)}
           onClick={(event) => { if (performance.now() < motionRef.current.blockClickUntil) { event.preventDefault(); event.stopPropagation(); } }}
@@ -250,13 +243,13 @@ export function WorkView({ motionRef }: { motionRef: MutableRefObject<OrbitMotio
           {shown.map((project, index) => (
             <li key={project.id} hidden={index !== active} role="group" aria-roledescription="اسلاید" aria-label={faDigit(index + 1) + ' از ' + faDigit(shown.length)}>
               <div className="im-orbit__project-meta"><span style={{ color: project.accent }}>{project.categoryLabel}</span><span dir="ltr">PROJECT / {String(projects.indexOf(project) + 1).padStart(2, '0')}</span></div>
-              <a ref={(element) => { linksRef.current[index] = element; }} href={project.url} target="_blank" rel="noopener noreferrer" className="im-orbit__project-link" data-cursor="cta" onClick={(event) => activate(index, event)} aria-current={selected === index ? 'true' : undefined}><h3>{project.title.split('؛')[0]}</h3><span>{selected === index ? 'ورود به تجربه' : 'انتخاب پروژه'} <span aria-hidden="true">↖</span></span></a>
+              <a id={`project-link-${project.id}`} ref={(element) => { linksRef.current[index] = element; }} href={project.url} target="_blank" rel="noopener noreferrer" className="im-orbit__project-link" data-cursor="cta" onClick={(event) => activate(index, event)}><h3>{project.title.split('؛')[0]}</h3><span>انتخاب پروژه <span aria-hidden="true">↖</span></span></a>
               <p>{project.tagline}</p>
             </li>
           ))}
         </ul>
         <div className="im-orbit__controls">
-          <p id="im-orbit-help" aria-live="polite">{selected !== null ? 'برای ورود، دوباره کلیک کنید' : 'اسکرول کنید یا بکشید'}<span className="im-sr-only">. پیکان‌ها برای جابه‌جایی، Enter برای انتخاب یا بازکردن، Escape برای بازگشت به گالری.</span></p>
+          <p id="im-orbit-help" aria-live="polite">اسکرول کنید یا بکشید<span className="im-sr-only">. پیکان‌ها برای جابه‌جایی، Enter برای انتخاب یا بازکردن، Escape برای بازگشت به گالری.</span></p>
           <span className="im-orbit__counter" aria-live="polite" aria-atomic="true"><b>{faDigit(String(active + 1).padStart(2, '0'))}</b><i>/</i>{faDigit(String(shown.length).padStart(2, '0'))}</span>
           <details className="im-orbit__tools" ref={toolsRef}>
             <summary data-cursor="link">انتخاب پروژه <span aria-hidden="true">↔</span></summary>

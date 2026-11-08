@@ -1,6 +1,5 @@
 import { Component, Suspense, lazy, useCallback, useEffect, useRef, useState, useSyncExternalStore, type ReactNode } from 'react';
 import { LazyMotion, domAnimation } from 'motion/react';
-import { CustomCursor } from '../components/CustomCursor';
 import { BrandMark } from '../components/BrandMark';
 import { useSmoothScroll } from '../lib/useSmoothScroll';
 import { subscribeRaf } from '../lib/raf';
@@ -13,6 +12,8 @@ import { useSceneNavigation } from './useSceneNavigation';
 import { ambient } from './audio';
 import type { SceneProgress, ViewId } from './types';
 import type { OrbitMotion } from './orbit';
+import { createPresentation } from './projectPresentation';
+import { ProjectView } from './ProjectView';
 
 const Stage = lazy(() => import('./Stage').then((module) => ({ default: module.Stage })));
 function StageFallback() {
@@ -29,9 +30,9 @@ export function ImmersiveApp() {
   const audio = useSyncExternalStore(ambient.subscribe, ambient.getSnapshot, ambient.getSnapshot);
   const mainRef = useRef<HTMLElement>(null);
   const progressRef = useRef<SceneProgress>({ chapter: 'home', position: 0, progress: 0, workBlend: 0, overlay: null });
-  const workRef = useRef<OrbitMotion>({ items: projects, target: 0, position: 0, dragging: false, blockClickUntil: 0, ready: false, interactive: false, selectedIndex: null, selection: 0 });
+  const workRef = useRef<OrbitMotion>({ items: projects, target: 0, position: 0, dragging: false, blockClickUntil: 0, ready: false, interactive: false, selectedIndex: null, selection: 0, presentation: createPresentation() });
   useSmoothScroll(false);
-  const { panel, closePanel } = useSceneNavigation();
+  const { panel, closePanel, projectId, openProject, closeProject } = useSceneNavigation(workRef);
 
   useEffect(() => {
     document.documentElement.classList.add('im-root');
@@ -83,14 +84,14 @@ export function ImmersiveApp() {
   return (
     <LazyMotion features={domAnimation} strict>
       <div className="im-experience" data-chapter={panel ?? view}>
-        <CustomCursor />
         <SceneBoundary><Suspense fallback={<StageFallback />}><Stage progressRef={progressRef} workRef={workRef} /></Suspense></SceneBoundary>
         <a className="skip-link" href="#im-main">پرش به محتوا</a>
         <ImmersiveNav view={panel ?? view} audio={audio} onToggleAudio={toggleAudio} />
-        <main id="im-main" ref={mainRef} tabIndex={-1}>
+        <main id="im-main" ref={mainRef} tabIndex={-1} {...(projectId ? { inert: '', 'aria-hidden': true } : {})}>
           <section id="home" className="im-chapter" aria-labelledby="im-home-title"><HomeView /></section>
-          <section id="demos" className="im-chapter im-chapter--work" aria-labelledby="im-work-title"><WorkView motionRef={workRef} /></section>
+          <section id="demos" className="im-chapter im-chapter--work" aria-labelledby="im-work-title"><WorkView motionRef={workRef} onSelect={openProject} /></section>
         </main>
+        {projectId && <ProjectView project={projects.find((project) => project.id === projectId)!} motionRef={workRef} onClose={closeProject} />}
         <InfoPanel panel={panel} onClose={closePanel} />
       </div>
     </LazyMotion>

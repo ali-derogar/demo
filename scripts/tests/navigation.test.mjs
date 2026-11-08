@@ -10,7 +10,7 @@ async function app(t, options) {
   prepareNavigation();
   const { default: App } = await source('src/App.tsx');
   const root = createRoot(env.q('#root'));
-  env.action = async (callback) => { await act(async () => { callback(); await env.settle(); }); };
+  env.action = async (callback) => { await act(async () => { await callback(); await env.settle(); }); };
   t.after(async () => { try { await env.action(() => root.unmount()); assert.deepEqual(env.errors, []); } finally { env.cleanup(); } });
   await env.action(() => root.render(React.createElement(React.StrictMode, null, React.createElement(App))));
   return env;

@@ -18,6 +18,7 @@ import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
 import { createWorkOrbit } from './WorkOrbit';
 import { createBrandSculpture } from './BrandSculpture';
 import { createWorkSculpture } from './WorkSculpture';
+import { createProjectEnvironment } from './ProjectEnvironment';
 import { FrameQuality } from './frameQuality';
 import type { OrbitMotion } from './orbit';
 import { getPointer, subscribeRaf } from '../lib/raf';
@@ -158,6 +159,8 @@ export function Stage({ progressRef, workRef }: { progressRef: RefObject<ScenePr
     const orbit = createWorkOrbit(renderer, canFloat, lowPower);
     if (!reduced && workRef.current) orbit.preload(workRef.current.items);
     scene.add(orbit.group);
+    const projectEnvironment = createProjectEnvironment(lowPower, canFloat, emptyTexture);
+    scene.add(projectEnvironment.group);
     const sculpture = createWorkSculpture(lowPower);
     scene.add(sculpture.group);
     let backdrop: WebGLRenderTarget | null = canFloat ? new WebGLRenderTarget(1, 1, { minFilter: LinearFilter, magFilter: LinearFilter }) : null;
@@ -196,6 +199,7 @@ export function Stage({ progressRef, workRef }: { progressRef: RefObject<ScenePr
       uPointer: { value: pointerUv }, uPreviousPointer: { value: previousUv },
       uVelocity: { value: inputVelocity }, uDelta: { value: 1 / 60 },
       uAspect: { value: 1 }, uActive: { value: 0 }, uBurst: { value: 0 },
+      uProject: { value: 0 },
     };
     if (canFloat) {
       composer = new EffectComposer(renderer);
@@ -246,10 +250,15 @@ export function Stage({ progressRef, workRef }: { progressRef: RefObject<ScenePr
     let pendingClick = false;
     const heroDrag = { id: -1, x: 0, y: 0, lastX: 0, active: false };
     let heroAngle = 0, heroTarget = 0;
+    const galleryRegion = document.querySelector<HTMLElement>('.im-orbit__stage');
+    const gallerySticky = document.querySelector<HTMLElement>('.im-work--orbit');
+    let viewportWidth = 1, viewportHeight = 1, stableHeight = 1;
+    let cursor = '';
 
     const onPointerDown = (event: PointerEvent) => {
       if (reduced || progressRef.current?.overlay) return;
       clickUv.set(event.clientX / Math.max(1, window.innerWidth), 1 - event.clientY / Math.max(1, window.innerHeight));
+      if (workRef.current?.presentation?.projectId) { pointerUv.copy(clickUv); previousUv.copy(clickUv); burst = 1; return; }
       pendingClick = true;
       if (workBlend < .15 && event.button === 0 && !(event.target as Element | null)?.closest?.('a,button,input,summary')) {
         Object.assign(heroDrag, { id: event.pointerId, x: event.clientX, y: event.clientY, lastX: event.clientX, active: false });
@@ -276,7 +285,9 @@ export function Stage({ progressRef, workRef }: { progressRef: RefObject<ScenePr
       chapter += ((progressRef.current?.position ?? 0) - chapter) * ease;
       const timeline = progressRef.current;
       const work = workRef.current;
-      workBlend += ((reduced ? 0 : timeline?.workBlend ?? 0) - workBlend) * ease;
+      const presentation = work?.presentation;
+      const projectMix = presentation?.progress ?? 0;
+      workBlend += ((reduced ? 0 : presentation?.projectId ? 1 : timeline?.workBlend ?? 0) - workBlend) * ease;
       panelMix += ((timeline?.overlay ? 1 : 0) - panelMix) * ease;
       const fov = 34 + workBlend * 20;
       if (Math.abs(camera.fov - fov) > .01) { camera.fov = fov; camera.updateProjectionMatrix(); }
@@ -306,8 +317,12 @@ export function Stage({ progressRef, workRef }: { progressRef: RefObject<ScenePr
         MathUtils.smoothstep(workBlend, .2, .96) * (1 - panelMix * .7),
         workBlend > .95 && work.interactive && !timeline?.overlay,
       );
+      if (galleryRegion && work && !reduced) {
+        const next = work.dragging ? 'grabbing' : getPointer().active && !presentation?.projectId && orbit.hovered() >= 0 ? 'pointer' : 'grab';
+        if (next !== cursor) { galleryRegion.style.cursor = next; cursor = next; }
+      }
       if (bloom) bloom.strength = .6 * (1 - workBlend) + .12 * workBlend;
-      sculpture.material.opacity = .88 * workBlend * (1 - panelMix * .8) * (1 - (work?.selection ?? 0) * .88);
+      sculpture.material.opacity = .88 * workBlend * (1 - panelMix * .8) * (presentation?.projectId ? 1 - Math.min(1, projectMix * 5) : 1 - (work?.selection ?? 0) * .88);
       sculpture.group.visible = sculpture.material.opacity > .005;
       sculpture.group.rotation.y = reduced ? 0 : elapsed * .06;
       atmosphereUniforms.uTime.value = elapsed;
@@ -344,7 +359,7 @@ export function Stage({ progressRef, workRef }: { progressRef: RefObject<ScenePr
       }
       pointerWasActive = active;
 
-      if (gpu && positionVariable && velocityVariable) {
+      if (gpu && positionVariable && velocityVariable && projectMix < .2) {
         const uniforms = velocityVariable.material.uniforms;
         uniforms.uTime.value = elapsed;
         uniforms.uDelta.value = dt;
@@ -356,19 +371,20 @@ export function Stage({ progressRef, workRef }: { progressRef: RefObject<ScenePr
       }
       particleUniforms.uTime.value = elapsed;
       particleUniforms.uChapter.value = position;
-      particleUniforms.uReveal.value = (reduced ? .25 : MathUtils.smoothstep(elapsed, .05, 2.2)) * (.24 + workBlend * .64) * (1 - panelMix * .3) * (1 - (work?.selection ?? 0) * .86);
+      particleUniforms.uReveal.value = (reduced ? .25 : MathUtils.smoothstep(elapsed, .05, 2.2)) * (.24 + workBlend * .64) * (1 - panelMix * .3) * (presentation?.projectId ? 1 - Math.min(1, projectMix * 5) : 1 - (work?.selection ?? 0) * .86);
       signature.rotation.y = reduced ? -.15 : Math.sin(elapsed * .45) * .35;
       signature.rotation.z = reduced ? 0 : Math.sin(elapsed * .28) * .06;
       signature.position.y = reduced ? 0 : Math.sin(elapsed * .6) * .1;
       signature.scale.setScalar(Math.max(.001, 1 - workBlend) * (1 - panelMix * .16));
       signature.visible = workBlend < .995;
-      if (flowPass) flowPass.uniforms.uStrength.value = 1 - panelMix * .8;
+      if (flowPass) flowPass.uniforms.uStrength.value = presentation?.projectId ? 0 : 1 - panelMix * .8;
 
       if (fluidQuad && flowRead && flowWrite && flowPass) {
         fluidUniforms.uPrevious.value = flowRead.texture;
         fluidUniforms.uDelta.value = dt;
         fluidUniforms.uActive.value = active || burst > .01 ? 1 : 0;
         fluidUniforms.uBurst.value = burst;
+        fluidUniforms.uProject.value = presentation?.projectId ? 1 : 0;
         renderer.setRenderTarget(flowWrite);
         fluidQuad.render(renderer);
         renderer.setRenderTarget(null);
@@ -377,6 +393,10 @@ export function Stage({ progressRef, workRef }: { progressRef: RefObject<ScenePr
         flowPass.uniforms.uTime.value = elapsed;
         burst *= Math.exp(-dt * 8);
       }
+      orbit.setFlow(flowRead?.texture);
+      projectEnvironment.setFlow(flowRead?.texture);
+      const project = work?.items.find((item) => item.id === presentation?.projectId);
+      projectEnvironment.update(presentation, project, project ? orbit.texture(project.id) : undefined, camera, elapsed, viewportWidth, viewportHeight, dpr, panelMix);
       if (backdrop && workBlend > .02 && (!lowPower || captureFrame++ % 2 === 0)) {
         const visible = orbit.group.visible;
         orbit.group.visible = false;
@@ -397,7 +417,8 @@ export function Stage({ progressRef, workRef }: { progressRef: RefObject<ScenePr
           renderer.setPixelRatio(dpr);
           composer?.setPixelRatio(dpr);
           particleUniforms.uDpr.value = dpr;
-          orbit.resize(wrap.clientWidth, wrap.clientHeight, dpr);
+          orbit.resize(viewportWidth, viewportHeight, dpr, stableHeight);
+          projectEnvironment.setQuality(level);
           if (bloom) { composer?.removePass(bloom); bloom.dispose(); bloom = null; }
           if (lowPower || level === 2) {
             if (flowPass) { composer?.removePass(flowPass); flowPass.dispose(); flowPass = null; }
@@ -415,13 +436,14 @@ export function Stage({ progressRef, workRef }: { progressRef: RefObject<ScenePr
       if (lost) return;
       const width = wrap.clientWidth;
       const height = Math.max(1, wrap.clientHeight);
+      viewportWidth = width; viewportHeight = height; stableHeight = gallerySticky?.offsetHeight || height;
       compact = width < 768;
       world.position.set(0, .6, 0);
       renderer.setSize(width, height, false);
       composer?.setSize(width, height);
       camera.aspect = width / height;
       camera.updateProjectionMatrix();
-      orbit.resize(width, height, dpr);
+      orbit.resize(width, height, dpr, stableHeight);
       backdrop?.setSize(Math.max(1, Math.floor(width * (lowPower ? .35 : .5))), Math.max(1, Math.floor(height * (lowPower ? .35 : .5))));
       fluidUniforms.uAspect.value = width / height;
       if (reduced) renderFrame(0, 16);
@@ -434,13 +456,13 @@ export function Stage({ progressRef, workRef }: { progressRef: RefObject<ScenePr
       event.preventDefault();
       lost = true;
       unsubscribe();
-      if (workRef.current) { workRef.current.ready = false; workRef.current.labelsReady = false; }
+      if (workRef.current) { workRef.current.ready = false; workRef.current.labelsReady = false; if (workRef.current.presentation) workRef.current.presentation.ready = false; }
       setStatus('fallback');
     };
     const onProjectClick = (event: MouseEvent) => {
       if (event.defaultPrevented || (event.target as Element | null)?.closest?.('a')) return;
       const work = workRef.current;
-      if (!work || workBlend < .95 || progressRef.current?.overlay || work.dragging || performance.now() < work.blockClickUntil) return;
+      if (!work || work.presentation?.projectId || workBlend < .95 || progressRef.current?.overlay || work.dragging || performance.now() < work.blockClickUntil) return;
       if (!(event.target as Element | null)?.closest?.('.im-orbit__stage')) return;
       const index = orbit.hitTest(camera, event.clientX, event.clientY, wrap.clientWidth, wrap.clientHeight);
       if (index >= 0) work.onPick?.(index);
@@ -464,8 +486,10 @@ export function Stage({ progressRef, workRef }: { progressRef: RefObject<ScenePr
       gpu?.dispose();
       geometry.dispose(); particleMaterial.dispose();
       brand.dispose(); sculpture.dispose(); orbit.dispose(); environment?.dispose(); emptyTexture.dispose(); backdrop?.dispose();
+      projectEnvironment.dispose();
+      if (galleryRegion) galleryRegion.style.cursor = '';
       atmosphereGeometry.dispose(); atmosphereMaterial.dispose();
-      if (workRef.current) { workRef.current.ready = false; workRef.current.labelsReady = false; }
+      if (workRef.current) { workRef.current.ready = false; workRef.current.labelsReady = false; if (workRef.current.presentation) workRef.current.presentation.ready = false; }
       flowRead?.dispose(); flowWrite?.dispose();
       fluidQuad?.dispose(); fluidMaterial?.dispose();
       composer?.passes.forEach((pass) => pass.dispose());

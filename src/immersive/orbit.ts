@@ -1,4 +1,12 @@
-import type { DemoProject } from '../data/projects';
+import type { DemoCategory, DemoProject } from '../data/projects';
+import type { ProjectPresentation } from './projectPresentation';
+
+export interface GallerySnapshot {
+  filter: DemoCategory;
+  target: number;
+  position: number;
+  scrollY: number;
+}
 
 export interface OrbitMotion {
   items: DemoProject[];
@@ -12,6 +20,12 @@ export interface OrbitMotion {
   selectedIndex: number | null;
   selection: number;
   onPick?: (index: number) => void;
+  presentation?: ProjectPresentation;
+  gallery?: {
+    capture: () => GallerySnapshot;
+    restore: (snapshot: GallerySnapshot) => void;
+    forProject: (id: string) => GallerySnapshot;
+  };
 }
 
 export const ORBIT_RADIUS = 7.6;
