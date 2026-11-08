@@ -32,6 +32,7 @@ export async function environment({ hash = '#home', type = 'navigate', width = 3
     url: `http://localhost:5173/portfolio/?lang=fa${hash}`, pretendToBeVisual: true, virtualConsole, runScripts: 'outside-only',
   });
   const w = dom.window;
+  const touchViewport = width < 768;
   const originals = new Map();
   function expose(key, value) {
     originals.set(key, Object.getOwnPropertyDescriptor(globalThis, key));
@@ -62,6 +63,7 @@ export async function environment({ hash = '#home', type = 'navigate', width = 3
   w.matchMedia = (query) => ({
     get matches() {
       if (query.includes('prefers-reduced-motion')) return reduced;
+      if (query.includes('pointer: coarse') && touchViewport) return true;
       const minWidth = query.match(/min-width:\s*(\d+)px/), minHeight = query.match(/min-height:\s*(\d+)px/);
       const maxWidth = query.match(/max-width:\s*(\d+)px/), maxHeight = query.match(/max-height:\s*(\d+)px/);
       if (!minWidth && !minHeight && !maxWidth && !maxHeight) return false;
@@ -89,7 +91,7 @@ export async function environment({ hash = '#home', type = 'navigate', width = 3
   w.HTMLElement.prototype.setPointerCapture = function (id) { this.captureId = id; };
   w.HTMLElement.prototype.hasPointerCapture = function (id) { return this.captureId === id; };
   w.HTMLElement.prototype.releasePointerCapture = function () { this.captureId = -1; };
-  let workTop = height * 1.65;
+  let workTop = height * (touchViewport ? 1 : 1.65);
   Object.defineProperty(w.HTMLElement.prototype, 'clientWidth', { get() { return width; } });
   Object.defineProperty(w.HTMLElement.prototype, 'clientHeight', { get() { return height; } });
   Object.defineProperty(w.HTMLElement.prototype, 'offsetHeight', { get() {
@@ -124,7 +126,7 @@ export async function environment({ hash = '#home', type = 'navigate', width = 3
       });
     },
     setViewport(nextWidth, nextHeight, toolbarOnly = false) {
-      if (!toolbarOnly) { width = nextWidth; height = nextHeight; workTop = height * 1.65; }
+      if (!toolbarOnly) { width = nextWidth; height = nextHeight; workTop = height * (touchViewport ? 1 : 1.65); }
       Object.defineProperties(w, { innerWidth: { value: nextWidth, configurable: true }, innerHeight: { value: nextHeight, configurable: true } });
       w.dispatchEvent(new w.Event('resize'));
       resizeObservers.forEach((observer) => observer.callback([...observer.targets].map((target) => ({ target }))));

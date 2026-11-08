@@ -82,6 +82,12 @@ ul,ol { list-style: none; margin: 0; padding: 0; }
 .im-home__scroll-line { display: block; width: 1px; height: 28px; background: linear-gradient(#b6dcc7,transparent); }
 .im-home__intro,.im-home__scene,.im-home__gesture,.im-home__identity .im-home__description,.im-home__actions,.im-home__collection { display: none; }
 
+/* Touch scrolling should move the introduction from the very first swipe. */
+@media (max-width:767px), (hover:none) and (pointer:coarse) {
+  #home { min-height: 100svh; }
+  .im-home { position: relative; }
+}
+
 /* Fullscreen information windows preserve the scene below them. */
 .im-info-panel { position: fixed; inset: 0; width: 100%; height: 100dvh; max-width: none; max-height: none; margin: 0; padding: 0; border: 0; background: transparent; color: var(--paper); overflow: hidden; }
 .im-info-panel:not([open]) { display: none; }

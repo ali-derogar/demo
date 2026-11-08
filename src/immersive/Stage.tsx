@@ -19,7 +19,7 @@ import { createWorkOrbit } from './WorkOrbit';
 import { createBrandSculpture } from './BrandSculpture';
 import { createWorkSculpture } from './WorkSculpture';
 import { createProjectEnvironment } from './ProjectEnvironment';
-import { FrameQuality } from './frameQuality';
+import { FrameQuality, scenePixelRatio } from './frameQuality';
 import { createStarPointer } from './projectStars';
 import type { OrbitMotion } from './orbit';
 import { getPointer, subscribeRaf } from '../lib/raf';
@@ -68,7 +68,7 @@ export function Stage({ progressRef, workRef, onReady }: { progressRef: RefObjec
     renderer.outputColorSpace = SRGBColorSpace;
     renderer.toneMapping = ACESFilmicToneMapping;
     renderer.toneMappingExposure = 1.1;
-    let dpr = Math.min(window.devicePixelRatio || 1, lowPower ? 1 : 1.5);
+    let dpr = scenePixelRatio(window.devicePixelRatio, lowPower);
     renderer.setPixelRatio(dpr);
     const scene = new Scene();
     scene.background = new Color(0x030606);
@@ -439,7 +439,7 @@ export function Stage({ progressRef, workRef, onReady }: { progressRef: RefObjec
         const level = quality.sample(delta);
         if (level !== null) {
           wrap.dataset.quality = String(level);
-          dpr = Math.min(window.devicePixelRatio || 1, lowPower || level === 2 ? 1 : 1.25);
+          dpr = scenePixelRatio(window.devicePixelRatio, lowPower, level);
           renderer.setPixelRatio(dpr);
           composer?.setPixelRatio(dpr);
           particleUniforms.uDpr.value = dpr;

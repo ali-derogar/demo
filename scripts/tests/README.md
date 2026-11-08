@@ -14,6 +14,10 @@ The nine authored covers use the real demos' copy, typography, palettes and cred
 
 These tests use JSDOM, real React handlers/Three geometry, and a renderer stub. They do not measure browser paint, black frames, actual GPU performance or mobile FPS. Chrome Android and Safari iPhone checks, including refresh/first scroll, browser chrome, rotation, fast direction changes and all nine projects, remain required for device-level visual verification.
 
+High-density mobile rendering uses up to 2× pixel density and retains 1.5× after a sustained performance downshift, bounded by the device's own density. Resolution tests cover the real Stage path, unchanged CSS card bounds, shader pixel coordinates, lower-density displays and the desktop quality levels. Browser image-quality checks must emulate device scale factors 2 and 3; a 1× mobile viewport alone cannot reveal this regression. The 1200×800 local preview images remain shared by the GPU and native fallbacks.
+
 `npm run check:site` has five pre-existing GitHub-reference errors in ContactSection, SiteHeader, icons, profile and ContactView. The checker and existing contact information are preserved.
 
 The first HTML paint includes the branded orbital loader, before the application bundle arrives. React reuses the same artwork. Loader tests cover actual scene readiness, the initial animation, font readiness/fallback, reduced motion, long-load entry, StrictMode, unmount cleanup and scroll ownership. Scene recovery must not replay the initial loader. No percentage or elapsed timer stands in for scene readiness.
+
+On touch viewports the introduction occupies one stable viewport and scrolls naturally from the first swipe; desktop retains its pinned introduction. The loader releases its scroll lock and stops intercepting touches when its ready exit fade begins. The artwork can finish fading without consuming the first gesture. Browser checks must use actual touch input immediately after the loader, assert visible movement of the introduction as well as `scrollY`, and cover the transition into the gallery at high pixel density.

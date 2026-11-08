@@ -4,6 +4,18 @@ import { source } from './helpers.mjs';
 
 const flush = () => new Promise((resolve) => setImmediate(resolve));
 
+test('mobile resolution follows display density and retains legible detail after a quality downshift', async () => {
+  const { scenePixelRatio } = await source('src/immersive/frameQuality.ts');
+  for (const density of [.75, 1, 1.25, 1.5, 2, 3, 4]) {
+    assert.equal(scenePixelRatio(density, true), Math.min(density, 2));
+    assert.equal(scenePixelRatio(density, true, 1), Math.min(density, 1.5));
+    assert.equal(scenePixelRatio(density, false), Math.min(density, 1.5));
+    assert.equal(scenePixelRatio(density, false, 1), Math.min(density, 1.25));
+    assert.equal(scenePixelRatio(density, false, 2), Math.min(density, 1));
+  }
+  for (const invalid of [NaN, Infinity, 0, -1]) assert.equal(scenePixelRatio(invalid, true), 1);
+});
+
 test('image queue bounds concurrency, reprioritizes and retries a failure once', async () => {
   const { createResourceQueue } = await source('src/immersive/resourceQueue.ts');
   const calls = []; const pending = new Map(); const released = [];

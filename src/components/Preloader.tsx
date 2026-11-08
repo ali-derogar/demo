@@ -17,7 +17,7 @@ export function Preloader({ ready, onComplete }: { ready: boolean; onComplete: (
     const root = bootstrap.current ?? fallbackRef.current;
     if (!root) return;
     const version = ++generation.current;
-    let active = true, completed = false, leaving = false, introDone = false;
+    let active = true, completed = false, leaving = false, introDone = false, released = false;
     let fontsReady = !document.fonts;
     let departure = 0;
     const unlock = acquireScrollLock();
@@ -26,12 +26,18 @@ export function Preloader({ ready, onComplete }: { ready: boolean; onComplete: (
     const skip = root.querySelector<HTMLButtonElement>('.im-loader__skip');
     if (skip) skip.hidden = true;
 
+    const releaseScroll = () => {
+      if (released) return;
+      released = true;
+      document.documentElement.classList.remove('im-booting');
+      unlock();
+    };
+
     const finish = () => {
       if (!active || completed) return;
       completed = true;
       root.dataset.state = 'complete';
-      document.documentElement.classList.remove('im-booting');
-      unlock();
+      releaseScroll();
       if (bootstrap.current) root.remove();
       completeRef.current();
     };
@@ -40,6 +46,7 @@ export function Preloader({ ready, onComplete }: { ready: boolean; onComplete: (
       if (leaving) { if (reducedRef.current) finish(); return; }
       if (!readyRef.current || !fontsReady || (!introDone && !reducedRef.current)) return;
       leaving = true;
+      releaseScroll();
       root.dataset.state = 'leaving';
       if (reducedRef.current) finish();
       else departure = window.setTimeout(finish, 500);
@@ -72,8 +79,7 @@ export function Preloader({ ready, onComplete }: { ready: boolean; onComplete: (
       root.removeEventListener('animationend', animation);
       root.removeEventListener('transitionend', transition);
       skip?.removeEventListener('click', finish);
-      document.documentElement.classList.remove('im-booting');
-      unlock();
+      releaseScroll();
       checkRef.current = () => {};
       // StrictMode immediately acquires the same existing HTML node again.
       // Remove abandoned bootstrap markup only after a real unmount.

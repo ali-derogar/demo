@@ -1,3 +1,10 @@
+/** Keep high-density mobile previews readable while bounding full-screen GPU work. */
+export function scenePixelRatio(deviceRatio: number, mobile: boolean, level = 0): number {
+  const nativeRatio = Number.isFinite(deviceRatio) && deviceRatio > 0 ? deviceRatio : 1;
+  const limit = mobile ? level === 0 ? 2 : 1.5 : level === 0 ? 1.5 : level === 1 ? 1.25 : 1;
+  return Math.min(nativeRatio, limit);
+}
+
 /** Downshift only after warm-up and two sustained slow windows; hidden time is excluded by RAF. */
 export class FrameQuality {
   private warmup = 0;

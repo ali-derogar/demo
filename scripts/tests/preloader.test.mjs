@@ -63,6 +63,28 @@ test('a ready scene cannot hide the loading surface before fonts and the entranc
   assert.equal(env.q('.im-loader').dataset.state, 'leaving');
 });
 
+test('the first swipe is released as the ready loader fades, before its exit transition finishes', async (t) => {
+  const env = await loader(t, { bootstrap: true });
+  const touch = () => {
+    const event = new Event('touchmove', { bubbles: true, cancelable: true });
+    document.body.dispatchEvent(event);
+    return event.defaultPrevented;
+  };
+  assert.equal(touch(), true, 'pending loading still owns the scroll lock');
+  await env.action(() => env.resolveFonts());
+  await env.event('animationend', 'animationName', 'im-loader-enter', '.im-loader__body');
+  await env.render(true);
+  assert.equal(env.q('.im-loader').dataset.state, 'leaving');
+  assert.equal(env.completions, 0, 'the artwork still finishes its exit');
+  assert.equal(document.documentElement.classList.contains('im-booting'), false);
+  assert.equal(document.documentElement.style.overflow, '');
+  assert.equal(document.body.style.overflow, '');
+  assert.equal(touch(), false, 'the first touch gesture reaches native scrolling during the fade');
+  await env.event('transitionend', 'propertyName', 'opacity');
+  assert.equal(env.completions, 1);
+  assert.equal(touch(), false);
+});
+
 test('the original HTML artwork survives StrictMode and is removed once without a duplicate loader', async (t) => {
   const env = await loader(t, { bootstrap: true, ready: true });
   const art = env.q('.im-loader__art');
