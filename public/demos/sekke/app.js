@@ -293,7 +293,7 @@
     detailBox.querySelector('.rate__driver').innerHTML = row.oz
       ? `مبنای محاسبه: اونسِ جهانی · دلار <span class="num" dir="ltr">${group(DRIVER.USD)}</span> تومان`
       : `اونس <span class="num" dir="ltr">${dec(DRIVER.XAU)}</span> دلار · دلار <span class="num" dir="ltr">${group(DRIVER.USD)}</span> تومان · هر اونس <span class="num" dir="ltr">${dec(DRIVER.OZ, 4)}</span> گرم`;
-    detailBox.querySelector('.rate__note').innerHTML = `نرخِ تابلو به نزدیک‌ترین <span class="num" dir="ltr">${money(row.step, 1)}</span> تومان گرد می‌شود؛ خودِ محاسبه گرد نیست.`;
+    detailBox.querySelector('.rate__note').innerHTML = `نرخِ تابلو به نزدیک‌ترین <span class="num" dir="ltr">${money(row.step, 1)}</span> تومان گرد می‌شود؛ محاسبه با عدد کامل انجام می‌شود.`;
     drawSpark(detailBox.querySelector('#rate-spark'), id, true);
   }
   for (const r of rows.values()) {
@@ -847,10 +847,10 @@
     const ok = diff <= near.w * 0.012 && mint >= 9 && digitSum % 7 !== 0;
     box.classList.add(ok ? 'is-ok' : 'is-no');
     text.innerHTML = ok
-      ? `<b>نمونه با مشخصاتِ کارخانه می‌خواند</b>${near.name} · وزنِ استاندارد <span class="num" dir="ltr">${dec(near.w, 4)}</span> گرم · انحراف <span class="num" dir="ltr">${dec(diff * 1000, 1)}</span> صدم‌گرم · کدِ رهگیری <span class="num" dir="ltr">${toFa(String(h % 1_000_000).padStart(6, '0'))}</span>`
+      ? `<b>اطلاعات نمونه مطابقت دارد</b>${near.name} · وزنِ استاندارد <span class="num" dir="ltr">${dec(near.w, 4)}</span> گرم · انحراف <span class="num" dir="ltr">${dec(diff * 1000, 1)}</span> میلی‌گرم · کدِ رهگیری <span class="num" dir="ltr">${toFa(String(h % 1_000_000).padStart(6, '0'))}</span>`
       : diff > near.w * 0.012
-        ? `<b>وزن با ${near.name} نمی‌خواند</b>اختلاف <span class="num" dir="ltr">${dec(diff, 3)}</span> گرم؛ سکه را به ترازویِ مرجعِ شعبه بیاورید.`
-        : `<b>این سریال در پایگاه ثبت نشده</b>سریال <span class="num" dir="ltr">${toFa(serialRaw)}</span> در فهرستِ ضربِ این دوره نیست. معامله را تعلیق کنید.`;
+        ? `<b>وزن با ${near.name} نمی‌خواند</b>اختلاف <span class="num" dir="ltr">${dec(diff, 3)}</span> گرم با وزن نمونه.`
+        : `<b>این شماره در نمونه پذیرفته نشد</b>سریال <span class="num" dir="ltr">${toFa(serialRaw)}</span> در این بررسی آزمایشی پذیرفته نشد.`;
   });
 
   /* ---------- سبد پیگیری ---------- */
@@ -961,7 +961,7 @@
       const live = wins.some(([o, c]) => hour >= o && hour < c);
       const pill = $('.pill', p);
       pill.classList.toggle('is-off', !live);
-      pill.textContent = live ? 'در حالِ خدمت' : (off ? 'تعطیلِ هفته' : 'بسته است');
+      pill.textContent = live ? 'باز است' : (off ? 'تعطیل است' : 'بسته است');
       const nextEl = $('.branch__next', p);
       if (live) { nextEl.textContent = ''; return; }
       const later = wins.map(([o]) => o).filter((o) => o > hour).sort((a, b) => a - b)[0];
@@ -996,8 +996,8 @@
     const code = fnv(`${SEED}:${phoneOf(phone.value)}:${name.value}`) % 1_000_000;
     const ticket = $('#ticket');
     ticket.hidden = false;
-    ticket.innerHTML = `کدِ پیگیری شما <span class="num" dir="ltr">${toFa(String(code).padStart(6, '0'))}</span> است. کارشناسِ همان نماد با شما تماس می‌گیرد.`;
-    toast('درخواست ثبت شد؛ کدِ پیگیری را نگه دارید', 'ok');
+    ticket.innerHTML = `کدِ پیگیری شما <span class="num" dir="ltr">${toFa(String(code).padStart(6, '0'))}</span> است. این درخواست آزمایشی است و تماسی گرفته نمی‌شود.`;
+    toast('درخواست آزمایشی ثبت شد', 'ok');
     e.target.reset();
   });
 

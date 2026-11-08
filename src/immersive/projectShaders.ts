@@ -41,7 +41,8 @@ export const projectSurfaceFragment = /* glsl */ `
     color += vec3(.008, .028, .03) * pow(perimeter, 3.0) * mist;
     color *= 1.0 - (1.0 - smoothstep(.22, .35, vUv.x)) * (1.0 - smoothstep(.5, .7, vUv.y)) * .65;
     if (uEncodeOutput > .5) color = pow(max(color, .0), vec3(1.0 / 2.2));
-    gl_FragColor = vec4(color, uReveal);
+    // Glaze the existing world; leave its sculpture, haze and particles visible.
+    gl_FragColor = vec4(color, uReveal * (.08 + perimeter * .3));
   }
 `;
 export const projectParticlesVertex = /* glsl */ `
@@ -68,9 +69,9 @@ export const projectParticlesVertex = /* glsl */ `
     wake /= max(1.0, length(wake));
     float depth = 5.9 + aSeed * 3.0;
     vec3 p = vec3(screen * uExtent * depth, -depth);
-    p.xy += vec2(sin(aSeed * 41.0 + uTime * .13), cos(aSeed * 53.0 + uTime * .09)) * .06;
+    p.xy += vec2(sin(aSeed * 41.0 + uTime * .22), cos(aSeed * 53.0 + uTime * .18)) * .1;
     p.xy += wake * .28;
-    p.z += sin(aSeed * 77.0 + uTime * .15) * .1;
+    p.z += sin(aSeed * 77.0 + uTime * .2) * .18;
     vec3 media = texture2D(uImage, aSample).rgb;
     vColor = mix(uAccent * .3, media, uLoaded) * (.12 + aSeed * .5);
     vec2 relative = (screenUv - uFrame.xy) / max(uFrame.zw, vec2(.01));

@@ -150,6 +150,9 @@ test('all nine projects enter a routed presentation, then open their native demo
     assert.match(location.hash, /^#work\//);
     assert.equal(env.scroll, y, 'opening does not change the saved gallery scroll');
     const presentation = env.q('.im-project'); assert.ok(presentation);
+    assert.equal(env.q('.im-project__technologies span').textContent, 'ساخته‌شده با');
+    assert.equal(env.q('.im-project__technologies bdi').getAttribute('dir'), 'ltr');
+    assert.equal(env.q('.im-project__technologies bdi').textContent, 'HTML · CSS · JavaScript');
     assert.equal(env.q('#im-main').hasAttribute('inert'), true);
     assert.equal(document.querySelectorAll('canvas').length, 1, 'there is only one shared scene surface');
     const entry = env.q('.im-project__hitarea');

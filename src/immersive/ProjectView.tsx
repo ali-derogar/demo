@@ -17,7 +17,7 @@ export function ProjectView({ project, motionRef, onClose }: { project: DemoProj
     const sticky = document.querySelector<HTMLElement>('.im-work--orbit');
     const unlock = acquireScrollLock();
     entryRef.current?.focus({ preventScroll: true });
-    let previous = '', ready: boolean | undefined, phase = '', progress = -1;
+    let previous = '', ready: boolean | undefined, phase = '', surface = '', progress = -1;
     const frame = () => {
       const state = motionRef.current.presentation!;
       const bounds = state.bounds ?? projectFrame(window.innerWidth, window.innerHeight, sticky?.offsetHeight || window.innerHeight);
@@ -28,6 +28,7 @@ export function ProjectView({ project, motionRef, onClose }: { project: DemoProj
         root.style.setProperty('--project-width', `${bounds.width}px`); root.style.setProperty('--project-height', `${bounds.height}px`);
       }
       if (ready !== state.ready) { root.dataset.ready = String(state.ready); ready = state.ready; }
+      if (surface !== state.surface) { root.dataset.surface = state.surface; surface = state.surface; }
       if (phase !== state.phase) { root.dataset.phase = state.phase; phase = state.phase; }
       if (progress !== state.progress) { root.style.setProperty('--project-progress', String(state.progress)); progress = state.progress; }
     };
@@ -41,7 +42,7 @@ export function ProjectView({ project, motionRef, onClose }: { project: DemoProj
     return () => { unsubscribe(); unlock(); document.removeEventListener('keydown', escape); };
   }, [motionRef, onClose, project.id]);
 
-  return <section ref={rootRef} className="im-project" role="region" aria-labelledby="im-project-title" data-project={project.id} data-ready="false" style={{ ['--project-accent' as string]: project.accent }}>
+  return <section ref={rootRef} className="im-project" role="region" aria-labelledby="im-project-title" data-project={project.id} data-ready="false" data-surface="pending" style={{ ['--project-accent' as string]: project.accent }}>
     <a ref={entryRef} className="im-project__hitarea" href={project.url} target="_blank" rel="noopener noreferrer" aria-label={`دیدن سایت ${project.title.split('؛')[0]}`}>
       <div className="im-project__poster" aria-hidden="true">
         {failed ? <span className="im-project__image-error">تصویر بارگذاری نشد<span>دیدن سایت ↖</span></span> : <img key={project.preview} src={project.preview} alt="" width="1200" height="800" onError={() => setFailed(true)} draggable={false} />}

@@ -19,9 +19,10 @@ const Stage = lazy(() => import('./Stage').then((module) => ({ default: module.S
 function StageFallback() {
   return <div className="im-stage im-stage--flat" aria-hidden="true"><div className="im-brand-fallback"><BrandMark /></div></div>;
 }
-class SceneBoundary extends Component<{ children: ReactNode }, { failed: boolean }> {
+class SceneBoundary extends Component<{ children: ReactNode; onFailure: () => void }, { failed: boolean }> {
   state = { failed: false };
   static getDerivedStateFromError() { return { failed: true }; }
+  componentDidCatch() { this.props.onFailure(); }
   render() { return this.state.failed ? <StageFallback /> : this.props.children; }
 }
 
@@ -84,7 +85,7 @@ export function ImmersiveApp() {
   return (
     <LazyMotion features={domAnimation} strict>
       <div className="im-experience" data-chapter={panel ?? view} data-project-open={projectId !== null}>
-        <SceneBoundary><Suspense fallback={<StageFallback />}><Stage progressRef={progressRef} workRef={workRef} /></Suspense></SceneBoundary>
+        <SceneBoundary onFailure={() => { if (workRef.current.presentation) { workRef.current.presentation.surface = 'fallback'; workRef.current.presentation.ready = false; } }}><Suspense fallback={<StageFallback />}><Stage progressRef={progressRef} workRef={workRef} /></Suspense></SceneBoundary>
         <a className="skip-link" href={projectId ? '#im-project-title' : '#im-main'}>پرش به محتوا</a>
         <ImmersiveNav view={panel ?? view} audio={audio} onToggleAudio={toggleAudio} />
         <main id="im-main" ref={mainRef} tabIndex={-1} {...(projectId ? { inert: '', 'aria-hidden': true } : {})}>

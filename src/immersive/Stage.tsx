@@ -51,10 +51,13 @@ export function Stage({ progressRef, workRef }: { progressRef: RefObject<ScenePr
     const canvas = canvasRef.current;
     const wrap = wrapRef.current;
     if (!canvas || !wrap) return;
+    const presentationState = workRef.current?.presentation;
+    if (presentationState) { presentationState.ready = false; presentationState.surface = reduced ? 'reduced' : 'pending'; }
     let renderer: WebGLRenderer;
     try {
       renderer = new WebGLRenderer({ canvas, alpha: false, antialias: false, powerPreference: 'high-performance' });
     } catch {
+      if (presentationState) presentationState.surface = reduced ? 'reduced' : 'fallback';
       setStatus('fallback');
       return;
     }
@@ -316,15 +319,17 @@ export function Stage({ progressRef, workRef }: { progressRef: RefObject<ScenePr
         work, camera, elapsed, dt,
         MathUtils.smoothstep(workBlend, .2, .96) * (1 - panelMix * .7),
         workBlend > .95 && work.interactive && !timeline?.overlay,
+        !lowPower && !timeline?.overlay,
       );
       if (galleryRegion && work && !reduced) {
         const next = work.dragging ? 'grabbing' : getPointer().active && !presentation?.projectId && orbit.hovered() >= 0 ? 'pointer' : 'grab';
         if (next !== cursor) { galleryRegion.style.cursor = next; cursor = next; }
       }
       if (bloom) bloom.strength = .6 * (1 - workBlend) + .12 * workBlend;
-      sculpture.material.opacity = .88 * workBlend * (1 - panelMix * .8) * (presentation?.projectId ? 1 - Math.min(1, projectMix * 5) : 1 - (work?.selection ?? 0) * .88);
+      sculpture.material.opacity = .88 * workBlend * (1 - panelMix * .8) * (presentation?.projectId ? 1 - projectMix * .62 : 1 - (work?.selection ?? 0) * .88);
       sculpture.group.visible = sculpture.material.opacity > .005;
       sculpture.group.rotation.y = reduced ? 0 : elapsed * .06;
+      sculpture.group.position.set(-1.7 * projectMix, 0, 0).applyQuaternion(camera.quaternion);
       atmosphereUniforms.uTime.value = elapsed;
       atmosphereUniforms.uWork.value = workBlend;
       atmosphereUniforms.uPanel.value = panelMix;
@@ -359,7 +364,7 @@ export function Stage({ progressRef, workRef }: { progressRef: RefObject<ScenePr
       }
       pointerWasActive = active;
 
-      if (gpu && positionVariable && velocityVariable && projectMix < .2) {
+      if (gpu && positionVariable && velocityVariable) {
         const uniforms = velocityVariable.material.uniforms;
         uniforms.uTime.value = elapsed;
         uniforms.uDelta.value = dt;
@@ -371,7 +376,7 @@ export function Stage({ progressRef, workRef }: { progressRef: RefObject<ScenePr
       }
       particleUniforms.uTime.value = elapsed;
       particleUniforms.uChapter.value = position;
-      particleUniforms.uReveal.value = (reduced ? .25 : MathUtils.smoothstep(elapsed, .05, 2.2)) * (.24 + workBlend * .64) * (1 - panelMix * .3) * (presentation?.projectId ? 1 - Math.min(1, projectMix * 5) : 1 - (work?.selection ?? 0) * .86);
+      particleUniforms.uReveal.value = (reduced ? .25 : MathUtils.smoothstep(elapsed, .05, 2.2)) * (.24 + workBlend * .64) * (1 - panelMix * .3) * (presentation?.projectId ? 1 - projectMix * .65 : 1 - (work?.selection ?? 0) * .86);
       signature.rotation.y = reduced ? -.15 : Math.sin(elapsed * .45) * .35;
       signature.rotation.z = reduced ? 0 : Math.sin(elapsed * .28) * .06;
       signature.position.y = reduced ? 0 : Math.sin(elapsed * .6) * .1;
@@ -410,6 +415,7 @@ export function Stage({ progressRef, workRef }: { progressRef: RefObject<ScenePr
       if (composer) composer.render(dt);
       else renderer.render(scene, camera);
       if (work && !reduced) orbit.present(work);
+      if (presentationState) presentationState.surface = reduced ? 'reduced' : 'webgl';
       if (firstFrame) { firstFrame = false; setStatus('ready'); }
 
       if (!reduced) {
@@ -420,6 +426,7 @@ export function Stage({ progressRef, workRef }: { progressRef: RefObject<ScenePr
           renderer.setPixelRatio(dpr);
           composer?.setPixelRatio(dpr);
           particleUniforms.uDpr.value = dpr;
+          geometry.setDrawRange(0, Math.floor(count * (level === 2 ? .5 : .75)));
           orbit.resize(viewportWidth, viewportHeight, dpr, stableHeight);
           projectEnvironment.setQuality(level);
           if (bloom) { composer?.removePass(bloom); bloom.dispose(); bloom = null; }
@@ -459,7 +466,7 @@ export function Stage({ progressRef, workRef }: { progressRef: RefObject<ScenePr
       event.preventDefault();
       lost = true;
       unsubscribe();
-      if (workRef.current) { workRef.current.ready = false; workRef.current.labelsReady = false; if (workRef.current.presentation) workRef.current.presentation.ready = false; }
+      if (workRef.current) { workRef.current.ready = false; workRef.current.labelsReady = false; if (workRef.current.presentation) { workRef.current.presentation.ready = false; workRef.current.presentation.surface = 'fallback'; } }
       setStatus('fallback');
     };
     const onProjectClick = (event: MouseEvent) => {
@@ -492,7 +499,7 @@ export function Stage({ progressRef, workRef }: { progressRef: RefObject<ScenePr
       projectEnvironment.dispose();
       if (galleryRegion) galleryRegion.style.cursor = '';
       atmosphereGeometry.dispose(); atmosphereMaterial.dispose();
-      if (workRef.current) { workRef.current.ready = false; workRef.current.labelsReady = false; if (workRef.current.presentation) workRef.current.presentation.ready = false; }
+      if (workRef.current) { workRef.current.ready = false; workRef.current.labelsReady = false; if (workRef.current.presentation) { workRef.current.presentation.ready = false; workRef.current.presentation.surface = 'pending'; } }
       flowRead?.dispose(); flowWrite?.dispose();
       fluidQuad?.dispose(); fluidMaterial?.dispose();
       composer?.passes.forEach((pass) => pass.dispose());

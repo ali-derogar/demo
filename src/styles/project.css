@@ -1,9 +1,8 @@
 /* Native content stays sharp over the refractive GPU scene. */
 .im-experience[data-project-open="true"] #im-main { visibility: hidden; }
 .im-project { position: fixed; inset: 0; z-index: 5; pointer-events: none; --project-progress: 0; }
-.im-project::before { content: ''; position: absolute; inset: 0; pointer-events: none; background: radial-gradient(ellipse at 65% 42%,transparent 15%,#030a0cb3 70%),radial-gradient(ellipse at 80% 20%,color-mix(in srgb,var(--project-accent) 18%,transparent),transparent 60%),#03090a77; opacity: 1; transition: opacity .5s; }
-.im-project[data-ready="true"]::before { opacity: 0; }
-.im-project[data-ready="false"] { background: #03090a; }
+.im-project::before { content: ''; position: absolute; inset: 0; pointer-events: none; background: radial-gradient(ellipse at 65% 42%,transparent 15%,#030a0c77 85%),radial-gradient(ellipse at 80% 20%,color-mix(in srgb,var(--project-accent) 12%,transparent),transparent 60%); opacity: 0; transition: opacity .5s; }
+.im-project[data-surface="fallback"]::before,.im-project[data-surface="reduced"]::before { opacity: 1; }
 .im-project__hitarea { position: absolute; left: var(--project-left,30vw); top: var(--project-top,20svh); width: var(--project-width,60vw); height: var(--project-height,60svh); pointer-events: auto; display: block; border-radius: 12px; cursor: pointer; }
 .im-project__poster { width: 100%; height: 100%; overflow: hidden; border-radius: inherit; background: #081011; box-shadow: 0 0 60px #88bbc510,0 35px 100px #0007; transition: opacity .25s; }
 .im-project__poster img { width: 100%; height: 100%; object-fit: contain; }

@@ -3,11 +3,12 @@ export interface ProjectPresentation {
   phase: 'closed' | 'opening' | 'open' | 'closing';
   progress: number;
   ready: boolean;
+  surface: 'pending' | 'webgl' | 'fallback' | 'reduced';
   bounds: { left: number; top: number; width: number; height: number } | null;
 }
 
 export function createPresentation(): ProjectPresentation {
-  return { projectId: null, phase: 'closed', progress: 0, ready: false, bounds: null };
+  return { projectId: null, phase: 'closed', progress: 0, ready: false, surface: 'pending', bounds: null };
 }
 
 export function advancePresentation(state: ProjectPresentation, dt: number, reduced = false) {

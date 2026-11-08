@@ -10,10 +10,12 @@ import { orbitFragment, orbitVertex } from './orbitShaders';
 import { createResourceQueue } from './resourceQueue';
 import { createProjectLabel } from './projectLabel';
 import { projectFrame, smoothRange } from './projectPresentation';
+import { createProjectRim } from './ProjectRim';
 
 /** Scene module only: renderer, camera, post-processing and RAF belong to Stage. */
 export function createWorkOrbit(renderer: WebGLRenderer, linearOutput: boolean, mobile = false) {
   const group = new Group();
+  const rim = createProjectRim();
   group.visible = false;
   const geometry = new PlaneGeometry(ORBIT_CARD_WIDTH, ORBIT_CARD_HEIGHT, 40, 8);
   const vertices = geometry.attributes.position;
@@ -57,10 +59,12 @@ export function createWorkOrbit(renderer: WebGLRenderer, linearOutput: boolean, 
   const center = new Vector3();
   const destination = new Vector3();
   const projected = new Vector3();
+  const caseTilt = new Vector2();
   const drawOrder: typeof panels = [];
 
   function prepare(next: DemoProject[]) {
     if (next === items) return;
+    rim.mesh.removeFromParent();
     panels.forEach((panel) => { group.remove(panel); panel.material.dispose(); });
     items = next;
     priorityKey = '';
@@ -138,7 +142,7 @@ export function createWorkOrbit(renderer: WebGLRenderer, linearOutput: boolean, 
     return (hit?.object.userData.index as number | undefined) ?? -1;
   }
 
-  function update(state: OrbitMotion, camera: PerspectiveCamera, time: number, dt: number, reveal: number, interactive: boolean) {
+  function update(state: OrbitMotion, camera: PerspectiveCamera, time: number, dt: number, reveal: number, interactive: boolean, pointerEffects = true) {
     group.visible = reveal > .005;
     const pointer = getPointer();
     const hover = interactive && !state.dragging && pointer.active
@@ -148,8 +152,12 @@ export function createWorkOrbit(renderer: WebGLRenderer, linearOutput: boolean, 
     const presentation = state.presentation;
     const progress = presentation?.progress ?? 0;
     const heroMix = smoothRange(progress, .2, 1);
+    const flatten = heroMix * .82;
     const neighborReveal = 1 - smoothRange(progress, 0, .2);
     let hero: typeof panels[number] | undefined;
+    const pointerEnabled = pointerEffects && !mobile && pointer.active && !!presentation?.projectId && presentation.phase !== 'closing';
+    caseTilt.x += ((pointerEnabled ? pointer.nx : 0) - caseTilt.x) * ease;
+    caseTilt.y += ((pointerEnabled ? pointer.ny : 0) - caseTilt.y) * ease;
     panels.forEach((panel, index) => {
       const uniforms = panel.material.uniforms;
       const selected = state.selectedIndex === index ? 1 : 0;
@@ -168,7 +176,7 @@ export function createWorkOrbit(renderer: WebGLRenderer, linearOutput: boolean, 
       uniforms.uImageAspect.value = imageAspect;
       const isHero = items[index].id === presentation?.projectId;
       uniforms.uPresentation.value = isHero ? smoothRange(progress, 0, .55) : 0;
-      uniforms.uFlatten.value = isHero ? heroMix : 0;
+      uniforms.uFlatten.value = isHero ? flatten : 0;
       if (isHero) {
         hero = panel;
         const frame = projectFrame(cssSize.value.x, cssSize.value.y, stableHeight, imageAspect);
@@ -177,8 +185,12 @@ export function createWorkOrbit(renderer: WebGLRenderer, linearOutput: boolean, 
           (1 - (frame.top + frame.height / 2) / cssSize.value.y * 2) * halfHeight, -4.8).applyMatrix4(camera.matrixWorld);
         panel.position.lerp(destination, heroMix);
         panel.quaternion.slerp(camera.quaternion, heroMix);
-        panel.scale.x += (frame.width / cssSize.value.x * halfHeight * 2 * camera.aspect / ORBIT_CARD_WIDTH - panel.scale.x) * heroMix;
-        panel.scale.y += (frame.height / cssSize.value.y * halfHeight * 2 / ORBIT_CARD_HEIGHT - panel.scale.y) * heroMix;
+        panel.scale.x += (frame.width * .96 / cssSize.value.x * halfHeight * 2 * camera.aspect / ORBIT_CARD_WIDTH - panel.scale.x) * heroMix;
+        panel.scale.y += (frame.height * .96 / cssSize.value.y * halfHeight * 2 / ORBIT_CARD_HEIGHT - panel.scale.y) * heroMix;
+        destination.set(Math.cos(time * .48) * .025 + caseTilt.x * .065, Math.sin(time * .8) * .035 + caseTilt.y * .035, 0).applyQuaternion(camera.quaternion);
+        panel.position.addScaledVector(destination, heroMix);
+        panel.rotateY((Math.sin(time * .26) * .012 + caseTilt.x * .035) * heroMix);
+        panel.rotateX((Math.cos(time * .31) * .007 - caseTilt.y * .018) * heroMix);
         uniforms.uMediaSize.value.set(frame.width, frame.height);
       }
       uniforms.uFrameAspect.value = ORBIT_CARD_WIDTH * panel.scale.x / (ORBIT_CARD_HEIGHT * panel.scale.y);
@@ -189,17 +201,23 @@ export function createWorkOrbit(renderer: WebGLRenderer, linearOutput: boolean, 
       uniforms.uTime.value = time;
       uniforms.uReveal.value = reveal * (isHero ? 1 : presentation?.projectId ? neighborReveal : selected ? 1 : 1 - .7 * Math.max(0, state.selection - lift));
     });
+    rim.mesh.visible = !!hero && progress > .001;
+    if (hero) {
+      if (rim.mesh.parent !== hero) hero.add(rim.mesh);
+      rim.mesh.material.opacity = smoothRange(progress, .05, .5) * .72;
+    }
     group.updateMatrixWorld(true);
     if (hero && presentation) {
       let left = Infinity, top = Infinity, right = -Infinity, bottom = -Infinity;
       for (const x of [-ORBIT_CARD_WIDTH / 2, 0, ORBIT_CARD_WIDTH / 2]) for (const y of [-ORBIT_CARD_HEIGHT / 2, 0, ORBIT_CARD_HEIGHT / 2]) {
-        projected.set(Math.sin(x / ORBIT_CURVE_RADIUS) * ORBIT_CURVE_RADIUS * (1 - heroMix) + x * heroMix, y,
-          (Math.cos(x / ORBIT_CURVE_RADIUS) - 1) * ORBIT_CURVE_RADIUS * (1 - heroMix)).applyMatrix4(hero.matrixWorld).project(camera);
+        projected.set(Math.sin(x / ORBIT_CURVE_RADIUS) * ORBIT_CURVE_RADIUS * (1 - flatten) + x * flatten, y,
+          (Math.cos(x / ORBIT_CURVE_RADIUS) - 1) * ORBIT_CURVE_RADIUS * (1 - flatten)).applyMatrix4(hero.matrixWorld).project(camera);
         const px = (projected.x + 1) * cssSize.value.x / 2, py = (1 - projected.y) * cssSize.value.y / 2;
         left = Math.min(left, px); right = Math.max(right, px); top = Math.min(top, py); bottom = Math.max(bottom, py);
       }
       const bounds = presentation.bounds ?? (presentation.bounds = { left: 0, top: 0, width: 0, height: 0 });
       Object.assign(bounds, { left, top, width: right - left, height: bottom - top });
+      hero.material.uniforms.uMediaSize.value.set(bounds.width, bounds.height);
     }
     // Transparent panes cannot write depth. Paint far panes first in the current camera space.
     drawOrder.forEach((panel) => {
@@ -230,7 +248,7 @@ export function createWorkOrbit(renderer: WebGLRenderer, linearOutput: boolean, 
       if (state.presentation?.projectId) {
         const project = items.find((item) => item.id === state.presentation?.projectId);
         const pane = panels.find((panel) => items[panel.userData.index]?.id === state.presentation?.projectId);
-        state.presentation.ready = group.visible && !!project && !!images.get(project.preview) && !!state.presentation.bounds && !!pane && pane.material.uniforms.uReveal.value > .98;
+        state.presentation.ready = group.visible && !!project && !!images.get(project.preview) && !!state.presentation.bounds && !!pane && (state.presentation.ready || pane.material.uniforms.uReveal.value > .98);
       }
     },
     texture(id: string) { const project = items.find((item) => item.id === id); return project ? images.get(project.preview) : undefined; },
@@ -250,6 +268,7 @@ export function createWorkOrbit(renderer: WebGLRenderer, linearOutput: boolean, 
     clearBackdrop() { backdrop.value = placeholder; backdropReady.value = 0; },
     dispose() {
       geometry.dispose();
+      rim.dispose();
       placeholder.dispose();
       panels.forEach((panel) => panel.material.dispose());
       images.dispose();
