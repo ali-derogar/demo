@@ -13,3 +13,5 @@ The nine authored covers use the real demos' copy, typography, palettes and cred
 These tests use JSDOM, real React handlers/Three geometry, and a renderer stub. They do not measure browser paint, black frames, actual GPU performance or mobile FPS. Chrome Android and Safari iPhone checks, including refresh/first scroll, browser chrome, rotation, fast direction changes and all nine projects, remain required for device-level visual verification.
 
 `npm run check:site` has five pre-existing GitHub-reference errors in ContactSection, SiteHeader, icons, profile and ContactView. The checker and existing contact information are preserved.
+
+The first HTML paint includes the branded orbital loader, before the application bundle arrives. React reuses the same artwork. Loader tests cover actual scene readiness, the initial animation, font readiness/fallback, reduced motion, long-load entry, StrictMode, unmount cleanup and scroll ownership. Scene recovery must not replay the initial loader. No percentage or elapsed timer stands in for scene readiness.

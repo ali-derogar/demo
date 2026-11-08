@@ -12,6 +12,7 @@ async function app(t,options={}) {
   t.after(async()=>{try{await env.action(()=>root.unmount());assert.deepEqual(env.errors,[]);}finally{env.cleanup();}});
   await env.action(()=>root.render(React.createElement(React.StrictMode,null,React.createElement(App))));
   await env.action(()=>{});
+  await env.finishLoading(env.action);
   env.at=async(unit)=>env.action(()=>env.w.scrollTo({top:env.workTop+unit*env.q('.im-work--orbit').offsetHeight}));
   env.progress=()=>Number(env.q('.im-project')?.style.getPropertyValue('--project-progress')||0);
   return env;
@@ -92,4 +93,62 @@ test('click return and browser Forward keep project/filter coordinates across or
   assert.equal(env.q('.im-project'),null);
   await env.action(()=>history.forward());
   assert.equal(env.q('.im-project').dataset.project,'cars');assert.equal(env.q('.im-project').dataset.phase,'open');
+});
+
+for (const [width, height] of [[320,568], [390,844], [768,1024], [844,390], [1440,900]]) {
+  test(`project copy stays compact on mobile and every surface passes vertical scrolling / ${width}x${height}`, async (t) => {
+    const env = await app(t, { width, height });
+    const { projects } = await source('src/data/projects.ts');
+    const { readFile } = await import('node:fs/promises');
+    const style = document.createElement('style');
+    style.textContent = await readFile(new URL('../../src/styles/project.css', import.meta.url), 'utf8');
+    document.head.append(style);
+    await env.at(.4);
+    const project = env.q('.im-project'), info = env.q('.im-project__info');
+    assert.equal(project.dataset.compact, String(width <= 1023));
+    assert.equal(env.q('.im-project__description').textContent, width <= 1023 ? projects[0].tagline : projects[0].description);
+    assert.equal(getComputedStyle(project).pointerEvents, 'auto', 'empty space accepts the same gestures as the preview');
+    assert.equal(getComputedStyle(info).overflow, 'visible', 'the description cannot become a nested scroll container');
+    assert.equal(info.hasAttribute('data-lenis-prevent'), false);
+    assert.equal(info.hasAttribute('data-scroll-lock-allow'), false);
+    assert.equal(document.body.style.overflow, '');
+    for (const target of [project, info, env.q('.im-project__description'), env.q('.im-project__poster img'), env.q('.im-project__actions a')]) {
+      const move = new Event('touchmove', { bubbles: true, cancelable: true });
+      await env.action(() => target.dispatchEvent(move));
+      assert.equal(move.defaultPrevented, false, 'vertical scrolling passes through text, buttons, the image and blank space');
+    }
+  });
+}
+
+test('project text and blank space share horizontal navigation without intercepting action buttons', async (t) => {
+  const env = await app(t);
+  const pointer = (target, type, x, y) => {
+    const event = new MouseEvent(type, { bubbles: true, cancelable: true, clientX: x, clientY: y, buttons: type === 'pointerup' ? 0 : 1, button: 0 });
+    Object.defineProperties(event, { pointerId: { value: 31 }, pointerType: { value: 'touch' } });
+    target.dispatchEvent(event);
+    return event;
+  };
+  for (const selector of ['.im-project', '.im-project__info', '.im-project__description']) {
+    await env.at(.4);
+    const target = env.q(selector), start = env.scroll;
+    await env.action(() => { pointer(target, 'pointerdown', 180, 350); pointer(target, 'pointermove', 220, 352); pointer(target, 'pointerup', 220, 352); });
+    assert.ok(env.scroll > start, `horizontal dragging works on ${selector}`);
+    await env.at(.4);
+    const verticalTarget = env.q(selector), y = env.scroll;
+    let vertical;
+    await env.action(() => { pointer(verticalTarget, 'pointerdown', 180, 350); vertical = pointer(verticalTarget, 'pointermove', 182, 395); pointer(verticalTarget, 'pointerup', 182, 395); });
+    assert.equal(vertical.defaultPrevented, false);
+    assert.equal(env.scroll, y, 'vertical movement is left to native page scrolling');
+  }
+  await env.at(.4);
+  const button = env.q('.im-project__actions button'), start = env.scroll;
+  await env.action(() => { pointer(button, 'pointerdown', 180, 350); pointer(button, 'pointermove', 220, 352); pointer(button, 'pointerup', 220, 352); });
+  assert.equal(env.scroll, start, 'horizontal drags on action buttons do not navigate the gallery');
+  let wheel;
+  await env.action(() => {
+    wheel = new env.w.WheelEvent('wheel', { deltaX: 40, bubbles: true, cancelable: true });
+    env.q('.im-project__description').dispatchEvent(wheel);
+  });
+  assert.equal(wheel.defaultPrevented, true);
+  assert.equal(env.scroll, start + 40, 'horizontal scrolling over text reaches the shared gallery timeline');
 });

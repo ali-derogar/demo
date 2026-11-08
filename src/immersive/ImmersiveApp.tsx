@@ -1,6 +1,7 @@
 import { Component, Suspense, lazy, useCallback, useEffect, useRef, useState, useSyncExternalStore, type ReactNode } from 'react';
 import { LazyMotion, domAnimation } from 'motion/react';
 import { BrandMark } from '../components/BrandMark';
+import { Preloader } from '../components/Preloader';
 import { useSmoothScroll } from '../lib/useSmoothScroll';
 import { subscribeRaf } from '../lib/raf';
 import { projects } from '../data/projects';
@@ -27,6 +28,10 @@ class SceneBoundary extends Component<{ children: ReactNode; onFailure: () => vo
 }
 
 export function ImmersiveApp() {
+  const [sceneReady, setSceneReady] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const markSceneReady = useCallback(() => setSceneReady(true), []);
+  const finishLoading = useCallback(() => setLoading(false), []);
   const [view, setView] = useState<ViewId>('home');
   const audio = useSyncExternalStore(ambient.subscribe, ambient.getSnapshot, ambient.getSnapshot);
   const mainRef = useRef<HTMLElement>(null);
@@ -86,8 +91,9 @@ export function ImmersiveApp() {
 
   return (
     <LazyMotion features={domAnimation} strict>
-      <div className="im-experience" data-chapter={panel ?? view} data-project-open={projectId !== null}>
-        <SceneBoundary onFailure={() => { if (workRef.current.presentation) { workRef.current.presentation.surface = 'fallback'; workRef.current.presentation.ready = false; } }}><Suspense fallback={<StageFallback />}><Stage progressRef={progressRef} workRef={workRef} /></Suspense></SceneBoundary>
+      {loading && <Preloader ready={sceneReady} onComplete={finishLoading} />}
+      <div className="im-experience" data-chapter={panel ?? view} data-project-open={projectId !== null} aria-busy={loading} {...(loading ? { inert: '' } : {})}>
+        <SceneBoundary onFailure={() => { if (workRef.current.presentation) { workRef.current.presentation.surface = 'fallback'; workRef.current.presentation.ready = false; } markSceneReady(); }}><Suspense fallback={<StageFallback />}><Stage progressRef={progressRef} workRef={workRef} onReady={markSceneReady} /></Suspense></SceneBoundary>
         <a className="skip-link" href={projectId ? '#im-project-title' : '#im-main'}>پرش به محتوا</a>
         <ImmersiveNav view={panel ?? view} audio={audio} onToggleAudio={toggleAudio} />
         <main id="im-main" ref={mainRef} tabIndex={-1}>
@@ -95,7 +101,7 @@ export function ImmersiveApp() {
           <section id="demos" className="im-chapter im-chapter--work" aria-labelledby="im-work-title"><WorkView motionRef={workRef} onSelect={openProject} /></section>
         </main>
         {projectId && <ProjectView project={projects.find((project) => project.id === projectId)!} motionRef={workRef} onClose={closeProject} />}
-        <InfoPanel panel={panel} onClose={closePanel} />
+        <InfoPanel panel={loading ? null : panel} onClose={closePanel} />
       </div>
     </LazyMotion>
   );

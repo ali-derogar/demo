@@ -14,6 +14,7 @@ async function app(t, options) {
   t.after(async () => { try { await env.action(() => root.unmount()); assert.deepEqual(env.errors, []); } finally { env.cleanup(); } });
   await env.action(() => root.render(React.createElement(React.StrictMode, null, React.createElement(App))));
   await env.action(() => {});
+  await env.finishLoading(env.action);
   return env;
 }
 

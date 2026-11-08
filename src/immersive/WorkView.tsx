@@ -161,7 +161,8 @@ export function WorkView({ motionRef, onSelect }: { motionRef: MutableRefObject<
     let wheelAxis = '', wheelUntil = 0;
     const down = (event: PointerEvent) => {
       const target = event.target as Element | null;
-      if (event.button !== 0 || isScrollLocked() || !target?.closest('.im-orbit__stage,.im-project__hitarea')) return;
+      if (event.button !== 0 || isScrollLocked() || !target?.closest('.im-orbit__stage,.im-project')) return;
+      if (target.closest('button,input,textarea,select,summary,.im-project__actions a')) return;
       drag = { id: event.pointerId, x: event.clientX, y: event.clientY, start: window.scrollY, target, horizontal: false };
     };
     const move = (event: PointerEvent) => {
@@ -189,7 +190,7 @@ export function WorkView({ motionRef, onSelect }: { motionRef: MutableRefObject<
       drag = null; state.dragging = false;
     };
     const wheel = (event: WheelEvent) => {
-      if (isScrollLocked() || event.ctrlKey || (event.target as Element | null)?.closest('input,textarea,select,.im-project__info')) return;
+      if (isScrollLocked() || event.ctrlKey || (event.target as Element | null)?.closest('input,textarea,select')) return;
       const metrics = metricsRef.current;
       if (window.scrollY < metrics.start || window.scrollY > metrics.start + metrics.travel) return;
       if (event.timeStamp > wheelUntil) wheelAxis = Math.abs(event.deltaX) > Math.abs(event.deltaY) * 1.1 ? 'x' : 'y';

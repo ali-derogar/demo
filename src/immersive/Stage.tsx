@@ -33,13 +33,15 @@ import {
 } from './flowShaders';
 
 /** Stateful GPU particles, advected pointer wakes, bloom and scroll morphing. */
-export function Stage({ progressRef, workRef }: { progressRef: RefObject<SceneProgress>; workRef: RefObject<OrbitMotion> }) {
+export function Stage({ progressRef, workRef, onReady }: { progressRef: RefObject<SceneProgress>; workRef: RefObject<OrbitMotion>; onReady?: () => void }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const wrapRef = useRef<HTMLDivElement>(null);
   const reduced = useReducedMotionPreference();
   const lowPower = useMediaQuery('(max-width: 767px), (pointer: coarse)');
   const [status, setStatus] = useState<'loading' | 'ready' | 'fallback'>('loading');
   const [generation, setGeneration] = useState(0);
+
+  useEffect(() => { if (status !== 'loading') onReady?.(); }, [onReady, status]);
 
   useEffect(() => {
     const canvas = canvasRef.current;

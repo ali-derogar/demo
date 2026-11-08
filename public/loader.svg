@@ -1,0 +1,76 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="360" height="360" viewBox="0 0 360 360" fill="none">
+  <defs>
+    <linearGradient id="chrome" x1="106" y1="104" x2="253" y2="260" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#758f88"/><stop offset=".27" stop-color="#effff8"/><stop offset=".48" stop-color="#b7acff"/><stop offset=".65" stop-color="#668b80"/><stop offset=".84" stop-color="#e1fff0"/><stop offset="1" stop-color="#8aaca0"/>
+    </linearGradient>
+    <linearGradient id="light" x1="40" y1="92" x2="320" y2="280" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#8ee5bc" stop-opacity="0"/><stop offset=".42" stop-color="#b7acff"/><stop offset=".7" stop-color="#c6ffe9"/><stop offset="1" stop-color="#8ee5bc" stop-opacity="0"/>
+    </linearGradient>
+    <radialGradient id="halo"><stop stop-color="#a3dfbf" stop-opacity=".13"/><stop offset=".5" stop-color="#a598f2" stop-opacity=".04"/><stop offset="1" stop-color="#a3dfbf" stop-opacity="0"/></radialGradient>
+    <style>
+      .track{stroke:#a9d0bd;stroke-width:.65;opacity:.17}
+      .runner{stroke:url(#light);stroke-width:1.5;stroke-linecap:round;stroke-dasharray:14 86;animation:orbit 3.6s linear infinite}
+      .runner--back{animation-direction:reverse;animation-duration:4.8s}
+      .crest{transform-origin:180px 180px;animation:breathe 3s ease-in-out infinite}
+      .draw{stroke-dasharray:none;stroke-dashoffset:0;animation:draw 1.15s cubic-bezier(.2,.7,.3,1) backwards}
+      .face{animation-delay:.2s}.eyes{animation-delay:.4s}
+      .pane{transform-box:fill-box;transform-origin:center;animation:pane 3.2s ease-in-out infinite;animation-delay:var(--delay)}
+      .spark{animation:glint 2.4s ease-in-out infinite;animation-delay:var(--delay)}
+      .ribbon{stroke:url(#chrome);stroke-width:1.1;stroke-dasharray:24 12;animation:ribbon 5s linear infinite;opacity:.45}
+      @keyframes orbit{to{stroke-dashoffset:-100}}
+      @keyframes draw{from{stroke-dasharray:100;stroke-dashoffset:100}to{stroke-dasharray:100;stroke-dashoffset:0}}
+      @keyframes breathe{0%,100%{opacity:.8;transform:scale(.985)}50%{opacity:1;transform:scale(1)}}
+      @keyframes pane{0%,100%{opacity:.2;transform:translateY(3px) scale(.9)}50%{opacity:.8;transform:translateY(-3px) scale(1)}}
+      @keyframes glint{0%,100%{opacity:.18}50%{opacity:.85}}
+      @keyframes ribbon{to{stroke-dashoffset:-144}}
+      @media(prefers-reduced-motion:reduce){*{animation:none!important}.draw{stroke-dashoffset:0}.pane,.spark{opacity:.5}}
+    </style>
+  </defs>
+  <circle cx="180" cy="180" r="158" fill="url(#halo)"/>
+  <g stroke="#91b4a4" stroke-width=".7" opacity=".2">
+    <path d="M24 74V58H40M320 58H336V74M24 286V302H40M320 302H336V286"/>
+    <path d="M176 24H184M180 20V28M176 336H184M180 332V340"/>
+  </g>
+  <g transform="rotate(-28 180 180)">
+    <ellipse class="track" cx="180" cy="180" rx="144" ry="56"/>
+    <ellipse class="runner" cx="180" cy="180" rx="144" ry="56" pathLength="100"/>
+  </g>
+  <g transform="rotate(34 180 180)">
+    <ellipse class="track" cx="180" cy="180" rx="137" ry="62"/>
+    <ellipse class="runner runner--back" cx="180" cy="180" rx="137" ry="62" pathLength="100"/>
+  </g>
+  <g transform="rotate(88 180 180)" opacity=".5">
+    <ellipse class="track" cx="180" cy="180" rx="119" ry="79"/>
+    <ellipse class="runner" cx="180" cy="180" rx="119" ry="79" pathLength="100" style="animation-duration:5.6s"/>
+  </g>
+  <g fill="#091310" stroke="url(#chrome)" stroke-width=".9">
+    <g class="pane" style="--delay:-.2s"><rect x="51" y="121" width="26" height="18" rx="3" transform="rotate(-28 64 130)"/></g>
+    <g class="pane" style="--delay:-1.8s"><rect x="95" y="67" width="22" height="15" rx="3" transform="rotate(18 106 75)"/></g>
+    <g class="pane" style="--delay:-.8s"><rect x="244" y="79" width="27" height="18" rx="3" transform="rotate(34 257 88)"/></g>
+    <g class="pane" style="--delay:-2.3s"><rect x="292" y="154" width="22" height="15" rx="3" transform="rotate(-22 303 161)"/></g>
+    <g class="pane" style="--delay:-1.4s"><rect x="278" y="239" width="24" height="16" rx="3" transform="rotate(25 290 247)"/></g>
+    <g class="pane" style="--delay:-2.8s"><rect x="211" y="292" width="22" height="15" rx="3" transform="rotate(-14 222 300)"/></g>
+    <g class="pane" style="--delay:-.5s"><rect x="105" y="266" width="26" height="17" rx="3" transform="rotate(-28 118 275)"/></g>
+    <g class="pane" style="--delay:-2s"><rect x="43" y="218" width="23" height="15" rx="3" transform="rotate(20 54 225)"/></g>
+    <g class="pane" style="--delay:-1s"><rect x="165" y="42" width="22" height="15" rx="3" transform="rotate(-8 176 50)"/></g>
+  </g>
+  <path class="ribbon" d="M148 235C122 269 202 272 168 310C158 321 142 327 149 341"/>
+  <path class="ribbon" d="M211 236C238 269 158 286 192 312C204 322 219 327 211 341" style="animation-direction:reverse;opacity:.25"/>
+  <g class="crest">
+    <circle cx="180" cy="180" r="70" fill="#06100d" fill-opacity=".9" stroke="#a1c8b4" stroke-opacity=".13" stroke-width="9"/>
+    <circle class="draw" cx="180" cy="180" r="66" stroke="url(#chrome)" stroke-width="1.8" pathLength="100"/>
+    <circle cx="180" cy="180" r="73" stroke="#9be8c2" stroke-width=".6" stroke-opacity=".25"/>
+    <g stroke="url(#chrome)" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round">
+      <rect class="draw face" x="146" y="156" width="68" height="55" rx="15" pathLength="100"/>
+      <path class="draw face" d="M180 142V154M137 178V190M223 178V190" pathLength="100"/>
+      <path class="draw eyes" d="M168 173L158 182L168 191M192 173L202 182L192 191M168 200H192" pathLength="100"/>
+    </g>
+    <circle class="spark" cx="180" cy="136" r="3" fill="#c3ffe5"/>
+  </g>
+  <g fill="#b6e5d1">
+    <circle class="spark" cx="85" cy="184" r="1.5" style="--delay:-.5s"/>
+    <circle class="spark" cx="276" cy="190" r="1.5" style="--delay:-1.6s"/>
+    <circle class="spark" cx="142" cy="80" r="1" style="--delay:-1s"/>
+    <circle class="spark" cx="229" cy="268" r="1" style="--delay:-2s"/>
+  </g>
+</svg>

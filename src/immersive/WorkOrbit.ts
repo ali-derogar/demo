@@ -129,9 +129,12 @@ export function createWorkOrbit(renderer: WebGLRenderer, linearOutput: boolean, 
   function cameraPose(state: OrbitMotion, aspect: number, fov: number, eye: Vector3, aim: Vector3) {
     const pose = orbitPose(state.position, Math.max(1, state.items.length), portrait);
     const halfFov = Math.tan(fov * Math.PI / 360);
+    const compact = cssSize.value.x < 1024 && cssSize.value.x <= stableHeight;
+    const widthFraction = state.scrollDriven && compact
+      ? Math.min(.82, projectFrame(cssSize.value.x, cssSize.value.y, stableHeight).width * .9 / cssSize.value.x) : .82;
     const distance = Math.max(
       ORBIT_CARD_HEIGHT / (2 * halfFov * .54),
-      ORBIT_CARD_WIDTH / (2 * halfFov * aspect * .82),
+      ORBIT_CARD_WIDTH / (2 * halfFov * aspect * widthFraction),
     ) * (state.scrollDriven ? 1 : 1 - state.selection * (portrait ? .015 : .08));
     eye.set(Math.sin(pose.angle) * (ORBIT_RADIUS + distance), pose.y + .18, Math.cos(pose.angle) * (ORBIT_RADIUS + distance));
     aim.set(pose.x, pose.y, pose.z);

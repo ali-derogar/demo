@@ -1,13 +1,13 @@
 /* Native content stays sharp over the refractive GPU scene. */
-.im-project { position: fixed; inset: 0; z-index: 5; pointer-events: none; --project-progress: 0; }
+.im-project { position: fixed; inset: 0; z-index: 5; pointer-events: auto; touch-action: pan-y pinch-zoom; --project-progress: 0; }
 .im-project::before { content: ''; position: absolute; inset: 0; pointer-events: none; background: radial-gradient(ellipse at 65% 42%,transparent 15%,#030a0c77 85%),radial-gradient(ellipse at 80% 20%,color-mix(in srgb,var(--project-accent) 12%,transparent),transparent 60%); opacity: 0; transition: opacity .5s; }
 .im-project[data-surface="fallback"]::before,.im-project[data-surface="reduced"]::before { opacity: 1; }
-.im-project__hitarea { position: absolute; left: var(--project-left,30vw); top: var(--project-top,20svh); width: var(--project-width,60vw); height: var(--project-height,60svh); pointer-events: auto; display: block; border-radius: 12px; cursor: pointer; touch-action: pan-y; }
+.im-project__hitarea { position: absolute; left: var(--project-left,30vw); top: var(--project-top,20svh); width: var(--project-width,60vw); height: var(--project-height,60svh); pointer-events: auto; display: block; border-radius: 12px; cursor: pointer; touch-action: pan-y pinch-zoom; }
 .im-project__poster { width: 100%; height: 100%; overflow: hidden; border-radius: inherit; background: var(--project-surface,#081011); box-shadow: 0 0 60px color-mix(in srgb,var(--project-accent) 9%,transparent),0 35px 100px #0007; }
 .im-project__poster img { width: 100%; height: 100%; object-fit: contain; }
 .im-project[data-ready="true"] .im-project__poster { visibility: hidden; }
 .im-project__image-error { display: grid; place-content: center; text-align: center; gap: 20px; width: 100%; height: 100%; font-size: 13px; color: #b6d3ce; background: radial-gradient(ellipse,color-mix(in srgb,var(--project-accent) 22%,#071211),#030807); }
-.im-project__info { position: absolute; left: 4vw; bottom: 100px; width: min(22vw,320px); max-height: calc(100svh - 230px); overflow: auto; overscroll-behavior: contain; pointer-events: auto; text-align: right; scrollbar-width: thin; opacity: clamp(0,calc((var(--project-progress) - .2) * 2.5),1); transform: translateY(calc((1 - var(--project-progress)) * 12px)); text-shadow: 0 2px 12px #000; }
+.im-project__info { position: absolute; left: 4vw; bottom: 100px; width: min(22vw,320px); overflow: visible; pointer-events: auto; text-align: right; opacity: clamp(0,calc((var(--project-progress) - .2) * 2.5),1); transform: translateY(calc((1 - var(--project-progress)) * 12px)); text-shadow: 0 2px 12px #000; }
 .im-project__category { color: color-mix(in srgb,var(--project-accent) 65%,#e3e9e5); font-size: 11px; margin-bottom: 8px; }
 .im-project__info h2 { color: #f0f2ed; font-size: clamp(24px,2.5vw,38px); font-weight: 350; line-height: 1.5; margin-bottom: 16px; }
 .im-project__description { font-size: 12px; line-height: 2.3; color: #c1ccca; }
@@ -16,17 +16,19 @@
 .im-project__actions a { text-decoration: underline; text-underline-offset: 6px; }
 .im-project__actions a:hover,.im-project__actions button:hover { color: #fff; }
 .im-project[data-phase="opening"] .im-project__info:focus-within { opacity: 1; }
-@media (max-width:1023px) and (min-height:650px) {
-  .im-project__info { left: 5vw; bottom: 85px; width: 90vw; max-height: 34svh; }
-  .im-project__info h2 { font-size: 27px; margin-bottom: 7px; }
-  .im-project__category { margin-bottom: 3px; }
-  .im-project__description { font-size: 12px; line-height: 2; }
-  .im-project__actions { margin-top: 5px; justify-content: space-between; }
-}
 @media (max-height:649px) {
-  .im-project__info { bottom: 65px; width: 34vw; max-height: calc(100svh - 160px); }
+  .im-project__info { bottom: 65px; width: 34vw; }
   .im-project__info h2 { font-size: 22px; margin-bottom: 7px; }
   .im-project__description { font-size: 11px; }
+}
+.im-project[data-compact="true"] .im-project__heading { display: flex; align-items: baseline; flex-wrap: wrap; gap: 2px 10px; }
+.im-project[data-compact="true"] .im-project__info h2 { order: -1; font-size: 22px; line-height: 1.4; margin: 0; }
+.im-project[data-compact="true"] .im-project__category { font-size: 10px; line-height: 1.6; margin: 0; }
+.im-project[data-compact="true"] .im-project__description { font-size: 11px; line-height: 1.8; margin-top: 5px; }
+.im-project[data-compact="true"] .im-project__actions { margin-top: 4px; gap: 4px 12px; justify-content: space-between; }
+.im-project[data-compact="true"] .im-project__actions a,.im-project[data-compact="true"] .im-project__actions button { font-size: 11px; gap: 8px; }
+@media (max-width:1023px) and (orientation:portrait) {
+  .im-project__info { left: 5vw; top: calc(var(--project-top) + var(--project-height) + 16px); bottom: auto; width: 90vw; }
 }
 @media (prefers-reduced-motion:reduce) {
   .im-project__info { opacity: 1; transform: none; }

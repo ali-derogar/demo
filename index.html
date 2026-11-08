@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="fa" dir="rtl">
+<html lang="fa" dir="rtl" class="im-booting">
   <head>
     <meta charset="UTF-8" />
     <script>if ('scrollRestoration' in history) history.scrollRestoration = 'manual';</script>
@@ -11,10 +11,21 @@
     />
     <title>persianbotyar | مهندس نرم‌افزار و طراحی سایت</title>
     <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="./loader.css" />
+    <link rel="preload" href="./loader.svg" as="image" type="image/svg+xml" />
   </head>
   <body>
+    <div id="im-boot-loader" class="im-loader" data-state="loading" role="status" aria-live="polite" aria-label="در حال آماده‌شدن سایت">
+      <div class="im-loader__body">
+        <img class="im-loader__art" src="./loader.svg" width="360" height="360" alt="" draggable="false" />
+        <p class="im-loader__brand" dir="ltr">persianbotyar</p>
+        <p class="im-loader__status"><span>در حال آماده‌شدن فضا</span><span class="im-loader__signal" aria-hidden="true"><i></i><i></i><i></i></span></p>
+        <button class="im-loader__skip" type="button" hidden>ورود به سایت</button>
+      </div>
+    </div>
     <div id="root"></div>
     <noscript>
+      <style>.im-loader{display:none!important}html.im-booting{overflow:auto}</style>
       <div style="padding: 2.5rem; font-family: system-ui; text-align: center; color: #f4f1ea; background: #0e0d12">
         برای دیدن نمونه‌کارها، جاوااسکریپتِ مرورگر شما باید روشن باشد.
       </div>

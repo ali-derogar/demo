@@ -63,8 +63,10 @@ export async function environment({ hash = '#home', type = 'navigate', width = 3
     get matches() {
       if (query.includes('prefers-reduced-motion')) return reduced;
       const minWidth = query.match(/min-width:\s*(\d+)px/), minHeight = query.match(/min-height:\s*(\d+)px/);
-      if (minWidth || minHeight) return (!minWidth || width >= Number(minWidth[1])) && (!minHeight || height >= Number(minHeight[1]));
-      return query.includes('max-width') && width < 768;
+      const maxWidth = query.match(/max-width:\s*(\d+)px/), maxHeight = query.match(/max-height:\s*(\d+)px/);
+      if (!minWidth && !minHeight && !maxWidth && !maxHeight) return false;
+      return (!minWidth || width >= Number(minWidth[1])) && (!minHeight || height >= Number(minHeight[1]))
+        && (!maxWidth || width <= Number(maxWidth[1])) && (!maxHeight || height <= Number(maxHeight[1]));
     },
     media: query, addEventListener(_, callback) { if (query.includes('prefers-reduced-motion')) media.add(callback); },
     removeEventListener(_, callback) { media.delete(callback); }, addListener() {}, removeListener() {},
@@ -106,6 +108,21 @@ export async function environment({ hash = '#home', type = 'navigate', width = 3
     w, errors, frames, get workTop() { return workTop; }, q: (selector) => w.document.querySelector(selector),
     get scroll() { return scroll; },
     resolveFonts,
+    async finishLoading(action) {
+      await action(() => resolveFonts());
+      const loader = w.document.getElementById('im-boot-loader');
+      if (!loader) return;
+      await action(() => {
+        const event = new w.Event('animationend', { bubbles: true });
+        Object.defineProperty(event, 'animationName', { value: 'im-loader-enter' });
+        loader.querySelector('.im-loader__body').dispatchEvent(event);
+      });
+      await action(() => {
+        const event = new w.Event('transitionend', { bubbles: true });
+        Object.defineProperty(event, 'propertyName', { value: 'opacity' });
+        loader.dispatchEvent(event);
+      });
+    },
     setViewport(nextWidth, nextHeight, toolbarOnly = false) {
       if (!toolbarOnly) { width = nextWidth; height = nextHeight; workTop = height * 1.65; }
       Object.defineProperties(w, { innerWidth: { value: nextWidth, configurable: true }, innerHeight: { value: nextHeight, configurable: true } });

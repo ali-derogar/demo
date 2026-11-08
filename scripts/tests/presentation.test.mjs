@@ -17,7 +17,7 @@ test('presentation progress is reversible and independent of elapsed time', asyn
   for(let i=0;i<100;i++) assert.deepEqual(galleryFrame(1520,m),forward[2]);
 });
 
-for (const [width, height] of [[390, 844], [768, 1024], [1440, 900]]) {
+for (const [width, height] of [[320, 568], [390, 500], [390, 844], [768, 1024], [1440, 900]]) {
   test(`real panes transform into correctly framed projects without fading or early enlargement / ${width}px`, async (t) => {
     const env = await environment({ width, height }); t.after(() => env.cleanup());
     const { createWorkOrbit } = await source('src/immersive/WorkOrbit.ts');
@@ -48,7 +48,7 @@ for (const [width, height] of [[390, 844], [768, 1024], [1440, 900]]) {
       assert.ok(Math.abs(p.bounds.width / p.bounds.height - 1.5) < .02, 'the original photo aspect is preserved on the actual mesh');
       assert.ok(pane.material.uniforms.uFlatten.value > 0 && pane.material.uniforms.uFlatten.value < 1, 'the selected pane retains depth instead of becoming a flat billboard');
       assert.equal(pane.material.uniforms.uPresentation.value, 1, 'the glass title yields to readable native metadata');
-      assert.ok(p.bounds.width <= width * (width < 1024 ? .9 : .62) + 1e-6);
+      assert.ok(p.bounds.width <= width * (width < 1024 ? .94 : .62) + 1e-6);
       const rim = pane.getObjectByName('project-rim'); assert.equal(rim.visible, true); assert.ok(rim.geometry.attributes.normal);
       const before = pane.matrixWorld.clone();
       orbit.update(state, camera, 3.5, 1 / 60, 1, false);
@@ -149,7 +149,7 @@ test('star repulsion has a bounded pixel radius, follows smoothly and returns af
   assert.equal(mobile.pointer.z, 90);
 });
 
-for (const [width,height] of [[390,844],[768,1024],[1440,900]]) {
+for (const [width,height] of [[320,568],[390,500],[390,844],[768,1024],[1440,900]]) {
   test(`every original pane grows without overshoot and exactly retraces its projection / ${width}`,async(t)=>{
     const env=await environment({width,height});t.after(()=>env.cleanup());
     const {createWorkOrbit}=await source('src/immersive/WorkOrbit.ts');

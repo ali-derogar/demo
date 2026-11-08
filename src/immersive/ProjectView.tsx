@@ -1,6 +1,7 @@
 import { useLayoutEffect, useRef, useState, type MutableRefObject } from 'react';
 import type { DemoProject } from '../data/projects';
 import { subscribeRaf } from '../lib/raf';
+import { useMediaQuery } from '../lib/useMedia';
 import type { OrbitMotion } from './orbit';
 import { projectFrame } from './projectPresentation';
 import '../styles/project.css';
@@ -10,6 +11,7 @@ export function ProjectView({ project, motionRef, onClose }: { project: DemoProj
   const rootRef = useRef<HTMLElement>(null);
   const entryRef = useRef<HTMLAnchorElement>(null);
   const [failed, setFailed] = useState(false);
+  const compact = useMediaQuery('(max-width: 1023px)');
   useLayoutEffect(() => {
     setFailed(false);
     const root = rootRef.current!;
@@ -41,16 +43,18 @@ export function ProjectView({ project, motionRef, onClose }: { project: DemoProj
     return () => { motionRef.current.presentation!.onFrame = undefined; unsubscribe(); document.removeEventListener('keydown', escape); };
   }, [motionRef, onClose, project.id]);
 
-  return <section ref={rootRef} className="im-project" role="region" aria-labelledby="im-project-title" data-project={project.id} data-ready="false" data-surface="pending" style={{ ['--project-accent' as string]: project.accent, ['--project-surface' as string]: project.visual.surface }}>
+  return <section ref={rootRef} className="im-project" role="region" aria-labelledby="im-project-title" data-project={project.id} data-compact={compact} data-ready="false" data-surface="pending" style={{ ['--project-accent' as string]: project.accent, ['--project-surface' as string]: project.visual.surface }}>
     <a ref={entryRef} className="im-project__hitarea" href={project.url} target="_blank" rel="noopener noreferrer" aria-label={`دیدن سایت ${project.title.split('؛')[0]}`} onClick={(event) => { if (motionRef.current.dragging || performance.now() < motionRef.current.blockClickUntil || motionRef.current.presentation!.progress < .95) event.preventDefault(); }}>
       <div className="im-project__poster" aria-hidden="true">
         {failed ? <span className="im-project__image-error">تصویر بارگذاری نشد<span>دیدن سایت ↖</span></span> : <img key={project.preview} src={project.preview} alt="" width="1200" height="800" onError={() => setFailed(true)} draggable={false} />}
       </div>
     </a>
-    <div className="im-project__info" data-lenis-prevent data-scroll-lock-allow>
-      <p className="im-project__category">{project.categoryLabel}</p>
-      <h2 id="im-project-title">{project.title.split('؛')[0]}</h2>
-      <p className="im-project__description">{project.description}</p>
+    <div className="im-project__info">
+      <div className="im-project__heading">
+        <p className="im-project__category">{project.categoryLabel}</p>
+        <h2 id="im-project-title">{project.title.split('؛')[0]}</h2>
+      </div>
+      <p className="im-project__description">{compact ? project.tagline : project.description}</p>
       <div className="im-project__actions">
         <a href={project.url} target="_blank" rel="noopener noreferrer">دیدن سایت <span aria-hidden="true">↗</span></a>
         <button type="button" onClick={onClose}>بازگشت به گالری <span aria-hidden="true">↶</span></button>
