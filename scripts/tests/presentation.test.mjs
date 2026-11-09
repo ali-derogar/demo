@@ -9,7 +9,8 @@ import { requests } from './orbit-loader.mock.mjs';
 
 test('presentation progress is reversible and independent of elapsed time', async () => {
   const { galleryFrame, galleryMetrics } = await source('src/immersive/orbit.ts');
-  const m=galleryMetrics(1400,844,9);
+  const { projects } = await source('src/data/projects.ts');
+  const m=galleryMetrics(1400,844,projects.length);
   const positions=[1400,1450,1520,1600,1750,1900,2000,2200,2400];
   const forward=positions.map(y=>galleryFrame(y,m));
   const reverse=[...positions].reverse().map(y=>galleryFrame(y,m)).reverse();
@@ -26,7 +27,7 @@ for (const [width, height] of [[320, 568], [390, 500], [390, 844], [768, 1024], 
     const orbit = createWorkOrbit({ capabilities: { getMaxAnisotropy: () => 1 } }, false, width < 768); t.after(() => orbit.dispose());
     orbit.resize(width, height, 1); orbit.prepare(projects);
     const camera = new PerspectiveCamera(54, width / height, .1, 120), eye = new Vector3(), aim = new Vector3();
-    for (let index = 0; index < 9; index++) {
+    for (let index = 0; index < projects.length; index++) {
       const p = createPresentation(); p.projectId = projects[index].id; p.phase = 'opening';
       const state = { items: projects, target: index, position: index, selectedIndex: index, selection: 1, scrollDriven: true, presentation: p, dragging: false, ready: false };
       const pane = orbit.group.children[index];
@@ -80,14 +81,14 @@ test('project poster retires only after its own image and a fully visible render
   const { createPresentation } = await source('src/immersive/projectPresentation.ts');
   const orbit = createWorkOrbit({ capabilities: { getMaxAnisotropy: () => 1 } }, false); t.after(() => orbit.dispose());
   orbit.resize(1440, 900, 1);
-  const presentation = createPresentation(); Object.assign(presentation, { projectId: 'fashion', progress: 1, phase: 'open' });
+  const presentation = createPresentation(); Object.assign(presentation, { projectId: projects[0].id, progress: 1, phase: 'open' });
   const state = { items: projects, target: 0, position: 0, selectedIndex: 0, selection: 1, presentation, dragging: false, ready: false };
   const camera = new PerspectiveCamera(54, 1440 / 900, .1, 120), eye = new Vector3(), aim = new Vector3();
   orbit.advance(state, 0); await env.settle();
   orbit.cameraPose(state, camera.aspect, camera.fov, eye, aim); camera.position.copy(eye); camera.lookAt(aim); camera.updateMatrixWorld();
   orbit.update(state, camera, 1, 0, 1, false); orbit.present(state); assert.equal(presentation.ready, false);
   const image = new Texture({ width: 1200, height: 800 }); requests.find((r) => r.url === projects[0].preview).resolve(image); await env.settle();
-  assert.equal(orbit.texture('fashion'), image, 'environment uses the same cached texture as the pane');
+  assert.equal(orbit.texture(projects[0].id), image, 'environment uses the same cached texture as the pane');
   orbit.update(state, camera, 1, 0, .4, false); assert.equal(presentation.ready, false, 'the poster stays until a rendered frame');
   orbit.present(state); assert.equal(presentation.ready, true);
   presentation.ready = false;
@@ -102,7 +103,7 @@ test('texture loading never turns the live scene into an opaque project page', a
   const { ProjectView } = await source('src/immersive/ProjectView.tsx');
   const { projects } = await source('src/data/projects.ts');
   const { createPresentation } = await source('src/immersive/projectPresentation.ts');
-  const presentation = createPresentation(); Object.assign(presentation, { projectId: 'fashion', progress: 1, phase: 'open', surface: 'webgl', ready: false });
+  const presentation = createPresentation(); Object.assign(presentation, { projectId: projects[0].id, progress: 1, phase: 'open', surface: 'webgl', ready: false });
   const motionRef = { current: { presentation } }, root = createRoot(env.q('#root'));
   const action = async (fn) => { await act(async () => { fn(); await env.settle(); }); };
   t.after(async () => { try { await action(() => root.unmount()); assert.deepEqual(env.errors, []); } finally { env.cleanup(); } });

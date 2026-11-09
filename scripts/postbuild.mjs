@@ -42,6 +42,9 @@ for (const slug of DEMOS) {
     problems.push(`dist/demos/${slug}/index.html وجود ندارد`);
     continue;
   }
+  if (slug === 'roban') for (const file of ['app.js', 'products.js', 'scene.js']) {
+    if (!(await exists(join(dir, file)))) problems.push(`roban: ${file} در خروجی build نیست`);
+  }
   const html = await readFile(join(dir, 'index.html'), 'utf8');
   const images = await countImages(join(dir, 'assets'));
   if (!/<html[^>]*\blang=["']fa["']/i.test(html)) problems.push(`${slug}: lang="fa" ندارد`);

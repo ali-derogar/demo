@@ -16,6 +16,7 @@ import { join, resolve, dirname, extname, basename } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import sharp from 'sharp';
 import { demoIds } from './lib/demos.mjs';
+import { provenanceError } from './lib/image-provenance.mjs';
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const PUBLIC = join(ROOT, 'public');
@@ -107,7 +108,7 @@ for (const slug of DEMOS) {
   const dir = join(PUBLIC, 'demos', slug);
   const html = await read(join(dir, 'index.html'));
   const css = await read(join(dir, 'styles.css'));
-  const js = await read(join(dir, 'app.js'));
+  const js = (await Promise.all((await readdir(dir).catch(() => [])).filter((file) => file.endsWith('.js') && file !== 'scene.js').map((file) => read(join(dir, file))))).filter(Boolean).join('\n');
   if (!html) {
     say(errors, `demos/${slug}: index.html وجود ندارد`);
     continue;
@@ -237,14 +238,13 @@ for (const slug of DEMOS) {
       if (!covered.has(file)) say(errors, `demos/${slug}: ${file} در attribution نیست`);
     }
     for (const item of items) {
-      if (!item.license || !item.title) say(errors, `demos/${slug}: attribution بی‌عنوان/بی‌لایسنس → ${item.file}`);
+      const provenance = provenanceError(item);
+      if (provenance) say(errors, `demos/${slug}: ${provenance} → ${item.file}`);
       const rel = String(item.file ?? '');
       if (!rel.startsWith('img/'))
         say(errors, `demos/${slug}: attribution با مسیر نادرست → ${rel} (باید به img/ شروع شود)`);
       else if (!(await stat(join(dir, 'assets', rel)).then(() => true).catch(() => false)))
         say(errors, `demos/${slug}: attribution به فایلی اشاره می‌کند که نیست → ${rel}`);
-      if (!/^https?:\/\//.test(String(item.source ?? '')))
-        say(errors, `demos/${slug}: attribution بی‌نشانی منبع → ${rel} (${item.source})`);
     }
     if (items.length !== onDisk.length)
       say(errors, `demos/${slug}: attribution ${items.length} رکورد دارد ولی ${onDisk.length} تصویر روی دیسک است`);

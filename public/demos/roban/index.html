@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#fff8f4">
+  <title>روبان — دنیای کوچک قشنگی‌ها</title>
+  <meta name="description" content="اکسسوری‌های کوچک، خوشحالی‌های بزرگ. دنیای روبان را کشف کن؛ کیف، زیورآلات، اکسسوری مو و کوچولوهای کاربردی.">
+  <link rel="icon" href="./favicon.svg" type="image/svg+xml">
+  <link rel="preload" href="./assets/fonts/vazirmatn-arabic-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="./styles.css"><link rel="stylesheet" href="../shared/navigation.css">
+  <script type="module" src="./app.js"></script>
+</head>
+<body data-demo="roban">
+<svg class="icon-defs" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs>
+  <symbol id="i-heart" viewBox="0 0 24 24"><path d="M20.5 4.8a5.5 5.5 0 0 0-8.5 1 5.5 5.5 0 0 0-8.5-1c-4.5 4.6 1.5 10.8 8.5 15 7-4.2 13-10.4 8.5-15Z"/></symbol>
+  <symbol id="i-bag" viewBox="0 0 24 24"><path d="m5 7-1 14h16L19 7Zm3 0V5a4 4 0 0 1 8 0v2"/><path d="M8 10v1m8-1v1"/></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/></symbol>
+  <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M20 12H4m6-6-6 6 6 6"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+  <symbol id="i-close" viewBox="0 0 24 24"><path d="m6 6 12 12M6 18 18 6"/></symbol>
+  <symbol id="i-spark" viewBox="0 0 24 24"><path d="m12 2 2.8 7.2L22 12l-7.2 2.8L12 22l-2.8-7.2L2 12l7.2-2.8Z"/></symbol>
+  <symbol id="i-bow" viewBox="0 0 48 40"><path d="M22 17C13 4 3 4 4 15s8 10 18 7m4-5C35 4 45 4 44 15s-8 10-18 7M22 22l-9 14 10-3 1-8 1 8 10 3-9-14"/><rect x="21" y="16" width="6" height="9" rx="3"/></symbol>
+</defs></svg>
+<nav class="demo-return" aria-label="بازگشت به گالری"><a class="demo-return__link" href="/#demos">↗ بازگشت به صفحه اصلی</a><span class="demo-return__brand">نمونه‌کار فروشگاه روبان</span></nav>
+<a class="skip-link" href="#shop">رفتن به محصولات</a>
+<div class="announcement"><span>برای خودت هم هدیه بگیر</span><svg class="icon"><use href="#i-bow"/></svg><span>چیزهای کوچک، خوشحالی‌های بزرگ</span></div>
+<header class="site-header">
+  <a class="brand" href="#home" aria-label="روبان، خانه"><svg><use href="#i-bow"/></svg><span>روبان<small>R O B A N</small></span></a>
+  <nav class="main-nav" aria-label="منوی اصلی"><a href="#shop">همهٔ قشنگی‌ها</a><a href="#collections">دسته‌بندی‌ها</a><a href="#gifts">هدیه‌های دوست‌داشتنی</a><a href="#guide">راهنمای خرید</a></nav>
+  <div class="header-actions"><button class="icon-button" data-action="search" aria-label="جست‌وجوی محصولات"><svg class="icon"><use href="#i-search"/></svg></button><button class="icon-button" data-action="favorites" aria-label="علاقه‌مندی‌ها" aria-pressed="false"><svg class="icon"><use href="#i-heart"/></svg><span class="favorite-count" hidden></span></button><button class="icon-button cart-button" data-action="cart" aria-label="سبد خرید"><svg class="icon"><use href="#i-bag"/></svg><span class="cart-count">۰</span></button></div>
+</header>
+<main>
+<section class="hero" id="home" aria-labelledby="hero-title">
+  <div class="hero-copy"><p class="eyebrow"><span></span> برای تو، با یک عالمه عشق</p><h1 id="hero-title">یه دنیا<br><span>قشنگی،</span><br>برای تو.</h1><p class="hero-description">از یه پاپیون کوچولو تا کیفِ موردعلاقه‌ات؛<br>اینجا جزئیات کوچیک، روزت رو قشنگ‌تر می‌کنن.</p><div class="hero-actions"><a class="btn" href="#shop">قشنگی‌تو پیدا کن <svg class="icon"><use href="#i-arrow"/></svg></a><a class="text-link" href="#gifts">یه هدیهٔ کوچولو؟</a></div><div class="hero-note"><svg class="icon"><use href="#i-spark"/></svg> با سلیقه انتخاب شده، برای حالِ خوب تو</div></div>
+  <div class="showroom" id="showroom" data-scene="poster" aria-label="ویترین روبان">
+    <div class="showroom-orbit orbit-one"></div><div class="showroom-orbit orbit-two"></div>
+    <img class="showroom-poster" src="./assets/img/hero-01.webp" width="1536" height="1024" alt="کیف صورتی، دستبند مرواریدی و آینهٔ یاسی روی سکوهای رنگی" fetchpriority="high">
+    <canvas id="showroom-canvas" aria-hidden="true"></canvas>
+    <span class="scene-label">THE LITTLE JOYS CLUB</span><span class="floating-note">کوچیک، ولی دلبر!</span>
+    <div class="scene-sticker" aria-hidden="true"><svg><use href="#i-bow"/></svg><span>made for<br>your little joys</span></div>
+    <div class="scene-products" role="group" aria-label="محصولات ویترین"><button data-product="bag-01">کیف ابری <span>↗</span></button><button data-product="jewel-01">ماه‌مروارید <span>↗</span></button><button data-product="daily-01">آینهٔ لی‌لی <span>↗</span></button></div>
+    <span class="scene-hint" id="scene-hint">روی اسم هر کوچولو بزن تا از نزدیک ببینیش</span>
+  </div>
+  <a class="scroll-cue" href="#collections"><span>یه کم پایین‌تر، یه عالمه قشنگی</span> ↓</a>
+</section>
+<div class="ribbon-band" aria-hidden="true"><div><span>برای روزهای معمولیِ قشنگ</span>✧<span>LITTLE THINGS, BIG LOVE</span>✧<span>قشنگی توی جزئیاته</span>✧<span>برای روزهای معمولیِ قشنگ</span>✧<span>LITTLE THINGS, BIG LOVE</span>✧</div></div>
+<section class="section collections" id="collections" aria-labelledby="collection-title"><div class="section-heading reveal"><div><p class="eyebrow">هر کدوم، یه جور دل می‌برن</p><h2 id="collection-title">دنیای تو، <em>به سلیقهٔ تو.</em></h2></div><span class="section-aside">از کدوم گوشه شروع کنیم؟ ↙</span></div>
+  <div class="category-grid">
+    <button class="category-card reveal" data-category="hair"><div class="category-image pink"><img src="./assets/img/hair-01.webp" width="800" height="800" loading="lazy" alt="پاپیون ساتن صورتی"></div><span>برای موهای قشنگت <b>اکسسوری مو <i>↗</i></b></span></button>
+    <button class="category-card reveal" data-category="jewel"><div class="category-image vanilla"><img src="./assets/img/jewel-01.webp" width="800" height="800" loading="lazy" alt="دستبند مرواریدی با قلب صورتی"></div><span>یه ذره برقِ بیشتر <b>زیورآلات <i>↗</i></b></span></button>
+    <button class="category-card reveal" data-category="bag"><div class="category-image lilac"><img src="./assets/img/bag-02.webp" width="800" height="800" loading="lazy" alt="کیف آرایش یاسی با گل‌های سفید"></div><span>همراهِ هر روزت <b>کیف و کیف آرایش <i>↗</i></b></span></button>
+    <button class="category-card reveal" data-category="daily"><div class="category-image peach"><img src="./assets/img/daily-01.webp" width="800" height="800" loading="lazy" alt="آینهٔ جیبی قلبی یاسی"></div><span>ریز اما دوست‌داشتنی <b>کوچولوهای کاربردی <i>↗</i></b></span></button>
+  </div>
+</section>
+<section class="section shop" id="shop" aria-labelledby="shop-title"><div class="section-heading reveal"><div><p class="eyebrow">فصلِ دوست داشتنِ خودت</p><h2 id="shop-title">کوچولوهای <em>دل‌بَر.</em><svg class="title-spark"><use href="#i-spark"/></svg></h2></div><p class="section-aside">چیزهایی که دیدنشون<br>یه لبخند کوچولو میاره.</p></div>
+<div class="shop-controls"><div class="filter-chips" role="group" aria-label="دسته‌بندی محصولات"><button data-filter="all" aria-pressed="true">همهٔ قشنگی‌ها</button><button data-filter="hair" aria-pressed="false">اکسسوری مو</button><button data-filter="jewel" aria-pressed="false">زیورآلات</button><button data-filter="bag" aria-pressed="false">کیف‌ها</button><button data-filter="daily" aria-pressed="false">کوچولوها</button></div><button class="favorites-filter" data-action="favorites" aria-pressed="false">♡ علاقه‌مندی‌ها</button></div>
+<div class="search-row"><label class="search-box"><svg class="icon"><use href="#i-search"/></svg><input id="search" type="search" placeholder="دنبال چه قشنگی‌ای می‌گردی؟" aria-label="جست‌وجوی محصول"><button id="clear-search" aria-label="پاک‌کردن جست‌وجو" hidden>×</button></label><label class="sort-label">چیدمان: <select id="sort"><option value="newest">تازه‌رسیده‌ها</option><option value="low">قیمت کمتر</option><option value="high">قیمت بیشتر</option></select></label></div>
+<p class="result-count" id="result-count" role="status" aria-live="polite"></p><div class="product-grid" id="product-grid"></div><div class="empty-state" id="empty-state" hidden><svg class="icon"><use href="#i-bow"/></svg><h3>اینجا هنوز یه کم خلوت است!</h3><p>یه کلمهٔ دیگه امتحان کن یا همهٔ قشنگی‌ها رو ببین.</p><button class="btn" data-action="reset">دیدن همهٔ محصولات</button></div><noscript><p>برای جست‌وجو و خرید، جاوااسکریپت مرورگرت را فعال کن.</p></noscript>
+</section>
+<section class="gift-section" id="gifts" aria-labelledby="gift-title"><div class="gift-visual reveal"><span class="gift-circle"></span><img src="./assets/img/bag-03.webp" width="800" height="800" loading="lazy" alt="کیسهٔ ساتن کرم با روبان صورتی برای هدیه"><svg class="gift-bow"><use href="#i-bow"/></svg><span class="gift-tag">just a little<br>something ♡</span></div><div class="gift-copy reveal"><p class="eyebrow">بهانه نمی‌خواد، یه دلِ مهربون می‌خواد</p><h2 id="gift-title">یه روبان ببند،<br><em>یه دل رو خوشحال کن.</em></h2><p>برای رفیقت، خواهرت، یا خودِ دوست‌داشتنی‌ات.<br>یه یادگاری کوچیک، با یه عالمه حس خوب.</p><button class="btn" data-product="bag-03">از یه هدیه شروع کن <svg class="icon"><use href="#i-arrow"/></svg></button><span class="gift-caption">قشنگیِ هدیه، به فکر پشتشه.</span></div></section>
+<section class="section guide" id="guide" aria-labelledby="guide-title"><div class="guide-intro reveal"><p class="eyebrow">خیالت راحت، قشنگِ من</p><h2 id="guide-title">قبل از انتخاب،<br><em>این‌ها رو بدون.</em></h2><svg class="guide-bow"><use href="#i-bow"/></svg></div><div class="faq-list reveal"><details><summary>چطور محصول مناسبم رو انتخاب کنم؟ <span>+</span></summary><p>روی هر محصول بزن تا جنس، اندازه و روش نگهداری‌اش رو ببینی. با قلب کنار محصول هم می‌تونی انتخاب‌هات رو برای بعد نگه داری.</p></details><details><summary>چیزهایی که دوست دارم کجا می‌مونن؟ <span>+</span></summary><p>علاقه‌مندی‌ها و سبد خرید در همین مرورگر می‌مونن؛ حتی اگر صفحه رو ببندی. با پاک کردن داده‌های مرورگر، این فهرست‌ها هم پاک می‌شن.</p></details><details><summary>چطور از اکسسوری‌هام نگهداری کنم؟ <span>+</span></summary><p>زیورآلات رو از آب و عطر دور نگه دار و پارچه‌های ساتن رو با دست و آب سرد بشور. راهنمای دقیق‌تر هر کوچولو، کنار توضیحات همون محصوله.</p></details><details><summary>می‌تونم انتخاب‌هام رو با هم مقایسه کنم؟ <span>+</span></summary><p>قلب محصولاتی که دوست داری رو بزن و بعد «علاقه‌مندی‌ها» رو باز کن؛ همهٔ انتخاب‌هات کنار هم دیده می‌شن و راحت‌تر می‌تونی تصمیم بگیری.</p></details></div></section>
+<div class="closing-note"><svg><use href="#i-bow"/></svg><p>گاهی یه چیز کوچیک،<br><em>همه‌چیز رو قشنگ‌تر می‌کنه.</em></p><a href="#shop" class="text-link">قشنگی بعدی‌ات رو پیدا کن ↖</a></div>
+</main>
+<footer class="site-footer"><a class="brand" href="#home"><svg><use href="#i-bow"/></svg><span>روبان<small>R O B A N</small></span></a><p>جزئیات کوچک. لبخندهای بزرگ.</p><nav aria-label="دسترسی پایین صفحه"><a href="#shop">محصولات</a><a href="#gifts">هدیه‌ها</a><a href="#guide">راهنمای خرید</a><a class="demo-return-footer" href="/#demos">بازگشت به صفحه اصلی ↗</a></nav><span class="footer-signature">A LITTLE LOVE, TIED IN A BOW.</span></footer>
+<nav class="mobile-dock" aria-label="دسترسی سریع"><a href="#shop"><svg class="icon"><use href="#i-search"/></svg>محصولات</a><a href="#collections"><svg class="icon"><use href="#i-bow"/></svg>دسته‌ها</a><button data-action="favorites" aria-pressed="false"><svg class="icon"><use href="#i-heart"/></svg>علاقه‌ها</button><button data-action="cart"><svg class="icon"><use href="#i-bag"/></svg>سبد <span class="cart-count">۰</span></button></nav>
+<dialog id="shop-dialog" aria-labelledby="dialog-title"><div class="dialog-header"><span class="dialog-brand">روبان / با عشق</span><button class="icon-button" data-action="close" aria-label="بستن پنجره"><svg class="icon"><use href="#i-close"/></svg></button></div><div id="dialog-content"></div></dialog>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+</body></html>

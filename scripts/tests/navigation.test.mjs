@@ -3,6 +3,7 @@ import test from 'node:test';
 import React, { act } from 'react';
 import { createRoot } from 'react-dom/client';
 import { source, environment } from './helpers.mjs';
+const { projects } = await source('src/data/projects.ts');
 
 async function app(t, options) {
   const env = await environment(options);
@@ -86,10 +87,10 @@ test('Back then Forward restores a scrolled gallery without visiting a modal', a
   assert.equal(location.hash, '#demos'); assert.equal(env.scroll, 3150);
 });
 
-test('gallery menus, keyboard, cancelled touch, filtering and all nine demo links', async (t) => {
+test('gallery menus, keyboard, cancelled touch, filtering and all registered demo links', async (t) => {
   const env = await app(t, { hash: '#demos' });
   const links = [...document.querySelectorAll('.im-orbit__project-link')];
-  assert.equal(new Set(links.map((link) => link.href)).size, 9);
+  assert.equal(new Set(links.map((link) => link.href)).size, projects.length);
   links.forEach((link) => { assert.match(link.getAttribute('href'), /^\/demos\/\w+\/$/); assert.equal(link.target, '_blank'); });
   const stage = env.q('.im-orbit__stage');
   await env.action(() => stage.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true, cancelable: true })));
@@ -135,14 +136,14 @@ test('startup handles repeated refresh and legacy navigation APIs without adding
   assert.equal(navigationType(), 'navigate');
 });
 
-test('all nine projects enter a routed presentation, then open their native demo link', async (t) => {
+test('all registered projects enter a routed presentation, then open their native demo link', async (t) => {
   const env = await app(t, { hash: '#demos', reduced: true });
   const stage = env.q('.im-orbit__stage');
   const click = (element, options = {}) => {
     const event = new MouseEvent('click', { bubbles: true, cancelable: true, button: 0, ...options });
     element.dispatchEvent(event); return event;
   };
-  for (let i = 0; i < 9; i++) {
+  for (let i = 0; i < projects.length; i++) {
     if (i) await env.action(() => stage.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowLeft', bubbles: true, cancelable: true })));
     const link = env.q('.im-orbit__captions li:not([hidden]) a'); let first, second;
     const y = env.scroll;
@@ -183,7 +184,7 @@ test('touch fallback, keyboard entry, image errors and Escape work with reduced 
   assert.ok(env.q('.im-project'));
   await env.action(() => env.q('.im-project__poster img').dispatchEvent(new Event('error')));
   assert.ok(env.q('.im-project__image-error'));
-  assert.equal(env.q('.im-project__actions a').getAttribute('href'), '/demos/fashion/');
+  assert.equal(env.q('.im-project__actions a').getAttribute('href'), projects[0].url);
   await env.action(() => { history.pushState({}, '', '#work/sports'); env.w.dispatchEvent(new Event('hashchange')); });
   assert.equal(env.q('.im-project__image-error'), null, 'an image error does not leak into the next project');
   assert.equal(env.q('.im-project__poster img').getAttribute('src'), '/images/previews/sports.webp');
@@ -201,8 +202,8 @@ test('desktop presentation retains the same Stage and desktop filters return aft
   assert.equal(filters.dataset.persistent, 'true'); assert.equal(filters.open, true);
   await env.action(() => env.q('.im-orbit__captions li:not([hidden]) a').click());
   assert.equal(env.q('canvas'), canvas); assert.equal(env.q('.im-orbit__detail'), null);
-  assert.ok(env.q('#im-project-title').textContent.includes('آینه'));
-  assert.equal(env.q('.im-project__hitarea').getAttribute('href'), '/demos/fashion/');
+  assert.ok(env.q('#im-project-title').textContent.includes(projects[0].title.split('؛')[0]));
+  assert.equal(env.q('.im-project__hitarea').getAttribute('href'), projects[0].url);
   await env.action(() => env.q('.im-project__actions button').click());
   await env.action(() => env.advance(50));
   assert.equal(env.q('.im-project'), null); assert.equal(filters.open, true);
@@ -213,7 +214,7 @@ for (const width of [390,768,1440]) {
   test(`scroll presentation and stable metrics survive toolbar resizing / ${width}px`, async(t)=>{
     const env=await app(t,{hash:'#demos',width});
     const track=env.q('.im-work-track'),h=env.q('.im-work--orbit').offsetHeight;
-    assert.ok(Math.abs(parseFloat(track.style.height)-h*11.4)<.001);
+    assert.ok(Math.abs(parseFloat(track.style.height)-h*(1+.8+(projects.length-1)*1.2))<.001);
     await env.action(()=>env.w.scrollTo({top:env.workTop+.15*h}));
     assert.ok(env.q('.im-project'));
     const progress=env.q('.im-project').style.getPropertyValue('--project-progress');
@@ -231,7 +232,7 @@ for (const width of [390,768,1440]) {
   });
 }
 
-for (const id of ['fashion','sports','cars','store','cafe','travel','maktab','nabz','sekke']) {
+for (const { id } of projects) {
   test(`direct project route ${id}, native demo link, close and refresh`, async (t) => {
     const env = await app(t, { hash: `#work/${id}`, reduced: true });
     assert.equal(env.q('.im-project')?.dataset.project, id);
@@ -265,7 +266,7 @@ test('single-project filter, nested panels and Back/Forward preserve presentatio
   assert.equal(env.scroll, y); assert.equal(document.querySelectorAll('.im-orbit__project-link').length, 1);
   assert.equal(document.activeElement, opener);
   await env.action(() => env.q('.im-filter').click());
-  assert.equal(document.querySelectorAll('.im-orbit__project-link').length, 9);
+  assert.equal(document.querySelectorAll('.im-orbit__project-link').length, projects.length);
   await env.action(() => history.forward());
   assert.equal(location.hash, '#work/fashion'); assert.equal(env.q('.im-project').dataset.project, 'fashion');
   assert.equal(document.querySelectorAll('.im-orbit__project-link').length, 1);
@@ -281,10 +282,10 @@ test('changing reduced motion while a project is open keeps its route, scroll an
   const y = env.scroll;
   await env.action(() => env.setReduced(true));
   await env.action(() => env.advance(32));
-  assert.equal(location.hash, '#work/fashion'); assert.equal(env.scroll, y);
+  assert.equal(location.hash, `#work/${projects[0].id}`); assert.equal(env.scroll, y);
   assert.equal(env.q('.im-project').dataset.phase, 'open'); assert.equal(document.body.style.overflow, '');
   await env.action(() => env.setReduced(false));
-  assert.equal(location.hash, '#work/fashion'); assert.equal(env.scroll, y);
+  assert.equal(location.hash, `#work/${projects[0].id}`); assert.equal(env.scroll, y);
   await env.action(() => env.q('.im-project__actions button').click());
   await env.action(() => env.advance(1700));
   assert.equal(env.q('.im-project'), null); assert.equal(env.scroll, sourceY);

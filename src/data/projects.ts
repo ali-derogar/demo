@@ -5,7 +5,7 @@ export interface ProjectVisual {
   foreground: string;
   muted: string;
   image: string;
-  layout: 'editorial' | 'athletic' | 'automotive' | 'retail' | 'cafe' | 'travel' | 'craft' | 'festival' | 'finance';
+  layout: 'editorial' | 'athletic' | 'automotive' | 'retail' | 'cafe' | 'travel' | 'craft' | 'festival' | 'finance' | 'boutique';
 }
 
 export interface DemoProject {
@@ -36,6 +36,21 @@ export interface DemoProject {
  * کامپوننت‌های گالری خودکار با همین فهرست به‌روز می‌شوند.
  */
 export const projects: DemoProject[] = [
+  {
+    id: 'roban',
+    title: 'روبان؛ دنیای کوچک قشنگی‌ها',
+    tagline: 'فروشگاه اکسسوری دخترانه با ویترین سه‌بعدی',
+    description: 'فروشگاهی فانتزی برای اکسسوری مو، زیورآلات و لوازم کوچک روزمره؛ با ویترین سه‌بعدی تعاملی، جست‌وجوی فارسی، علاقه‌مندی و مسیر کامل خرید نمایشی.',
+    category: 'store', categoryLabel: 'فروشگاه اینترنتی',
+    preview: '/images/previews/roban.webp',
+    previewAlt: 'ویترین صورتی و یاسی روبان با کیف، مروارید و آینه روی سکوهای رنگی',
+    url: '/demos/roban/',
+    technologies: ['HTML', 'CSS', 'JavaScript', 'TypeScript', 'Three.js'],
+    keywords: ['دخترانه', 'فروشگاه', 'اکسسوری', 'کیف', 'آینه', 'مروارید', 'زیورآلات', 'گیره مو', 'سبد خرید', 'سه‌بعدی', 'فانتزی', 'صورتی', 'روبان'],
+    highlights: ['ویترین سه‌بعدی تعاملی', 'جست‌وجو و علاقه‌مندی', 'ذخیرهٔ سبد خرید', 'سفارش نمایشی'],
+    accent: '#dc86aa',
+    visual: { surface: '#fff8f4', foreground: '#522a46', muted: '#826776', image: '/demos/roban/assets/img/hero-01.webp', layout: 'boutique' },
+  },
   {
     id: 'fashion',
     visual: { surface: '#f4f1ea', foreground: '#211d18', muted: '#6e6759', image: '/demos/fashion/assets/img/hero-01.webp', layout: 'editorial' },

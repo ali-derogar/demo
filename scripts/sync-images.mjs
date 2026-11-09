@@ -11,6 +11,7 @@ import { join, resolve, dirname, basename } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import sharp from 'sharp';
 import { demoIds } from './lib/demos.mjs';
+import { provenanceError } from './lib/image-provenance.mjs';
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const DEMOS = await demoIds(ROOT);
@@ -39,14 +40,15 @@ for (const slug of DEMOS) {
       missingFiles.push(`${slug}: فایل روی دیسک نیست → ${localPath}`);
       continue;
     }
-    if (!/^https?:\/\//.test(String(item.source ?? '')))
-      missingFiles.push(`${slug}: منبع نشانی وبسایت نیست → ${item.file} (${item.source})`);
+    const provenance = provenanceError(item);
+    if (provenance) missingFiles.push(`${slug}: ${provenance} → ${item.file}`);
     rows.push({
       out: localPath,
       file: basename(localPath),
       demo: slug,
       title: item.title,
       artist: item.artist,
+      ...(item.origin === 'generated' ? { origin: item.origin, generator: item.generator, prompt: item.prompt } : {}),
       license: item.license,
       source: item.source ?? item.descriptionUrl ?? '',
       width: meta.width,
@@ -104,5 +106,5 @@ await writeFile(join(ROOT, 'scripts', 'image-manifest.mjs'), manifest);
 
 console.log(`${rows.length} تصویر → public/images/ATTRIBUTION.json و scripts/image-manifest.mjs`);
 const licenses = {};
-for (const r of rows) licenses[r.license ?? 'نامعلوم'] = (licenses[r.license ?? 'نامعلوم'] ?? 0) + 1;
+for (const r of rows) { const label = r.origin === 'generated' ? 'تولید اختصاصی' : r.license ?? 'نامعلوم'; licenses[label] = (licenses[label] ?? 0) + 1; }
 for (const [license, count] of Object.entries(licenses)) console.log(`  ${license}: ${count}`);

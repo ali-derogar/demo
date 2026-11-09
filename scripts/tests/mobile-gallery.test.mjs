@@ -3,6 +3,7 @@ import test from 'node:test';
 import React, { act } from 'react';
 import { createRoot } from 'react-dom/client';
 import { source, environment } from './helpers.mjs';
+const { projects } = await source('src/data/projects.ts');
 
 async function app(t) {
   const env = await environment({ hash: '#demos', width: 390, height: 844 });
@@ -38,7 +39,7 @@ test('direct mobile controls browse all projects, reflect filters and finish the
   assert.equal(previous.disabled, false);
   assert.equal(history.length, entries);
   const height = env.q('.im-work--orbit').offsetHeight;
-  await env.action(() => env.w.scrollTo({ top: env.workTop + (8 * 1.2 + .8) * height }));
+  await env.action(() => env.w.scrollTo({ top: env.workTop + ((projects.length - 1) * 1.2 + .8) * height }));
   assert.ok(Math.abs(Number(env.q('.im-work-track').style.getPropertyValue('--step-progress')) - 1) < 1e-8);
   await env.action(() => {
     [...document.querySelectorAll('.im-filter')].find((button) => button.textContent === 'مد و پوشاک').click();
@@ -54,7 +55,7 @@ test('direct mobile controls browse all projects, reflect filters and finish the
 test('the persistent mobile caption closes a routed project and keeps direct demo actions out of drag navigation', async (t) => {
   const env = await app(t);
   await env.action(() => env.q('.im-orbit__project-link').click());
-  assert.equal(location.hash, '#work/fashion');
+  assert.equal(location.hash, `#work/${projects[0].id}`);
   const close = env.q('.im-orbit__captions > li:not([hidden]) .im-orbit__mobile-actions button');
   assert.equal(close.hidden, false);
   const pointer = (target, type, x) => {

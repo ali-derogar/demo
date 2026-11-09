@@ -23,16 +23,19 @@ const wrap = (value, length = 18) => {
   if (current) lines.push(current);
   return lines;
 };
-const manifest = [];
+const selected = process.argv.slice(2);
+if (selected.some((id) => !projects.some((p) => p.id === id))) throw new Error('Unknown preview project');
+const manifest = JSON.parse(await readFile(join(root, 'public/images/previews/ATTRIBUTION.json'), 'utf8')).filter((row) => selected.length && !selected.includes(row.demo));
 let credits = JSON.parse(await readFile(join(root, 'public/images/ATTRIBUTION.json'), 'utf8'));
 for (const [index, project] of projects.entries()) {
+  if (selected.length && !selected.includes(project.id)) continue;
   const { surface: bg, foreground: ink, muted, image: mainImage, layout } = project.visual;
   const accent = project.accent;
   const document = new JSDOM(await readFile(join(root, `public${project.url}index.html`), 'utf8')).window.document;
   const heading = document.querySelector('main h1');
   heading?.querySelectorAll('br').forEach((br) => br.replaceWith(' '));
   const title = heading?.textContent.replace(/\s+/g, ' ').trim() || project.tagline;
-  const nav = [...document.querySelectorAll('.main-nav a')].slice(1,4).map((a) => a.textContent.trim());
+  const nav = layout === 'boutique' ? ['همهٔ قشنگی‌ها', 'هدیه‌ها', 'راهنمای خرید'] : [...document.querySelectorAll('.main-nav a')].slice(1,4).map((a) => a.textContent.trim());
   const cta = document.querySelector('main .hero-actions a,main .hero-cta a,main .btn')?.textContent.trim() || project.highlights[0];
   const used = new Set();
   const photo = async (path, x,y,w,h, extra='') => {
@@ -47,7 +50,15 @@ for (const [index, project] of projects.entries()) {
     +nav.map((label,i)=>text(label,1000-i*180,137,19,muted)).join('')
     +text(String(index+1).padStart(2,'0'),138,137,18,accent,500,'start');
   let content = '';
-  if (layout === 'editorial') {
+  if (layout === 'boutique') {
+    content = rect(110,210,740,560,'#f7e8ee',160)
+      +await photo(mainImage,110,210,740,560)
+      +text('دنیای کوچک قشنگی‌ها',1290,268,21,muted)
+      +titleBlock(1290,366,69,13,ink,500)
+      +button(1290,666,cta,ink,'#fff8f4')
+      +text('اکسسوری مو · زیورآلات · کیف',1290,793,19,muted)
+      +text('THE LITTLE JOYS CLUB',145,837,17,accent,400,'start');
+  } else if (layout === 'editorial') {
     content = await photo(mainImage,128,220,490,550)
       +text('خانه‌ی مد و استایل',1280,260,20,muted)
       +titleBlock(1280,366,68,17,ink,300)
@@ -144,7 +155,7 @@ for (const [index, project] of projects.entries()) {
   await writeFile(join(root,output),bytes);
   const upstream = JSON.parse(await readFile(join(root, `public${project.url}assets/ATTRIBUTION.json`),'utf8'));
   const sources = [...used].map((path) => ({ path, ...upstream.find((row) => basename(row.file) === basename(path)) }));
-  const row = { out:output,file:`${project.id}.webp`,demo:project.id,title:`طرح گرافیکی رابط ${project.title.split('؛')[0]}`,artist:`persianbotyar (layout); ${[...new Set(sources.map(s=>s.artist))].join('; ')}`,license:[...new Set(sources.map(s=>s.license))].join(' / '),source:sources[0]?.source,derivedFrom:[...used].map(path=>`public${path}`),sources,width:1200,height:800,bytes:bytes.length,format:'webp',generator:'scripts/generate-previews.mjs' };
+  const row = { out:output,file:`${project.id}.webp`,demo:project.id,title:`طرح گرافیکی رابط ${project.title.split('؛')[0]}`,artist:`persianbotyar (layout); ${[...new Set(sources.map(s=>s.artist))].join('; ')}`,license:[...new Set(sources.map(s=>s.license).filter(Boolean))].join(' / ') || undefined,source:sources[0]?.source,origin:sources.every((s)=>s.origin==='generated')?'generated':undefined,derivedFrom:[...used].map(path=>`public${path}`),sources,width:1200,height:800,bytes:bytes.length,format:'webp',generator:'scripts/generate-previews.mjs' };
   credits = credits.filter((item)=>item.out!==output); credits.push(row); manifest.push(row);
   console.log(`${project.id}: ${Math.round(bytes.length/1024)} KB`);
   document.defaultView.close();

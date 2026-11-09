@@ -11,7 +11,7 @@ test('Persian glass titles refresh after font loading and stop updating after di
   const { createProjectLabel } = await source('src/immersive/projectLabel.ts');
   const { projects } = await source('src/data/projects.ts');
   const label = createProjectLabel(projects[0], false, false);
-  assert.ok(label); assert.ok(drawn.includes('آینه'));
+  assert.ok(label); assert.ok(drawn.includes(projects[0].title.split('؛')[0]));
   assert.ok(label.texture.image.width > label.texture.image.height);
   const version = label.texture.version;
   env.resolveFonts(); await Promise.resolve();

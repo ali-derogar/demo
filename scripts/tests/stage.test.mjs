@@ -128,7 +128,7 @@ test('context recovery retains an open project, its transition and shared enviro
   const { createPresentation } = await source('src/immersive/projectPresentation.ts');
   const presentation = createPresentation(); Object.assign(presentation, { projectId: 'cars', phase: 'opening', progress: .65 });
   const progressRef = { current: { chapter: 'work', position: 1, progress: 1, workBlend: 1, overlay: null } };
-  const workRef = { current: { items: projects, target: 2, position: 2, dragging: false, blockClickUntil: 0, ready: false, interactive: false, selectedIndex: 2, selection: 1, presentation } };
+  const workRef = { current: { items: projects, target: projects.findIndex((p) => p.id === 'cars'), position: projects.findIndex((p) => p.id === 'cars'), dragging: false, blockClickUntil: 0, ready: false, interactive: false, selectedIndex: projects.findIndex((p) => p.id === 'cars'), selection: 1, presentation } };
   const root = createRoot(env.q('#root'));
   const action = async (callback) => { await act(async () => { callback(); await env.settle(); }); };
   t.after(async () => { try { await action(() => root.unmount()); assert.deepEqual(env.errors, []); } finally { env.cleanup(); } });
@@ -152,7 +152,7 @@ test('context recovery retains an open project, its transition and shared enviro
   await action(() => env.q('canvas').dispatchEvent(new Event('webglcontextrestored')));
   await action(() => {});
   assert.equal(presentation.projectId, 'cars'); assert.equal(presentation.phase, 'opening'); assert.equal(presentation.progress, .65);
-  assert.equal(workRef.current.position, 2); assert.equal(previous.disposed, true);
+  assert.equal(workRef.current.position, projects.findIndex((p) => p.id === 'cars')); assert.equal(previous.disposed, true);
   assert.equal(presentation.surface, 'webgl');
   assert.ok(renderers.at(-1).camera.distanceTo(camera) < 1e-9);
   assert.notEqual(renderers.at(-1).scene.getObjectByName('project-environment'), previousSurroundings);
@@ -177,7 +177,7 @@ test('first selection moves the same star mesh behind the project and binds a re
   const stars = scene.getObjectByName('home-world').children.find((item) => item.isPoints);
   const geometry = stars.geometry;
   assert.equal(stars.material.uniforms.uProjectMix.value, 0);
-  await action(() => { Object.assign(presentation, { projectId: 'fashion', phase: 'opening', progress: .4 }); workRef.current.selectedIndex = 0; });
+  await action(() => { Object.assign(presentation, { projectId: projects[0].id, phase: 'opening', progress: .4 }); workRef.current.selectedIndex = 0; });
   assert.ok(stars.material.uniforms.uProjectMix.value > 0 && stars.material.uniforms.uProjectMix.value < 1);
   await action(() => {
     presentation.phase = 'open'; presentation.progress = 1;
@@ -205,7 +205,7 @@ test('mobile toolbar resize reuses the drawing buffer and first gallery entry re
   t.after(async()=>{try{await action(()=>root.unmount());assert.deepEqual(env.errors,[]);}finally{env.cleanup();}});
   await action(()=>root.render(React.createElement(Stage,{progressRef,workRef})));await action(()=>{});
   const renderer=renderers.at(-1),panes=[...renderer.scene.getObjectByName('work-orbit').children],sizeCount=renderer.sizes.length;
-  assert.equal(panes.length,9,'materials and geometry exist before the first scroll');
+  assert.equal(panes.length,projects.length,'materials and geometry exist before the first scroll');
   await action(()=>env.setViewport(390,924,true));
   assert.equal(renderer.sizes.length,sizeCount,'hiding browser chrome never reallocates the drawing buffer');
   await action(()=>{Object.assign(progressRef.current,{chapter:'work',position:1,progress:1,workBlend:1});});

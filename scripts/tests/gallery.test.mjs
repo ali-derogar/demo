@@ -6,7 +6,8 @@ import { requests } from './orbit-loader.mock.mjs';
 
 test('gallery coordinates preserve card positions and the full open/hold/return cycle, including one project', async () => {
   const { galleryMetrics, projectFromScroll, scrollForProject, galleryFrame } = await source('src/immersive/orbit.ts');
-  for (const viewport of [844,1024,900]) for (const count of [1,9]) for (const reduced of [false,true]) {
+  const { projects } = await source('src/data/projects.ts');
+  for (const viewport of [844,1024,900]) for (const count of [1,projects.length]) for (const reduced of [false,true]) {
     const m = galleryMetrics(1700,viewport,count,reduced);
     assert.equal(m.opening,.3*viewport); assert.equal(m.hold,.2*viewport); assert.equal(m.closing,.3*viewport); assert.equal(m.passage,.4*viewport);
     for (let position=0;position<=count-1;position+=.125) assert.ok(Math.abs(projectFromScroll(scrollForProject(position,m),m)-position)<1e-10);
@@ -68,7 +69,7 @@ for (const [width, height] of [[390, 844], [768, 1024], [1440, 900]]) {
     assert.deepEqual(collisions, []);
   });
 
-  test(`all nine card centers can be seen and picked; selected card stays within the viewport / ${width}px`, async (t) => {
+  test(`all registered card centers can be seen and picked; selected card stays within the viewport / ${width}px`, async (t) => {
     const env = await environment({ width, height }); t.after(() => env.cleanup());
     const { createWorkOrbit } = await source('src/immersive/WorkOrbit.ts');
     const { projects } = await source('src/data/projects.ts');

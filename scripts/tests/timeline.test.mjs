@@ -3,6 +3,7 @@ import test from 'node:test';
 import React, { act } from 'react';
 import { createRoot } from 'react-dom/client';
 import { source, environment } from './helpers.mjs';
+const { projects } = await source('src/data/projects.ts');
 
 async function app(t,options={}) {
   const env=await environment({hash:'#demos',...options});
@@ -32,8 +33,8 @@ for(const width of [390,768,1440]) {
     await env.at(.65);assert.ok(Math.abs(env.progress()-.5)<1e-10);
     await env.at(.4);assert.equal(env.progress(),1,'reversing the exit reopens the same pane');
     await env.at(0);assert.equal(env.q('.im-project'),null);
-    await env.at(1.6);assert.equal(env.q('.im-project').dataset.project,'sports');
-    assert.equal(env.q('.im-project__actions a').getAttribute('href'),'/demos/sports/');
+    await env.at(1.6);assert.equal(env.q('.im-project').dataset.project,projects[1].id);
+    assert.equal(env.q('.im-project__actions a').getAttribute('href'),projects[1].url);
     assert.equal(history.length,entries);assert.equal(location.hash,hash);
     await env.action(()=>document.dispatchEvent(new KeyboardEvent('keydown',{key:'Escape',bubbles:true,cancelable:true})));
     assert.equal(env.q('.im-project'),null);assert.ok(Math.abs(env.scroll-env.workTop-1.2*env.q('.im-work--orbit').offsetHeight)<1e-8);
@@ -68,7 +69,7 @@ test('toolbar changes retain progress; orientation retains the same normalized t
   assert.equal(env.scroll,y);assert.equal(env.progress(),progress);assert.equal(env.q('.im-work-track').style.height,height);
   await env.action(()=>env.setViewport(844,390));
   assert.ok(Math.abs((env.scroll-env.workTop)/390-2.55)<1e-10);
-  assert.ok(Math.abs(env.progress()-progress)<1e-10);assert.equal(env.q('.im-project').dataset.project,'cars');
+  assert.ok(Math.abs(env.progress()-progress)<1e-10);assert.equal(env.q('.im-project').dataset.project,projects[2].id);
 });
 
 test('nested information panels freeze and restore a partially open project, then release the only scroll lock',async(t)=>{
@@ -86,13 +87,13 @@ test('click return and browser Forward keep project/filter coordinates across or
   const env=await app(t);await env.at(2.4);
   const stage=env.q('.im-orbit__stage');stage.focus();
   await env.action(()=>stage.dispatchEvent(new KeyboardEvent('keydown',{key:'Enter',bubbles:true,cancelable:true})));
-  assert.equal(env.q('.im-project').dataset.project,'cars');
+  assert.equal(env.q('.im-project').dataset.project,projects[2].id);
   await env.action(()=>env.setViewport(844,390));
   await env.action(()=>env.q('.im-project__actions button').click());
   assert.ok(Math.abs((env.scroll-env.workTop)/390-2.4)<1e-10);
   assert.equal(env.q('.im-project'),null);
   await env.action(()=>history.forward());
-  assert.equal(env.q('.im-project').dataset.project,'cars');assert.equal(env.q('.im-project').dataset.phase,'open');
+  assert.equal(env.q('.im-project').dataset.project,projects[2].id);assert.equal(env.q('.im-project').dataset.phase,'open');
 });
 
 for (const [width, height] of [[320,568], [390,844], [768,1024], [844,390], [1440,900]]) {

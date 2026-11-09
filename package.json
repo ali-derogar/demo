@@ -14,7 +14,10 @@
     "search:images": "node scripts/fetch-images.mjs search",
     "sync:images": "node scripts/sync-images.mjs",
     "check:site": "node scripts/check-site.mjs",
-    "generate:previews": "node scripts/generate-previews.mjs"
+    "generate:previews": "node scripts/generate-previews.mjs",
+    "predev": "node scripts/build-roban-scene.mjs",
+    "prebuild": "node scripts/build-roban-scene.mjs",
+    "build:scene": "node scripts/build-roban-scene.mjs"
   },
   "dependencies": {
     "@fontsource-variable/vazirmatn": "^5.3.0",

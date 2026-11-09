@@ -5,3 +5,5 @@ dist/
 .vite/
 .wrangler/
 scripts/.cache/
+
+public/demos/roban/scene.js
