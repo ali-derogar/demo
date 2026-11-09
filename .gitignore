@@ -7,3 +7,4 @@ dist/
 scripts/.cache/
 
 public/demos/roban/scene.js
+public/demos/aura/scene.js

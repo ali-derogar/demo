@@ -32,3 +32,11 @@ is stubbed for lifecycle tests; they do not establish visual quality or real-dev
 The Roban implementation session had no browser available through the browser tool. HTTP checks,
 image inspection, automated tests, TypeScript and production checks were completed; actual browser
 paint, touch, keyboard trapping and device-level visual/FPS verification remain to be performed.
+
+Aura is registered as project four. Its tests cover Tehran midnight and Persian dates, unavailable and
+forged slots, selection changes, booking validation/review/edit/confirmation, focus return and the
+mobile menu. Sculpture checks project every real vertex through desktop and phone cameras at the
+rotation limits. Renderer-stub checks cover offscreen/background/dialog suspension, reduced-motion
+on-demand drawing, context recovery, unavailable WebGL and cleanup. These tests do not establish
+browser paint, native dialog trapping, mobile FPS or actual touch quality. The browser tool had no
+available browser in this implementation session, so real-browser visual/device verification remains.

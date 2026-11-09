@@ -1,0 +1,18 @@
+[
+  {
+    "file": "img/portrait.webp",
+    "title": "پرترهٔ هنری زیبایی طبیعی اُرا",
+    "artist": "Generated with image_gen for AURA",
+    "origin": "generated",
+    "generator": "image_gen",
+    "prompt": "Use case: photorealistic-natural. Asset type: portrait photograph for AURA, a premium Persian aesthetic clinic website. A serene adult Iranian woman age 30, dark slicked back hair, beautiful natural warm olive skin with fine visible skin texture, understated makeup, eyes softly closed, subtle lips, graceful long neck, sculptural three-quarter face turned slightly to the right, one hand gently resting along side of neck. Very close beauty editorial portrait from upper chest to above forehead, face dominant and comfortably framed. Minimal seamless pale sage-gray background (#d9dfd0), daylight studio lighting from upper left, soft shadows, warm bronze highlights on skin, quiet luxurious analog film finish. Vogue beauty editorial, sophisticated human natural beauty, not plastic skin. Portrait 4:5 composition. No lettering, no logos, no watermark, no medical tools, no before-after, no decorative objects."
+  },
+  {
+    "file": "img/clinic.webp",
+    "title": "فضای مفهومی کلینیک زیبایی اُرا",
+    "artist": "Generated with image_gen for AURA",
+    "origin": "generated",
+    "generator": "image_gen",
+    "prompt": "Use case: photorealistic-natural. Asset type: architectural photograph for AURA premium aesthetic clinic website. An empty tranquil contemporary aesthetic clinic reception with a monolithic rounded travertine reception desk, tall sculptural olive tree at left, soft curved sage green plaster wall, generous full height arched doorway at right with warm indirect glow, cream microcement floor, linen and walnut furniture. Rich tactile minimal architecture, refined Mediterranean-inspired wellness interior, natural sunlight entering from left making long soft architectural shadows, a muted sage, chalk, olive and sand palette. Wide 3:2 editorial architectural photography, eye level, honest realistic materials, no people, no logos, no writing, no watermark, no decorative medical cross."
+  }
+]

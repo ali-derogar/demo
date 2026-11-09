@@ -50,7 +50,19 @@ for (const [index, project] of projects.entries()) {
     +nav.map((label,i)=>text(label,1000-i*180,137,19,muted)).join('')
     +text(String(index+1).padStart(2,'0'),138,137,18,accent,500,'start');
   let content = '';
-  if (layout === 'boutique') {
+  if (layout === 'aesthetic') {
+    content = `<defs><clipPath id="aura-portrait"><path d="M172 788V438a231 231 0 0 1 462 0V788z"/></clipPath><radialGradient id="aura-pearl" cx="30%" cy="25%"><stop stop-color="#ffffef"/><stop offset=".4" stop-color="#dbe2bf"/><stop offset=".8" stop-color="#879c70"/><stop offset="1" stop-color="#c3d0ac"/></radialGradient></defs>`
+      +await photo(mainImage,172,204,462,584,'clip-path="url(#aura-portrait)"')
+      +`<ellipse cx="402" cy="508" rx="285" ry="110" fill="none" stroke="#adb995" transform="rotate(-28 402 508)"/><circle cx="162" cy="529" r="39" fill="url(#aura-pearl)"/><circle cx="635" cy="478" r="17" fill="url(#aura-pearl)"/>`
+      +text('تعادل میان علم و ظرافت',1290,255,19,muted)
+      +text('زیبایی،',1290,385,93,ink,350)
+      +text('به ظرافتِ',1290,511,93,ink,350)
+      +text('خودِ تو.',1290,637,93,'#788b64',350)
+      +button(1290,694,'از یک گفت‌وگو شروع کنیم',ink,bg)
+      +text('ظرافت در جزئیات است.',650,775,17,ink)
+      +rect(72,825,1296,60,ink)
+      +text('YOUR BEAUTY. YOUR WAY.   ✳   THE ART OF SUBTLETY.   ✳   BEAUTIFULLY YOU.',180,861,15,'#d8e4b8',400,'start');
+  } else if (layout === 'boutique') {
     content = rect(110,210,740,560,'#f7e8ee',160)
       +await photo(mainImage,110,210,740,560)
       +text('دنیای کوچک قشنگی‌ها',1290,268,21,muted)

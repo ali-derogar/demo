@@ -45,6 +45,9 @@ for (const slug of DEMOS) {
   if (slug === 'roban') for (const file of ['app.js', 'products.js', 'scene.js']) {
     if (!(await exists(join(dir, file)))) problems.push(`roban: ${file} در خروجی build نیست`);
   }
+  if (slug === 'aura') for (const file of ['app.js', 'services.js', 'scene.js']) {
+    if (!(await exists(join(dir, file)))) problems.push(`aura: ${file} در خروجی build نیست`);
+  }
   const html = await readFile(join(dir, 'index.html'), 'utf8');
   const images = await countImages(join(dir, 'assets'));
   if (!/<html[^>]*\blang=["']fa["']/i.test(html)) problems.push(`${slug}: lang="fa" ندارد`);

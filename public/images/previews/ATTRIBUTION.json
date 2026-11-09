@@ -280,5 +280,32 @@
     "bytes": 52684,
     "format": "webp",
     "generator": "scripts/generate-previews.mjs"
+  },
+  {
+    "out": "public/images/previews/aura.webp",
+    "file": "aura.webp",
+    "demo": "aura",
+    "title": "طرح گرافیکی رابط اُرا",
+    "artist": "persianbotyar (layout); Generated with image_gen for AURA",
+    "origin": "generated",
+    "derivedFrom": [
+      "public/demos/aura/assets/img/portrait.webp"
+    ],
+    "sources": [
+      {
+        "path": "/demos/aura/assets/img/portrait.webp",
+        "file": "img/portrait.webp",
+        "title": "پرترهٔ هنری زیبایی طبیعی اُرا",
+        "artist": "Generated with image_gen for AURA",
+        "origin": "generated",
+        "generator": "image_gen",
+        "prompt": "Use case: photorealistic-natural. Asset type: portrait photograph for AURA, a premium Persian aesthetic clinic website. A serene adult Iranian woman age 30, dark slicked back hair, beautiful natural warm olive skin with fine visible skin texture, understated makeup, eyes softly closed, subtle lips, graceful long neck, sculptural three-quarter face turned slightly to the right, one hand gently resting along side of neck. Very close beauty editorial portrait from upper chest to above forehead, face dominant and comfortably framed. Minimal seamless pale sage-gray background (#d9dfd0), daylight studio lighting from upper left, soft shadows, warm bronze highlights on skin, quiet luxurious analog film finish. Vogue beauty editorial, sophisticated human natural beauty, not plastic skin. Portrait 4:5 composition. No lettering, no logos, no watermark, no medical tools, no before-after, no decorative objects."
+      }
+    ],
+    "width": 1200,
+    "height": 800,
+    "bytes": 46080,
+    "format": "webp",
+    "generator": "scripts/generate-previews.mjs"
   }
 ]
