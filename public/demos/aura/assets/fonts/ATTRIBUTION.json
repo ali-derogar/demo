@@ -1,0 +1,54 @@
+[
+  {
+    "file": "Estedad-SemiBold.woff2",
+    "family": "Estedad",
+    "source": "https://raw.githubusercontent.com/aminabedi68/Estedad/0dbe689787b8c2ea302373cb601d0f352f9f98e5/fonts/webfonts/Estedad-SemiBold.woff2",
+    "upstream": "https://github.com/aminabedi68/Estedad",
+    "commit": "0dbe689787b8c2ea302373cb601d0f352f9f98e5",
+    "license": "OFL-1.1",
+    "sha256": "38e5be81425fd786581c2a6f7de84cb00c0f010f0dd29f8082e3a291935babb3",
+    "bytes": 80052
+  },
+  {
+    "file": "Shabnam-Regular.woff2",
+    "family": "Shabnam",
+    "source": "https://raw.githubusercontent.com/rastikerdar/shabnam-font/5283d80e0118d9d4439b1208e9b912588e563d06/dist/Shabnam.woff2",
+    "upstream": "https://github.com/rastikerdar/shabnam-font",
+    "commit": "5283d80e0118d9d4439b1208e9b912588e563d06",
+    "license": "OFL-1.1; included Latin glyphs Apache-2.0",
+    "sha256": "540d3f4e172bd6b5c70dd06bce57e055ce59270e95ea642b414fe0709faaa085",
+    "bytes": 35752
+  },
+  {
+    "file": "Shabnam-Medium.woff2",
+    "family": "Shabnam",
+    "source": "https://raw.githubusercontent.com/rastikerdar/shabnam-font/5283d80e0118d9d4439b1208e9b912588e563d06/dist/Shabnam-Medium.woff2",
+    "upstream": "https://github.com/rastikerdar/shabnam-font",
+    "commit": "5283d80e0118d9d4439b1208e9b912588e563d06",
+    "license": "OFL-1.1; included Latin glyphs Apache-2.0",
+    "sha256": "fd5931f57e84baad81cc7243cfc1c83e5ac7f5dd17818d917765063544a54441",
+    "bytes": 37168
+  },
+  {
+    "file": "CormorantGaramond-Regular.woff2",
+    "family": "Cormorant Garamond",
+    "source": "https://fonts.gstatic.com/s/cormorantgaramond/v21/co3umX5slCNuHLi8bLeY9MK7whWMhyjypVO7abI26QOD_v86KnTOig.woff2",
+    "upstream": "https://github.com/CatharsisFonts/Cormorant",
+    "license": "OFL-1.1",
+    "sha256": "8048ac209bec741e1c29cd0cfac5aac1c0c2ba8c3ddbd4a58fa9bd92ef5c63c2",
+    "bytes": 22876,
+    "distribution": "Google Fonts, Latin subset",
+    "cssSource": "https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;1,400&display=swap"
+  },
+  {
+    "file": "CormorantGaramond-Italic.woff2",
+    "family": "Cormorant Garamond",
+    "source": "https://fonts.gstatic.com/s/cormorantgaramond/v21/co3smX5slCNuHLi8bLeY9MK7whWMhyjYrGFEsdtdc62E6zd58jD-iNM8.woff2",
+    "upstream": "https://github.com/CatharsisFonts/Cormorant",
+    "license": "OFL-1.1",
+    "sha256": "e48e58027030df56869b795ca6f19b7012158275f7ad7cde1900b4a0b68d02e2",
+    "bytes": 23660,
+    "distribution": "Google Fonts, Latin subset",
+    "cssSource": "https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;1,400&display=swap"
+  }
+]

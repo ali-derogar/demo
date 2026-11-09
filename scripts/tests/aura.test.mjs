@@ -43,7 +43,7 @@ test('Aura synchronizes accessible atlas regions, treatment disclosure and the c
   click('.atlas-hotspot[data-region="filler"]');
   assert.equal(q('.region-tabs [data-region="filler"]').getAttribute('aria-pressed'), 'true');
   assert.equal(q('.atlas-hotspot[data-region="botox"]').getAttribute('aria-pressed'), 'false');
-  assert.match(q('#atlas-name').textContent, /فیلر لب/);
+  assert.match(q('#atlas-name').textContent, /ژل لب/);
   assert.equal(q('[data-service-visual="filler"]').classList.contains('is-active'), true);
   assert.equal(q('[data-service-visual="botox"]').classList.contains('is-active'), false);
   click('#atlas-book'); assert.equal(q('#booking-service').value, 'filler');
@@ -81,7 +81,7 @@ test('Aura booking validates choices, invalidates a time after changing dates, s
   click('#booking-success [data-close]');
   assert.equal(w.document.body.classList.contains('has-dialog'), false);
   assert.equal(w.document.activeElement.dataset.book, 'skin');
-  click('[data-book="botox"]'); assert.equal(q('input[name="day"]:checked'), null); assert.equal(q('#booking-review').hidden, true);
+  click('[data-book="botox"]'); assert.equal(q('#booking-service').value, 'botox'); assert.equal(q('input[name="day"]:checked'), null); assert.equal(q('#booking-review').hidden, true);
 });
 
 test('Aura mobile menu closes with Escape and returns keyboard focus', (t) => {

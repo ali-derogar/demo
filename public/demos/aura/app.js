@@ -20,7 +20,7 @@ export function mountAura({ scene = true } = {}) {
     $('#atlas-description').textContent = service.description;
     $('#atlas-first').textContent = service.first;
     $('#atlas-book').dataset.book = id;
-    $('#atlas-book').replaceChildren(document.createTextNode(`مشاوره برای ${id === 'filler' ? 'فیلر لب' : id === 'skin' ? 'پوست' : id === 'laser' ? 'لیزر' : 'بوتاکس'} `), Object.assign(document.createElement('span'), { textContent: '↖' }));
+    $('#atlas-book').replaceChildren(document.createTextNode(`نوبت مشاورهٔ ${id === 'filler' ? 'ژل لب' : id === 'skin' ? 'پوست' : id === 'laser' ? 'لیزر' : 'بوتاکس'} `), Object.assign(document.createElement('span'), { textContent: '↖' }));
     $('#atlas-book span').setAttribute('aria-hidden', 'true');
     const detail = $('#atlas-detail'); detail.classList.remove('changing');
     if (!reduced.matches) { void detail.offsetWidth; detail.classList.add('changing'); }
@@ -67,7 +67,7 @@ export function mountAura({ scene = true } = {}) {
   }
   function renderTimes() {
     const container = $('#time-options'); container.replaceChildren();
-    if (!selection.day) { const hint = document.createElement('span'); hint.className = 'time-hint'; hint.textContent = 'اول یک روز انتخاب کن.'; container.append(hint); return; }
+    if (!selection.day) { const hint = document.createElement('span'); hint.className = 'time-hint'; hint.textContent = 'برای دیدن ساعت‌های خالی، ابتدا روز مراجعه را انتخاب کنید.'; container.append(hint); return; }
     for (const slot of slotsForDay(selection.day)) {
       const label = document.createElement('label'); label.className = 'time-choice';
       const input = document.createElement('input'); input.type = 'radio'; input.name = 'time'; input.value = slot.id; input.disabled = !slot.available; input.checked = selection.time === slot.id; input.setAttribute('aria-label', `${slot.label}${slot.available ? '' : '، در دسترس نیست'}`);
@@ -111,7 +111,7 @@ export function mountAura({ scene = true } = {}) {
   function receipt(container, value) {
     container.replaceChildren();
     const day = days.find((d) => d.id === value.day), slot = slotsForDay(value.day).find((s) => s.id === value.time);
-    for (const [label, text] of [['موضوع', services[value.service].label], ['روز', day.full], ['ساعت', slot.label]]) {
+    for (const [label, text] of [['خدمت', services[value.service].label], ['روز مراجعه', day.full], ['ساعت', slot.label]]) {
       const row = document.createElement('div');
       row.append(Object.assign(document.createElement('dt'), { textContent: label }), Object.assign(document.createElement('dd'), { textContent: text })); container.append(row);
     }
@@ -129,7 +129,7 @@ export function mountAura({ scene = true } = {}) {
     if (!pending) return;
     const current = calendarOptions();
     const error = validateBooking(pending, current);
-    if (error) { days = current; selection.day = ''; selection.time = ''; pending = null; renderDates(); showStep(flow); $('#booking-error').textContent = 'روزهای پیشنهادی تازه شدند؛ یک زمان تازه انتخاب کن.'; return; }
+    if (error) { days = current; selection.day = ''; selection.time = ''; pending = null; renderDates(); showStep(flow); $('#booking-error').textContent = 'این زمان دیگر در فهرست نوبت‌ها نیست. لطفاً روز و ساعت دیگری انتخاب کنید.'; return; }
     receipt($('#success-details'), pending); pending = null; showStep(success);
   });
 

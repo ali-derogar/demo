@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 /** Authored vector covers using the demos' real copy, brand colors and credited photographs. */
-import { readFile, writeFile } from 'node:fs/promises';
+import { mkdir, readFile, writeFile } from 'node:fs/promises';
+import { spawnSync } from 'node:child_process';
 import { resolve, dirname, basename, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { build } from 'esbuild';
@@ -8,10 +9,24 @@ import { JSDOM } from 'jsdom';
 import sharp from 'sharp';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
+const selected = process.argv.slice(2);
+// Register the bundled Aura fonts for this render process without installing
+// fonts or changing the user's system font configuration.
+if (process.platform === 'linux' && (!selected.length || selected.includes('aura')) && process.env.NAMUNE_PREVIEW_FONTS !== 'ready') {
+  const cache = join(root, 'scripts/.cache/preview-fonts');
+  await mkdir(cache, { recursive: true });
+  const xml = (value) => value.replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('"', '&quot;');
+  const config = join(cache, 'fonts.conf');
+  await writeFile(config, `<?xml version="1.0"?><!DOCTYPE fontconfig SYSTEM "urn:fontconfig:fonts.dtd"><fontconfig><include ignore_missing="yes">/etc/fonts/fonts.conf</include><dir>${xml(join(root, 'public/demos/aura/assets/fonts'))}</dir><cachedir>${xml(cache)}</cachedir></fontconfig>`);
+  const child = spawnSync(process.execPath, process.argv.slice(1), { cwd: process.cwd(), env: { ...process.env, FONTCONFIG_FILE: config, NAMUNE_PREVIEW_FONTS: 'ready' }, stdio: 'inherit' });
+  if (child.error) throw child.error;
+  process.exit(child.status ?? 1);
+}
 const built = await build({ entryPoints: [join(root, 'src/data/projects.ts')], bundle: true, write: false, format: 'esm' });
 const { projects } = await import(`data:text/javascript;base64,${Buffer.from(built.outputFiles[0].text).toString('base64')}`);
 const escape = (value) => String(value).replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '&quot;');
-const text = (value, x, y, size, color, weight = 400, anchor = 'start') => `<text x="${x}" y="${y}" font-family="Vazirmatn, Noto Sans Arabic, sans-serif" font-size="${size}" font-weight="${weight}" fill="${color}" text-anchor="${anchor}" direction="${/[\u0600-\u06ff]/.test(value) ? 'rtl' : 'ltr'}" unicode-bidi="plaintext">${escape(value)}</text>`;
+let textFont = 'Vazirmatn, Noto Sans Arabic, sans-serif';
+const text = (value, x, y, size, color, weight = 400, anchor = 'start', family = textFont) => `<text x="${x}" y="${y}" font-family="${escape(family)}" font-size="${size}" font-weight="${weight}" fill="${color}" text-anchor="${anchor}" direction="${/[\u0600-\u06ff]/.test(value) ? 'rtl' : 'ltr'}" unicode-bidi="plaintext">${escape(value)}</text>`;
 const rect = (x,y,w,h,color,r=0,extra='') => `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="${r}" fill="${color}" ${extra}/>`;
 const line = (x,y,x2,y2,color,opacity=1) => `<path d="M${x} ${y}H${x2}" stroke="${color}" opacity="${opacity}"/>`;
 const wrap = (value, length = 18) => {
@@ -23,13 +38,13 @@ const wrap = (value, length = 18) => {
   if (current) lines.push(current);
   return lines;
 };
-const selected = process.argv.slice(2);
 if (selected.some((id) => !projects.some((p) => p.id === id))) throw new Error('Unknown preview project');
 const manifest = JSON.parse(await readFile(join(root, 'public/images/previews/ATTRIBUTION.json'), 'utf8')).filter((row) => selected.length && !selected.includes(row.demo));
 let credits = JSON.parse(await readFile(join(root, 'public/images/ATTRIBUTION.json'), 'utf8'));
 for (const [index, project] of projects.entries()) {
   if (selected.length && !selected.includes(project.id)) continue;
   const { surface: bg, foreground: ink, muted, image: mainImage, layout } = project.visual;
+  textFont = layout === 'aesthetic' ? 'Shabnam, sans-serif' : 'Vazirmatn, Noto Sans Arabic, sans-serif';
   const accent = project.accent;
   const document = new JSDOM(await readFile(join(root, `public${project.url}index.html`), 'utf8')).window.document;
   const heading = document.querySelector('main h1');
@@ -44,9 +59,9 @@ for (const [index, project] of projects.entries()) {
     return `<image xlink:href="data:image/png;base64,${bytes.toString('base64')}" x="${x}" y="${y}" width="${w}" height="${h}" preserveAspectRatio="xMidYMid slice" ${extra}/>`;
   };
   const titleBlock = (x,y,size=66,max=18,color=ink,weight=500) => wrap(title,max).slice(0,3).map((row,i)=>text(row,x,y+i*size*1.45,size,color,weight)).join('');
-  const button = (x,y,label=cta,color=accent,labelColor=bg) => rect(x-252,y,252,58,color,layout==='athletic'?0:6)+text(label,x-26,y+38,22,labelColor,600);
+  const button = (x,y,label=cta,color=accent,labelColor=bg) => rect(x-252,y,252,58,color,layout==='athletic'?0:6)+text(label,x-26,y+38,22,labelColor,layout==='aesthetic'?500:600);
   const header = rect(72,76,1296,100,bg)+line(110,174,1330,174,accent,.3)
-    +text(project.title.split('؛')[0],1308,140,34,ink,600)
+    +(layout === 'aesthetic' ? text('aura',1308,143,52,ink,400,'end','Cormorant Garamond, serif') : text(project.title.split('؛')[0],1308,140,34,ink,600))
     +nav.map((label,i)=>text(label,1000-i*180,137,19,muted)).join('')
     +text(String(index+1).padStart(2,'0'),138,137,18,accent,500,'start');
   let content = '';
@@ -56,13 +71,13 @@ for (const [index, project] of projects.entries()) {
       +rect(72,176,1296,708,'url(#fade)')
       +`<ellipse cx="400" cy="508" rx="224" ry="292" fill="none" stroke="url(#aura-chrome)" stroke-width="11" transform="rotate(-17 400 508)"/>`
       +text('کلینیک پوست و زیبایی اُرا',1290,268,18,muted)
-      +text('زیبایی تو،',1290,411,94,ink,300)
-      +text('از نزدیک.',1290,556,94,'#c796aa',300)
-      +text('بوتاکس · فیلر لب · لیزر · پوست',1290,620,20,muted)
+      +text('کلینیک',1290,411,86,ink,600,'start','Estedad, Shabnam, sans-serif')
+      +text('زیبایی اُرا',1290,556,86,'#c796aa',600,'start','Estedad, Shabnam, sans-serif')
+      +text('بوتاکس · ژل لب · لیزر · پوست',1290,620,20,muted)
       +button(1290,674,'رزرو مشاوره','#ede3dc','#482233')
       +line(110,804,1330,804,accent,.24)
       +text('AURA / BEAUTY STUDY — 01',145,844,12,muted,400,'start')
-      +text('خدمات را از نزدیک ببین',1290,844,15,muted);
+      +text('خدمات و نوبت مشاوره',1290,844,15,muted);
   } else if (layout === 'boutique') {
     content = rect(110,210,740,560,'#f7e8ee',160)
       +await photo(mainImage,110,210,740,560)

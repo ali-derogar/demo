@@ -1,9 +1,9 @@
 export const services = {
   general: { label: 'مشاورهٔ عمومی' },
-  botox: { label: 'بوتاکس', number: '01 / EXPRESSION', title: ['بوتاکس،', 'برای کدام خطوط؟'], description: 'پیشانی یا دور چشم؟ ناحیه‌ای که مدنظرت است را در مشاوره مشخص کن تا پزشک حالت چهره و انتخاب‌های مناسب را بررسی کند.', first: 'بررسی خطوط و حالت چهره' },
-  filler: { label: 'فیلر و فرم‌دهی لب', number: '02 / BALANCE', title: ['فیلر لب،', 'با چه فرمی؟'], description: 'به فرم لب فکر می‌کنی یا حجم آن؟ از چیزی که دوست داری بگو تا تناسبش با چهره‌ات در جلسهٔ مشاوره بررسی شود.', first: 'بررسی فرم لب و خواستهٔ تو' },
-  laser: { label: 'لیزر موهای زائد', number: '03 / LIGHT', title: ['لیزر،', 'برای کدام ناحیه؟'], description: 'ناحیهٔ موردنظرت را مشخص کن. برنامهٔ جلسات پس از بررسی پوست و شرایطت در مشاوره تعیین می‌شود.', first: 'بررسی پوست و ناحیهٔ انتخابی' },
-  skin: { label: 'مراقبت و جوان‌سازی پوست', number: '04 / SKIN', title: ['پوستت،', 'چه چیزی نیاز دارد؟'], description: 'از دغدغهٔ پوستت و محصولاتی که استفاده می‌کنی بگو. اول وضعیت پوست بررسی می‌شود، بعد دربارهٔ روش مراقبت تصمیم می‌گیری.', first: 'بررسی پوست و مراقبت‌های فعلی' },
+  botox: { label: 'بوتاکس', number: '01 / BOTOX', title: ['بوتاکس', 'پیشانی و دور چشم'], description: 'در مشاورهٔ بوتاکس می‌توانید دربارهٔ خطوط صورت، ناحیهٔ تزریق و هزینه سؤال کنید.', first: 'بررسی خطوط صورت' },
+  filler: { label: 'تزریق ژل لب', number: '02 / LIP FILLER', title: ['ژل لب', 'فرم و حجم لب'], description: 'فرم و حجم دلخواهتان را با پزشک مطرح کنید. نوع ژل و جزئیات تزریق در جلسهٔ مشاوره بررسی می‌شود.', first: 'بررسی فرم لب و مدل دلخواه' },
+  laser: { label: 'لیزر موهای زائد', number: '03 / LASER', title: ['لیزر موهای زائد', 'صورت و بدن'], description: 'ناحیهٔ موردنظر و سابقهٔ جلسات قبلی را به پزشک بگویید تا شرایط انجام لیزر بررسی شود.', first: 'بررسی پوست و ناحیهٔ موردنظر' },
+  skin: { label: 'مراقبت و جوان‌سازی پوست', number: '04 / SKIN', title: ['خدمات پوست', 'مراقبت و جوان‌سازی'], description: 'برای بررسی وضعیت پوست و روش‌های مراقبت، نوبت مشاوره بگیرید. دربارهٔ محصولات و درمان‌های قبلی‌تان هم با پزشک صحبت کنید.', first: 'بررسی وضعیت پوست' },
 };
 
 /** All calendar boundaries use Tehran, regardless of the visitor or host timezone. */
@@ -27,8 +27,8 @@ export function slotsForDay(day) {
 }
 
 export function validateBooking({ service, day, time }, days) {
-  if (!Object.hasOwn(services, service)) return 'موضوع مشاوره را انتخاب کن.';
-  if (!days.some((d) => d.id === day)) return 'یک روز از روزهای پیشنهادی انتخاب کن.';
-  if (!slotsForDay(day).some((slot) => slot.id === time && slot.available)) return 'یک ساعت در دسترس انتخاب کن.';
+  if (!Object.hasOwn(services, service)) return 'لطفاً خدمت موردنظر را انتخاب کنید.';
+  if (!days.some((d) => d.id === day)) return 'لطفاً روز مراجعه را انتخاب کنید.';
+  if (!slotsForDay(day).some((slot) => slot.id === time && slot.available)) return 'لطفاً یکی از ساعت‌های خالی را انتخاب کنید.';
   return '';
 }
