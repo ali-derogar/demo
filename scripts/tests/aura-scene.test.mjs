@@ -16,6 +16,7 @@ test('Aura suspends the GPU offscreen, in background and under booking, recovers
   await env.advance(32); const renderer = renderers.at(-1);
   assert.equal(host.dataset.scene, 'ready'); assert.ok(renderer.frames > 0); assert.ok(renderer.pixelRatio <= 1.5);
   assert.match(host.querySelector('.atlas-hotspot').style.getPropertyValue('--pin-x'), /px$/);
+  app.setLook('lines'); await env.advance(32); assert.equal(host.dataset.look, 'lines');
   visibility([{ isIntersecting: false }]); const offscreen = renderer.frames; await env.advance(64); assert.equal(renderer.frames, offscreen);
   visibility([{ isIntersecting: true }]); await env.advance(32); assert.ok(renderer.frames > offscreen);
   document.dispatchEvent(new CustomEvent('aura:overlay', { detail: { open: true } })); const covered = renderer.frames; await env.advance(64); assert.equal(renderer.frames, covered);
@@ -25,6 +26,7 @@ test('Aura suspends the GPU offscreen, in background and under booking, recovers
   const oldEnvironment = environments.at(-1); canvas.dispatchEvent(new Event('webglcontextlost', { cancelable: true })); assert.equal(host.dataset.scene, 'fallback');
   const lost = renderer.frames; await env.advance(32); assert.equal(renderer.frames, lost);
   canvas.dispatchEvent(new Event('webglcontextrestored')); await env.advance(32); assert.equal(host.dataset.scene, 'ready'); assert.ok(oldEnvironment.disposed);
+  assert.equal(host.dataset.look, 'lines'); app.setLook('solid'); assert.equal(host.dataset.look, 'solid');
   app.dispose(); const stopped = renderer.frames; await env.advance(64); assert.equal(renderer.frames, stopped); assert.ok(renderer.disposed); assert.ok(environments.at(-1).disposed); assert.equal(host.dataset.scene, 'poster'); assert.deepEqual(env.errors, []);
 });
 
@@ -44,4 +46,24 @@ test('Aura retains the fallback sculpture and region buttons when WebGL is unava
   const host = document.querySelector('#sculpture'), app = mountSculpture(host);
   assert.equal(host.dataset.scene, 'fallback'); assert.ok(host.querySelector('.atlas-hotspot')); assert.equal(host.querySelector('[data-rotate]').hidden, true);
   assert.doesNotThrow(() => app.select('botox')); assert.doesNotThrow(() => app.dispose());
+});
+
+test('Aura chrome introduction pauses outside its viewport and under booking, restores context and keeps reduced motion still', async (t) => {
+  const env = await environment({ width: 1440, height: 900 });
+  document.body.innerHTML = '<section class="hero"><div id="hero-sculpture"><canvas></canvas></div></section>';
+  let visibility;
+  const original = globalThis.IntersectionObserver;
+  globalThis.IntersectionObserver = class { constructor(fn) { visibility = fn; } observe(target) { visibility([{ target, isIntersecting: true }]); } disconnect() {} };
+  const { mountHero } = await source('src/demos/aura/scene.ts', { three: new URL('./aura-renderer.mock.mjs', import.meta.url).href });
+  const host = document.querySelector('#hero-sculpture'), canvas = host.querySelector('canvas'), app = mountHero(host);
+  t.after(() => { app.dispose(); globalThis.IntersectionObserver = original; env.cleanup(); });
+  await env.advance(32); const renderer = renderers.at(-1); assert.equal(host.dataset.scene, 'ready');
+  visibility([{ isIntersecting: false }]); const outside = renderer.frames; await env.advance(64); assert.equal(renderer.frames, outside);
+  visibility([{ isIntersecting: true }]); await env.advance(32); assert.ok(renderer.frames > outside);
+  document.dispatchEvent(new CustomEvent('aura:overlay', { detail: { open: true } })); const covered = renderer.frames; await env.advance(64); assert.equal(renderer.frames, covered);
+  document.dispatchEvent(new CustomEvent('aura:overlay', { detail: { open: false } })); await env.advance(32); assert.ok(renderer.frames > covered);
+  canvas.dispatchEvent(new Event('webglcontextlost', { cancelable: true })); assert.equal(host.dataset.scene, 'fallback');
+  canvas.dispatchEvent(new Event('webglcontextrestored')); await env.advance(32); assert.equal(host.dataset.scene, 'ready');
+  env.setReduced(true); await env.advance(32); const still = renderer.frames; await env.advance(200); assert.equal(renderer.frames, still);
+  app.dispose(); assert.ok(renderer.disposed); assert.ok(environments.at(-1).disposed);
 });

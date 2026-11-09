@@ -51,17 +51,18 @@ for (const [index, project] of projects.entries()) {
     +text(String(index+1).padStart(2,'0'),138,137,18,accent,500,'start');
   let content = '';
   if (layout === 'aesthetic') {
-    content = `<defs><clipPath id="aura-portrait"><path d="M172 788V438a231 231 0 0 1 462 0V788z"/></clipPath><radialGradient id="aura-pearl" cx="30%" cy="25%"><stop stop-color="#ffffef"/><stop offset=".4" stop-color="#dbe2bf"/><stop offset=".8" stop-color="#879c70"/><stop offset="1" stop-color="#c3d0ac"/></radialGradient></defs>`
-      +await photo(mainImage,172,204,462,584,'clip-path="url(#aura-portrait)"')
-      +`<ellipse cx="402" cy="508" rx="285" ry="110" fill="none" stroke="#adb995" transform="rotate(-28 402 508)"/><circle cx="162" cy="529" r="39" fill="url(#aura-pearl)"/><circle cx="635" cy="478" r="17" fill="url(#aura-pearl)"/>`
-      +text('تعادل میان علم و ظرافت',1290,255,19,muted)
-      +text('زیبایی،',1290,385,93,ink,350)
-      +text('به ظرافتِ',1290,511,93,ink,350)
-      +text('خودِ تو.',1290,637,93,'#788b64',350)
-      +button(1290,694,'از یک گفت‌وگو شروع کنیم',ink,bg)
-      +text('ظرافت در جزئیات است.',650,775,17,ink)
-      +rect(72,825,1296,60,ink)
-      +text('YOUR BEAUTY. YOUR WAY.   ✳   THE ART OF SUBTLETY.   ✳   BEAUTIFULLY YOU.',180,861,15,'#d8e4b8',400,'start');
+    content = `<defs><linearGradient id="aura-chrome"><stop stop-color="#493745"/><stop offset=".18" stop-color="#e9d5da"/><stop offset=".25" stop-color="#79707f"/><stop offset=".5" stop-color="#f6e2dd"/><stop offset=".68" stop-color="#9d6e8d"/><stop offset=".85" stop-color="#edd7dc"/><stop offset="1" stop-color="#4a3b50"/></linearGradient></defs>`
+      +await photo(mainImage,72,176,1296,708)
+      +rect(72,176,1296,708,'url(#fade)')
+      +`<ellipse cx="400" cy="508" rx="224" ry="292" fill="none" stroke="url(#aura-chrome)" stroke-width="11" transform="rotate(-17 400 508)"/>`
+      +text('کلینیک پوست و زیبایی اُرا',1290,268,18,muted)
+      +text('زیبایی تو،',1290,411,94,ink,300)
+      +text('از نزدیک.',1290,556,94,'#c796aa',300)
+      +text('بوتاکس · فیلر لب · لیزر · پوست',1290,620,20,muted)
+      +button(1290,674,'رزرو مشاوره','#ede3dc','#482233')
+      +line(110,804,1330,804,accent,.24)
+      +text('AURA / BEAUTY STUDY — 01',145,844,12,muted,400,'start')
+      +text('خدمات را از نزدیک ببین',1290,844,15,muted);
   } else if (layout === 'boutique') {
     content = rect(110,210,740,560,'#f7e8ee',160)
       +await photo(mainImage,110,210,740,560)

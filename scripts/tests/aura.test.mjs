@@ -43,12 +43,18 @@ test('Aura synchronizes accessible atlas regions, treatment disclosure and the c
   click('.atlas-hotspot[data-region="filler"]');
   assert.equal(q('.region-tabs [data-region="filler"]').getAttribute('aria-pressed'), 'true');
   assert.equal(q('.atlas-hotspot[data-region="botox"]').getAttribute('aria-pressed'), 'false');
-  assert.match(q('#atlas-name').textContent, /تعادل/);
+  assert.match(q('#atlas-name').textContent, /فیلر لب/);
+  assert.equal(q('[data-service-visual="filler"]').classList.contains('is-active'), true);
+  assert.equal(q('[data-service-visual="botox"]').classList.contains('is-active'), false);
   click('#atlas-book'); assert.equal(q('#booking-service').value, 'filler');
   click('[data-close]'); assert.equal(q('#booking-dialog').open, false);
   click('[aria-controls="treatment-laser"]');
   assert.equal(q('#treatment-laser').hidden, false); assert.equal(q('#treatment-botox').hidden, true);
   assert.equal(q('.region-tabs [data-region="laser"]').getAttribute('aria-pressed'), 'true');
+  assert.equal(q('#service-visual-label').textContent, '03 / LASER');
+  click('[data-look="lines"]');
+  assert.equal(q('[data-look="solid"]').getAttribute('aria-pressed'), 'false');
+  assert.equal(q('#sculpture').dataset.look, 'lines');
   click('[aria-controls="treatment-laser"]'); assert.equal(q('#treatment-laser').hidden, true);
 });
 
@@ -100,5 +106,20 @@ test('Aura is the fourth registered project and its real sculpture geometry and 
       for (const pin of Object.values(pins)) { const p = pin.getWorldPosition(new Vector3()).project(camera); assert.ok(Math.abs(p.x) < .8 && Math.abs(p.y) < .85, `anchor ${pin.name} fits`); }
     }
     world.traverse((mesh) => { if (mesh.isMesh) { mesh.geometry.dispose(); mesh.material.dispose(); } });
+  }
+});
+
+test('Aura chrome contour is a finite closed band and remains framed while scroll and pointer tilt it', async () => {
+  const { createContour } = await source('src/demos/aura/scene.ts');
+  for (const [width, height] of [[893, 740], [429, 560], [352, 510]]) {
+    const { group, contour } = createContour(width < 768), positions = contour.geometry.attributes.position;
+    for (let i = 0; i < 4; i++) assert.ok(new Vector3().fromBufferAttribute(positions, i).distanceTo(new Vector3().fromBufferAttribute(positions, positions.count - 4 + i)) < .00001, 'closed seam');
+    const camera = new PerspectiveCamera(38, width / height, .1, 30);
+    camera.position.set(0, 0, Math.max(7.5, 4.8 / (2 * Math.tan(38 * Math.PI / 360) * Math.min(1, width / height)))); camera.lookAt(0, 0, 0); camera.updateMatrixWorld();
+    for (const progress of [0, 1]) for (const pointer of [-1, 1]) {
+      group.rotation.set(-.05 + pointer * .08, -.2 + pointer * .15 + progress * .45, -.23 - progress * .2); group.position.set(-.07 - progress * .18, .02, progress * .2); group.updateMatrixWorld(true);
+      group.traverse((mesh) => { if (!mesh.isMesh) return; const vertices = mesh.geometry.attributes.position; for (let i = 0; i < vertices.count; i++) { const p = new Vector3().fromBufferAttribute(vertices, i).applyMatrix4(mesh.matrixWorld).project(camera); assert.ok(Number.isFinite(p.x) && Number.isFinite(p.y)); assert.ok(Math.abs(p.x) < .98 && Math.abs(p.y) < .98, `contour fits ${width}`); } });
+    }
+    group.traverse((mesh) => { if (mesh.isMesh) { mesh.geometry.dispose(); mesh.material.dispose(); } });
   }
 });

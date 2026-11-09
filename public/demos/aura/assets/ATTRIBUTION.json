@@ -14,5 +14,21 @@
     "origin": "generated",
     "generator": "image_gen",
     "prompt": "Use case: photorealistic-natural. Asset type: architectural photograph for AURA premium aesthetic clinic website. An empty tranquil contemporary aesthetic clinic reception with a monolithic rounded travertine reception desk, tall sculptural olive tree at left, soft curved sage green plaster wall, generous full height arched doorway at right with warm indirect glow, cream microcement floor, linen and walnut furniture. Rich tactile minimal architecture, refined Mediterranean-inspired wellness interior, natural sunlight entering from left making long soft architectural shadows, a muted sage, chalk, olive and sand palette. Wide 3:2 editorial architectural photography, eye level, honest realistic materials, no people, no logos, no writing, no watermark, no decorative medical cross."
+  },
+  {
+    "file": "img/campaign.webp",
+    "title": "پرترهٔ سینمایی کمپین اُرا",
+    "artist": "Generated with image_gen for AURA",
+    "origin": "generated",
+    "generator": "image_gen",
+    "prompt": "Use case: ads-marketing. Asset type: hero campaign photo for an avant-garde luxury Iranian aesthetic clinic website, photography only not a website mockup. Landscape 3:2 composition. A beautiful adult Iranian woman age 30 with dark slicked back hair, understated natural makeup, visible real skin texture, eyes open with a calm direct gaze, sculptural three-quarter face turned slightly toward camera. Her head and graceful neck occupy the LEFT 55 percent of frame. Face large, top of hair comfortably inside the frame, lower crop at collarbones, bare shoulders. The entire RIGHT 45 percent must be clean very dark aubergine-black negative space for website typography. Cinematic hard raking light from upper left illuminates cheekbones, nose and lips with luminous warm pearl skin; deep elegant shadows, narrow soft burgundy rim light from right. Background near-black charcoal plum (#141013), absolutely seamless and clean. Bold high-fashion editorial beauty campaign, rich tonal gradation, fine analog texture, tactile luminous skin, restrained sensuality. Premium professional studio medium format photograph. No text, no watermarks, no logos, no jewelry, no tools, no medical devices, no metallic decorations, no graphic overlays. The image must feel art-directed and dramatic, not a generic smiling stock portrait."
+  },
+  {
+    "file": "img/details.webp",
+    "title": "نمای نزدیک لب برای معرفی فیلر لب اُرا",
+    "artist": "Generated with image_gen for AURA",
+    "origin": "generated",
+    "generator": "image_gen",
+    "prompt": "Use case: photorealistic-natural. Asset type: editorial macro beauty photograph for a luxury aesthetic clinic service panel. Very close crop of the lower half of an adult Iranian woman's face, natural elegant lips at center, softly parted only slightly, warm natural skin with visible pores, cheek and tip of nose partly visible at top, no teeth, no heavy lipstick, no injected or exaggerated look. A gentle fingertip lightly rests near chin at bottom left. Strong sculptural sidelight from top left, softly deep plum shadows, a sophisticated mix of warm nude skin and muted burgundy. The composition is sensual in the high fashion beauty editorial sense, dignified and clinical quality. Square composition, beautiful rich real texture, off-center framing with dramatic shadow. No text, no watermark, no logos, no medical instruments, no before-and-after, no collage."
   }
 ]

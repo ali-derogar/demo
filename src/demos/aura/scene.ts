@@ -5,6 +5,7 @@ import {
   TubeGeometry, Vector2, Vector3, WebGLRenderer, type Material,
 } from 'three';
 import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+export { createContour, mountHero } from './hero';
 
 export const regionPoints: Record<string, Vector3> = {
   botox: new Vector3(-.16, 1.11, .71), filler: new Vector3(.02, -.25, 1.02),
@@ -28,9 +29,9 @@ function surfaceZ(x: number, y: number) {
 /** An authored ceramic portrait, generated as real geometry rather than a textured plane. */
 export function createBust(compact = false) {
   const world = new Group();
-  const ceramic = new MeshPhysicalMaterial({ color: '#e7ead8', metalness: .08, roughness: .39, clearcoat: .35, clearcoatRoughness: .24, sheen: .35, sheenColor: new Color('#c7d5a8') });
-  const detail = new MeshStandardMaterial({ color: '#a2af8d', roughness: .6, metalness: .12 });
-  const ringMaterial = new MeshStandardMaterial({ color: '#a2b17c', metalness: .65, roughness: .3 });
+  const ceramic = new MeshPhysicalMaterial({ color: '#e5d4ce', metalness: .2, roughness: .29, clearcoat: .65, clearcoatRoughness: .22, sheen: .25, sheenColor: new Color('#c3a2ad') });
+  const detail = new MeshStandardMaterial({ color: '#a2858c', roughness: .6, metalness: .12 });
+  const ringMaterial = new MeshStandardMaterial({ color: '#a77c94', metalness: .75, roughness: .25 });
   const headGeometry = new SphereGeometry(1, compact ? 64 : 100, compact ? 48 : 76);
   const position = headGeometry.getAttribute('position');
   for (let i = 0; i < position.count; i++) {
@@ -41,6 +42,8 @@ export function createBust(compact = false) {
   }
   headGeometry.computeVertexNormals();
   world.add(new Mesh(headGeometry, ceramic));
+  const lines = new Mesh(headGeometry, new MeshStandardMaterial({ color: '#782b50', wireframe: true, transparent: true, opacity: .18, depthWrite: false }));
+  lines.scale.setScalar(1.001); lines.visible = false; world.add(lines);
   const neckGeometry = new LatheGeometry([
     new Vector2(0, -2.1), new Vector2(1.18, -2.1), new Vector2(1.26, -2.01),
     new Vector2(1.19, -1.86), new Vector2(.9, -1.7), new Vector2(.59, -1.56),
@@ -65,10 +68,10 @@ export function createBust(compact = false) {
   const smallPearl = new Mesh(new SphereGeometry(.105, 18, 14), ceramic); smallPearl.position.set(-1.7, .62, .19); world.add(smallPearl);
   const pins: Record<string, Mesh> = {};
   for (const [id, point] of Object.entries(regionPoints)) {
-    const pin = new Mesh(new SphereGeometry(.027, 12, 10), new MeshStandardMaterial({ color: '#c9d9a3', metalness: .5, roughness: .2 }));
+    const pin = new Mesh(new SphereGeometry(.027, 12, 10), new MeshStandardMaterial({ color: '#c995a9', metalness: .5, roughness: .2 }));
     pin.position.copy(point); pin.name = id; world.add(pin); pins[id] = pin;
   }
-  return { world, pins, ring };
+  return { world, pins, ring, lines, ceramic };
 }
 
 export function mountSculpture(host: HTMLElement) {
@@ -77,18 +80,18 @@ export function mountSculpture(host: HTMLElement) {
   const fallback = () => { host.dataset.scene = 'fallback'; const instruction = host.querySelector<HTMLElement>('#scene-instruction'); if (instruction) instruction.textContent = 'یک ناحیه را انتخاب کنید'; controls.forEach((button) => { button.hidden = true; }); };
   let renderer: WebGLRenderer;
   try { renderer = new WebGLRenderer({ canvas, alpha: true, antialias: true, powerPreference: 'low-power' }); }
-  catch { fallback(); return { select(_id: string) {}, dispose() {} }; }
+  catch { fallback(); return { select(_id: string) {}, setLook(_look: string) {}, dispose() {} }; }
   const compact = window.innerWidth < 768, reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
   renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, compact ? 1.5 : 1.8));
   renderer.setClearColor(0x000000, 0); renderer.outputColorSpace = SRGBColorSpace; renderer.toneMapping = ACESFilmicToneMapping; renderer.toneMappingExposure = 1.2;
   const scene = new Scene(), camera = new PerspectiveCamera(38, 1, .1, 30);
   camera.position.set(0, .05, 7.4); camera.lookAt(0, -.18, 0);
-  scene.add(new HemisphereLight('#fffce8', '#6e8157', 2.5));
-  const key = new DirectionalLight('#fff7db', 3.7); key.position.set(-3, 4, 5); scene.add(key);
-  const rim = new DirectionalLight('#d0dfbc', 2.2); rim.position.set(3, 2, -3); scene.add(rim);
+  scene.add(new HemisphereLight('#fff1e6', '#78566c', 2.3));
+  const key = new DirectionalLight('#fff0e1', 3.3); key.position.set(-3, 4, 5); scene.add(key);
+  const rim = new DirectionalLight('#caa5c5', 2.5); rim.position.set(3, 2, -3); scene.add(rim);
   function makeEnvironment() { const pmrem = new PMREMGenerator(renderer), room = new RoomEnvironment(); const target = pmrem.fromScene(room, .08); scene.environment = target.texture; room.dispose(); pmrem.dispose(); return target; }
   let environment = makeEnvironment();
-  const { world, pins, ring } = createBust(compact); scene.add(world);
+  const { world, pins, ring, lines, ceramic } = createBust(compact); scene.add(world);
   const projected = new Vector3(), nodes = new Map([...host.querySelectorAll<HTMLElement>('.atlas-hotspot')].map((node) => [node.dataset.region!, node]));
   let frame = 0, disposed = false, visible = true, lost = false, overlay = !!document.querySelector('dialog[open]');
   let width = 1, height = 1, yaw = -.16, targetYaw = -.16, pitch = 0, targetPitch = 0, phase = 0, last = 0, down: { x: number; y: number; yaw: number; pitch: number; id: number } | null = null;
@@ -145,6 +148,7 @@ export function mountSculpture(host: HTMLElement) {
   reduced.addEventListener('change', resume, { signal: signal.signal });
   resize(); resume();
   return {
+    setLook(look: string) { const scan = look === 'lines'; lines.visible = scan; ceramic.color.set(scan ? '#c8b7c5' : '#e5d4ce'); ceramic.roughness = scan ? .72 : .29; host.dataset.look = scan ? 'lines' : 'solid'; resume(); },
     select(id: string) { for (const [key, pin] of Object.entries(pins)) pin.scale.setScalar(key === id ? 1.7 : 1); resume(); },
     dispose() {
       if (disposed) return; disposed = true; pause(); signal.abort(); visibilityObserver.disconnect(); resizeObserver.disconnect();

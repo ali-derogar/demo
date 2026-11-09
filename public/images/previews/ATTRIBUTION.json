@@ -289,22 +289,22 @@
     "artist": "persianbotyar (layout); Generated with image_gen for AURA",
     "origin": "generated",
     "derivedFrom": [
-      "public/demos/aura/assets/img/portrait.webp"
+      "public/demos/aura/assets/img/campaign.webp"
     ],
     "sources": [
       {
-        "path": "/demos/aura/assets/img/portrait.webp",
-        "file": "img/portrait.webp",
-        "title": "پرترهٔ هنری زیبایی طبیعی اُرا",
+        "path": "/demos/aura/assets/img/campaign.webp",
+        "file": "img/campaign.webp",
+        "title": "پرترهٔ سینمایی کمپین اُرا",
         "artist": "Generated with image_gen for AURA",
         "origin": "generated",
         "generator": "image_gen",
-        "prompt": "Use case: photorealistic-natural. Asset type: portrait photograph for AURA, a premium Persian aesthetic clinic website. A serene adult Iranian woman age 30, dark slicked back hair, beautiful natural warm olive skin with fine visible skin texture, understated makeup, eyes softly closed, subtle lips, graceful long neck, sculptural three-quarter face turned slightly to the right, one hand gently resting along side of neck. Very close beauty editorial portrait from upper chest to above forehead, face dominant and comfortably framed. Minimal seamless pale sage-gray background (#d9dfd0), daylight studio lighting from upper left, soft shadows, warm bronze highlights on skin, quiet luxurious analog film finish. Vogue beauty editorial, sophisticated human natural beauty, not plastic skin. Portrait 4:5 composition. No lettering, no logos, no watermark, no medical tools, no before-after, no decorative objects."
+        "prompt": "Use case: ads-marketing. Asset type: hero campaign photo for an avant-garde luxury Iranian aesthetic clinic website, photography only not a website mockup. Landscape 3:2 composition. A beautiful adult Iranian woman age 30 with dark slicked back hair, understated natural makeup, visible real skin texture, eyes open with a calm direct gaze, sculptural three-quarter face turned slightly toward camera. Her head and graceful neck occupy the LEFT 55 percent of frame. Face large, top of hair comfortably inside the frame, lower crop at collarbones, bare shoulders. The entire RIGHT 45 percent must be clean very dark aubergine-black negative space for website typography. Cinematic hard raking light from upper left illuminates cheekbones, nose and lips with luminous warm pearl skin; deep elegant shadows, narrow soft burgundy rim light from right. Background near-black charcoal plum (#141013), absolutely seamless and clean. Bold high-fashion editorial beauty campaign, rich tonal gradation, fine analog texture, tactile luminous skin, restrained sensuality. Premium professional studio medium format photograph. No text, no watermarks, no logos, no jewelry, no tools, no medical devices, no metallic decorations, no graphic overlays. The image must feel art-directed and dramatic, not a generic smiling stock portrait."
       }
     ],
     "width": 1200,
     "height": 800,
-    "bytes": 46080,
+    "bytes": 56644,
     "format": "webp",
     "generator": "scripts/generate-previews.mjs"
   }
