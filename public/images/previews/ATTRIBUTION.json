@@ -1,28 +1,88 @@
 [
   {
-    "out": "public/images/previews/fashion.webp",
-    "file": "fashion.webp",
-    "demo": "fashion",
-    "title": "طرح گرافیکی رابط آینه",
-    "artist": "persianbotyar (layout); NiceIrn",
-    "license": "CC0",
-    "source": "https://commons.wikimedia.org/wiki/File:Street_Style_of_2018_2019_in_Tehran_2.jpg",
+    "out": "public/images/previews/roban.webp",
+    "file": "roban.webp",
+    "demo": "roban",
+    "title": "طرح گرافیکی رابط روبان",
+    "artist": "persianbotyar (layout); Generated with image_gen for Roban",
+    "origin": "generated",
     "derivedFrom": [
-      "public/demos/fashion/assets/img/hero-01.webp"
+      "public/demos/roban/assets/img/hero-01.webp"
     ],
     "sources": [
       {
-        "path": "/demos/fashion/assets/img/hero-01.webp",
+        "path": "/demos/roban/assets/img/hero-01.webp",
         "file": "img/hero-01.webp",
-        "title": "Street Style of 2018 2019 in Tehran 2.jpg",
-        "artist": "NiceIrn",
-        "license": "CC0",
-        "source": "https://commons.wikimedia.org/wiki/File:Street_Style_of_2018_2019_in_Tehran_2.jpg"
+        "title": "ویترین روبان",
+        "artist": "Generated with image_gen for Roban",
+        "origin": "generated",
+        "generator": "image_gen",
+        "prompt": "Wide cinematic still life for a sophisticated feminine accessories boutique called Roban. A blush pink quilted mini handbag with curved handle at center, a lustrous ivory pearl bracelet to the left, and a pastel lavender heart compact mirror to the right, standing on sculptural pastel pink and lilac cylinder plinths at different heights. Large sculptural satin pink ribbon arches behind them, cream seamless studio, warm diffuse daylight, soft contact shadows, fine leather and pearl textures, premium playful editorial product photography, elegant uncluttered composition, no people, no text, no lettering, no watermark. Wide landscape image, products in the central two thirds, generous breathing room."
       }
     ],
     "width": 1200,
     "height": 800,
-    "bytes": 52706,
+    "bytes": 46020,
+    "format": "webp",
+    "generator": "scripts/generate-previews.mjs"
+  },
+  {
+    "out": "public/images/previews/nabz.webp",
+    "file": "nabz.webp",
+    "demo": "nabz",
+    "title": "طرح گرافیکی رابط نبض",
+    "artist": "persianbotyar (layout); swimfinfan",
+    "license": "CC BY-SA 2.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Pretty_Lights_at_the_Aragon_Ballroom_-_8_November_2013_-_Light_show.jpg",
+    "derivedFrom": [
+      "public/demos/nabz/assets/img/hero-01.webp"
+    ],
+    "sources": [
+      {
+        "path": "/demos/nabz/assets/img/hero-01.webp",
+        "file": "img/hero-01.webp",
+        "title": "Pretty Lights at the Aragon Ballroom - 8 November 2013 - Light show.jpg",
+        "artist": "swimfinfan",
+        "license": "CC BY-SA 2.0",
+        "source": "https://commons.wikimedia.org/wiki/File:Pretty_Lights_at_the_Aragon_Ballroom_-_8_November_2013_-_Light_show.jpg",
+        "px": "1600x1200",
+        "kb": 131,
+        "slot": "پس‌زمینه‌ی سرصفحه — نمایش نور"
+      }
+    ],
+    "width": 1200,
+    "height": 800,
+    "bytes": 74356,
+    "format": "webp",
+    "generator": "scripts/generate-previews.mjs"
+  },
+  {
+    "out": "public/images/previews/sekke.webp",
+    "file": "sekke.webp",
+    "demo": "sekke",
+    "title": "طرح گرافیکی رابط سکه",
+    "artist": "persianbotyar (layout); Stevebidmead",
+    "license": "CC0",
+    "source": "https://commons.wikimedia.org/wiki/File:Gold_bullion_bars.jpg",
+    "derivedFrom": [
+      "public/demos/sekke/assets/img/gold-bars.webp"
+    ],
+    "sources": [
+      {
+        "path": "/demos/sekke/assets/img/gold-bars.webp",
+        "file": "img/gold-bars.webp",
+        "title": "Gold bullion bars.jpg",
+        "artist": "Stevebidmead",
+        "license": "CC0",
+        "source": "https://commons.wikimedia.org/wiki/File:Gold_bullion_bars.jpg",
+        "px": "1200x900",
+        "kb": 119,
+        "slot": "کارت شمش — شمش‌های طلا"
+      }
+    ],
+    "width": 1200,
+    "height": 800,
+    "bytes": 48642,
     "format": "webp",
     "generator": "scripts/generate-previews.mjs"
   },
@@ -76,7 +136,7 @@
     ],
     "width": 1200,
     "height": 800,
-    "bytes": 77452,
+    "bytes": 77460,
     "format": "webp",
     "generator": "scripts/generate-previews.mjs"
   },
@@ -103,7 +163,7 @@
     ],
     "width": 1200,
     "height": 800,
-    "bytes": 63154,
+    "bytes": 63168,
     "format": "webp",
     "generator": "scripts/generate-previews.mjs"
   },
@@ -130,7 +190,7 @@
     ],
     "width": 1200,
     "height": 800,
-    "bytes": 39322,
+    "bytes": 39340,
     "format": "webp",
     "generator": "scripts/generate-previews.mjs"
   },
@@ -160,7 +220,7 @@
     ],
     "width": 1200,
     "height": 800,
-    "bytes": 66836,
+    "bytes": 66846,
     "format": "webp",
     "generator": "scripts/generate-previews.mjs"
   },
@@ -190,94 +250,34 @@
     ],
     "width": 1200,
     "height": 800,
-    "bytes": 76178,
+    "bytes": 76204,
     "format": "webp",
     "generator": "scripts/generate-previews.mjs"
   },
   {
-    "out": "public/images/previews/nabz.webp",
-    "file": "nabz.webp",
-    "demo": "nabz",
-    "title": "طرح گرافیکی رابط نبض",
-    "artist": "persianbotyar (layout); swimfinfan",
-    "license": "CC BY-SA 2.0",
-    "source": "https://commons.wikimedia.org/wiki/File:Pretty_Lights_at_the_Aragon_Ballroom_-_8_November_2013_-_Light_show.jpg",
-    "derivedFrom": [
-      "public/demos/nabz/assets/img/hero-01.webp"
-    ],
-    "sources": [
-      {
-        "path": "/demos/nabz/assets/img/hero-01.webp",
-        "file": "img/hero-01.webp",
-        "title": "Pretty Lights at the Aragon Ballroom - 8 November 2013 - Light show.jpg",
-        "artist": "swimfinfan",
-        "license": "CC BY-SA 2.0",
-        "source": "https://commons.wikimedia.org/wiki/File:Pretty_Lights_at_the_Aragon_Ballroom_-_8_November_2013_-_Light_show.jpg",
-        "px": "1600x1200",
-        "kb": 131,
-        "slot": "پس‌زمینه‌ی سرصفحه — نمایش نور"
-      }
-    ],
-    "width": 1200,
-    "height": 800,
-    "bytes": 74462,
-    "format": "webp",
-    "generator": "scripts/generate-previews.mjs"
-  },
-  {
-    "out": "public/images/previews/sekke.webp",
-    "file": "sekke.webp",
-    "demo": "sekke",
-    "title": "طرح گرافیکی رابط سکه",
-    "artist": "persianbotyar (layout); Stevebidmead",
+    "out": "public/images/previews/fashion.webp",
+    "file": "fashion.webp",
+    "demo": "fashion",
+    "title": "طرح گرافیکی رابط آینه",
+    "artist": "persianbotyar (layout); NiceIrn",
     "license": "CC0",
-    "source": "https://commons.wikimedia.org/wiki/File:Gold_bullion_bars.jpg",
+    "source": "https://commons.wikimedia.org/wiki/File:Street_Style_of_2018_2019_in_Tehran_2.jpg",
     "derivedFrom": [
-      "public/demos/sekke/assets/img/gold-bars.webp"
+      "public/demos/fashion/assets/img/hero-01.webp"
     ],
     "sources": [
       {
-        "path": "/demos/sekke/assets/img/gold-bars.webp",
-        "file": "img/gold-bars.webp",
-        "title": "Gold bullion bars.jpg",
-        "artist": "Stevebidmead",
-        "license": "CC0",
-        "source": "https://commons.wikimedia.org/wiki/File:Gold_bullion_bars.jpg",
-        "px": "1200x900",
-        "kb": 119,
-        "slot": "کارت شمش — شمش‌های طلا"
-      }
-    ],
-    "width": 1200,
-    "height": 800,
-    "bytes": 48644,
-    "format": "webp",
-    "generator": "scripts/generate-previews.mjs"
-  },
-  {
-    "out": "public/images/previews/roban.webp",
-    "file": "roban.webp",
-    "demo": "roban",
-    "title": "طرح گرافیکی رابط روبان",
-    "artist": "persianbotyar (layout); Generated with image_gen for Roban",
-    "origin": "generated",
-    "derivedFrom": [
-      "public/demos/roban/assets/img/hero-01.webp"
-    ],
-    "sources": [
-      {
-        "path": "/demos/roban/assets/img/hero-01.webp",
+        "path": "/demos/fashion/assets/img/hero-01.webp",
         "file": "img/hero-01.webp",
-        "title": "ویترین روبان",
-        "artist": "Generated with image_gen for Roban",
-        "origin": "generated",
-        "generator": "image_gen",
-        "prompt": "Wide cinematic still life for a sophisticated feminine accessories boutique called Roban. A blush pink quilted mini handbag with curved handle at center, a lustrous ivory pearl bracelet to the left, and a pastel lavender heart compact mirror to the right, standing on sculptural pastel pink and lilac cylinder plinths at different heights. Large sculptural satin pink ribbon arches behind them, cream seamless studio, warm diffuse daylight, soft contact shadows, fine leather and pearl textures, premium playful editorial product photography, elegant uncluttered composition, no people, no text, no lettering, no watermark. Wide landscape image, products in the central two thirds, generous breathing room."
+        "title": "Street Style of 2018 2019 in Tehran 2.jpg",
+        "artist": "NiceIrn",
+        "license": "CC0",
+        "source": "https://commons.wikimedia.org/wiki/File:Street_Style_of_2018_2019_in_Tehran_2.jpg"
       }
     ],
     "width": 1200,
     "height": 800,
-    "bytes": 46020,
+    "bytes": 52684,
     "format": "webp",
     "generator": "scripts/generate-previews.mjs"
   }

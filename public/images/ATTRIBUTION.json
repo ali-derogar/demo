@@ -2076,7 +2076,7 @@
     ],
     "width": 1200,
     "height": 800,
-    "bytes": 39322,
+    "bytes": 39340,
     "format": "webp",
     "generator": "scripts/generate-previews.mjs"
   },
@@ -2103,7 +2103,7 @@
     ],
     "width": 1200,
     "height": 800,
-    "bytes": 77452,
+    "bytes": 77460,
     "format": "webp",
     "generator": "scripts/generate-previews.mjs"
   },
@@ -2130,7 +2130,7 @@
     ],
     "width": 1200,
     "height": 800,
-    "bytes": 52706,
+    "bytes": 52684,
     "format": "webp",
     "generator": "scripts/generate-previews.mjs"
   },
@@ -2160,7 +2160,7 @@
     ],
     "width": 1200,
     "height": 800,
-    "bytes": 76178,
+    "bytes": 76204,
     "format": "webp",
     "generator": "scripts/generate-previews.mjs"
   },
@@ -2190,7 +2190,7 @@
     ],
     "width": 1200,
     "height": 800,
-    "bytes": 74462,
+    "bytes": 74356,
     "format": "webp",
     "generator": "scripts/generate-previews.mjs"
   },
@@ -2247,7 +2247,7 @@
     ],
     "width": 1200,
     "height": 800,
-    "bytes": 48644,
+    "bytes": 48642,
     "format": "webp",
     "generator": "scripts/generate-previews.mjs"
   },
@@ -2301,7 +2301,7 @@
     ],
     "width": 1200,
     "height": 800,
-    "bytes": 63154,
+    "bytes": 63168,
     "format": "webp",
     "generator": "scripts/generate-previews.mjs"
   },
@@ -2331,7 +2331,7 @@
     ],
     "width": 1200,
     "height": 800,
-    "bytes": 66836,
+    "bytes": 66846,
     "format": "webp",
     "generator": "scripts/generate-previews.mjs"
   }
