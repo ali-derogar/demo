@@ -182,7 +182,7 @@ export function mountStore({ scene = true } = {}) {
         mobileIndex = Math.max(0, Math.min(2, mobileIndex + (d.sceneAction === 'next' ? 1 : -1)));
         showroom?.focus(mobileIndex); $('#studio-hint').textContent = `ORIGINALS / ${capsules[mobileIndex].label} — برای ورود انتخاب کنید.`; return;
       }
-      if (!showroom || host.dataset.scene !== 'ready') return notify('نمای ثابت فعال است؛ انتخاب سایز و خرید در دسترس است.');
+      if (!showroom || host.dataset.scene !== 'ready' || host.classList.contains('is-static')) return notify('نمای ثابت فعال است؛ انتخاب سایز و خرید در دسترس است.');
       if (d.sceneAction === 'left') showroom.rotate(-Math.PI / 4);
       if (d.sceneAction === 'right') showroom.rotate(Math.PI / 4);
       if (d.sceneAction === 'in') showroom.zoom(.15);

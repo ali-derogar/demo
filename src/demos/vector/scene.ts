@@ -77,7 +77,8 @@ export function mountShowroom(host: HTMLElement, options: ShowroomOptions) {
   const maskMaterial = new MeshBasicMaterial({ colorWrite: false, depthWrite: false, depthTest: false, stencilWrite: true, stencilRef: 1, stencilFunc: AlwaysStencilFunc, stencilFail: ReplaceStencilOp, stencilZFail: ReplaceStencilOp, stencilZPass: ReplaceStencilOp, side: DoubleSide });
   const mask = new Mesh(new PlaneGeometry(1, 1), maskMaterial); mask.renderOrder = 0; mask.visible = false; scene.add(mask);
   const reduced = window.matchMedia('(prefers-reduced-motion: reduce)'), pointer = new Vector2(), raycaster = new Raycaster();
-  const entry = { value: 0 }, reveal = { value: 0 }, entryTimeline = gsap.timeline({ paused: true }).to(entry, { value: 1, duration: 4, ease: 'power4.inOut' });
+  const entry = { value: 0, spread: 0 }, reveal = { value: 0 };
+  const entryTimeline = gsap.timeline({ paused: true }).to(entry, { value: 1, duration: 4, ease: 'power4.inOut' }, 0).to(entry, { spread: 1, duration: 3, ease: 'power2.out' }, 1);
   let revealTimeline = gsap.timeline({ paused: true }).to(reveal, { value: 1, duration: 1.3, ease: 'power3.out' });
   let overview: ReturnType<typeof buildOverview> | null = null, maps: TextureMap = {};
   let room: ReturnType<typeof buildRoom> | null = null, detail: ReturnType<typeof buildDetail> | null = null, film: Group | null = null;
@@ -107,16 +108,17 @@ export function mountShowroom(host: HTMLElement, options: ShowroomOptions) {
   }
   function updateOverview(dt: number) {
     if (!overview) return;
-    const value = reduced.matches ? 1 : entry.value;
+    const value = reduced.matches ? 1 : entry.value, spread = reduced.matches ? 1 : entry.spread;
     overview.world.visible = !room; overview.world.scale.setScalar(window.innerWidth <= 400 ? .8 : 1);
     overview.world.position.set(0, -.15 * (1 - value), 2 * (1 - value));
     const active = compact ? capsules[mobileIndex].product : hoverId;
     (overview.environment.material as MeshBasicMaterial).map = maps[active ? capsuleFor(active)!.theme : 'default'];
     overview.shirts.forEach((shirt, index) => {
       const capsule = capsules[index], focused = active === capsule.product, shift = compact ? (mobileIndex - 1) * .65 : 0;
-      const yaw = focused ? 0 : capsule.yaw * (4 - value * 3), alpha = reduced.matches ? 1 : 1 - Math.exp(-dt * 5);
+      const yaw = focused ? 0 : capsule.yaw * (4 - spread * 3), alpha = reduced.matches ? 1 : 1 - Math.exp(-dt * 5);
       shirt.rotation.y += (yaw - shirt.rotation.y) * alpha;
-      shirt.position.set(capsule.position[0] * (2 - value) + shift, .7, compact && focused ? 0 : capsule.position[2]);
+      const targetPosition = new Vector3(capsule.position[0] * (2 - spread) + shift, .7, compact && focused ? 0 : capsule.position[2]);
+      if (compact && !reduced.matches) shirt.position.lerp(targetPosition, alpha); else shirt.position.copy(targetPosition);
       const scale = focused ? 1.05 : 1; shirt.scale.lerp(new Vector3(scale, scale, scale), alpha);
     });
   }
@@ -195,7 +197,7 @@ export function mountShowroom(host: HTMLElement, options: ShowroomOptions) {
   function zoom(delta: number) { if (selected && Number.isFinite(delta)) { zoomLevel = Math.max(-.35, Math.min(.3, zoomLevel + delta)); wake(); } }
   function move(event: PointerEvent) {
     const bounds = canvas.getBoundingClientRect(); pointer.set((event.clientX - bounds.left) / bounds.width * 2 - 1, 1 - (event.clientY - bounds.top) / bounds.height * 2);
-    if (down && selected) { const dx = event.clientX - down.x, dy = event.clientY - down.y;
+    if (down && selected && down.id === event.pointerId) { const dx = event.clientX - down.x, dy = event.clientY - down.y;
       if (!down.dragging && Math.abs(dy) > Math.abs(dx) && Math.abs(dy) > 8) down = null;
       else if (down && (down.dragging || Math.abs(dx) > 8)) { down.dragging = true; canvas.setPointerCapture?.(event.pointerId); rotate(dx * .01); down.x = event.clientX; down.y = event.clientY; }
     }
@@ -205,7 +207,7 @@ export function mountShowroom(host: HTMLElement, options: ShowroomOptions) {
   const pointerDown = (event: PointerEvent) => { down = { x: event.clientX, y: event.clientY, id: event.pointerId, dragging: false }; };
   function pointerUp(event: PointerEvent) {
     const start = down; down = null; if (canvas.hasPointerCapture?.(event.pointerId)) canvas.releasePointerCapture(event.pointerId);
-    if (!start || start.dragging || Math.hypot(start.x - event.clientX, start.y - event.clientY) > 8) return;
+    if (!start || start.id !== event.pointerId || start.dragging || Math.hypot(start.x - event.clientX, start.y - event.clientY) > 8) return;
     const bounds = canvas.getBoundingClientRect(); raycaster.setFromCamera(new Vector2((event.clientX - bounds.left) / bounds.width * 2 - 1, 1 - (event.clientY - bounds.top) / bounds.height * 2), camera);
     if (!selected && overview) { const hit = raycaster.intersectObjects(overview.shirts, false)[0]; if (hit) options.onProductSelect(hit.object.userData.product); }
     else if (film?.visible && raycaster.intersectObjects(film.children, true).some((hit) => hit.object.userData.action === 'shop')) options.onShop?.();
