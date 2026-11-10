@@ -1,0 +1,28 @@
+[
+  {
+    "file": "img/category-hoodie.webp",
+    "title": "VECTOR category / hoodie",
+    "artist": "Edited with image_gen for VECTOR",
+    "origin": "generated",
+    "generator": "image_gen",
+    "prompt": "Use case: compositing. Asset type: production square ecommerce category photograph for the existing VECTOR store. Input image 1 is the EDIT TARGET garment. Input image 2 is the STYLE AND SCALE REFERENCE charcoal T-shirt; do not output the T-shirt. Edit only the target photograph's background, lighting, scale and floor placement to make it belong in the exact same catalog series as image 2. Output a SINGLE 1:1 SQUARE image, edge-to-edge full bleed, no margins or bars. Backdrop: seamless neutral warm light grey, closely match the T-shirt reference's background approximately sRGB #dfdcd5, no ivory, no yellow, no cream cast, no visible horizon or background panel. Composition: the FULL target garment must occupy 86-89 percent of the image HEIGHT, top of garment at y=6%, lowest hem or cuff at y=94%, horizontally centered, fully visible, no cropping. Keep natural garment proportions, never stretch it. Place garment just above the ground plane with a small soft contact shadow like the reference, no large levitation gap. Match soft studio light and realistic detailed fabric in reference. Preserve garment identity, material, color, seams, all construction details, and recognizable silhouette. No human, no mannequin, no hanger, no props, no watermarks, no frames, no extra text. Target: preserve this exact burgundy DRIFT hoodie with its sculpted hood, long pale drawstrings, ribbed cuffs, natural folds and cream chest text \"VECTOR\" spelled exactly V E C T O R. Keep the original sleeve pose and all garment design details. Enlarge and reposition the whole existing hoodie so its actual hood-to-hem height matches the T-shirt reference scale.",
+    "derivedFrom": [
+      "img/hoodie-01.webp",
+      "img/tee-01.webp"
+    ],
+    "usage": "Square category card only; original product photographs and showroom renders are retained."
+  },
+  {
+    "file": "img/category-jacket.webp",
+    "title": "VECTOR category / jacket",
+    "artist": "Edited with image_gen for VECTOR",
+    "origin": "generated",
+    "generator": "image_gen",
+    "prompt": "Use case: compositing. Asset type: production square ecommerce category photograph for the existing VECTOR store. Input image 1 is the EDIT TARGET garment. Input image 2 is the STYLE AND SCALE REFERENCE charcoal T-shirt; do not output the T-shirt. Edit only the target photograph's background, lighting, scale and floor placement to make it belong in the exact same catalog series as image 2. Output a SINGLE 1:1 SQUARE image, edge-to-edge full bleed, no margins or bars. Backdrop: seamless neutral warm light grey, closely match the T-shirt reference's background approximately sRGB #dfdcd5, no ivory, no yellow, no cream cast, no visible horizon or background panel. Composition: the FULL target garment must occupy 86-89 percent of the image HEIGHT, top of garment at y=6%, lowest hem or cuff at y=94%, horizontally centered, fully visible, no cropping. Keep natural garment proportions, never stretch it. Place garment just above the ground plane with a small soft contact shadow like the reference, no large levitation gap. Match soft studio light and realistic detailed fabric in reference. Preserve garment identity, material, color, seams, all construction details, and recognizable silhouette. No human, no mannequin, no hanger, no props, no watermarks, no frames, no extra text. Target: preserve this exact charcoal SHELL fleece jacket: nubby black fleece, tall collar, white center zipper and thin pale piped seams on collar, chest and sleeves, dropped shoulders, ribbed cuffs and two dark drawcord loops at the hem. Keep its original front three-quarter pose and construction. Enlarge and reposition the entire original jacket to the reference scale.",
+    "derivedFrom": [
+      "img/jacket-01.webp",
+      "img/tee-01.webp"
+    ],
+    "usage": "Square category card only; original product photographs and showroom renders are retained."
+  }
+]
