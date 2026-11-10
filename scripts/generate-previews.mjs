@@ -66,16 +66,13 @@ for (const [index, project] of projects.entries()) {
     +text(String(index+1).padStart(2,'0'),138,137,18,accent,500,'start');
   let content = '';
   if (layout === 'streetwear') {
-    content = await photo(mainImage,72,176,1296,708)
-      +rect(72,176,1296,708,'url(#fade)')
-      +text('VECTOR®',1310,277,100,ink,800,'end','Arial, sans-serif')
-      +text('کالکشن ۰۱ / بدون مرز',1290,318,18,muted)
-      +rect(72,680,1296,204,bg)
-      +text('قواعد خودت را بپوش.',1290,746,45,ink,600)
-      +text('فرم آزاد. انتخاب شخصی.',1290,790,20,muted)
-      +button(1290,815,'کالکشن را کشف کن',accent,'#ffffff')
-      +text('01 — CORE     /     02 — DRIFT     /     03 — SHELL',140,782,15,muted,500,'start','Arial, sans-serif')
-      +text('BE YOUR OWN DIRECTION.',140,845,13,accent,600,'start','Arial, sans-serif');
+    content = await photo(mainImage,72,76,1296,808)
+      +text('VECTOR',145,151,37,'#ffffff',800,'start','Arial, sans-serif')
+      +text('ORIGINALS STUDIO',145,175,9,'#ffffff',400,'start','Arial, sans-serif')
+      +text('فروشگاه ↗',1290,151,17,'#ffffff')
+      +text('01 WHITE     /     02 SPORT     /     03 GRAY',720,773,13,'#e8e8e8',400,'middle','Arial, sans-serif')
+      +text('برای شروع، یک لباس انتخاب کنید.',720,820,18,'#ffffff',400,'middle')
+      +text('© VECTOR CONCEPT',145,858,10,'#bcbcbc',400,'start','Arial, sans-serif');
   } else if (layout === 'aesthetic') {
     content = `<defs><linearGradient id="aura-chrome"><stop stop-color="#493745"/><stop offset=".18" stop-color="#e9d5da"/><stop offset=".25" stop-color="#79707f"/><stop offset=".5" stop-color="#f6e2dd"/><stop offset=".68" stop-color="#9d6e8d"/><stop offset=".85" stop-color="#edd7dc"/><stop offset="1" stop-color="#4a3b50"/></linearGradient></defs>`
       +await photo(mainImage,72,176,1296,708)

@@ -11,7 +11,7 @@ const palette = {
 };
 const rows = [
   ['tee-01', 'tee', 'تیشرت ORIGINALS GRAY', 'GRAY / 03', 890000, 'charcoal', 'پنبهٔ سنگین ۲۸۰ گرم، سرشانهٔ افتاده و یقهٔ کش‌باف؛ از کالکشن خاکستری اوریجینال.', '۱۰۰٪ پنبه', 'آزاد / اورسایز', 'انتخاب استودیو'],
-  ['tee-02', 'tee', 'تیشرت ORIGINALS WHITE', 'WHITE / 01', 950000, 'cream', 'تیشرت روشن کالکشن اوریجینال، با برش آزاد و جزئیات مشکی.', '۱۰۰٪ پنبه', 'باکسی / آزاد', 'تازه رسیده'],
+  ['tee-02', 'tee', 'تیشرت ORIGINALS WHITE', 'WHITE / 01', 950000, 'cream', 'تیشرت روشن کالکشن اوریجینال، با برش آزاد و جزئیات قرمز.', '۱۰۰٪ پنبه', 'باکسی / آزاد', 'تازه رسیده'],
   ['tee-03', 'tee', 'تیشرت ORIGINALS SPORT', 'SPORT / 02', 780000, 'charcoal', 'تیشرت کالکشن ورزشی با ترکیب مشکی و قرمز و فرم آزاد.', 'پنبهٔ نرم', 'آزاد / لانگ', ''],
   ['hoodie-01', 'hoodie', 'هودی سنگین DRIFT', 'DRIFT / 04', 2190000, 'wine', 'کلاه دولایهٔ خوش‌فرم، جیب کانگورویی و پارچهٔ دورس سنگین؛ حجمی که استایل شما را تعریف می‌کند.', 'دورس پنبه‌ای ۴۲۰ گرم', 'اورسایز', 'انتخاب استودیو'],
   ['hoodie-02', 'hoodie', 'هودی زیپ‌دار LAYER', 'LAYER / 05', 2450000, 'cream', 'یک لایهٔ گرم برای هوای خنک، با زیپ فلزی و جیب‌های راحت در دو طرف.', 'دورس پنبه‌ای', 'آزاد', ''],
@@ -31,7 +31,7 @@ export const products = rows.map(([id, cat, name, code, price, base, detail, fab
   const colorIds = featuredIds.includes(id) ? [base] : [...new Set([base, 'charcoal', 'cream', 'wine'])].slice(0, 3);
   const colors = colorIds.map((color) => palette[color]);
   if (id === 'tee-03') colors[0] = { ...colors[0], name: 'مشکی و قرمز' };
-  return { id, cat, name, code, price, detail, fabric, fit, badge, colors, sizes, imageColor: palette[base].name,
+  return { id, cat, name, code, price, detail, fabric, fit, badge: featuredIds.includes(id) ? 'ORIGINALS' : badge === 'انتخاب استودیو' ? '' : badge, colors, sizes, imageColor: palette[base].name,
     image: './assets/img/' + id + '.webp', added: rows.length - index, featured: featuredIds.includes(id),
     variants: colors.flatMap((color, c) => sizes.map((size, s) => ({ color: color.id, size, stock: s === 4 && (index % 4 === 0 || (index + c) % 3 === 0) ? 0 : 3 + (index + s + c) % 5 }))),
   };
