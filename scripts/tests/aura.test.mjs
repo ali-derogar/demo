@@ -92,8 +92,8 @@ test('Aura mobile menu closes with Escape and returns keyboard focus', (t) => {
   click('#menu-toggle'); click('#main-nav a'); assert.equal(q('#main-nav').classList.contains('is-open'), false);
 });
 
-test('Aura is the fourth registered project and its real sculpture geometry and projected anchors fit desktop and phone frames', async () => {
-  const { projects } = await source('src/data/projects.ts'); assert.equal(projects[3].id, 'aura');
+test('Aura follows the new Vector entry and its real sculpture geometry and projected anchors fit desktop and phone frames', async () => {
+  const { projects } = await source('src/data/projects.ts'); assert.equal(projects[4].id, 'aura');
   const { createBust } = await source('src/demos/aura/scene.ts');
   for (const [width, height] of [[600, 600], [390, 460], [320, 410]]) {
     const { world, pins } = createBust(width < 768);

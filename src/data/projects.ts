@@ -5,7 +5,7 @@ export interface ProjectVisual {
   foreground: string;
   muted: string;
   image: string;
-  layout: 'editorial' | 'athletic' | 'automotive' | 'retail' | 'cafe' | 'travel' | 'craft' | 'festival' | 'finance' | 'boutique' | 'aesthetic';
+  layout: 'editorial' | 'athletic' | 'automotive' | 'retail' | 'cafe' | 'travel' | 'craft' | 'festival' | 'finance' | 'boutique' | 'aesthetic' | 'streetwear';
 }
 
 export interface DemoProject {
@@ -36,6 +36,21 @@ export interface DemoProject {
  * کامپوننت‌های گالری خودکار با همین فهرست به‌روز می‌شوند.
  */
 export const projects: DemoProject[] = [
+  {
+    id: 'vector',
+    title: 'وکتور؛ قواعد خودت را بپوش',
+    tagline: 'فروشگاه پوشاک با استودیوی سه‌بعدی',
+    description: 'فروشگاه پوشاک یونیسکس با تیشرت، هودی، کاپشن، پیراهن و شلوار؛ استودیوی تعاملی با چرخش لباس و تغییر رنگ، انتخاب سایز، علاقه‌مندی و مسیر کامل خرید نمایشی.',
+    category: 'store', categoryLabel: 'فروشگاه اینترنتی',
+    preview: '/images/previews/vector.webp',
+    previewAlt: 'استودیوی زغالی وکتور با تیشرت، هودی زرشکی و کاپشن پافر؛ قواعد خودت را بپوش',
+    url: '/demos/vector/',
+    technologies: ['HTML', 'CSS', 'JavaScript', 'TypeScript', 'Three.js'],
+    keywords: ['وکتور', 'vector', 'پوشاک', 'فروشگاه', 'تیشرت', 'هودی', 'کاپشن', 'پیراهن', 'شلوار', 'یونیسکس', 'استریت‌ور', 'سه‌بعدی', 'سایز', 'رنگ', 'سبد خرید'],
+    highlights: ['استودیوی سه‌بعدی لباس', 'چرخش و تغییر رنگ', 'انتخاب سایز و موجودی', 'سبد خرید و سفارش نمایشی'],
+    accent: '#ef493c',
+    visual: { surface: '#19191b', foreground: '#f0efe9', muted: '#aaa69e', image: '/demos/vector/assets/img/hero-01.webp', layout: 'streetwear' },
+  },
   {
     id: 'roban',
     title: 'روبان؛ دنیای کوچک قشنگی‌ها',
