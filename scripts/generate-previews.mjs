@@ -68,9 +68,9 @@ for (const [index, project] of projects.entries()) {
   if (layout === 'streetwear') {
     content = await photo(mainImage,72,76,1296,808)
       +text('VECTOR',145,151,37,'#ffffff',800,'start','Arial, sans-serif')
-      +text('ORIGINALS STUDIO',145,175,9,'#ffffff',400,'start','Arial, sans-serif')
+      +text('INDEPENDENT STUDIO',145,175,9,'#ffffff',400,'start','Arial, sans-serif')
       +text('فروشگاه ↗',1290,151,17,'#ffffff')
-      +text('01 WHITE     /     02 SPORT     /     03 GRAY',720,773,13,'#e8e8e8',400,'middle','Arial, sans-serif')
+      +text('01 CORE     /     02 DRIFT     /     03 SHELL',720,773,13,'#e8e8e8',400,'middle','Arial, sans-serif')
       +text('برای شروع، یک لباس انتخاب کنید.',720,820,18,'#ffffff',400,'middle')
       +text('© VECTOR CONCEPT',145,858,10,'#bcbcbc',400,'start','Arial, sans-serif');
   } else if (layout === 'aesthetic') {
@@ -191,7 +191,7 @@ for (const [index, project] of projects.entries()) {
   await writeFile(join(root,output),bytes);
   const upstream = JSON.parse(await readFile(join(root, `public${project.url}assets/ATTRIBUTION.json`),'utf8'));
   const sources = [...used].map((path) => ({ path, ...upstream.find((row) => basename(row.file) === basename(path)) }));
-  const row = { out:output,file:`${project.id}.webp`,demo:project.id,title:`طرح گرافیکی رابط ${project.title.split('؛')[0]}`,artist:`persianbotyar (layout); ${[...new Set(sources.map(s=>s.artist))].join('; ')}`,license:[...new Set(sources.map(s=>s.license).filter(Boolean))].join(' / ') || undefined,source:sources[0]?.source,origin:sources.every((s)=>s.origin==='generated')?'generated':undefined,derivedFrom:[...used].map(path=>`public${path}`),sources,width:1200,height:800,bytes:bytes.length,format:'webp',generator:'scripts/generate-previews.mjs' };
+  const row = { out:output,file:`${project.id}.webp`,demo:project.id,title:`طرح گرافیکی رابط ${project.title.split('؛')[0]}`,artist:`persianbotyar (layout); ${[...new Set(sources.map(s=>s.artist))].join('; ')}`,license:[...new Set(sources.map(s=>s.license).filter(Boolean))].join(' / ') || undefined,source:sources[0]?.source,origin:sources.every((s)=>s.origin==='generated')?'generated':sources.every((s)=>s.origin==='rendered')?'rendered':sources.every((s)=>s.origin==='original')?'original':undefined,derivedFrom:[...used].map(path=>`public${path}`),sources,width:1200,height:800,bytes:bytes.length,format:'webp',generator:'scripts/generate-previews.mjs' };
   credits = credits.filter((item)=>item.out!==output); credits.push(row); manifest.push(row);
   console.log(`${project.id}: ${Math.round(bytes.length/1024)} KB`);
   document.defaultView.close();

@@ -2,12 +2,8 @@ import { mountSoundtrack } from './sound.js?v=vector-3';
 import { products, categories, sizes, featuredIds, byId, money, selectProducts, cleanCart, addToCart, cartLines, variantFor, orderErrors } from './products.js';
 const icon = (name) => `<svg class="icon" aria-hidden="true"><use href="#i-${name}"/></svg>`;
 const price = (amount) => `${money(amount)} <small>تومان</small>`;
-const capsules = [{ id: 'tee-02', theme: 'white', label: 'WHITE' }, { id: 'tee-03', theme: 'sport', label: 'SPORT' }, { id: 'tee-01', theme: 'gray', label: 'GRAY' }];
-const posters = {
-  white: ['./assets/img/room-white.webp', './assets/img/detail-white.webp', './assets/img/film-white.webp'],
-  sport: ['./assets/img/room-sport.webp', './assets/img/detail-sport.webp', './assets/img/film-sport.webp'],
-  gray: ['./assets/img/room-gray.webp', './assets/img/detail-gray.webp', './assets/img/film-gray.webp'],
-};
+const capsules = [{ id: 'hoodie-03', theme: 'core', label: 'CORE' }, { id: 'hoodie-01', theme: 'drift', label: 'DRIFT' }, { id: 'jacket-01', theme: 'shell', label: 'SHELL' }];
+const posters = Object.fromEntries(capsules.map(({theme}) => [theme, ['room', 'detail', 'film'].map((phase) => './assets/img/' + phase + '-' + theme + '.webp')]));
 
 export function mountStore({ scene = true, sound = scene } = {}) {
   const $ = (selector) => document.querySelector(selector), $$ = (selector) => [...document.querySelectorAll(selector)];
@@ -85,7 +81,7 @@ export function mountStore({ scene = true, sound = scene } = {}) {
     const progress = Math.max(0, Math.min(1, (window.scrollY - top) / Math.max(1, track.offsetHeight - window.innerHeight)));
     showroom?.setProgress(progress);
     const phase = progress < .24 ? 0 : progress < .77 ? 1 : 2;
-    $('#story-step').textContent = ['01 / THE STUDIO', '02 / EVERY ANGLE', '03 / THE FILM'][phase];
+    $('#story-step').textContent = ['01 / THE STUDIO', '02 / EVERY ANGLE', '03 / THE COLLECTION'][phase];
     $('#story-progress-bar').style.transform = `scaleX(${progress})`;
     $$('[data-story-step]').forEach((el, index) => { if (index === phase) el.setAttribute('aria-current', 'step'); else el.removeAttribute('aria-current'); });
     $('#story-offer').hidden = progress < .86; $('#scroll-hint').hidden = progress > .97;
@@ -100,7 +96,7 @@ export function mountStore({ scene = true, sound = scene } = {}) {
     $('#home-ui').hidden = !!id; $('#story-track').hidden = !id; $('#story-ui').hidden = !id;
     $$('[data-scene-product]').forEach((el) => el.setAttribute('aria-pressed', String(el.dataset.sceneProduct === id)));
     if (capsule) {
-      $('#story-name').textContent = `ORIGINALS / ${capsule.label}`; $('#story-buy').dataset.product = id;
+      $('#story-name').textContent = `VECTOR / ${capsule.label}`; $('#story-buy').dataset.product = id;
       $('#offer-copy').textContent = byId(id).name; $('.showroom-poster').src = posters[capsule.theme][0];
       host.classList.add('is-static'); window.scrollTo({ top: 0, behavior: 'instant' });
       showroom?.select(id); updateStoryScroll();
@@ -124,7 +120,7 @@ export function mountStore({ scene = true, sound = scene } = {}) {
       $('#studio-hint').textContent = 'یک کالکشن انتخاب کنید؛ فروشگاه در دسترس است.';
     }
   }
-  function routeChanged() { const match = /^#studio\/(white|sport|gray)$/.exec(location.hash); selectHero(match ? capsules.find((c) => c.theme === match[1]).id : null, false); }
+  function routeChanged() { const match = /^#studio\/(core|drift|shell|white|sport|gray)$/.exec(location.hash); const aliases = { white: 'core', sport: 'drift', gray: 'shell' }; selectHero(match ? capsules.find((c) => c.theme === (aliases[match[1]] || match[1])).id : null, false); }
   function syncProductOptions() {
     const p = byId(selectedId); if (!p || view !== 'product') return;
     const color = p.colors.find((c) => c.id === selectedColor), variant = variantFor(p.id, selectedColor, selectedSize);
@@ -138,7 +134,7 @@ export function mountStore({ scene = true, sound = scene } = {}) {
     $('#selection-error').textContent = '';
     $('#detail-add').disabled = !!variant && (!variant.stock || (cart[`${p.id}~${selectedColor}~${selectedSize}`] || 0) >= variant.stock);
     if (p.featured) {
-      const link = dialog.querySelector('[data-action="view-studio"]'); link.textContent = color ? `رنگ ${color.name} را در استودیو ببین ↗` : 'این لباس را در استودیو ببین ↗';
+      const link = dialog.querySelector('[data-action="view-studio"]'); link.textContent = `مدل ${p.imageColor} را در استودیو ببین ↗`;
     }
   }
   function openProduct(id, fromStudio = false, retain = false) {
@@ -236,7 +232,7 @@ export function mountStore({ scene = true, sound = scene } = {}) {
     if (d.action === 'close-catalog') setMenu(false);
     if (d.action === 'home') { event.preventDefault(); if (dialog.open) close(); setMenu(false); selectHero(null); }
     if (d.action === 'poster') { $('#load-state').hidden = true; }
-    if (d.action === 'credits') show('<h2 id="dialog-title">دربارهٔ این تجربه</h2><p class="credits-copy">این نمونه‌کار، بازآفرینی مفهومی یک تجربهٔ تعاملی پوشاک است. مدل‌ها و تکسچرهای کالکشن اوریجینال از تجربهٔ مرجع با ثبت منبع نگهداری شده‌اند. نشان‌های تجاری متعلق به صاحبان آن‌ها هستند.</p><p class="credits-copy"><a href="https://adidas-modern-webiste.vercel.app/" target="_blank" rel="noopener noreferrer">دیدن تجربهٔ مرجع ↗</a></p>', 'credits');
+    if (d.action === 'credits') show('<h2 id="dialog-title">دربارهٔ این تجربه</h2><p class="credits-copy">وکتور، استودیوی کالکشن مفهومی پوشاک است. هودی‌های CORE و DRIFT و کاپشن پلار SHELL را از هر زاویه ببینید، جزئیات بافت را کشف کنید و از همان مدل وارد انتخاب سایز و رنگ شوید.</p>', 'credits');
     if (button.id === 'clear-search') { state.query = ''; $('#search').value = ''; renderProducts(); $('#search').focus(); }
   }
   const searchInput = () => { state.query = $('#search').value; renderProducts(); };
@@ -261,7 +257,7 @@ export function mountStore({ scene = true, sound = scene } = {}) {
     if (!scene || showroom || disposed || pageHidden || scenePending) return;
     scenePending = true;
     try {
-      const { mountShowroom } = await import('./scene.js?v=studio-2'); if (disposed || pageHidden) return;
+      const { mountShowroom } = await import('./scene.js?v=collection-5'); if (disposed || pageHidden) return;
       showroom = mountShowroom(host, { onProductSelect: selectHero, onShop: () => setMenu(true), onStatus: sceneStatus, onProgress: (value) => { $('#load-progress').style.transform = `scaleX(${value})`; } });
       showroom.focus(mobileIndex); if (selectedHero) showroom.select(selectedHero); overlayChanged();
     } catch { host.dataset.scene = 'fallback'; sceneStatus('fallback'); }

@@ -1,35 +1,11 @@
 [
   {
-    "file": "img/hoodie-01.webp",
-    "title": "VECTOR hoodie-01",
-    "artist": "Generated with image_gen for VECTOR",
-    "origin": "generated",
-    "generator": "image_gen",
-    "prompt": "Use case: product-mockup. Asset type: square premium e-commerce product photograph for VECTOR conceptual unisex streetwear. One deep wine red oversized heavyweight fleece pullover hoodie, large sculptural double-layer hood, kangaroo pocket, ribbed hem and cuffs, dark red drawstrings. Invisible mannequin / ghost garment with natural three-dimensional volume, front three-quarter view, no visible person, centered and fully framed with generous 15 percent margins. Seamless warm light grey studio background #e8e6e0, soft directional lighting from top left, delicate contact shadow. Sophisticated luxury sportswear editorial, photorealistic fabric and detailed seams, restrained and clean. No logos, no text, no watermark, no props."
-  },
-  {
     "file": "img/hoodie-02.webp",
     "title": "VECTOR hoodie-02",
     "artist": "Generated with image_gen for VECTOR",
     "origin": "generated",
     "generator": "image_gen",
     "prompt": "Use case: product-mockup. Asset type: square premium e-commerce product photograph for VECTOR conceptual unisex streetwear. One warm oatmeal cream oversized zip-up fleece hoodie, hood down around collar, subtle silver front zipper, two pockets, ribbed cuffs. Invisible mannequin / ghost garment with natural three-dimensional volume, front three-quarter view, no visible person, centered and fully framed with generous 15 percent margins. Seamless warm light grey studio background #e8e6e0, soft directional lighting from top left, delicate contact shadow. Sophisticated luxury sportswear editorial, photorealistic fabric and detailed seams, restrained and clean. No logos, no text, no watermark, no props."
-  },
-  {
-    "file": "img/hoodie-03.webp",
-    "title": "VECTOR hoodie-03",
-    "artist": "Generated with image_gen for VECTOR",
-    "origin": "generated",
-    "generator": "image_gen",
-    "prompt": "Use case: product-mockup. Asset type: square premium e-commerce product photograph for VECTOR conceptual unisex streetwear. One graphite grey cropped boxy pullover hoodie, spacious hood, dropped shoulders, kangaroo pocket, heavy ribbed cuffs. Invisible mannequin / ghost garment with natural three-dimensional volume, front three-quarter view, no visible person, centered and fully framed with generous 15 percent margins. Seamless warm light grey studio background #e8e6e0, soft directional lighting from top left, delicate contact shadow. Sophisticated luxury sportswear editorial, photorealistic fabric and detailed seams, restrained and clean. No logos, no text, no watermark, no props."
-  },
-  {
-    "file": "img/jacket-01.webp",
-    "title": "VECTOR jacket-01",
-    "artist": "Generated with image_gen for VECTOR",
-    "origin": "generated",
-    "generator": "image_gen",
-    "prompt": "Use case: product-mockup. Asset type: square premium e-commerce product photograph for VECTOR conceptual unisex streetwear. One black quilted puffer jacket, high stand collar, six broad horizontal padded baffles, black central zipper, elastic cuffs, two zip pockets. Voluminous modern unisex silhouette. Invisible mannequin / ghost garment with natural three-dimensional volume, front three-quarter view, no visible person, centered and fully framed with generous 15 percent margins. Seamless warm light grey studio background #e8e6e0, soft directional lighting from top left, delicate contact shadow. Sophisticated luxury sportswear editorial, photorealistic fabric and detailed seams, restrained and clean. No logos, no text, no watermark, no props."
   },
   {
     "file": "img/jacket-02.webp",
@@ -96,183 +72,299 @@
     "prompt": "Use case: product-mockup. Asset type: square premium e-commerce product photograph for VECTOR conceptual unisex streetwear. One washed medium indigo relaxed straight leg denim jeans, five pocket construction, silver button, realistic denim texture. Invisible mannequin / ghost garment with natural three-dimensional volume, front three-quarter view, no visible person, centered and fully framed with generous 15 percent margins. Seamless warm light grey studio background #e8e6e0, soft directional lighting from top left, delicate contact shadow. Sophisticated luxury sportswear editorial, photorealistic fabric and detailed seams, restrained and clean. No logos, no text, no watermark, no props."
   },
   {
-    "file": "img/campaign.webp",
-    "title": "VECTOR campaign",
+    "file": "img/tee-01.webp",
+    "title": "VECTOR tee-01",
     "artist": "Generated with image_gen for VECTOR",
     "origin": "generated",
     "generator": "image_gen",
-    "prompt": "Use case: ads-marketing. Asset type: wide landscape fashion editorial banner for VECTOR unisex streetwear. Two adult fashion models, a woman and a man, walking across a raw brutalist concrete skate plaza at blue hour. One wears a sculptural deep wine red oversized hoodie and black wide leg cargo pants, the other wears a black quilted puffer jacket and ecru trousers. Dramatic long shadows, direct on-camera flash mixed with cool ambient light, subtle film grain, authentic contemporary high fashion campaign, architectural composition with generous negative space, wide landscape 3:2 photograph. No brand marks, no text, no watermark."
-  },
-  {
-    "file": "img/hero-01.webp",
-    "title": "VECTOR reference studio: hero-01",
-    "artist": "Ali Sanati / referenced Adidas experience; software asset render by VECTOR",
-    "license": "Source rights not specified by publisher; reference study",
-    "source": "https://github.com/Ali-Sanati/awwwards-adidas",
-    "derivedFrom": [
-      "models/main/MainStudio.glb",
-      "textures/main/Default_Studio_Baked_Texture.webp",
-      "textures/main/White_Studio_Baked_Texture.webp",
-      "textures/main/Red_Studio_Baked_Texture.webp",
-      "textures/main/Gray_Studio_Baked_Texture.webp",
-      "textures/main/White_Shirt_BakedTexture.webp",
-      "textures/main/Sport_Shirt_Baked_Texture.webp",
-      "textures/main/Gray_Shirt_Baked_Texture.webp"
-    ],
-    "generator": "scripts/render-vector-assets.mjs"
+    "prompt": "Use case: product-mockup. Asset type: square premium e-commerce product photograph for VECTOR conceptual unisex streetwear. One heavyweight oversized charcoal black cotton T-shirt, dropped shoulders, short wide sleeves, ribbed crew neck, subtle realistic fabric folds and visible double stitching. Invisible mannequin / ghost garment with natural three-dimensional volume, front three-quarter view, no visible person, centered and fully framed with generous 15 percent margins. Seamless warm light grey studio background #e8e6e0, soft directional lighting from top left, delicate contact shadow. Sophisticated luxury sportswear editorial, photorealistic woven fabric, restrained and clean. No logos, no text, no watermark, no props."
   },
   {
     "file": "img/tee-02.webp",
-    "title": "VECTOR reference studio: tee-02",
-    "artist": "Ali Sanati / referenced Adidas experience; software asset render by VECTOR",
-    "license": "Source rights not specified by publisher; reference study",
-    "source": "https://github.com/Ali-Sanati/awwwards-adidas",
-    "derivedFrom": [
-      "models/main/MainStudio.glb",
-      "textures/main/White_Shirt_BakedTexture.webp"
-    ],
-    "generator": "scripts/render-vector-assets.mjs"
+    "title": "VECTOR tee-02",
+    "artist": "Generated with image_gen for VECTOR",
+    "origin": "generated",
+    "generator": "image_gen",
+    "prompt": "Use case: product-mockup. Asset type: square premium e-commerce product photograph for VECTOR conceptual unisex streetwear. One off-white heavyweight boxy cotton T-shirt with a small plain rectangular red sewn patch at lower hem, dropped shoulders, ribbed round neckline. Invisible mannequin / ghost garment with natural three-dimensional volume, front three-quarter view, no visible person, centered and fully framed with generous 15 percent margins. Seamless warm light grey studio background #e8e6e0, soft directional lighting from top left, delicate contact shadow. Sophisticated luxury sportswear editorial, photorealistic fabric and detailed seams, restrained and clean. No logos, no text, no watermark, no props."
   },
   {
     "file": "img/tee-03.webp",
-    "title": "VECTOR reference studio: tee-03",
-    "artist": "Ali Sanati / referenced Adidas experience; software asset render by VECTOR",
-    "license": "Source rights not specified by publisher; reference study",
-    "source": "https://github.com/Ali-Sanati/awwwards-adidas",
-    "derivedFrom": [
-      "models/main/MainStudio.glb",
-      "textures/main/Sport_Shirt_Baked_Texture.webp"
-    ],
-    "generator": "scripts/render-vector-assets.mjs"
+    "title": "VECTOR tee-03",
+    "artist": "Generated with image_gen for VECTOR",
+    "origin": "generated",
+    "generator": "image_gen",
+    "prompt": "Use case: product-mockup. Asset type: square premium e-commerce product photograph for VECTOR conceptual unisex streetwear. One muted olive green cotton longline T-shirt with a chest pocket, minimalist straight silhouette, short sleeves, ribbed round neckline. Invisible mannequin / ghost garment with natural three-dimensional volume, front three-quarter view, no visible person, centered and fully framed with generous 15 percent margins. Seamless warm light grey studio background #e8e6e0, soft directional lighting from top left, delicate contact shadow. Sophisticated luxury sportswear editorial, photorealistic fabric and detailed seams, restrained and clean. No logos, no text, no watermark, no props."
   },
   {
-    "file": "img/tee-01.webp",
-    "title": "VECTOR reference studio: tee-01",
-    "artist": "Ali Sanati / referenced Adidas experience; software asset render by VECTOR",
-    "license": "Source rights not specified by publisher; reference study",
-    "source": "https://github.com/Ali-Sanati/awwwards-adidas",
+    "file": "img/hoodie-03.webp",
+    "title": "VECTOR collection / hoodie-03",
+    "artist": "VECTOR art direction; user-supplied clothing models",
+    "origin": "rendered",
+    "generator": "scripts/prepare-vector-models.py",
+    "method": "Cycles render of the same supplied garment meshes and PBR textures used by the live showroom",
     "derivedFrom": [
-      "models/main/MainStudio.glb",
-      "textures/main/Gray_Shirt_Baked_Texture.webp"
+      "collection/collection.glb"
     ],
-    "generator": "scripts/render-vector-assets.mjs"
+    "sources": [
+      "models/Blender.zip",
+      "models/OBJ.zip",
+      "models/Jacket+70_obj.zip"
+    ]
   },
   {
-    "file": "img/room-white.webp",
-    "title": "VECTOR reference studio: room-white",
-    "artist": "Ali Sanati / referenced Adidas experience; software asset render by VECTOR",
-    "license": "Source rights not specified by publisher; reference study",
-    "source": "https://github.com/Ali-Sanati/awwwards-adidas",
+    "file": "img/hoodie-01.webp",
+    "title": "VECTOR collection / hoodie-01",
+    "artist": "VECTOR art direction; user-supplied clothing models",
+    "origin": "rendered",
+    "generator": "scripts/prepare-vector-models.py",
+    "method": "Cycles render of the same supplied garment meshes and PBR textures used by the live showroom",
     "derivedFrom": [
-      "models/white/WhiteStudio.glb",
-      "textures/white/first/White_Studio_Baked_Texture.webp",
-      "textures/white/first/Speakers_Baked_Texture.webp",
-      "textures/white/first/Dj_Baked_Texture.webp",
-      "textures/white/first/White_Shirt_Baked_Texture.webp",
-      "textures/white/first/TV_Screen.webp"
+      "collection/collection.glb"
     ],
-    "generator": "scripts/render-vector-assets.mjs"
+    "sources": [
+      "models/Blender.zip",
+      "models/OBJ.zip",
+      "models/Jacket+70_obj.zip"
+    ]
   },
   {
-    "file": "img/detail-white.webp",
-    "title": "VECTOR reference studio: detail-white",
-    "artist": "Ali Sanati / referenced Adidas experience; software asset render by VECTOR",
-    "license": "Source rights not specified by publisher; reference study",
-    "source": "https://github.com/Ali-Sanati/awwwards-adidas",
+    "file": "img/jacket-01.webp",
+    "title": "VECTOR collection / jacket-01",
+    "artist": "VECTOR art direction; user-supplied clothing models",
+    "origin": "rendered",
+    "generator": "scripts/prepare-vector-models.py",
+    "method": "Cycles render of the same supplied garment meshes and PBR textures used by the live showroom",
     "derivedFrom": [
-      "models/ShirtScrolling.glb",
-      "textures/white/second/White_Studio_Baked_Texture.webp",
-      "textures/white/second/Sphere_Env_Baked_Texture.webp"
+      "collection/collection.glb"
     ],
-    "generator": "scripts/render-vector-assets.mjs"
+    "sources": [
+      "models/Blender.zip",
+      "models/OBJ.zip",
+      "models/Jacket+70_obj.zip"
+    ]
   },
   {
-    "file": "img/film-white.webp",
-    "title": "VECTOR reference studio: film-white",
-    "artist": "Ali Sanati / referenced Adidas experience; software asset render by VECTOR",
-    "license": "Source rights not specified by publisher; reference study",
-    "source": "https://github.com/Ali-Sanati/awwwards-adidas",
+    "file": "img/hero-01.webp",
+    "title": "VECTOR collection / hero-01",
+    "artist": "VECTOR art direction; user-supplied clothing models",
+    "origin": "rendered",
+    "generator": "scripts/prepare-vector-models.py",
+    "method": "Cycles render of the same supplied garment meshes and PBR textures used by the live showroom",
     "derivedFrom": [
-      "textures/white/third/adidas.mp4"
+      "collection/collection.glb"
     ],
-    "generator": "scripts/render-vector-assets.mjs"
+    "sources": [
+      "models/Blender.zip",
+      "models/OBJ.zip",
+      "models/Jacket+70_obj.zip"
+    ]
   },
   {
-    "file": "img/room-sport.webp",
-    "title": "VECTOR reference studio: room-sport",
-    "artist": "Ali Sanati / referenced Adidas experience; software asset render by VECTOR",
-    "license": "Source rights not specified by publisher; reference study",
-    "source": "https://github.com/Ali-Sanati/awwwards-adidas",
+    "file": "img/campaign.webp",
+    "title": "VECTOR collection / campaign",
+    "artist": "VECTOR art direction; user-supplied clothing models",
+    "origin": "rendered",
+    "generator": "scripts/prepare-vector-models.py",
+    "method": "Cycles render of the same supplied garment meshes and PBR textures used by the live showroom",
     "derivedFrom": [
-      "models/sport/SportStudio.glb",
-      "textures/sport/first/Floor_Baked_Texutre.webp",
-      "textures/sport/first/Ramp_Baked_Texture.webp",
-      "textures/sport/first/Skateboard_Baked_Texture.webp",
-      "textures/sport/first/Sport_Shirt_Baked_Texture.webp"
+      "collection/collection.glb"
     ],
-    "generator": "scripts/render-vector-assets.mjs"
+    "sources": [
+      "models/Blender.zip",
+      "models/OBJ.zip",
+      "models/Jacket+70_obj.zip"
+    ]
   },
   {
-    "file": "img/detail-sport.webp",
-    "title": "VECTOR reference studio: detail-sport",
-    "artist": "Ali Sanati / referenced Adidas experience; software asset render by VECTOR",
-    "license": "Source rights not specified by publisher; reference study",
-    "source": "https://github.com/Ali-Sanati/awwwards-adidas",
+    "file": "img/room-core.webp",
+    "title": "VECTOR collection / room-core",
+    "artist": "VECTOR art direction; user-supplied clothing models",
+    "origin": "rendered",
+    "generator": "scripts/prepare-vector-models.py",
+    "method": "Cycles render of the same supplied garment meshes and PBR textures used by the live showroom",
     "derivedFrom": [
-      "models/ShirtScrolling.glb",
-      "textures/sport/second/Sport_Shirt_Baked_Texture.webp",
-      "textures/sport/second/Sport_Sphere_Env_Baked_Texture.webp"
+      "collection/collection.glb"
     ],
-    "generator": "scripts/render-vector-assets.mjs"
+    "sources": [
+      "models/Blender.zip",
+      "models/OBJ.zip",
+      "models/Jacket+70_obj.zip"
+    ]
   },
   {
-    "file": "img/film-sport.webp",
-    "title": "VECTOR reference studio: film-sport",
-    "artist": "Ali Sanati / referenced Adidas experience; software asset render by VECTOR",
-    "license": "Source rights not specified by publisher; reference study",
-    "source": "https://github.com/Ali-Sanati/awwwards-adidas",
+    "file": "img/detail-core.webp",
+    "title": "VECTOR collection / detail-core",
+    "artist": "VECTOR art direction; user-supplied clothing models",
+    "origin": "rendered",
+    "generator": "scripts/prepare-vector-models.py",
+    "method": "Cycles render of the same supplied garment meshes and PBR textures used by the live showroom",
     "derivedFrom": [
-      "textures/sport/third/adidas.mp4"
+      "collection/collection.glb"
     ],
-    "generator": "scripts/render-vector-assets.mjs"
+    "sources": [
+      "models/Blender.zip",
+      "models/OBJ.zip",
+      "models/Jacket+70_obj.zip"
+    ]
   },
   {
-    "file": "img/room-gray.webp",
-    "title": "VECTOR reference studio: room-gray",
-    "artist": "Ali Sanati / referenced Adidas experience; software asset render by VECTOR",
-    "license": "Source rights not specified by publisher; reference study",
-    "source": "https://github.com/Ali-Sanati/awwwards-adidas",
+    "file": "img/film-core.webp",
+    "title": "VECTOR collection / film-core",
+    "artist": "VECTOR art direction; user-supplied clothing models",
+    "origin": "rendered",
+    "generator": "scripts/prepare-vector-models.py",
+    "method": "Cycles render of the same supplied garment meshes and PBR textures used by the live showroom",
     "derivedFrom": [
-      "models/gray/GrayStudio.glb",
-      "textures/gray/first/Gray_Shirt_Baked_Texture.webp",
-      "textures/gray/first/Assets_Baked_Texture.webp",
-      "textures/gray/first/Wall_Baked_Texture.webp",
-      "textures/gray/first/Floor_Baked_Texture.webp"
+      "collection/collection.glb"
     ],
-    "generator": "scripts/render-vector-assets.mjs"
+    "sources": [
+      "models/Blender.zip",
+      "models/OBJ.zip",
+      "models/Jacket+70_obj.zip"
+    ]
   },
   {
-    "file": "img/detail-gray.webp",
-    "title": "VECTOR reference studio: detail-gray",
-    "artist": "Ali Sanati / referenced Adidas experience; software asset render by VECTOR",
-    "license": "Source rights not specified by publisher; reference study",
-    "source": "https://github.com/Ali-Sanati/awwwards-adidas",
+    "file": "img/room-drift.webp",
+    "title": "VECTOR collection / room-drift",
+    "artist": "VECTOR art direction; user-supplied clothing models",
+    "origin": "rendered",
+    "generator": "scripts/prepare-vector-models.py",
+    "method": "Cycles render of the same supplied garment meshes and PBR textures used by the live showroom",
     "derivedFrom": [
-      "models/ShirtScrolling.glb",
-      "textures/gray/second/Gray_Shirt_Baked_Texture.webp",
-      "textures/gray/second/Gray_Sphere_Env_Baked_Texture.webp"
+      "collection/collection.glb"
     ],
-    "generator": "scripts/render-vector-assets.mjs"
+    "sources": [
+      "models/Blender.zip",
+      "models/OBJ.zip",
+      "models/Jacket+70_obj.zip"
+    ]
   },
   {
-    "file": "img/film-gray.webp",
-    "title": "VECTOR reference studio: film-gray",
-    "artist": "Ali Sanati / referenced Adidas experience; software asset render by VECTOR",
-    "license": "Source rights not specified by publisher; reference study",
-    "source": "https://github.com/Ali-Sanati/awwwards-adidas",
+    "file": "img/detail-drift.webp",
+    "title": "VECTOR collection / detail-drift",
+    "artist": "VECTOR art direction; user-supplied clothing models",
+    "origin": "rendered",
+    "generator": "scripts/prepare-vector-models.py",
+    "method": "Cycles render of the same supplied garment meshes and PBR textures used by the live showroom",
     "derivedFrom": [
-      "textures/gray/third/adidas.mp4"
+      "collection/collection.glb"
     ],
-    "generator": "scripts/render-vector-assets.mjs"
+    "sources": [
+      "models/Blender.zip",
+      "models/OBJ.zip",
+      "models/Jacket+70_obj.zip"
+    ]
+  },
+  {
+    "file": "img/film-drift.webp",
+    "title": "VECTOR collection / film-drift",
+    "artist": "VECTOR art direction; user-supplied clothing models",
+    "origin": "rendered",
+    "generator": "scripts/prepare-vector-models.py",
+    "method": "Cycles render of the same supplied garment meshes and PBR textures used by the live showroom",
+    "derivedFrom": [
+      "collection/collection.glb"
+    ],
+    "sources": [
+      "models/Blender.zip",
+      "models/OBJ.zip",
+      "models/Jacket+70_obj.zip"
+    ]
+  },
+  {
+    "file": "img/room-shell.webp",
+    "title": "VECTOR collection / room-shell",
+    "artist": "VECTOR art direction; user-supplied clothing models",
+    "origin": "rendered",
+    "generator": "scripts/prepare-vector-models.py",
+    "method": "Cycles render of the same supplied garment meshes and PBR textures used by the live showroom",
+    "derivedFrom": [
+      "collection/collection.glb"
+    ],
+    "sources": [
+      "models/Blender.zip",
+      "models/OBJ.zip",
+      "models/Jacket+70_obj.zip"
+    ]
+  },
+  {
+    "file": "img/detail-shell.webp",
+    "title": "VECTOR collection / detail-shell",
+    "artist": "VECTOR art direction; user-supplied clothing models",
+    "origin": "rendered",
+    "generator": "scripts/prepare-vector-models.py",
+    "method": "Cycles render of the same supplied garment meshes and PBR textures used by the live showroom",
+    "derivedFrom": [
+      "collection/collection.glb"
+    ],
+    "sources": [
+      "models/Blender.zip",
+      "models/OBJ.zip",
+      "models/Jacket+70_obj.zip"
+    ]
+  },
+  {
+    "file": "img/film-shell.webp",
+    "title": "VECTOR collection / film-shell",
+    "artist": "VECTOR art direction; user-supplied clothing models",
+    "origin": "rendered",
+    "generator": "scripts/prepare-vector-models.py",
+    "method": "Cycles render of the same supplied garment meshes and PBR textures used by the live showroom",
+    "derivedFrom": [
+      "collection/collection.glb"
+    ],
+    "sources": [
+      "models/Blender.zip",
+      "models/OBJ.zip",
+      "models/Jacket+70_obj.zip"
+    ]
+  },
+  {
+    "file": "img/core-closeup.webp",
+    "title": "VECTOR collection / core-closeup",
+    "artist": "VECTOR art direction; user-supplied clothing models",
+    "origin": "rendered",
+    "generator": "scripts/prepare-vector-models.py",
+    "method": "Cycles render of the same supplied garment meshes and PBR textures used by the live showroom",
+    "derivedFrom": [
+      "collection/collection.glb"
+    ],
+    "sources": [
+      "models/Blender.zip",
+      "models/OBJ.zip",
+      "models/Jacket+70_obj.zip"
+    ]
+  },
+  {
+    "file": "img/drift-closeup.webp",
+    "title": "VECTOR collection / drift-closeup",
+    "artist": "VECTOR art direction; user-supplied clothing models",
+    "origin": "rendered",
+    "generator": "scripts/prepare-vector-models.py",
+    "method": "Cycles render of the same supplied garment meshes and PBR textures used by the live showroom",
+    "derivedFrom": [
+      "collection/collection.glb"
+    ],
+    "sources": [
+      "models/Blender.zip",
+      "models/OBJ.zip",
+      "models/Jacket+70_obj.zip"
+    ]
+  },
+  {
+    "file": "img/shell-closeup.webp",
+    "title": "VECTOR collection / shell-closeup",
+    "artist": "VECTOR art direction; user-supplied clothing models",
+    "origin": "rendered",
+    "generator": "scripts/prepare-vector-models.py",
+    "method": "Cycles render of the same supplied garment meshes and PBR textures used by the live showroom",
+    "derivedFrom": [
+      "collection/collection.glb"
+    ],
+    "sources": [
+      "models/Blender.zip",
+      "models/OBJ.zip",
+      "models/Jacket+70_obj.zip"
+    ]
   }
 ]

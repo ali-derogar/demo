@@ -49,6 +49,7 @@ for (const slug of DEMOS) {
       title: item.title,
       artist: item.artist,
       ...(item.origin === 'generated' ? { origin: item.origin, generator: item.generator, prompt: item.prompt } : {}),
+      ...(['original', 'rendered'].includes(item.origin) ? { origin: item.origin, generator: item.generator, derivedFrom: item.derivedFrom, method: item.method, sources: item.sources } : {}),
       license: item.license,
       source: item.source ?? item.descriptionUrl ?? '',
       width: meta.width,

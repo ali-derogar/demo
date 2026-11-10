@@ -1,88 +1,92 @@
-/** Asset renderer, not a browser screenshot. Uses original geometry, UVs and baked maps. */
-import { readFile, writeFile } from 'node:fs/promises';
+/** Prepare supplied clothing, export browser GLBs and render matching posters. */
+import { readFile, writeFile, mkdir } from 'node:fs/promises';
 import { resolve, join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { spawnSync } from 'node:child_process';
+import { createHash } from 'node:crypto';
 import sharp from 'sharp';
-import { PerspectiveCamera, Texture, Vector4, DoubleSide } from 'three';
-import { source } from './tests/helpers.mjs';
-import { decodeReference } from './lib/vector-assets.mjs';
+import { compressGarmentGLB } from './lib/compress-vector-glb.mjs';
 
-const root = resolve(dirname(fileURLToPath(import.meta.url)), '..'), base = join(root, 'public/demos/vector/assets'), ref = join(base, 'reference');
-const { buildOverview, buildRoom, buildDetail } = await source('src/demos/vector/scene.ts');
-const { overviewMaps, roomMaps, detailMaps, capsules } = await source('src/demos/vector/studio.ts');
-const images = new Map();
-async function mapsFor(paths) {
-  const result = {};
-  for (const [key, path] of Object.entries(paths)) {
-    const file = join(ref, path), texture = new Texture(); texture.name = path; texture.flipY = false;
-    if (!images.has(path)) images.set(path, await sharp(file).resize({ width: 2048, withoutEnlargement: true }).ensureAlpha().raw().toBuffer({ resolveWithObject: true }));
-    result[key] = texture;
-  }
-  return result;
+const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
+const base = join(root, 'public/demos/vector/assets'), output = join(base, 'collection');
+const cache = join(root, 'scripts/.cache/vector-imports'), renders = join(cache, 'renders');
+await mkdir(output, { recursive: true });
+if (!process.argv.includes('--convert-only')) {
+  const extraction = spawnSync('python3', ['-c', `
+from pathlib import Path
+from zipfile import ZipFile
+from shutil import copyfileobj
+root=Path(${JSON.stringify(root)})
+cache=root/'scripts/.cache/vector-imports'
+sources={
+ 'Blender.zip':('hoodie', ['Blender/DG100024.blend','Blender/Read_Me.txt']),
+ 'OBJ.zip':('hoodie', ['OBJ/OBJ Multiple Objects/DG100024_diffuse_1001.png','OBJ/OBJ Multiple Objects/DG100024_normal_1001.png']),
+ 'Jacket+70_obj.zip':('jacket',None),
 }
-async function render(world, camera, width, height, bg) {
-  const output = Buffer.alloc(width * height * 4), zbuffer = new Float32Array(width * height).fill(Infinity);
-  for (let i = 0; i < width * height; i++) { output[i * 4] = bg[0]; output[i * 4 + 1] = bg[1]; output[i * 4 + 2] = bg[2]; output[i * 4 + 3] = 255; }
-  camera.aspect = width / height; camera.updateProjectionMatrix(); camera.updateMatrixWorld(); world.updateMatrixWorld(true);
-  world.traverse((object) => {
-    if (!object.isMesh || !object.visible) return;
-    const geometry = object.geometry, positions = geometry.attributes.position, uv = geometry.attributes.uv, index = geometry.index;
-    const map = images.get(object.material.map?.name); if (!map || !uv) return;
-    const projected = Array.from({ length: positions.count }, (_, i) => {
-      const p = new Vector4(positions.getX(i), positions.getY(i), positions.getZ(i), 1).applyMatrix4(object.matrixWorld).applyMatrix4(camera.matrixWorldInverse).applyMatrix4(camera.projectionMatrix);
-      return { x: (p.x / p.w * .5 + .5) * width, y: (.5 - p.y / p.w * .5) * height, z: p.z / p.w, w: 1 / p.w, u: uv.getX(i), v: uv.getY(i) };
-    });
-    for (let i = 0; i < (index?.count ?? positions.count); i += 3) {
-      const [a, b, c] = [0, 1, 2].map((n) => projected[index ? index.getX(i + n) : i + n]);
-      if (a.w <= 0 || b.w <= 0 || c.w <= 0) continue;
-      const area = (b.x - a.x) * (c.y - a.y) - (b.y - a.y) * (c.x - a.x);
-      if (Math.abs(area) < .000001 || (object.material.side !== DoubleSide && area > 0)) continue;
-      const left = Math.max(0, Math.floor(Math.min(a.x, b.x, c.x))), right = Math.min(width - 1, Math.ceil(Math.max(a.x, b.x, c.x)));
-      const top = Math.max(0, Math.floor(Math.min(a.y, b.y, c.y))), bottom = Math.min(height - 1, Math.ceil(Math.max(a.y, b.y, c.y)));
-      for (let y = top; y <= bottom; y++) for (let x = left; x <= right; x++) {
-        const px = x + .5, py = y + .5;
-        const wa = ((b.x - px) * (c.y - py) - (b.y - py) * (c.x - px)) / area;
-        const wb = ((c.x - px) * (a.y - py) - (c.y - py) * (a.x - px)) / area, wc = 1 - wa - wb;
-        if (wa < 0 || wb < 0 || wc < 0) continue;
-        const z = wa * a.z + wb * b.z + wc * c.z, out = y * width + x; if (z >= zbuffer[out] || z < -1 || z > 1) continue;
-        const sum = wa * a.w + wb * b.w + wc * c.w;
-        const u = Math.max(0, Math.min(.999999, (wa * a.u * a.w + wb * b.u * b.w + wc * c.u * c.w) / sum));
-        const v = Math.max(0, Math.min(.999999, (wa * a.v * a.w + wb * b.v * b.w + wc * c.v * c.w) / sum));
-        const source = (Math.floor(v * map.info.height) * map.info.width + Math.floor(u * map.info.width)) * 4;
-        output[out * 4] = map.data[source]; output[out * 4 + 1] = map.data[source + 1]; output[out * 4 + 2] = map.data[source + 2]; zbuffer[out] = z;
+for archive,(folder,names) in sources.items():
+ with ZipFile(root/'models'/archive) as z:
+  for name in names or z.namelist():
+   if name.endswith('/'): continue
+   target=(cache/folder/Path(name).name).resolve()
+   if not target.is_relative_to((cache/folder).resolve()): raise ValueError('Unsafe source path')
+   target.parent.mkdir(parents=True,exist_ok=True)
+   if not target.exists() or target.stat().st_size != z.getinfo(name).file_size:
+    with z.open(name) as src,target.open('wb') as dst: copyfileobj(src,dst)
+`], { cwd: root, encoding: 'utf8' });
+  if (extraction.status !== 0) throw new Error('Supplied model archives could not be extracted: ' + extraction.stderr);
+  const textures = join(cache, 'textures'); await mkdir(textures, { recursive: true });
+  const { data, info } = await sharp(join(cache, 'hoodie/DG100024_diffuse_1001.png')).resize(2048, 2048).removeAlpha().raw().toBuffer({ resolveWithObject: true });
+  for (const [theme, body, rib, ink] of [
+    ['core', [214, 205, 185], [191, 181, 160], '#343b34'],
+    ['drift', [79, 28, 44], [59, 20, 34], '#d8cdb6'],
+  ]) {
+    const pixels = Buffer.from(data);
+    for (let i = 0; i < pixels.length; i += 3) {
+      const [r, g, b] = [data[i], data[i + 1], data[i + 2]];
+      const color = b > r * 1.3 && b > g * 1.1 ? body : r > b * 1.5 && g > b * 1.3 ? rib : null;
+      if (color) {
+        const shade = color === body ? Math.min(1.12, Math.max(.65, b / 123)) : Math.min(1.12, Math.max(.65, r / 211));
+        for (let c = 0; c < 3; c++) pixels[i + c] = Math.min(255, Math.round(color[c] * shade));
       }
     }
-  });
-  return sharp(output, { raw: { width, height, channels: 4 } }).webp({ quality: 88 }).toBuffer();
+    const print = Buffer.from(`<svg width="2048" height="2048"><text x="612" y="1370" text-anchor="middle" fill="${ink}" font-family="sans-serif" font-weight="700" font-size="34" letter-spacing="5">VECTOR</text></svg>`);
+    await sharp(pixels, { raw: { width: info.width, height: info.height, channels: 3 } }).composite([{ input: print }]).jpeg({ quality: 95, chromaSubsampling: '4:4:4' }).toFile(join(textures, `hoodie-${theme}-color.jpg`));
+  }
+  await sharp(join(cache, 'hoodie/DG100024_normal_1001.png')).resize(4096, 4096).removeAlpha().jpeg({ quality: 96, chromaSubsampling: '4:4:4' }).toFile(join(textures, 'hoodie-normal.jpg'));
+  for (const [source, target, size] of [
+    ['uniformDiffuse.png', 'jacket-color.jpg', 2048], ['uniformNormal.png', 'jacket-normal.jpg', 4096],
+    ['uniformRoughness.png', 'jacket-roughness.jpg', 2048], ['uniformMetal.png', 'jacket-metal.jpg', 1024],
+  ]) await sharp(join(cache, 'jacket', source)).resize(size, size).removeAlpha().jpeg({ quality: 96, chromaSubsampling: '4:4:4' }).toFile(join(textures, target));
+  const blender = process.env.VECTOR_BLENDER_BIN || join(root, 'scripts/.cache/blender-4.5.9-linux-x64/blender');
+  const result = spawnSync(blender, ['--background', '--threads', '6', '--python-exit-code', '1', '--python', join(root, 'scripts/prepare-vector-models.py'), ...(process.argv.includes('--draft') ? ['--', '--draft'] : [])], { stdio: 'inherit' });
+  if (result.status !== 0) throw new Error('Supplied clothing preparation failed: ' + (result.error?.message || result.status));
+  if (process.argv.includes('--draft')) process.exit(0);
 }
-const nodes = await decodeReference(join(ref, 'models/main/MainStudio.glb')), textures = await mapsFor(overviewMaps), overview = buildOverview(nodes, textures);
-const camera = new PerspectiveCamera(30, 1.5, .01, 100); camera.position.set(0, .7, 3); camera.lookAt(0, .7, 0);
+await compressGarmentGLB(join(output, 'collection.glb'));
+await compressGarmentGLB(join(output, 'lettering.glb'));
+const images = {
+  'hoodie-03': 'core-product', 'hoodie-01': 'drift-product', 'jacket-01': 'shell-product',
+  'hero-01': 'hero-01', campaign: 'campaign',
+  ...Object.fromEntries(['core', 'drift', 'shell'].flatMap((theme) => ['room', 'detail', 'film'].map((phase) => [phase + '-' + theme, phase + '-' + theme]))),
+  ...Object.fromEntries(['core', 'drift', 'shell'].map((theme) => [theme + '-closeup', theme + '-closeup'])),
+};
 const records = [];
-async function save(name, data, sources) {
-  await writeFile(join(base, 'img', name + '.webp'), data);
-  records.push({ file: 'img/' + name + '.webp', title: 'VECTOR reference studio: ' + name, artist: 'Ali Sanati / referenced Adidas experience; software asset render by VECTOR', license: 'Source rights not specified by publisher; reference study', source: 'https://github.com/Ali-Sanati/awwwards-adidas', derivedFrom: sources, generator: 'scripts/render-vector-assets.mjs' });
+for (const [name, source] of Object.entries(images)) {
+  await sharp(join(renders, source + '.png')).webp({ quality: 93, effort: 5 }).toFile(join(base, 'img', name + '.webp'));
+  records.push({ file: 'img/' + name + '.webp', title: 'VECTOR collection / ' + name, artist: 'VECTOR art direction; user-supplied clothing models', origin: 'rendered', generator: 'scripts/prepare-vector-models.py', method: 'Cycles render of the same supplied garment meshes and PBR textures used by the live showroom', derivedFrom: ['collection/collection.glb'], sources: ['models/Blender.zip', 'models/OBJ.zip', 'models/Jacket+70_obj.zip'] });
 }
-await save('hero-01', await render(overview.world, camera, 1536, 1024, [60, 60, 60]), ['models/main/MainStudio.glb', ...Object.values(overviewMaps)]);
-for (const [index, capsule] of capsules.entries()) {
-  overview.shirts.forEach((shirt, n) => { shirt.visible = index === n; }); overview.environment.visible = false;
-  const shirt = overview.shirts[index]; shirt.position.set(0, .7, 0); shirt.rotation.y = .18;
-  camera.position.set(0, .75, 1.8); camera.lookAt(0, .75, 0);
-  await save(capsule.product, await render(overview.world, camera, 900, 900, [232, 230, 224]), ['models/main/MainStudio.glb', overviewMaps[capsule.theme + 'Shirt']]);
+const previous = JSON.parse(await readFile(join(base, 'ATTRIBUTION.json'), 'utf8'));
+const current = previous.filter((row) => !records.some((r) => r.file === row.file) && !/^img\/(room|detail|film)-(white|sport|gray)\.webp$/.test(row.file));
+await writeFile(join(base, 'ATTRIBUTION.json'), JSON.stringify([...current, ...records], null, 2) + '\n');
+const files = [];
+for (const file of ['collection.glb', 'lettering.glb']) {
+  const bytes = await readFile(join(output, file));
+  files.push({ file, bytes: bytes.length, sha256: createHash('sha256').update(bytes).digest('hex') });
 }
-const detailNodes = await decodeReference(join(ref, 'models/ShirtScrolling.glb'));
-for (const theme of ['white', 'sport', 'gray']) {
-  const filename = theme[0].toUpperCase() + theme.slice(1), roomNodes = await decodeReference(join(ref, `models/${theme}/${filename}Studio.glb`));
-  const room = buildRoom(theme, roomNodes, await mapsFor(roomMaps[theme]));
-  camera.position.set(0, .7, 3); camera.lookAt(0, .7, 0);
-  await save('room-' + theme, await render(room.world, camera, 1440, 960, [50, 50, 50]), [`models/${theme}/${filename}Studio.glb`, ...Object.values(roomMaps[theme])]);
-  const detail = buildDetail(theme, detailNodes, await mapsFor(detailMaps[theme])); detail.world.position.y = .7; detail.world.rotation.y = -Math.PI / 6;
-  await save('detail-' + theme, await render(detail.world, camera, 1440, 960, [50, 50, 50]), ['models/ShirtScrolling.glb', ...Object.values(detailMaps[theme])]);
-  const ffmpeg = process.env.VECTOR_FFMPEG_BIN || 'ffmpeg';
-  const result = spawnSync(ffmpeg, ['-v', 'error', '-ss', '0.5', '-i', join(ref, `textures/${theme}/third/adidas.mp4`), '-frames:v', '1', '-f', 'image2pipe', '-vcodec', 'png', '-'], { maxBuffer: 8 * 1024 * 1024 });
-  if (result.status !== 0) throw new Error('Film poster needs ffmpeg: ' + (result.error?.message || result.stderr?.toString()));
-  await save('film-' + theme, await sharp(result.stdout).resize(1200).webp({ quality: 85 }).toBuffer(), [`textures/${theme}/third/adidas.mp4`]);
+const sources = [];
+for (const archive of ['Blender.zip', 'OBJ.zip', 'Jacket+70_obj.zip']) {
+  const bytes = await readFile(join(root, 'models', archive));
+  sources.push({ file: 'models/' + archive, bytes: bytes.length, sha256: createHash('sha256').update(bytes).digest('hex') });
 }
-const previous = JSON.parse(await readFile(join(base, 'ATTRIBUTION.json'), 'utf8')), updated = previous.filter((row) => !records.some((r) => r.file === row.file));
-await writeFile(join(base, 'ATTRIBUTION.json'), JSON.stringify([...updated, ...records], null, 2) + '\n');
-console.log('Rendered', records.length, 'real asset previews; not browser screenshots.');
+await writeFile(join(output, 'ATTRIBUTION.json'), JSON.stringify({ title: 'VECTOR / CORE, DRIFT, SHELL', origin: 'user-supplied', generator: 'scripts/prepare-vector-models.py', nativeSource: 'design/vector/vector-collection.blend', license: 'Source archives supplied by the project owner; no additional redistribution license is asserted.', sources, designs: [{ node: 'CORE', source: 'DG100024', author: 'Digital Fashionwear (supplied Read_Me.txt)', colorway: 'bone' }, { node: 'DRIFT', source: 'DG100024', author: 'Digital Fashionwear (supplied Read_Me.txt)', colorway: 'oxblood' }, { node: 'SHELL', source: 'W-Jacket 70', author: 'Not named in supplied archive', colorway: 'charcoal fleece' }], files }, null, 2) + '\n');
+console.log('Saved', records.length, 'matching collection renders and supplied model provenance.');

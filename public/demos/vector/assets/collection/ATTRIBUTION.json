@@ -1,0 +1,56 @@
+{
+  "title": "VECTOR / CORE, DRIFT, SHELL",
+  "origin": "user-supplied",
+  "generator": "scripts/prepare-vector-models.py",
+  "nativeSource": "design/vector/vector-collection.blend",
+  "license": "Source archives supplied by the project owner; no additional redistribution license is asserted.",
+  "sources": [
+    {
+      "file": "models/Blender.zip",
+      "bytes": 17861265,
+      "sha256": "238ff95fb464e2f07b5bb204cea6811208ff33c8275dc45e3ce6a4e7da2da42b"
+    },
+    {
+      "file": "models/OBJ.zip",
+      "bytes": 292134520,
+      "sha256": "2e8be33a8cfeea350405603c024c330e81edfd9eab762d010e3029913ebd7489"
+    },
+    {
+      "file": "models/Jacket+70_obj.zip",
+      "bytes": 34512223,
+      "sha256": "4582894abbd3b443d479f4e298d7a3c5f12ca50a7d3f86167d6f1efc7259156d"
+    }
+  ],
+  "designs": [
+    {
+      "node": "CORE",
+      "source": "DG100024",
+      "author": "Digital Fashionwear (supplied Read_Me.txt)",
+      "colorway": "bone"
+    },
+    {
+      "node": "DRIFT",
+      "source": "DG100024",
+      "author": "Digital Fashionwear (supplied Read_Me.txt)",
+      "colorway": "oxblood"
+    },
+    {
+      "node": "SHELL",
+      "source": "W-Jacket 70",
+      "author": "Not named in supplied archive",
+      "colorway": "charcoal fleece"
+    }
+  ],
+  "files": [
+    {
+      "file": "collection.glb",
+      "bytes": 8251240,
+      "sha256": "5c93e1fef6c2a55c9593f35993f37b0a077d2d15be30cd29f8b871e4edd75233"
+    },
+    {
+      "file": "lettering.glb",
+      "bytes": 122504,
+      "sha256": "a22ac1a3c8a427d841aaebbdb1a7372648b05ef86e77251f8f3a56d4b5d99e8a"
+    }
+  ]
+}

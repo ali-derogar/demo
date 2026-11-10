@@ -53,10 +53,10 @@ for (const slug of DEMOS) {
   }
   if (slug === 'vector') {
     try {
-      const manifest = JSON.parse(await readFile(join(dir, 'assets/reference/ATTRIBUTION.json'), 'utf8'));
-      for (const entry of manifest.files) if (!(await exists(join(dir, 'assets/reference', entry.file)))) problems.push(`vector: دارایی مرجع ${entry.file} در خروجی نیست`);
-      for (const file of ['draco_decoder.js', 'draco_wasm_wrapper.js', 'draco_decoder.wasm']) if (!(await exists(join(dir, 'assets/reference/draco', file)))) problems.push(`vector: رمزگشای محلی ${file} در خروجی نیست`);
-    } catch { problems.push('vector: فهرست دارایی‌های مرجع در خروجی موجود یا معتبر نیست'); }
+      const manifest = JSON.parse(await readFile(join(dir, 'assets/collection/ATTRIBUTION.json'), 'utf8'));
+      for (const entry of manifest.files) if (!(await exists(join(dir, 'assets/collection', entry.file)))) problems.push(`vector: دارایی کالکشن ${entry.file} در خروجی نیست`);
+      for (const file of ['draco_decoder.js', 'draco_wasm_wrapper.js', 'draco_decoder.wasm']) if (!(await exists(join(dir, 'assets/collection/draco', file)))) problems.push(`vector: رمزگشای محلی ${file} در خروجی نیست`);
+    } catch { problems.push('vector: فهرست دارایی‌های کالکشن در خروجی موجود یا معتبر نیست'); }
   }
   const html = await readFile(join(dir, 'index.html'), 'utf8');
   const images = await countImages(join(dir, 'assets'));

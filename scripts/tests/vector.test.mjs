@@ -30,7 +30,7 @@ test('Vector is first, Roban moves to second, and all 15 products have local ass
   assert.equal(projects[0].id, 'vector'); assert.equal(projects[1].id, 'roban');
   assert.equal(projects[0].url, '/demos/vector/'); assert.equal(projects[0].visual.layout, 'streetwear');
   assert.equal(products.length, 15); assert.equal(new Set(products.map((p) => p.cat)).size, 5);
-  assert.equal(selectProducts({ query: 'كاپشن پافر' })[0].id, 'jacket-01');
+  assert.equal(selectProducts({ query: 'كاپشن پلار' })[0].id, 'jacket-01');
   assert.equal(selectProducts({ category: 'hoodie' }).length, 3);
   assert.ok(selectProducts({ size: 'XXL' }).length < products.length);
   assert.equal(selectProducts({ category: 'tee', size: 'XXL' }).some((p) => p.id === 'tee-01'), false);
@@ -56,7 +56,7 @@ test('Vector cart requires explicit options, separates colors/sizes, rejects for
 test('Vector catalog controls combine search, categories, sizes, sorting and favorites and recover from empty results', (t) => {
   const { q, click, input, w } = store(t);
   assert.equal(q('#product-grid').children.length, 15);
-  input('#search', 'كاپشن پافر'); assert.equal(q('#product-grid').children.length, 1);
+  input('#search', 'كاپشن پلار'); assert.equal(q('#product-grid').children.length, 1);
   click('[data-filter="tee"]'); assert.equal(q('#empty-state').hidden, false);
   click('[data-action="reset"]'); input('#size-filter', 'XXL', 'change'); assert.ok(q('#product-grid').children.length < 15);
   click('[data-action="reset"]'); click('[data-favorite="hoodie-01"]'); click('.favorites-filter');
@@ -78,13 +78,13 @@ test('Vector actual option controls enforce color/size, preserve selections thro
   click('[data-remove="hoodie-01~cream~L"]'); assert.equal(q('#dialog-content').querySelectorAll('.cart-line').length, 2);
 });
 
-test('Vector reference capsules enter their own story and connect the exact product to the persistent shopping flow', (t) => {
+test('Vector supplied clothing capsules enter their own story and connect the exact product to the persistent shopping flow', (t) => {
   const { click, q, app, w } = store(t);
-  click('[data-scene-product="tee-02"]'); assert.equal(app.getState().selectedHero, 'tee-02');
-  assert.equal(w.location.hash, '#studio/white'); assert.equal(q('#home-ui').hidden, true); assert.equal(q('#story-ui').hidden, false);
-  assert.equal(q('.showroom-poster').getAttribute('src'), './assets/img/room-white.webp');
+  click('[data-scene-product="hoodie-03"]'); assert.equal(app.getState().selectedHero, 'hoodie-03');
+  assert.equal(w.location.hash, '#studio/core'); assert.equal(q('#home-ui').hidden, true); assert.equal(q('#story-ui').hidden, false);
+  assert.equal(q('.showroom-poster').getAttribute('src'), './assets/img/room-core.webp');
   click('#story-buy'); assert.equal(app.getState().selectedColor, 'cream');
-  click('[data-size="M"]'); click('[data-add="tee-02"]'); assert.equal(app.getState().cart['tee-02~cream~M'], 1);
+  click('[data-size="M"]'); click('[data-add="hoodie-03"]'); assert.equal(app.getState().cart['hoodie-03~cream~M'], 1);
   click('[data-action="view-studio"]'); assert.equal(q('#shop-dialog').open, false);
   click('[data-scene-action="reset"]'); assert.equal(app.getState().selectedHero, null); assert.equal(q('#story-ui').hidden, true);
   assert.equal(w.location.hash, '#home');

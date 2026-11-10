@@ -3,20 +3,20 @@ export const sizes = ['S', 'M', 'L', 'XL', 'XXL'];
 const palette = {
   charcoal: { id: 'charcoal', name: 'زغالی', hex: '#29292b' },
   cream: { id: 'cream', name: 'استخوانی', hex: '#dcd7c9' },
-  wine: { id: 'wine', name: 'زرشکی', hex: '#782c39' },
+  wine: { id: 'wine', name: 'زرشکی', hex: '#4e1728' },
   olive: { id: 'olive', name: 'زیتونی', hex: '#707260' },
   grey: { id: 'grey', name: 'خاکستری', hex: '#6d6c70' },
   sand: { id: 'sand', name: 'شنی', hex: '#bca98c' },
   indigo: { id: 'indigo', name: 'نیلی', hex: '#536e86' },
 };
 const rows = [
-  ['tee-01', 'tee', 'تیشرت ORIGINALS GRAY', 'GRAY / 03', 890000, 'charcoal', 'پنبهٔ سنگین ۲۸۰ گرم، سرشانهٔ افتاده و یقهٔ کش‌باف؛ از کالکشن خاکستری اوریجینال.', '۱۰۰٪ پنبه', 'آزاد / اورسایز', 'انتخاب استودیو'],
-  ['tee-02', 'tee', 'تیشرت ORIGINALS WHITE', 'WHITE / 01', 950000, 'cream', 'تیشرت روشن کالکشن اوریجینال، با برش آزاد و جزئیات قرمز.', '۱۰۰٪ پنبه', 'باکسی / آزاد', 'تازه رسیده'],
-  ['tee-03', 'tee', 'تیشرت ORIGINALS SPORT', 'SPORT / 02', 780000, 'charcoal', 'تیشرت کالکشن ورزشی با ترکیب مشکی و قرمز و فرم آزاد.', 'پنبهٔ نرم', 'آزاد / لانگ', ''],
-  ['hoodie-01', 'hoodie', 'هودی سنگین DRIFT', 'DRIFT / 04', 2190000, 'wine', 'کلاه دولایهٔ خوش‌فرم، جیب کانگورویی و پارچهٔ دورس سنگین؛ حجمی که استایل شما را تعریف می‌کند.', 'دورس پنبه‌ای ۴۲۰ گرم', 'اورسایز', 'انتخاب استودیو'],
+  ['tee-01', 'tee', 'تیشرت زغالی FORM', 'FORM / 03', 890000, 'charcoal', 'پنبهٔ سنگین، سرشانهٔ افتاده و یقهٔ کش‌باف؛ با فرم ساده و دوخت ظریف.', '۱۰۰٪ پنبه', 'آزاد / اورسایز', 'انتخاب استودیو'],
+  ['tee-02', 'tee', 'تیشرت پنبه‌ای BASE', 'BASE / 01', 950000, 'cream', 'پنبهٔ استخوانی با برش آزاد، یقهٔ کش‌باف و لیبل کوچک پایین لباس.', '۱۰۰٪ پنبه', 'باکسی / آزاد', 'تازه رسیده'],
+  ['tee-03', 'tee', 'تیشرت جیب‌دار AXIS', 'AXIS / 02', 780000, 'olive', 'تیشرت زیتونی با جیب سینه، برش آزاد و قد بلندتر.', 'پنبهٔ نرم', 'آزاد / لانگ', ''],
+  ['hoodie-01', 'hoodie', 'هودی دورس DRIFT', 'DRIFT / 04', 2190000, 'wine', 'هودی زرشکی با کلاه خوش‌فرم، بند روشن و سرآستین کش‌باف؛ دوخت‌های ظریف روی پارچهٔ دورس.', 'دورس پنبه و پلی‌استر', 'آزاد', 'انتخاب استودیو'],
   ['hoodie-02', 'hoodie', 'هودی زیپ‌دار LAYER', 'LAYER / 05', 2450000, 'cream', 'یک لایهٔ گرم برای هوای خنک، با زیپ فلزی و جیب‌های راحت در دو طرف.', 'دورس پنبه‌ای', 'آزاد', ''],
-  ['hoodie-03', 'hoodie', 'هودی باکسی SHADOW', 'SHADOW / 06', 1990000, 'grey', 'قد کوتاه‌تر، سرشانهٔ افتاده و کلاه بزرگ؛ بافتی نرم با ایستایی مشخص.', 'پنبه و پلی‌استر', 'باکسی', 'تازه رسیده'],
-  ['jacket-01', 'jacket', 'کاپشن پافر SHELL', 'SHELL / 07', 4890000, 'charcoal', 'پافر حجم‌دار با دوخت‌های افقی، یقهٔ ایستاده و جیب زیپ‌دار؛ همراه روزهای سرد شهر.', 'رویهٔ نایلون مات', 'آزاد / پافر', 'انتخاب استودیو'],
+  ['hoodie-03', 'hoodie', 'هودی استخوانی CORE', 'CORE / 06', 1990000, 'cream', 'هودی دورس استخوانی با کلاه فرم‌دار، سرآستین کش‌باف و نشان ظریف وکتور؛ ساده و خوش‌فرم.', 'دورس پنبه و پلی‌استر', 'آزاد', 'تازه رسیده'],
+  ['jacket-01', 'jacket', 'کاپشن پلار SHELL', 'SHELL / 07', 4890000, 'charcoal', 'پلار زغالی با بافت برجسته، خطوط دوخت روشن، یقهٔ ایستاده، زیپ سرتاسری و بند تنظیم پایین لباس.', 'پلار بافت‌دار', 'آزاد', 'انتخاب استودیو'],
   ['jacket-02', 'jacket', 'کاپشن بامبر FLIGHT', 'FLIGHT / 08', 3650000, 'olive', 'بامبر کلاسیک با سرآستین کش‌باف و جیب روی آستین؛ فرم آشنا با حال‌وهوای امروز.', 'نایلون آستردار', 'آزاد', ''],
   ['jacket-03', 'jacket', 'بادگیر TRACE', 'TRACE / 09', 2790000, 'sand', 'بادگیر سبک کلاه‌دار با برش‌های هندسی؛ برای قدم‌زدن در هوای متغیر.', 'نایلون سبک', 'آزاد', ''],
   ['shirt-01', 'shirt', 'پیراهن آکسفورد BLANK', 'BLANK / 10', 1690000, 'cream', 'پیراهن آکسفورد با یقهٔ کلاسیک و فرم آزاد؛ تنها یا روی یک تیشرت ساده.', 'پنبهٔ آکسفورد', 'آزاد', ''],
@@ -26,11 +26,10 @@ const rows = [
   ['pants-02', 'pants', 'شلوار پلیسه WIDE', 'WIDE / 14', 2290000, 'cream', 'پنبهٔ محکم با پلیسهٔ ظریف و خط مستقیم پاچه؛ راحتی با فرمی مرتب.', 'پنبهٔ توییل', 'واید', ''],
   ['pants-03', 'pants', 'جین راسته EVERYDAY', 'EVERYDAY / 15', 2690000, 'indigo', 'جین آبی شسته با پنج جیب و پاچهٔ راسته؛ از آن انتخاب‌هایی که همیشه برمی‌گردید سراغشان.', 'دنیم پنبه‌ای', 'راسته / آزاد', ''],
 ];
-export const featuredIds = ['tee-02', 'tee-03', 'tee-01'];
+export const featuredIds = ['hoodie-03', 'hoodie-01', 'jacket-01'];
 export const products = rows.map(([id, cat, name, code, price, base, detail, fabric, fit, badge], index) => {
-  const colorIds = featuredIds.includes(id) ? [base] : [...new Set([base, 'charcoal', 'cream', 'wine'])].slice(0, 3);
+  const colorIds = cat === 'tee' ? [base] : [...new Set([base, 'charcoal', 'cream', 'wine'])].slice(0, 3);
   const colors = colorIds.map((color) => palette[color]);
-  if (id === 'tee-03') colors[0] = { ...colors[0], name: 'مشکی و قرمز' };
   return { id, cat, name, code, price, detail, fabric, fit, badge: featuredIds.includes(id) ? 'ORIGINALS' : badge === 'انتخاب استودیو' ? '' : badge, colors, sizes, imageColor: palette[base].name,
     image: './assets/img/' + id + '.webp', added: rows.length - index, featured: featuredIds.includes(id),
     variants: colors.flatMap((color, c) => sizes.map((size, s) => ({ color: color.id, size, stock: s === 4 && (index % 4 === 0 || (index + c) % 3 === 0) ? 0 : 3 + (index + s + c) % 5 }))),

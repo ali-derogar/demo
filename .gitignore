@@ -5,9 +5,12 @@ dist/
 .vite/
 .wrangler/
 scripts/.cache/
+models
 
 public/demos/roban/scene.js
 public/demos/aura/scene.js
 public/demos/vector/scene.js
 
 public/demos/vector/assets/reference/draco/
+public/demos/vector/assets/collection/draco/
+design/vector/*.blend1
