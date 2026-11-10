@@ -32,6 +32,13 @@ export class ReferenceAssets implements AssetProvider {
     return this.cached(path + ':' + srgb, async () => {
       const texture = await new TextureLoader().loadAsync(this.root + path);
       texture.flipY = false; if (srgb) texture.colorSpace = SRGBColorSpace; texture.anisotropy = 4;
+      const image = texture.image as HTMLImageElement, limit = window.innerWidth < 768 ? 2048 : 4096;
+      if (Math.max(image.width, image.height) > limit && !this.disposed) {
+        const scale = limit / Math.max(image.width, image.height), canvas = document.createElement('canvas');
+        canvas.width = Math.round(image.width * scale); canvas.height = Math.round(image.height * scale);
+        const context = canvas.getContext('2d');
+        if (context) { context.drawImage(image, 0, 0, canvas.width, canvas.height); texture.image = canvas; texture.needsUpdate = true; }
+      }
       this.textures.add(texture); if (this.disposed) texture.dispose(); return texture;
     });
   }

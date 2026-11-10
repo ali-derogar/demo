@@ -259,7 +259,7 @@ export function mountStore({ scene = true } = {}) {
     if (!scene || showroom || disposed || pageHidden || scenePending) return;
     scenePending = true;
     try {
-      const { mountShowroom } = await import('./scene.js'); if (disposed || pageHidden) return;
+      const { mountShowroom } = await import('./scene.js?v=studio-2'); if (disposed || pageHidden) return;
       showroom = mountShowroom(host, { onProductSelect: selectHero, onShop: () => setMenu(true), onStatus: sceneStatus, onProgress: (value) => { $('#load-progress').style.transform = `scaleX(${value})`; } });
       showroom.focus(mobileIndex); if (selectedHero) showroom.select(selectedHero); overlayChanged();
     } catch { host.dataset.scene = 'fallback'; sceneStatus('fallback'); }

@@ -7,7 +7,7 @@ import { products, selectProducts, cleanCart, addToCart, variantKey, variantFor,
 import { source } from './helpers.mjs';
 
 const html = await readFile(new URL('../../public/demos/vector/index.html', import.meta.url), 'utf8');
-const script = await build({ entryPoints: [new URL('../../public/demos/vector/app.js', import.meta.url).pathname], bundle: true, write: false, format: 'iife', globalName: 'VectorStore', platform: 'browser', external: ['./scene.js'] });
+const script = await build({ entryPoints: [new URL('../../public/demos/vector/app.js', import.meta.url).pathname], bundle: true, write: false, format: 'iife', globalName: 'VectorStore', platform: 'browser', external: ['./scene.js*'] });
 function store(t, saved = {}) {
   const errors = [], vc = new VirtualConsole(); vc.on('jsdomError', (e) => errors.push(e));
   const dom = new JSDOM(html, { url: 'http://localhost/demos/vector/', runScripts: 'outside-only', pretendToBeVisual: true, virtualConsole: vc });

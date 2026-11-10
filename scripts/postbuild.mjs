@@ -51,6 +51,13 @@ for (const slug of DEMOS) {
   if (slug === 'vector') for (const file of ['app.js', 'products.js', 'scene.js']) {
     if (!(await exists(join(dir, file)))) problems.push(`vector: ${file} در خروجی build نیست`);
   }
+  if (slug === 'vector') {
+    try {
+      const manifest = JSON.parse(await readFile(join(dir, 'assets/reference/ATTRIBUTION.json'), 'utf8'));
+      for (const entry of manifest.files) if (!(await exists(join(dir, 'assets/reference', entry.file)))) problems.push(`vector: دارایی مرجع ${entry.file} در خروجی نیست`);
+      for (const file of ['draco_decoder.js', 'draco_wasm_wrapper.js', 'draco_decoder.wasm']) if (!(await exists(join(dir, 'assets/reference/draco', file)))) problems.push(`vector: رمزگشای محلی ${file} در خروجی نیست`);
+    } catch { problems.push('vector: فهرست دارایی‌های مرجع در خروجی موجود یا معتبر نیست'); }
+  }
   const html = await readFile(join(dir, 'index.html'), 'utf8');
   const images = await countImages(join(dir, 'assets'));
   if (!/<html[^>]*\blang=["']fa["']/i.test(html)) problems.push(`${slug}: lang="fa" ندارد`);

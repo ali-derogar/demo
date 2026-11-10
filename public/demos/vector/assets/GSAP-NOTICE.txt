@@ -1,0 +1,4 @@
+GSAP 3.15.1
+Copyright GreenSock / Webflow.
+Standard license: https://gsap.com/standard-license
+Package source: https://www.npmjs.com/package/gsap

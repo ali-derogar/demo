@@ -9,3 +9,5 @@ scripts/.cache/
 public/demos/roban/scene.js
 public/demos/aura/scene.js
 public/demos/vector/scene.js
+
+public/demos/vector/assets/reference/draco/

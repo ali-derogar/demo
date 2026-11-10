@@ -1,13 +1,14 @@
 /** Asset renderer, not a browser screenshot. Uses original geometry, UVs and baked maps. */
 import { readFile, writeFile } from 'node:fs/promises';
-import { resolve, join } from 'node:path';
+import { resolve, join, dirname } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { spawnSync } from 'node:child_process';
 import sharp from 'sharp';
 import { PerspectiveCamera, Texture, Vector4, DoubleSide } from 'three';
 import { source } from './tests/helpers.mjs';
 import { decodeReference } from './lib/vector-assets.mjs';
 
-const root = resolve(import.meta.dirname, '..'), base = join(root, 'public/demos/vector/assets'), ref = join(base, 'reference');
+const root = resolve(dirname(fileURLToPath(import.meta.url)), '..'), base = join(root, 'public/demos/vector/assets'), ref = join(base, 'reference');
 const { buildOverview, buildRoom, buildDetail } = await source('src/demos/vector/scene.ts');
 const { overviewMaps, roomMaps, detailMaps, capsules } = await source('src/demos/vector/studio.ts');
 const images = new Map();
