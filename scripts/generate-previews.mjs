@@ -70,7 +70,7 @@ for (const [index, project] of projects.entries()) {
       +text('VECTOR',145,151,37,'#ffffff',800,'start','Arial, sans-serif')
       +text('INDEPENDENT STUDIO',145,175,9,'#ffffff',400,'start','Arial, sans-serif')
       +text('فروشگاه ↗',1290,151,17,'#ffffff')
-      +text('01 CORE     /     02 DRIFT     /     03 SHELL',720,773,13,'#e8e8e8',400,'middle','Arial, sans-serif')
+      +text('01 CORE     /     02 SHELL     /     03 DRIFT',720,773,13,'#e8e8e8',400,'middle','Arial, sans-serif')
       +text('برای شروع، یک لباس انتخاب کنید.',720,820,18,'#ffffff',400,'middle')
       +text('© VECTOR CONCEPT',145,858,10,'#bcbcbc',400,'start','Arial, sans-serif');
   } else if (layout === 'aesthetic') {
