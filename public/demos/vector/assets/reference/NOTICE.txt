@@ -1,0 +1,4 @@
+Reference study of https://adidas-modern-webiste.vercel.app/
+Assets match https://github.com/Ali-Sanati/awwwards-adidas at 5723cd28590eb021e2573b06d853fc24f25df3ca
+Original models, textures and campaign videos are third-party works. No license file was present in the upstream repository at retrieval. No permission or original authorship is asserted by this project. Adidas and Foot Locker marks remain their respective owners. This local portfolio study preserves source records; rights for broader redistribution require verification.
+The integration and shopping interface are independently implemented.
