@@ -339,7 +339,7 @@
     ],
     "width": 1200,
     "height": 800,
-    "bytes": 40800,
+    "bytes": 44738,
     "format": "webp",
     "generator": "scripts/generate-previews.mjs"
   }

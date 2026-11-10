@@ -2133,7 +2133,7 @@
     "source": "",
     "width": 1600,
     "height": 1067,
-    "bytes": 81372,
+    "bytes": 91822,
     "format": "webp"
   },
   {
@@ -2156,7 +2156,7 @@
     "source": "",
     "width": 1200,
     "height": 1200,
-    "bytes": 64120,
+    "bytes": 69958,
     "format": "webp"
   },
   {
@@ -2179,7 +2179,7 @@
     "source": "",
     "width": 1440,
     "height": 960,
-    "bytes": 23862,
+    "bytes": 30416,
     "format": "webp"
   },
   {
@@ -2202,7 +2202,7 @@
     "source": "",
     "width": 1440,
     "height": 960,
-    "bytes": 42722,
+    "bytes": 45496,
     "format": "webp"
   },
   {
@@ -2225,7 +2225,7 @@
     "source": "",
     "width": 1440,
     "height": 960,
-    "bytes": 121130,
+    "bytes": 130338,
     "format": "webp"
   },
   {
@@ -2248,7 +2248,7 @@
     "source": "",
     "width": 1200,
     "height": 1200,
-    "bytes": 76922,
+    "bytes": 69842,
     "format": "webp"
   },
   {
@@ -2271,7 +2271,7 @@
     "source": "",
     "width": 1440,
     "height": 960,
-    "bytes": 42194,
+    "bytes": 49920,
     "format": "webp"
   },
   {
@@ -2294,7 +2294,7 @@
     "source": "",
     "width": 1440,
     "height": 960,
-    "bytes": 42750,
+    "bytes": 47370,
     "format": "webp"
   },
   {
@@ -2317,7 +2317,7 @@
     "source": "",
     "width": 1440,
     "height": 960,
-    "bytes": 61662,
+    "bytes": 65214,
     "format": "webp"
   },
   {
@@ -2340,7 +2340,7 @@
     "source": "",
     "width": 1536,
     "height": 1024,
-    "bytes": 73820,
+    "bytes": 82554,
     "format": "webp"
   },
   {
@@ -2363,7 +2363,7 @@
     "source": "",
     "width": 1200,
     "height": 1400,
-    "bytes": 51118,
+    "bytes": 53378,
     "format": "webp"
   },
   {
@@ -2401,7 +2401,7 @@
     "source": "",
     "width": 1200,
     "height": 1400,
-    "bytes": 29034,
+    "bytes": 37546,
     "format": "webp"
   },
   {
@@ -2424,7 +2424,7 @@
     "source": "",
     "width": 1200,
     "height": 1400,
-    "bytes": 124582,
+    "bytes": 134718,
     "format": "webp"
   },
   {
@@ -2522,7 +2522,7 @@
     "source": "",
     "width": 1440,
     "height": 960,
-    "bytes": 47636,
+    "bytes": 61888,
     "format": "webp"
   },
   {
@@ -2545,7 +2545,7 @@
     "source": "",
     "width": 1440,
     "height": 960,
-    "bytes": 47834,
+    "bytes": 48632,
     "format": "webp"
   },
   {
@@ -2568,7 +2568,7 @@
     "source": "",
     "width": 1440,
     "height": 960,
-    "bytes": 85912,
+    "bytes": 89200,
     "format": "webp"
   },
   {
@@ -2591,7 +2591,7 @@
     "source": "",
     "width": 1200,
     "height": 1200,
-    "bytes": 193812,
+    "bytes": 217270,
     "format": "webp"
   },
   {
@@ -3024,7 +3024,7 @@
     ],
     "width": 1200,
     "height": 800,
-    "bytes": 40800,
+    "bytes": 44738,
     "format": "webp",
     "generator": "scripts/generate-previews.mjs"
   }

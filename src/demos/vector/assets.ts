@@ -14,7 +14,7 @@ export class StudioAssets implements AssetProvider {
   model(path: string) {
     let value = this.cache.get(path);
     if (!value) {
-      value = this.loader.loadAsync(this.root + path).then((gltf) => {
+      value = this.loader.loadAsync(this.root + path + '?v=fabric-2').then((gltf) => {
         const nodes = Object.fromEntries(gltf.scene.children.map((object) => [object.name, object]));
         this.models.push(nodes); if (this.disposed) this.releaseModel(nodes); return nodes;
       });

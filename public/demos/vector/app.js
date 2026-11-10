@@ -31,8 +31,8 @@ export function mountStore({ scene = true, sound = scene } = {}) {
   }
   function renderProducts() {
     const list = selectProducts({ ...state, favorites: state.favoritesOnly ? favorites : null });
-    $('#product-grid').innerHTML = list.map((p) => `<article class="product-card" data-id="${p.id}"><div class="product-photo"><button data-product="${p.id}" aria-label="مشاهدهٔ ${p.name}"><img src="${p.image}" width="900" height="900" loading="lazy" alt="${p.name}؛ رنگ ${p.imageColor}"></button><button class="favorite-button" data-favorite="${p.id}" aria-label="علاقه‌مندی: ${p.name}" aria-pressed="${favorites.includes(p.id)}">${icon('heart')}</button>${p.badge ? `<span class="product-badge">${p.badge}</span>` : ''}</div><div class="product-info"><div class="product-code"><span dir="ltr">${p.code}</span><span dir="ltr">VECTOR ORIGINALS</span></div><h3><button data-product="${p.id}">${p.name}</button></h3><div class="product-meta"><span>${p.fit}</span><span class="mini-colors" aria-label="${money(p.colors.length)} رنگ">${p.colors.map((c) => `<i style="background:${c.hex}" title="${c.name}"></i>`).join('')}</span></div><div class="product-bottom"><span class="price">${price(p.price)}</span><button class="add-button" data-product="${p.id}" aria-label="انتخاب سایز و رنگ ${p.name}">${icon('plus')}</button></div></div></article>`).join('');
-    $('#result-count').textContent = `${money(list.length)} انتخاب${state.favoritesOnly ? ' از علاقه‌مندی‌های شما' : ' برای مسیر شما'}`;
+    $('#product-grid').innerHTML = list.map((p) => `<article class="product-card" data-id="${p.id}"><div class="product-photo"><button data-product="${p.id}" aria-label="مشاهدهٔ ${p.name}"><img src="${p.image}" width="${p.imageWidth}" height="${p.imageHeight}" loading="lazy" alt="${p.name}؛ رنگ ${p.imageColor}"></button><button class="favorite-button" data-favorite="${p.id}" aria-label="علاقه‌مندی: ${p.name}" aria-pressed="${favorites.includes(p.id)}">${icon('heart')}</button>${p.badge ? `<span class="product-badge">${p.badge}</span>` : ''}</div><div class="product-info"><div class="product-code"><span dir="ltr">${p.code}</span><span dir="ltr">VECTOR ORIGINALS</span></div><h3><button data-product="${p.id}">${p.name}</button></h3><div class="product-meta"><span>${p.fit}</span><span class="mini-colors" aria-label="${money(p.colors.length)} رنگ">${p.colors.map((c) => `<i style="background:${c.hex}" title="${c.name}"></i>`).join('')}</span></div><div class="product-bottom"><span class="price">${price(p.price)}</span><button class="add-button" data-product="${p.id}" aria-label="انتخاب سایز و رنگ ${p.name}">${icon('plus')}</button></div></div></article>`).join('');
+    $('#result-count').textContent = `${money(list.length)} مدل${state.favoritesOnly ? ' در علاقه‌مندی‌ها' : ' لباس'}`;
     $('#empty-state').hidden = list.length > 0; $('#clear-search').hidden = !state.query;
     $$('[data-filter]').forEach((el) => el.setAttribute('aria-pressed', String(el.dataset.filter === state.category))); updateBadges();
   }
@@ -43,7 +43,7 @@ export function mountStore({ scene = true, sound = scene } = {}) {
     favorites = favorites.includes(id) ? favorites.filter((x) => x !== id) : [...favorites, id]; write('vector-favorites-v1', favorites); renderProducts();
     if (dialog.open) dialog.querySelector(`[data-favorite="${id}"]`)?.setAttribute('aria-pressed', String(favorites.includes(id)));
     else if (focus?.dataset.favorite === id) $(`[data-favorite="${id}"]`)?.focus({ preventScroll: true });
-    notify(favorites.includes(id) ? 'در علاقه‌مندی‌های شما ماند.' : 'از علاقه‌مندی‌ها برداشته شد.');
+    notify(favorites.includes(id) ? 'به علاقه‌مندی‌ها اضافه شد.' : 'از علاقه‌مندی‌ها حذف شد.');
   }
   function overlayChanged() { document.dispatchEvent(new CustomEvent('vector:overlay', { detail: { open: dialog.open || menuOpen } })); }
   function catalogClosed() {
@@ -117,7 +117,7 @@ export function mountStore({ scene = true, sound = scene } = {}) {
     if (['fallback', 'context-lost', 'partial', 'product-error'].includes(status)) {
       host.classList.add('is-static'); $('#load-state').hidden = false; $('#load-state').classList.toggle('is-product', !!selectedHero);
       $('#load-label').textContent = 'نمای ثابت در دسترس است.'; $('#poster-entry').hidden = false;
-      $('#studio-hint').textContent = 'یک کالکشن انتخاب کنید؛ فروشگاه در دسترس است.';
+      $('#studio-hint').textContent = 'برای دیدن جزئیات، یک لباس انتخاب کنید.';
     }
   }
   function routeChanged() { const match = /^#studio\/(core|drift|shell|white|sport|gray)$/.exec(location.hash); const aliases = { white: 'core', sport: 'drift', gray: 'shell' }; selectHero(match ? capsules.find((c) => c.theme === (aliases[match[1]] || match[1])).id : null, false); }
@@ -134,17 +134,17 @@ export function mountStore({ scene = true, sound = scene } = {}) {
     $('#selection-error').textContent = '';
     $('#detail-add').disabled = !!variant && (!variant.stock || (cart[`${p.id}~${selectedColor}~${selectedSize}`] || 0) >= variant.stock);
     if (p.featured) {
-      const link = dialog.querySelector('[data-action="view-studio"]'); link.textContent = `مدل ${p.imageColor} را در استودیو ببین ↗`;
+      const link = dialog.querySelector('[data-action="view-studio"]'); link.textContent = `مدل ${p.imageColor} را از نزدیک ببینید ↗`;
     }
   }
   function openProduct(id, fromStudio = false, retain = false) {
     const p = byId(id); if (!p) return;
     if (!retain) { selectedId = id; selectedColor = fromStudio ? heroColors[id] || '' : ''; selectedSize = ''; }
-    show(`<div class="product-detail"><div class="detail-image"><img src="${p.image}" width="900" height="900" alt="${p.name}، رنگ ${p.imageColor}"><span class="image-caption">تصویر محصول در رنگ ${p.imageColor}</span></div><div><p class="detail-code" dir="ltr">${p.code} — VECTOR ORIGINALS</p><h2 id="dialog-title">${p.name}</h2><p class="detail-description">${p.detail}</p><div class="detail-specs"><span>جنس<strong>${p.fabric}</strong></span><span>فرم<strong>${p.fit}</strong></span></div><span class="detail-price">${price(p.price)}</span><p class="option-label">رنگ: <strong id="selected-color">انتخاب کنید</strong></p><div class="color-options" role="group" aria-label="انتخاب رنگ">${colorButtons(p, selectedColor)}</div><div class="option-label"><span>سایز</span><button data-action="size-guide">راهنمای سایز ↙</button></div><div class="size-options" role="group" aria-label="انتخاب سایز">${sizes.map((size) => `<button data-size="${size}" aria-pressed="false">${size}</button>`).join('')}</div><p class="variant-status" id="variant-status" aria-live="polite"></p><p class="selection-error" id="selection-error" role="alert"></p><div class="detail-actions"><button class="btn" id="detail-add" data-add="${p.id}">افزودن به سبد ${icon('plus')}</button><button class="favorite-button" data-favorite="${p.id}" aria-label="علاقه‌مندی: ${p.name}" aria-pressed="${favorites.includes(p.id)}">${icon('heart')}</button></div><button class="scene-detail-link" data-action="cart">دیدن سبد خرید ↗</button>${p.featured ? '<button class="scene-detail-link" data-action="view-studio">دیدن در استودیو ↗</button>' : ''}</div></div>`, 'product'); syncProductOptions();
+    show(`<div class="product-detail"><div class="detail-image"><img src="${p.image}" width="${p.imageWidth}" height="${p.imageHeight}" alt="${p.name}، رنگ ${p.imageColor}"><span class="image-caption">تصویر محصول در رنگ ${p.imageColor}</span></div><div><p class="detail-code" dir="ltr">${p.code} — VECTOR ORIGINALS</p><h2 id="dialog-title">${p.name}</h2><p class="detail-description">${p.detail}</p><div class="detail-specs"><span>جنس<strong>${p.fabric}</strong></span><span>فرم<strong>${p.fit}</strong></span></div><span class="detail-price">${price(p.price)}</span><p class="option-label">رنگ: <strong id="selected-color">انتخاب کنید</strong></p><div class="color-options" role="group" aria-label="انتخاب رنگ">${colorButtons(p, selectedColor)}</div><div class="option-label"><span>سایز</span><button data-action="size-guide">راهنمای سایز ↙</button></div><div class="size-options" role="group" aria-label="انتخاب سایز">${sizes.map((size) => `<button data-size="${size}" aria-pressed="false">${size}</button>`).join('')}</div><p class="variant-status" id="variant-status" aria-live="polite"></p><p class="selection-error" id="selection-error" role="alert"></p><div class="detail-actions"><button class="btn" id="detail-add" data-add="${p.id}">افزودن به سبد ${icon('plus')}</button><button class="favorite-button" data-favorite="${p.id}" aria-label="علاقه‌مندی: ${p.name}" aria-pressed="${favorites.includes(p.id)}">${icon('heart')}</button></div><button class="scene-detail-link" data-action="cart">دیدن سبد خرید ↗</button>${p.featured ? '<button class="scene-detail-link" data-action="view-studio">دیدن در استودیو ↗</button>' : ''}</div></div>`, 'product'); syncProductOptions();
   }
   function openCart(focusKey) {
     const items = lines();
-    show(`<h2 id="dialog-title">انتخاب‌های شما <span>(${money(count())})</span></h2>${items.length ? items.map(({ product: p, key, qty, color, size, stock }) => `<div class="cart-line"><img src="${p.image}" width="85" height="100" alt="${p.name}؛ تصویر رنگ ${p.imageColor}"><div><h3>${p.name}</h3><p>${color.name} / سایز <b dir="ltr">${size}</b></p><div class="quantity" role="group" aria-label="تعداد ${p.name} ${color.name} ${size}"><button data-quantity="${key}:minus" aria-label="کاهش تعداد">−</button><span>${money(qty)}</span><button data-quantity="${key}:plus" ${qty >= stock ? 'disabled' : ''} aria-label="افزایش تعداد">+</button></div></div><div><span class="price">${price(p.price * qty)}</span><button class="remove-item" data-remove="${key}" aria-label="حذف ${p.name} ${color.name} ${size}">حذف</button></div></div>`).join('') + `<div class="cart-summary"><span>جمع انتخاب‌ها</span><strong>${price(total())}</strong></div><p class="demo-notice">این فروشگاه نمونهٔ نمایشی است؛ قیمت و موجودی فرضی‌اند و سفارش به پرداخت یا ارسال واقعی منتهی نمی‌شود. برای آزمودن فرم، اطلاعات ساختگی وارد کنید.</p><button class="btn full-width" data-action="checkout">ادامهٔ سفارش ${icon('arrow')}</button>` : `<div class="empty-cart">${icon('bag')}<h3>اولین انتخابت چه خواهد بود؟</h3><p>کالکشن منتظر شماست.</p><button class="btn" data-action="browse">دیدن محصولات ${icon('arrow')}</button></div>`}`, 'cart');
+    show(`<h2 id="dialog-title">سبد خرید <span>(${money(count())})</span></h2>${items.length ? items.map(({ product: p, key, qty, color, size, stock }) => `<div class="cart-line"><img src="${p.image}" width="85" height="100" alt="${p.name}؛ تصویر رنگ ${p.imageColor}"><div><h3>${p.name}</h3><p>${color.name} / سایز <b dir="ltr">${size}</b></p><div class="quantity" role="group" aria-label="تعداد ${p.name} ${color.name} ${size}"><button data-quantity="${key}:minus" aria-label="کاهش تعداد">−</button><span>${money(qty)}</span><button data-quantity="${key}:plus" ${qty >= stock ? 'disabled' : ''} aria-label="افزایش تعداد">+</button></div></div><div><span class="price">${price(p.price * qty)}</span><button class="remove-item" data-remove="${key}" aria-label="حذف ${p.name} ${color.name} ${size}">حذف</button></div></div>`).join('') + `<div class="cart-summary"><span>جمع سبد خرید</span><strong>${price(total())}</strong></div><p class="demo-notice">این فروشگاه یک نمونه‌کار است. قیمت‌ها و موجودی آزمایشی‌اند و خرید واقعی انجام نمی‌شود. برای امتحان کردن فرم، اطلاعات ساختگی بنویسید.</p><button class="btn full-width" data-action="checkout">ادامهٔ سفارش ${icon('arrow')}</button>` : `<div class="empty-cart">${icon('bag')}<h3>سبد خریدتان خالی است.</h3><p>هنوز لباسی به سبد اضافه نکرده‌اید.</p><button class="btn" data-action="browse">دیدن لباس‌ها ${icon('arrow')}</button></div>`}`, 'cart');
     if (focusKey) dialog.querySelector(`[data-quantity="${focusKey}"]`)?.focus({ preventScroll: true });
   }
   function summary() { return `<div class="checkout-items">${lines().map(({ product: p, qty, color, size }) => `<p><span>${p.name} · ${color.name} / ${size} × ${money(qty)}</span><span>${price(p.price * qty)}</span></p>`).join('')}<p class="checkout-total"><span>مجموع سفارش</span><span>${price(total())}</span></p></div>`; }
@@ -155,7 +155,7 @@ export function mountStore({ scene = true, sound = scene } = {}) {
   }
   function sizeGuide() {
     const back = view === 'product';
-    show(`${back ? '<button class="back-button" data-action="back-product">→ بازگشت به انتخاب لباس</button>' : ''}<p class="eyebrow">اندازه‌ها به سانتی‌متر</p><h2 id="dialog-title">فرمی که با شما هماهنگ است.</h2><p class="size-note">این جدول برای بالاتنهٔ کالکشن مفهومی وکتور است. عرض سینه و قد لباس را روی سطح صاف، بدون کشیدن پارچه اندازه بگیرید. برای فرم آزادتر یک سایز بالاتر انتخاب کنید.</p><table class="size-table"><thead><tr><th>سایز</th><th>عرض سینه</th><th>قد بالاتنه</th><th>دور کمر شلوار</th></tr></thead><tbody>${sizes.map((size, i) => `<tr><td dir="ltr">${size}</td><td>${money(52 + i * 3)}</td><td>${money(68 + i * 2)}</td><td>${money(74 + i * 6)}</td></tr>`).join('')}</tbody></table><p class="size-note">عرض سینهٔ بالاتنه با دور سینه متفاوت است. دور کمر شلوار، اندازهٔ کامل محیط کمر است. جدول راهنمای انتخاب نمایشی است.</p>`, 'guide');
+    show(`${back ? '<button class="back-button" data-action="back-product">→ بازگشت به انتخاب لباس</button>' : ''}<p class="eyebrow">اندازه‌ها به سانتی‌متر</p><h2 id="dialog-title">راهنمای سایز</h2><p class="size-note">یکی از لباس‌هایی که اندازه‌تان است را روی سطح صاف بگذارید. عرض سینه، قد و دور کمر آن را بدون کشیدن پارچه اندازه بگیرید و با جدول مقایسه کنید.</p><table class="size-table"><thead><tr><th>سایز</th><th>عرض سینه</th><th>قد بالاتنه</th><th>دور کمر شلوار</th></tr></thead><tbody>${sizes.map((size, i) => `<tr><td dir="ltr">${size}</td><td>${money(52 + i * 3)}</td><td>${money(68 + i * 2)}</td><td>${money(74 + i * 6)}</td></tr>`).join('')}</tbody></table><p class="size-note">عرض سینه، فاصلهٔ دو طرف لباس است؛ دور کمر، اندازهٔ کامل کمر شلوار. این جدول نمونه است و برای خرید واقعی کاربرد ندارد.</p>`, 'guide');
   }
   function submit(event) {
     if (event.target.id !== 'checkout-form') return;
@@ -163,7 +163,7 @@ export function mountStore({ scene = true, sound = scene } = {}) {
     for (const name of ['name', 'phone', 'address', 'postal']) { event.target.elements[name].setAttribute('aria-invalid', String(!!errors[name])); $('#error-' + name).textContent = errors[name] || ''; }
     if (Object.keys(errors).length) { event.target.elements[Object.keys(errors)[0]].focus(); return; }
     orderData = data;
-    show(`<button class="back-button" data-action="edit-order">→ ویرایش اطلاعات</button><h2 id="dialog-title">یک نگاه آخر.</h2>${summary()}<p id="order-address" class="detail-description"></p><button class="btn full-width" data-action="confirm-order">تأیید سفارش نمایشی ${icon('arrow')}</button>`, 'review');
+    show(`<button class="back-button" data-action="edit-order">→ ویرایش اطلاعات</button><h2 id="dialog-title">مرور سفارش</h2>${summary()}<p id="order-address" class="detail-description"></p><button class="btn full-width" data-action="confirm-order">تأیید سفارش نمایشی ${icon('arrow')}</button>`, 'review');
     $('#order-address').textContent = `${data.name} · ${data.phone} — ${data.address} · کد پستی ${data.postal}`;
   }
   function resetFilters() { Object.assign(state, { query: '', category: 'all', size: 'all', sort: 'newest', favoritesOnly: false }); $('#search').value = ''; $('#size-filter').value = 'all'; $('#sort').value = 'newest'; renderProducts(); }
@@ -204,7 +204,7 @@ export function mountStore({ scene = true, sound = scene } = {}) {
     if (d.add && view === 'product' && d.add === selectedId) {
       const result = addToCart(cart, selectedId, selectedColor, selectedSize);
       if (result.error) { $('#selection-error').textContent = result.error; return; }
-      cart = result.cart; persistCart(); syncProductOptions(); notify('انتخاب شما به سبد اضافه شد.'); return;
+      cart = result.cart; persistCart(); syncProductOptions(); notify('به سبد خرید اضافه شد.'); return;
     }
     if (d.category) { state.category = d.category; state.query = ''; state.favoritesOnly = false; $('#search').value = ''; renderProducts(); scrollTo('#shop'); }
     if (d.filter) { state.category = d.filter; renderProducts(); }
@@ -219,7 +219,7 @@ export function mountStore({ scene = true, sound = scene } = {}) {
     if (d.action === 'checkout' || d.action === 'edit-order') checkout();
     if (d.action === 'confirm-order' && view === 'review' && count()) {
       const amount = total(), quantity = count(); cart = {}; persistCart(); orderData = {};
-      show(`<div class="success-view"><div class="success-mark">↗</div><p class="eyebrow">YOUR NEXT DIRECTION.</p><h2 id="dialog-title">انتخابت ثبت شد.</h2><p>سفارش نمایشی شما کامل شد.</p><span class="order-reference">${money(quantity)} لباس · ${price(amount)}</span><p>این رسید نمایشی است؛ پرداخت یا ارسالی انجام نمی‌شود.</p><button class="btn" data-action="browse">ادامهٔ کشف کالکشن ${icon('arrow')}</button></div>`, 'success');
+      show(`<div class="success-view"><div class="success-mark">↗</div><p class="eyebrow">سفارش آزمایشی</p><h2 id="dialog-title">سفارش شما ثبت شد.</h2><p>ممنون که فروشگاه وکتور را امتحان کردید.</p><span class="order-reference">${money(quantity)} لباس · ${price(amount)}</span><p>این رسید نمایشی است؛ پرداخت یا ارسالی انجام نمی‌شود.</p><button class="btn" data-action="browse">بازگشت به لباس‌ها ${icon('arrow')}</button></div>`, 'success');
     }
     if (d.action === 'favorites') { state.favoritesOnly = !state.favoritesOnly; renderProducts(); scrollTo('#shop'); }
     if (d.action === 'reset') resetFilters();
@@ -232,7 +232,7 @@ export function mountStore({ scene = true, sound = scene } = {}) {
     if (d.action === 'close-catalog') setMenu(false);
     if (d.action === 'home') { event.preventDefault(); if (dialog.open) close(); setMenu(false); selectHero(null); }
     if (d.action === 'poster') { $('#load-state').hidden = true; }
-    if (d.action === 'credits') show('<h2 id="dialog-title">دربارهٔ این تجربه</h2><p class="credits-copy">وکتور، استودیوی کالکشن مفهومی پوشاک است. هودی‌های CORE و DRIFT و کاپشن پلار SHELL را از هر زاویه ببینید، جزئیات بافت را کشف کنید و از همان مدل وارد انتخاب سایز و رنگ شوید.</p>', 'credits');
+    if (d.action === 'credits') show('<h2 id="dialog-title">دربارهٔ وکتور</h2><p class="credits-copy">وکتور یک نمونه‌کار فروشگاه لباس است. در صفحهٔ اول می‌توانید دو هودی و یک کاپشن را بچرخانید و از نزدیک ببینید. در فروشگاه هم تیشرت، پیراهن و شلوار هست؛ هر مدل را که پسندیدید، رنگ و سایزش را انتخاب کنید.</p>', 'credits');
     if (button.id === 'clear-search') { state.query = ''; $('#search').value = ''; renderProducts(); $('#search').focus(); }
   }
   const searchInput = () => { state.query = $('#search').value; renderProducts(); };
