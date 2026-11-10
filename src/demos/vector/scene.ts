@@ -1,245 +1,217 @@
 import {
-  ACESFilmicToneMapping, BufferGeometry, CatmullRomCurve3, Color, CylinderGeometry, DataTexture, DirectionalLight,
-  DoubleSide, Float32BufferAttribute, Group, HemisphereLight, Mesh, MeshPhysicalMaterial, MeshStandardMaterial,
-  PCFSoftShadowMap, PerspectiveCamera, PlaneGeometry, PMREMGenerator, Raycaster, Scene, TorusGeometry,
-  TubeGeometry, Vector2, Vector3, WebGLRenderer, SRGBColorSpace, RepeatWrapping, RGBAFormat, type Material, type Object3D,
+  ACESFilmicToneMapping, AlwaysStencilFunc, Color, DoubleSide, EqualStencilFunc, Group, KeepStencilOp, Mesh,
+  MeshBasicMaterial, MeshStandardMaterial, NotEqualStencilFunc, PerspectiveCamera, PlaneGeometry, Raycaster,
+  ReplaceStencilOp, Scene, SRGBColorSpace, Texture, Vector2, Vector3, VideoTexture, WebGLRenderer, type Material,
 } from 'three';
-import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+import { Reflector } from 'three/addons/objects/Reflector.js';
+import { gsap } from 'gsap';
+import { ReferenceAssets, type AssetProvider, type ModelNodes } from './assets';
+import { capsules, capsuleFor, overviewMaps, roomMaps, detailMaps, storyPose, range, type StudioTheme } from './studio';
 
-export const garmentIds = ['tee-01', 'hoodie-01', 'jacket-01'] as const;
-type GarmentId = typeof garmentIds[number];
-type Kind = 'tee' | 'hoodie' | 'jacket';
-const positions = [-2.8, 0, 2.8];
-const defaultColors = ['#29292b', '#782c39', '#29292b'];
-
-/** Sewn surfaces are real, hollow volume, with open necks, hems and cuffs. */
-function surface(columns: number, rows: number, point: (u: number, v: number) => Vector3) {
-  const vertices: number[] = [], uv: number[] = [], indices: number[] = [];
-  for (let y = 0; y <= rows; y++) for (let x = 0; x <= columns; x++) {
-    const p = point(x / columns, y / rows); vertices.push(p.x, p.y, p.z); uv.push(x / columns, y / rows);
-    if (x < columns && y < rows) { const i = y * (columns + 1) + x; indices.push(i, i + 1, i + columns + 1, i + 1, i + columns + 2, i + columns + 1); }
-  }
-  const geometry = new BufferGeometry(); geometry.setAttribute('position', new Float32BufferAttribute(vertices, 3));
-  geometry.setAttribute('uv', new Float32BufferAttribute(uv, 2)); geometry.setIndex(indices); geometry.computeVertexNormals(); return geometry;
+type TextureMap = Record<string, Texture>;
+function basic(texture?: Texture) { return new MeshBasicMaterial({ map: texture }); }
+function addMesh(parent: Group, nodes: ModelNodes, name: string, material: Material) {
+  if (!nodes[name]) throw new Error('Missing reference node: ' + name);
+  const object = new Mesh(nodes[name].geometry, material); object.name = name; parent.add(object); return object;
 }
-function mesh(parent: Object3D, geometry: BufferGeometry, material: Material, x = 0, y = 0, z = 0) {
-  const object = new Mesh(geometry, material); object.position.set(x, y, z); object.castShadow = true; object.receiveShadow = true; parent.add(object); return object;
-}
-function seam(parent: Object3D, points: Vector3[], material: Material, radius = .007) {
-  return mesh(parent, new TubeGeometry(new CatmullRomCurve3(points), Math.max(12, points.length * 2), radius, 4, false), material);
-}
-
-export function createGarment(kind: Kind, color: string, compact = false) {
-  const group = new Group();
-  const weave = new Uint8Array(64 * 64 * 4);
-  for (let y = 0; y < 64; y++) for (let x = 0; x < 64; x++) {
-    const i = (y * 64 + x) * 4;
-    weave[i] = 128 + Math.round(Math.sin(x * Math.PI / 2) * 26); weave[i + 1] = 128 + Math.round(Math.sin(y * Math.PI / 2) * 26); weave[i + 2] = 249; weave[i + 3] = 255;
-  }
-  const normalMap = new DataTexture(weave, 64, 64, RGBAFormat); normalMap.wrapS = normalMap.wrapT = RepeatWrapping; normalMap.repeat.set(24, 24); normalMap.needsUpdate = true;
-  const fabric = new MeshPhysicalMaterial({ color, roughness: kind === 'jacket' ? .65 : .92, metalness: 0,
-    side: DoubleSide, sheen: kind === 'jacket' ? .2 : .75, sheenRoughness: .85, sheenColor: new Color('#d4cac0'), normalMap, normalScale: new Vector2(.13, .13) });
-  const rib = new MeshStandardMaterial({ color, roughness: 1, side: DoubleSide });
-  const stitch = new MeshStandardMaterial({ color: new Color(color).multiplyScalar(.7), roughness: .9 });
-  const metal = new MeshStandardMaterial({ color: '#86868a', roughness: .35, metalness: .8 });
-  const width = kind === 'jacket' ? .85 : .76, depth = kind === 'jacket' ? .36 : .25;
-  const torsoPoint = (u: number, v: number) => {
-    const angle = u * Math.PI * 2, xBase = Math.cos(angle), zBase = Math.sin(angle);
-    const fold = (Math.sin(angle * 11 + v * 2.5) * .021 + Math.sin(angle * 7 - v * 5) * .019) * (.4 + .6 * Math.sin(v * Math.PI));
-    const puff = kind === 'jacket' ? .085 * Math.sin(v * Math.PI * 6) ** 2 : Math.sin(v * 7 + angle * 3) * .024;
-    const w = width * (.93 + .07 * v) + fold;
-    return new Vector3(xBase * (w + puff * .6), -1 + v * 1.85 + .025 * Math.sin(angle * 4) * (1 - v), zBase * (depth + puff + fold + .035 * Math.sin(v * Math.PI)));
-  };
-  mesh(group, surface(compact ? 48 : 72, kind === 'jacket' ? 64 : 36, torsoPoint), fabric);
-  // Shoulder panels taper into an actual neck opening, rather than a sealed solid.
-  mesh(group, surface(compact ? 48 : 72, 12, (u, v) => {
-    const a = u * Math.PI * 2, outer = torsoPoint(u, 1), neck = new Vector3(Math.cos(a) * .245, 1.06 - Math.max(0, Math.sin(a)) * .085, Math.sin(a) * .185);
-    const p = outer.lerp(neck, v); p.y += Math.sin(v * Math.PI) * .055; return p;
-  }), fabric);
-  const band = (y: number, radiusX: number, radiusZ: number, height: number) => mesh(group, surface(64, 5, (u, v) => {
-    const a = u * Math.PI * 2; const ribbing = .002 * Math.sin(a * 90); return new Vector3(Math.cos(a) * (radiusX + ribbing), y + v * height, Math.sin(a) * (radiusZ + ribbing));
-  }), rib);
-  band(-1.04, width * .935, depth + .008, kind === 'tee' ? .06 : .14);
-  if (kind === 'tee') band(1.005, .248, .19, .065);
-  for (const side of [-1, 1]) {
-    const short = kind === 'tee';
-    const sleeveStart = new Vector3(side * .57, .68, 0), sleeveEnd = new Vector3(side * (short ? 1.35 : 1.32), short ? .22 : -.92, .045);
-    const axis = sleeveEnd.clone().sub(sleeveStart).normalize(), forward = new Vector3(0, 0, 1), across = new Vector3().crossVectors(axis, forward).normalize();
-    const sleevePoint = (u: number, v: number) => {
-      const a = u * Math.PI * 2, center = sleeveStart.clone().lerp(sleeveEnd, v);
-      const join = Math.min(1, .20 + v * 7);
-      const taper = (short ? .29 - v * .025 : .31 - v * .14) * join;
-      const puff = kind === 'jacket' ? .045 * Math.sin(v * Math.PI * 5) ** 2 : .012 * Math.sin(v * 17 + a * 3);
-      return center.addScaledVector(across, Math.cos(a) * (taper + puff)).addScaledVector(forward, Math.sin(a) * (taper * .9 + puff));
-    };
-    mesh(group, surface(compact ? 24 : 36, short ? 14 : 34, sleevePoint), fabric);
-    mesh(group, surface(36, 5, (u, v) => sleevePoint(u, 1 - v * (short ? .065 : .095))), rib);
-    seam(group, Array.from({ length: 37 }, (_, i) => sleevePoint(i / 36, .965)), stitch);
-    if (kind === 'jacket') for (let ring = 1; ring < 5; ring++) seam(group, Array.from({ length: 33 }, (_, i) => sleevePoint(i / 32, ring / 5)), stitch, .006);
-    // A tailored side seam subtly catches grazing light.
-    seam(group, Array.from({ length: 24 }, (_, i) => torsoPoint(side === 1 ? .015 : .485, i / 23)), stitch, .004);
-  }
-  seam(group, Array.from({ length: 65 }, (_, i) => torsoPoint(i / 64, .025)), stitch, .005);
-  if (kind === 'hoodie') {
-    // A shaped open hood: shell wraps the back and sides, framing a deep opening.
-    const hoodPoint = (u: number, v: number, inset = 0) => {
-      const a = -.2 + u * (Math.PI + .4), height = .91 + v * .83;
-      const radius = Math.max(.008, .46 * Math.sqrt(Math.max(0, 1 - ((height - 1.25) / .5) ** 2)) - inset);
-      return new Vector3(Math.cos(a) * radius, height, -.06 - Math.sin(a) * radius * .88);
-    };
-    const lining = new MeshStandardMaterial({ color: new Color(color).multiplyScalar(.32), roughness: 1, side: DoubleSide });
-    mesh(group, surface(40, 28, (u, v) => hoodPoint(u, v)), fabric);
-    mesh(group, surface(40, 28, (u, v) => hoodPoint(u, v, .022)), lining); group.userData.lining = lining;
-    for (const edge of [0, 1]) seam(group, Array.from({ length: 25 }, (_, i) => hoodPoint(edge, i / 24)), rib, .025);
-    // Kangaroo pocket is a bowed cloth panel with open diagonal entry seams.
-    mesh(group, surface(28, 16, (u, v) => new Vector3((u - .5) * (1.08 - v * .15), -.77 + v * .56, .285 + Math.sin(u * Math.PI) * .055 + Math.sin(v * Math.PI) * .015)), fabric);
-    for (const side of [-1, 1]) seam(group, [new Vector3(side * .53, -.74, .29), new Vector3(side * .52, -.48, .30), new Vector3(side * .40, -.23, .325)], stitch, .009);
-    for (const side of [-1, 1]) {
-      seam(group, [new Vector3(side * .21, 1.01, .19), new Vector3(side * .24, .72, .32), new Vector3(side * .20, .41, .33)], rib, .014);
-      mesh(group, new CylinderGeometry(.018, .018, .085, 8), metal, side * .20, .37, .33);
-    }
-  }
-  if (kind === 'jacket') {
-    band(.94, .30, .23, .35);
-    for (let ring = 1; ring < 6; ring++) seam(group, Array.from({ length: 73 }, (_, i) => torsoPoint(i / 72, ring / 6)), stitch, .007);
-    const zipperZ = (y: number) => y > .85 ? .255 : torsoPoint(.25, (y + 1) / 1.85).z + .025;
-    seam(group, Array.from({ length: 49 }, (_, i) => { const y = -.96 + i / 48 * 2.16; return new Vector3(0, y, zipperZ(y)); }), rib, .025);
-    for (let n = 0; n < 47; n++) {
-      const y = -.92 + n * .045, z = zipperZ(y) + .025;
-      mesh(group, new CylinderGeometry(.008, .008, .043, 4), metal, 0, y, z).rotation.z = Math.PI / 2;
-    }
-    mesh(group, new TorusGeometry(.045, .012, 6, 12), metal, 0, .86, .435).scale.y = 1.6;
-    for (const side of [-1, 1]) seam(group, [new Vector3(side * .49, -.71, .32), new Vector3(side * .64, -.28, .30)], rib, .023);
-  }
-  // A tiny authored woven label, with no borrowed branding.
-  mesh(group, new PlaneGeometry(.08, .12), new MeshStandardMaterial({ color: '#ef493c', side: DoubleSide }), .55, -.91, depth + .03);
-  group.userData.fabric = [fabric, rib]; return group;
-}
-
-export function createShowroom(compact = false) {
-  const world = new Group(), garments = garmentIds.map((id, index) => {
-    const garment = createGarment((['tee', 'hoodie', 'jacket'] as const)[index], defaultColors[index], compact);
-    garment.name = id; garment.position.set(positions[index], 2.12, 0); garment.rotation.y = index === 0 ? .16 : index === 2 ? -.16 : 0; world.add(garment); return garment;
+export function buildOverview(nodes: ModelNodes, maps: TextureMap) {
+  const world = new Group(), environment = addMesh(world, nodes, 'Environment', basic(maps.default));
+  const shirts = capsules.map((capsule) => {
+    const shirt = addMesh(world, nodes, capsule.node, basic(maps[capsule.theme + 'Shirt']));
+    shirt.position.fromArray(capsule.position); shirt.rotation.y = capsule.yaw; shirt.userData.product = capsule.product; return shirt;
   });
-  const concrete = new MeshStandardMaterial({ color: '#373638', roughness: .9 });
-  for (const x of positions) mesh(world, new CylinderGeometry(1.15, 1.18, .16, compact ? 40 : 64), concrete, x, .10, 0);
-  return { world, garments };
+  return { world, environment, shirts };
 }
-
-export function showroomFrame(aspect: number, selected: number | null, zoom: number) {
-  const isOverview = selected === null, x = isOverview ? 0 : positions[selected];
-  const target = new Vector3(x, isOverview ? 1.95 : selected === 1 ? 2.48 : 2.18, 0);
-  // The horizontal fit budget accounts for sleeves and all three display plinths.
-  const distance = isOverview ? Math.max(8.7, 14.5 / Math.max(.55, aspect)) : Math.max(6.5, 6.2 / Math.max(.55, aspect)) - zoom;
-  return { position: new Vector3(x + (isOverview ? .1 : .16), isOverview ? 3.0 : target.y + .25, distance), target };
+export function buildRoom(theme: StudioTheme, nodes: ModelNodes, maps: TextureMap) {
+  const world = new Group(); let shirt: Mesh;
+  if (theme === 'white') {
+    for (const [node, map] of [['DJ_Table', 'dj'], ['Speakers', 'speakers'], ['LED_Cube_White', 'studio'], ['Wall', 'studio'], ['Floor', 'studio'], ['TV', 'studio'], ['TV_Screen', 'tv']]) addMesh(world, nodes, node, basic(maps[map]));
+    shirt = addMesh(world, nodes, 'Shirt_White', basic(maps.shirt));
+  } else if (theme === 'sport') {
+    for (const [node, map] of [['Environment', 'env'], ['Ramp', 'ramp'], ['SakteBoard', 'skateboard']]) {
+      const object = addMesh(world, nodes, node, basic(maps[map])); if (node === 'SakteBoard') object.position.y = -.012;
+    }
+    shirt = addMesh(world, nodes, 'Shirt_Sport', basic(maps.shirt)); shirt.rotation.set(Math.PI, 0, Math.PI);
+  } else {
+    for (const [node, map] of [['Floor', 'floor'], ['Wall', 'wall'], ['Asset', 'assets']]) addMesh(world, nodes, node, basic(maps[map]));
+    shirt = addMesh(world, nodes, 'Shirt_Gray', basic(maps.shirt));
+  }
+  shirt.position.set(0, .7, 0); return { world, shirt };
 }
-
-export interface ShowroomOptions { onProductSelect: (id: string) => void }
-export function mountShowroom(host: HTMLElement, { onProductSelect }: ShowroomOptions) {
+export function buildDetail(theme: StudioTheme, nodes: ModelNodes, maps: TextureMap) {
+  const world = new Group(), shirt = addMesh(world, nodes, 'Shirt', basic(maps.shirt)); addMesh(world, nodes, 'Sphere_ENV', basic(maps.sphere));
+  const color = theme === 'white' ? '#141414' : theme === 'sport' ? '#f32926' : '#efefef';
+  const textMaterial = new MeshBasicMaterial({ color, transparent: true }), marqueeMaterial = new MeshBasicMaterial({ color, transparent: true, opacity: 0 });
+  const texts = new Group(); world.add(texts);
+  for (const [name, node] of Object.entries(nodes)) if (name.startsWith('Texts')) { const text = addMesh(texts, nodes, name, textMaterial); text.position.copy(node.position); }
+  const marquees = [['Marquee_Top_Bottom', 0], ['Marquee_Top_Bottom', 5.7], ['Marquee_Middle', 0], ['Marquee_Middle', -6.2]].map(([name, x]) => { const object = addMesh(world, nodes, String(name), marqueeMaterial); object.position.x = Number(x); return object; });
+  return { world, shirt, texts, textMaterial, marqueeMaterial, marquees };
+}
+function stencil(group: Group, enabled: boolean, inverse = false) {
+  group.traverse((object) => {
+    if (!(object instanceof Mesh)) return;
+    (Array.isArray(object.material) ? object.material : [object.material]).forEach((material) => {
+      material.stencilWrite = enabled; material.stencilRef = 1; material.stencilFunc = inverse ? NotEqualStencilFunc : EqualStencilFunc;
+      material.stencilFail = material.stencilZFail = material.stencilZPass = KeepStencilOp;
+    }); object.renderOrder = 2;
+  });
+}
+export interface ShowroomOptions {
+  onProductSelect: (id: string) => void;
+  onShop?: () => void;
+  onProgress?: (progress: number) => void;
+  onStatus?: (status: string) => void;
+  assets?: AssetProvider;
+}
+export function mountShowroom(host: HTMLElement, options: ShowroomOptions) {
   const canvas = host.querySelector<HTMLCanvasElement>('canvas')!;
   let renderer: WebGLRenderer;
-  try { renderer = new WebGLRenderer({ canvas, alpha: true, antialias: true, powerPreference: 'low-power' }); }
-  catch { host.dataset.scene = 'fallback'; return { select(_id: string | null) {}, setColor(_id: string, _color: string) {}, rotate(_delta: number) {}, zoom(_delta: number) {}, dispose() {} }; }
-  let compact = window.innerWidth < 768, quality = 0;
-  renderer.outputColorSpace = SRGBColorSpace; renderer.toneMapping = ACESFilmicToneMapping; renderer.toneMappingExposure = 1.35;
-  renderer.shadowMap.enabled = true; renderer.shadowMap.type = PCFSoftShadowMap;
-  const scene = new Scene(), camera = new PerspectiveCamera(38, 1, .1, 80);
-  const { world, garments } = createShowroom(compact); scene.add(world);
-  const floor = mesh(scene, new PlaneGeometry(100, 100), new MeshStandardMaterial({ color: '#252426', roughness: .82, metalness: .15 }), 0, 0, 0); floor.rotation.x = -Math.PI / 2;
-  scene.add(new HemisphereLight('#eeece5', '#151419', 2.1));
-  const key = new DirectionalLight('#ffede1', 4.1); key.position.set(-3, 7, 5); key.castShadow = true;
-  key.shadow.mapSize.setScalar(compact ? 512 : 1024); key.shadow.camera.left = -6; key.shadow.camera.right = 6; key.shadow.camera.top = 6; key.shadow.camera.bottom = -6; key.shadow.normalBias = .025; scene.add(key);
-  const fill = new DirectionalLight('#dfd9ef', 2.5); fill.position.set(5, 4, 3); scene.add(fill);
-  const rim = new DirectionalLight('#ef493c', 3.5); rim.position.set(0, 3, -3); scene.add(rim);
-  const strip = mesh(scene, new PlaneGeometry(18, .018), new MeshStandardMaterial({ color: '#d34137', emissive: '#d34137', emissiveIntensity: 1.5 }), 0, .06, -3.3);
-  strip.rotation.x = -.2;
-  const environment = () => { const pmrem = new PMREMGenerator(renderer), room = new RoomEnvironment(); const target = pmrem.fromScene(room, .06); scene.environment = target.texture; room.dispose(); pmrem.dispose(); return target; };
-  let env = environment();
-  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
-  const raycaster = new Raycaster(), pointer = new Vector2(), look = new Vector3(0, 1.95, 0), targetColor = new Color('#ef493c');
-  const rotations = [0, 0, 0];
-  let selected: number | null = null, zoomLevel = 0, visible = true, overlay = false, lost = false, disposed = false, frame = 0;
-  let time = 0, last = 0, slow = 0, animating = true;
-  let down: { x: number; y: number; id: number; horizontal: boolean } | null = null;
-  camera.position.copy(showroomFrame(2, null, 0).position);
-  function running() { return !disposed && !lost && visible && !document.hidden && !overlay; }
-  function pause() { cancelAnimationFrame(frame); frame = 0; last = 0; }
-  function wake() { if (!frame && running()) frame = requestAnimationFrame(tick); }
+  try { renderer = new WebGLRenderer({ canvas, antialias: true, alpha: false, stencil: true, powerPreference: 'high-performance' }); }
+  catch {
+    host.dataset.scene = 'fallback'; options.onStatus?.('fallback');
+    return { ready: Promise.resolve(), select: async (_id: string | null) => {}, hover(_id: string | null) {}, focus(_index: number) {}, setProgress(_progress: number) {}, rotate(_angle: number) {}, zoom(_delta: number) {}, dispose() {} };
+  }
+  renderer.outputColorSpace = SRGBColorSpace; renderer.toneMapping = ACESFilmicToneMapping;
+  const assets = options.assets ?? new ReferenceAssets(), scene = new Scene(), camera = new PerspectiveCamera(30, 1, .01, 100);
+  scene.background = new Color('#555'); camera.position.set(0, .7, 3); camera.lookAt(0, .7, 0);
+  const maskMaterial = new MeshBasicMaterial({ colorWrite: false, depthWrite: false, depthTest: false, stencilWrite: true, stencilRef: 1, stencilFunc: AlwaysStencilFunc, stencilFail: ReplaceStencilOp, stencilZFail: ReplaceStencilOp, stencilZPass: ReplaceStencilOp, side: DoubleSide });
+  const mask = new Mesh(new PlaneGeometry(1, 1), maskMaterial); mask.renderOrder = 0; mask.visible = false; scene.add(mask);
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)'), pointer = new Vector2(), raycaster = new Raycaster();
+  const entry = { value: 0 }, reveal = { value: 0 }, entryTimeline = gsap.timeline({ paused: true }).to(entry, { value: 1, duration: 4, ease: 'power4.inOut' });
+  let revealTimeline = gsap.timeline({ paused: true }).to(reveal, { value: 1, duration: 1.3, ease: 'power3.out' });
+  let overview: ReturnType<typeof buildOverview> | null = null, maps: TextureMap = {};
+  let room: ReturnType<typeof buildRoom> | null = null, detail: ReturnType<typeof buildDetail> | null = null, film: Group | null = null;
+  let video: HTMLVideoElement | null = null, videoTexture: VideoTexture | null = null, mirror: Reflector | null = null;
+  let selected: string | null = null, hoverId: string | null = null, mobileIndex = 1, targetProgress = 0, progress = 0, manualYaw = 0, zoomLevel = 0;
+  let frame = 0, last = 0, elapsed = 0, entryElapsed = 0, revealElapsed = 0, visible = true, overlay = !!document.querySelector('dialog[open]'), lost = false, disposed = false, quality = 0, slow = 0, compact = window.innerWidth < 768, token = 0;
+  const resources = new Set<Material>(), ownedGeometry = new Set<PlaneGeometry>();
+  let down: { x: number; y: number; id: number; dragging: boolean } | null = null;
+  function remember(group: Group) { group.traverse((o) => { if (o instanceof Mesh) (Array.isArray(o.material) ? o.material : [o.material]).forEach((m) => resources.add(m)); }); }
+  function releaseFilm() { video?.pause(); if (video) { video.removeAttribute('src'); video.load(); } videoTexture?.dispose(); mirror?.getRenderTarget().dispose(); mirror = null; video = null; videoTexture = null; }
+  function removeProduct() { if (room) scene.remove(room.world); if (detail) scene.remove(detail.world); if (film) scene.remove(film); releaseFilm(); room = null; detail = null; film = null; }
+  function canRun() { return !disposed && !lost && visible && !document.hidden && !overlay; }
+  function pause() { cancelAnimationFrame(frame); frame = 0; last = 0; video?.pause(); }
+  function wake() { if (!frame && canRun()) frame = requestAnimationFrame(tick); }
   function resize() {
-    if (disposed || lost) return;
-    const { width, height } = host.getBoundingClientRect(); if (!width || !height) return;
-    compact = window.innerWidth < 768;
-    renderer.setPixelRatio(quality ? 1 : Math.min(window.devicePixelRatio || 1, compact ? 1.5 : 2)); renderer.setSize(width, height, false);
-    camera.aspect = width / height; camera.updateProjectionMatrix(); animating = true; wake();
+    if (disposed || lost) return; const bounds = host.getBoundingClientRect(); if (!bounds.width || !bounds.height) return;
+    compact = window.innerWidth < 768; renderer.setPixelRatio(quality ? 1 : Math.min(window.devicePixelRatio || 1, compact ? 1.5 : 2)); renderer.setSize(bounds.width, bounds.height, false); camera.aspect = bounds.width / bounds.height; camera.updateProjectionMatrix(); wake();
+  }
+  function updateOverview(dt: number) {
+    if (!overview) return;
+    const value = reduced.matches ? 1 : entry.value;
+    overview.world.visible = !room; overview.world.scale.setScalar(window.innerWidth <= 400 ? .8 : 1);
+    overview.world.position.set(0, -.15 * (1 - value), 2 * (1 - value));
+    const active = compact ? capsules[mobileIndex].product : hoverId;
+    (overview.environment.material as MeshBasicMaterial).map = maps[active ? capsuleFor(active)!.theme : 'default'];
+    overview.shirts.forEach((shirt, index) => {
+      const capsule = capsules[index], focused = active === capsule.product, shift = compact ? (mobileIndex - 1) * .65 : 0;
+      const yaw = focused ? 0 : capsule.yaw * (4 - value * 3), alpha = reduced.matches ? 1 : 1 - Math.exp(-dt * 5);
+      shirt.rotation.y += (yaw - shirt.rotation.y) * alpha;
+      shirt.position.set(capsule.position[0] * (2 - value) + shift, .7, compact && focused ? 0 : capsule.position[2]);
+      const scale = focused ? 1.05 : 1; shirt.scale.lerp(new Vector3(scale, scale, scale), alpha);
+    });
+  }
+  function updateStory() {
+    if (!room || !selected) return;
+    const capsule = capsuleFor(selected)!, pose = storyPose(progress, compact), viewportHeight = 2 * camera.position.z * Math.tan(Math.PI / 12), viewportWidth = viewportHeight * camera.aspect;
+    room.world.visible = progress < .30; room.world.position.y = pose.roomY; room.shirt.rotation.y = pose.shirtYaw + manualYaw;
+    if (capsule.theme === 'sport') room.shirt.rotation.set(Math.PI, pose.shirtYaw + manualYaw, Math.PI);
+    mask.scale.set(viewportWidth * 2.2, viewportHeight * 1.5, 1);
+    if (progress < .3) {
+      mask.visible = true; mask.position.set(0, .7 - viewportHeight * 1.3 * (1 - reveal.value) + viewportHeight * 2 * pose.first, .05); mask.rotation.z = -.2 * pose.first;
+      stencil(room.world, true); if (detail) stencil(detail.world, true, true);
+    } else if (progress >= .77 && film) {
+      mask.visible = true; mask.position.set(0, .7 - viewportHeight * 1.6 * (1 - pose.last), .1); mask.rotation.z = -.3 * (1 - pose.last);
+      stencil(film, true); if (detail) stencil(detail.world, true, true);
+    } else { mask.visible = false; if (detail) stencil(detail.world, false); }
+    if (detail) {
+      detail.world.visible = progress > .045 && progress < .97; detail.world.position.y = pose.detailY;
+      detail.world.rotation.set(pose.detailPitch, pose.detailYaw + manualYaw, 0); detail.world.scale.setScalar(pose.detailScale);
+      detail.textMaterial.opacity = 1 - range(pose.turn, .1, .28); detail.marqueeMaterial.opacity = .10 * range(pose.turn, .12, .30); detail.texts.scale.setScalar(range(pose.turn, 0, .15));
+      detail.marquees.forEach((mesh, i) => { const width = i < 2 ? 5.7 : 6.2, phase = reduced.matches ? 0 : (elapsed / 50 % 1) * width; mesh.position.x = (i % 2 ? (i < 2 ? width : -width) : 0) + (i < 2 ? -phase : phase); });
+    }
+    if (film) film.visible = progress >= .77;
+    scene.background = new Color(capsule.theme === 'white' ? '#ededed' : capsule.theme === 'sport' ? '#2b0000' : '#252525');
+    if (video && film?.visible && canRun() && !reduced.matches && video.paused) video.play().catch(() => {});
+    else if (!film?.visible) video?.pause();
   }
   function tick(now: number) {
-    frame = 0; if (!running()) return;
-    const rawDt = last ? (now - last) / 1000 : 1 / 60, dt = Math.min(rawDt, .05); last = now; time += dt;
-    slow = rawDt > .038 && rawDt < .2 ? slow + 1 : Math.max(0, slow - 1);
-    if (!quality && slow > 65) { quality = 1; resize(); }
-    const desired = showroomFrame(camera.aspect, selected, zoomLevel), alpha = reduced.matches ? 1 : 1 - Math.exp(-dt * 5.5);
-    camera.position.lerp(desired.position, alpha); look.lerp(desired.target, alpha); camera.lookAt(look);
-    garments.forEach((garment, index) => {
-      const isSelected = selected === index;
-      const rest = selected === null ? (index === 0 ? .16 : index === 2 ? -.16 : 0) : 0;
-      const targetYaw = isSelected ? rotations[index] : rest;
-      garment.rotation.y += (targetYaw - garment.rotation.y) * alpha;
-      const base = 2.12 + (!reduced.matches ? Math.sin(time * .6 + index * 1.7) * .025 : 0);
-      garment.position.y = base;
-      const scale = selected === null || isSelected ? 1 : .88; garment.scale.lerp(new Vector3(scale, scale, scale), alpha);
-    });
-    rim.color.lerp(targetColor, alpha); renderer.render(scene, camera); host.dataset.scene = 'ready';
-    animating = camera.position.distanceTo(desired.position) > .002 || garments.some((g, i) => Math.abs(g.rotation.y - (selected === i ? rotations[i] : selected === null ? i === 0 ? .16 : i === 2 ? -.16 : 0 : 0)) > .002);
-    if (!reduced.matches || animating) wake();
+    frame = 0; if (!canRun()) return;
+    const raw = last ? (now - last) / 1000 : 1 / 60, dt = Math.min(raw, .05); last = now; elapsed += dt; revealElapsed += dt; if (overview && !room) entryElapsed += dt;
+    slow = raw > .04 && raw < .2 ? slow + 1 : Math.max(0, slow - 1); if (!quality && slow > 70) { quality = 1; resize(); }
+    entryTimeline.totalTime(reduced.matches ? 4 : Math.min(entryElapsed, 4)); revealTimeline.totalTime(reduced.matches ? 1.3 : Math.min(revealElapsed, 1.3));
+    const alpha = reduced.matches ? 1 : 1 - Math.exp(-dt * 3.5), target = new Vector3(reduced.matches ? 0 : pointer.x * .5, .7, 3 - (reduced.matches ? 0 : Math.abs(pointer.x * .2)) - zoomLevel);
+    camera.position.lerp(target, alpha); camera.lookAt(0, .7, 0); progress += (targetProgress - progress) * (reduced.matches ? 1 : 1 - Math.exp(-dt * 7));
+    updateOverview(dt); updateStory(); renderer.render(scene, camera);
+    if (overview && host.dataset.scene !== 'ready') { host.dataset.scene = 'ready'; options.onStatus?.('ready'); }
+    if (!reduced.matches || camera.position.distanceTo(target) > .001 || Math.abs(progress - targetProgress) > .0001) frame = requestAnimationFrame(tick);
   }
-  function select(id: string | null) {
-    const index = garmentIds.indexOf(id as GarmentId), next = index < 0 ? null : index;
-    if (next !== selected) zoomLevel = 0; selected = next;
-    if (selected !== null) targetColor.set(defaultColors[selected] === '#782c39' ? '#f35466' : '#c1b5aa'); else targetColor.set('#ef493c');
-    animating = true; wake();
+  async function textureMap(paths: Record<string, string>) { return Object.fromEntries(await Promise.all(Object.entries(paths).map(async ([key, path]) => [key, await assets.texture(path)]))); }
+  const ready = (async () => {
+    let count = 0; const done = <T>(promise: Promise<T>) => promise.then((value) => { if (!disposed) options.onProgress?.(++count / 8); return value; });
+    const [nodes, textures] = await Promise.all([done(assets.model('models/main/MainStudio.glb')), Promise.all(Object.entries(overviewMaps).map(async ([key, path]) => [key, await done(assets.texture(path))]))]);
+    if (disposed) return; maps = Object.fromEntries(textures) as TextureMap; overview = buildOverview(nodes, maps); remember(overview.world); scene.add(overview.world); wake();
+  })();
+  ready.catch(() => { if (!disposed) { host.dataset.scene = 'fallback'; options.onStatus?.('fallback'); pause(); } });
+  async function select(id: string | null) {
+    const generation = ++token; selected = id; manualYaw = 0; zoomLevel = 0; progress = targetProgress = 0;
+    if (!id) { removeProduct(); mask.visible = false; if (overview) overview.world.visible = true; options.onStatus?.('ready'); wake(); return; }
+    const capsule = capsuleFor(id); if (!capsule) { selected = null; return; } options.onStatus?.('loading-product');
+    try {
+      await ready;
+      const [nodes, textures] = await Promise.all([assets.model(`models/${capsule.theme}/${capsule.theme === 'white' ? 'White' : capsule.theme === 'sport' ? 'Sport' : 'Gray'}Studio.glb`), textureMap(roomMaps[capsule.theme])]);
+      if (disposed || generation !== token) return;
+      removeProduct(); room = buildRoom(capsule.theme, nodes, textures); remember(room.world); scene.add(room.world); if (overview) overview.world.visible = false;
+      reveal.value = 0; revealElapsed = 0; revealTimeline.kill(); revealTimeline = gsap.timeline({ paused: true }).to(reveal, { value: 1, duration: 1.3, ease: 'power3.out' }); options.onStatus?.('product-ready'); wake();
+      const [detailNodes, detailTextures] = await Promise.all([assets.model('models/ShirtScrolling.glb'), textureMap(detailMaps[capsule.theme])]);
+      if (disposed || generation !== token) return;
+      detail = buildDetail(capsule.theme, detailNodes, detailTextures); remember(detail.world); scene.add(detail.world); wake();
+      const [floorNormal, overlayTexture, cube, still] = await Promise.all([assets.texture('textures/FloorNormal.png', false), assets.texture('textures/SmudgesOverlay.jpg'), assets.cube(`textures/${capsule.theme}/third/`), assets.texture(`../img/film-${capsule.theme}.webp`)]);
+      if (disposed || generation !== token) return;
+      film = new Group(); const wall = new Mesh(new PlaneGeometry(10, 10), new MeshBasicMaterial({ color: capsule.theme === 'white' ? '#fff' : capsule.theme === 'sport' ? '#2b0000' : '#252525', map: overlayTexture })); wall.position.set(0, 5, -1.3); film.add(wall); ownedGeometry.add(wall.geometry);
+      mirror = new Reflector(new PlaneGeometry(10, 3), { color: capsule.theme === 'white' ? '#bababa' : '#595959', textureWidth: compact ? 512 : 1024, textureHeight: compact ? 512 : 1024, clipBias: .003 }); mirror.rotation.x = -Math.PI / 2; mirror.position.y = .199; mirror.renderOrder = 1; film.add(mirror); ownedGeometry.add(mirror.geometry as PlaneGeometry);
+      const floor = new Mesh(new PlaneGeometry(10, 3), new MeshStandardMaterial({ envMap: cube, normalMap: floorNormal, map: overlayTexture, transparent: true, opacity: .40, roughness: .8 })); floor.rotation.x = -Math.PI / 2; floor.position.y = .20; film.add(floor); ownedGeometry.add(floor.geometry);
+      const screenMaterial = basic(still), screen = new Mesh(new PlaneGeometry(16, 9), screenMaterial); screen.scale.setScalar(compact ? .06 : .10); screen.rotation.y = -Math.PI / 6; screen.position.set(compact ? 0 : .2, compact ? .45 : .65, 0); film.add(screen); ownedGeometry.add(screen.geometry);
+      const button = new Mesh(new PlaneGeometry(.5, .13), new MeshBasicMaterial({ color: capsule.theme === 'white' ? '#111' : '#eee' })); button.position.set(compact ? 0 : -.8, compact ? .88 : .7, .02); button.rotation.y = compact ? -Math.PI / 9 : Math.PI / 9; button.userData.action = 'shop'; film.add(button); ownedGeometry.add(button.geometry);
+      video = document.createElement('video'); video.muted = true; video.loop = true; video.playsInline = true; video.preload = 'none'; video.src = new URL(`./assets/reference/textures/${capsule.theme}/third/adidas.mp4`, import.meta.url).href;
+      const ownVideo = video; videoTexture = new VideoTexture(video); videoTexture.colorSpace = SRGBColorSpace; const ownVideoTexture = videoTexture;
+      video.addEventListener('loadeddata', () => { if (video !== ownVideo || disposed) return; screenMaterial.map = ownVideoTexture; screenMaterial.needsUpdate = true; wake(); }, { once: true }); video.load(); remember(film); scene.add(film); wake();
+    } catch { if (!disposed && generation === token) { options.onStatus?.(room ? 'partial' : 'product-error'); wake(); } }
   }
-  function setColor(id: string, color: string) {
-    const object = garments.find((g) => g.name === id); if (!object || !/^#[a-f0-9]{6}$/i.test(color)) return;
-    (object.userData.fabric as MeshStandardMaterial[]).forEach((m) => m.color.set(color)); animating = true; wake();
-    if (object.userData.lining) (object.userData.lining as MeshStandardMaterial).color.set(color).multiplyScalar(.32);
+  function hover(id: string | null) { hoverId = id; wake(); }
+  function focus(index: number) { mobileIndex = Math.max(0, Math.min(2, index)); wake(); }
+  function setProgress(value: number) { targetProgress = Math.max(0, Math.min(1, Number.isFinite(value) ? value : 0)); wake(); }
+  function rotate(angle: number) { if (selected && Number.isFinite(angle)) { manualYaw += angle; wake(); } }
+  function zoom(delta: number) { if (selected && Number.isFinite(delta)) { zoomLevel = Math.max(-.35, Math.min(.3, zoomLevel + delta)); wake(); } }
+  function move(event: PointerEvent) {
+    const bounds = canvas.getBoundingClientRect(); pointer.set((event.clientX - bounds.left) / bounds.width * 2 - 1, 1 - (event.clientY - bounds.top) / bounds.height * 2);
+    if (down && selected) { const dx = event.clientX - down.x, dy = event.clientY - down.y;
+      if (!down.dragging && Math.abs(dy) > Math.abs(dx) && Math.abs(dy) > 8) down = null;
+      else if (down && (down.dragging || Math.abs(dx) > 8)) { down.dragging = true; canvas.setPointerCapture?.(event.pointerId); rotate(dx * .01); down.x = event.clientX; down.y = event.clientY; }
+    }
+    if (!selected && overview && event.pointerType !== 'touch') { raycaster.setFromCamera(pointer, camera); const hit = raycaster.intersectObjects(overview.shirts, false)[0]; hover(hit?.object.userData.product || null); canvas.style.cursor = hit ? 'pointer' : ''; } wake();
   }
-  function rotate(delta: number) { if (selected !== null && Number.isFinite(delta)) { rotations[selected] += delta; animating = true; wake(); } }
-  function zoom(delta: number) { if (selected !== null && Number.isFinite(delta)) { zoomLevel = Math.max(-1, Math.min(1.25, zoomLevel + delta)); animating = true; wake(); } }
-  function pointerDown(event: PointerEvent) { down = { x: event.clientX, y: event.clientY, id: event.pointerId, horizontal: false }; }
-  function pointerMove(event: PointerEvent) {
-    if (!down || selected === null || down.id !== event.pointerId) return;
-    const dx = event.clientX - down.x, dy = event.clientY - down.y;
-    if (!down.horizontal && Math.abs(dy) > Math.abs(dx) && Math.abs(dy) > 8) { down = null; return; }
-    if (!down.horizontal && Math.abs(dx) > 8 && Math.abs(dx) > Math.abs(dy)) { down.horizontal = true; canvas.setPointerCapture?.(event.pointerId); }
-    if (down.horizontal) { rotate(dx * .012); down.x = event.clientX; down.y = event.clientY; }
-  }
+  const leave = () => { pointer.set(0, 0); hoverId = null; canvas.style.cursor = ''; wake(); };
+  const pointerDown = (event: PointerEvent) => { down = { x: event.clientX, y: event.clientY, id: event.pointerId, dragging: false }; };
   function pointerUp(event: PointerEvent) {
-    const start = down; down = null;
-    if (canvas.hasPointerCapture?.(event.pointerId)) canvas.releasePointerCapture(event.pointerId);
-    if (!start || start.horizontal || Math.hypot(event.clientX - start.x, event.clientY - start.y) > 8) return;
-    const bounds = canvas.getBoundingClientRect(); pointer.set((event.clientX - bounds.left) / bounds.width * 2 - 1, -((event.clientY - bounds.top) / bounds.height * 2 - 1));
-    raycaster.setFromCamera(pointer, camera); const hit = raycaster.intersectObjects(garments, true)[0]; if (!hit) return;
-    let object: Object3D | null = hit.object; while (object && !garments.includes(object as Group)) object = object.parent;
-    if (object) onProductSelect(object.name);
+    const start = down; down = null; if (canvas.hasPointerCapture?.(event.pointerId)) canvas.releasePointerCapture(event.pointerId);
+    if (!start || start.dragging || Math.hypot(start.x - event.clientX, start.y - event.clientY) > 8) return;
+    const bounds = canvas.getBoundingClientRect(); raycaster.setFromCamera(new Vector2((event.clientX - bounds.left) / bounds.width * 2 - 1, 1 - (event.clientY - bounds.top) / bounds.height * 2), camera);
+    if (!selected && overview) { const hit = raycaster.intersectObjects(overview.shirts, false)[0]; if (hit) options.onProductSelect(hit.object.userData.product); }
+    else if (film?.visible && raycaster.intersectObjects(film.children, true).some((hit) => hit.object.userData.action === 'shop')) options.onShop?.();
   }
-  function pointerCancel() { down = null; }
-  const observer = new IntersectionObserver(([entry]) => { visible = entry.isIntersecting; if (visible) wake(); else pause(); }, { rootMargin: '80px' }); observer.observe(host);
-  const resizeObserver = new ResizeObserver(resize); resizeObserver.observe(host);
-  const visibility = () => document.hidden ? pause() : wake();
+  const cancel = () => { down = null; }, observer = new IntersectionObserver(([entry]) => { visible = entry.isIntersecting; if (visible) wake(); else pause(); }); observer.observe(host);
+  const resizer = new ResizeObserver(resize); resizer.observe(host); const visibility = () => document.hidden ? pause() : wake();
   const overlayChange = (event: Event) => { overlay = (event as CustomEvent<{ open: boolean }>).detail.open; if (overlay) pause(); else wake(); };
-  const motionChange = () => { animating = true; wake(); };
-  const contextLost = (event: Event) => { event.preventDefault(); lost = true; pause(); host.dataset.scene = 'fallback'; };
-  const contextRestored = () => { if (disposed) return; lost = false; env.dispose(); env = environment(); resize(); wake(); };
-  canvas.addEventListener('pointerdown', pointerDown); canvas.addEventListener('pointermove', pointerMove); canvas.addEventListener('pointerup', pointerUp); canvas.addEventListener('pointercancel', pointerCancel);
-  canvas.addEventListener('webglcontextlost', contextLost); canvas.addEventListener('webglcontextrestored', contextRestored);
-  document.addEventListener('visibilitychange', visibility); document.addEventListener('vector:overlay', overlayChange); reduced.addEventListener('change', motionChange);
-  resize(); wake();
-  return { select, setColor, rotate, zoom, getState: () => ({ selected, zoom: zoomLevel, rotations: [...rotations], quality }), dispose() {
-    if (disposed) return; disposed = true; pause(); observer.disconnect(); resizeObserver.disconnect();
-    canvas.removeEventListener('pointerdown', pointerDown); canvas.removeEventListener('pointermove', pointerMove); canvas.removeEventListener('pointerup', pointerUp); canvas.removeEventListener('pointercancel', pointerCancel);
-    canvas.removeEventListener('webglcontextlost', contextLost); canvas.removeEventListener('webglcontextrestored', contextRestored); document.removeEventListener('visibilitychange', visibility); document.removeEventListener('vector:overlay', overlayChange); reduced.removeEventListener('change', motionChange);
-    const geometries = new Set<BufferGeometry>(), materials = new Set<Material>();
-    scene.traverse((object) => { if (object instanceof Mesh) { geometries.add(object.geometry); (Array.isArray(object.material) ? object.material : [object.material]).forEach((m) => materials.add(m)); } });
-    geometries.forEach((g) => g.dispose()); materials.forEach((m) => { if (m instanceof MeshStandardMaterial) m.normalMap?.dispose(); m.dispose(); }); env.dispose(); renderer.dispose(); host.dataset.scene = 'poster';
+  const contextLost = (event: Event) => { event.preventDefault(); lost = true; pause(); host.dataset.scene = 'fallback'; options.onStatus?.('context-lost'); };
+  const contextRestored = () => { if (disposed) return; lost = false; resize(); wake(); };
+  const motionChange = () => { if (reduced.matches) video?.pause(); wake(); };
+  canvas.addEventListener('pointermove', move); canvas.addEventListener('pointerleave', leave); canvas.addEventListener('pointerdown', pointerDown); canvas.addEventListener('pointerup', pointerUp); canvas.addEventListener('pointercancel', cancel); canvas.addEventListener('webglcontextlost', contextLost); canvas.addEventListener('webglcontextrestored', contextRestored);
+  document.addEventListener('visibilitychange', visibility); document.addEventListener('vector:overlay', overlayChange); reduced.addEventListener('change', motionChange); resize();
+  return { ready, select, hover, focus, setProgress, rotate, zoom, getState: () => ({ selected, progress, targetProgress, mobileIndex, manualYaw, zoom: zoomLevel, quality, ready: !!overview, detailReady: !!detail, filmReady: !!film }), dispose() {
+    if (disposed) return; disposed = true; token++; pause(); removeProduct(); observer.disconnect(); resizer.disconnect(); entryTimeline.kill(); revealTimeline.kill();
+    canvas.removeEventListener('pointermove', move); canvas.removeEventListener('pointerleave', leave); canvas.removeEventListener('pointerdown', pointerDown); canvas.removeEventListener('pointerup', pointerUp); canvas.removeEventListener('pointercancel', cancel); canvas.removeEventListener('webglcontextlost', contextLost); canvas.removeEventListener('webglcontextrestored', contextRestored);
+    document.removeEventListener('visibilitychange', visibility); document.removeEventListener('vector:overlay', overlayChange); reduced.removeEventListener('change', motionChange);
+    resources.forEach((material) => material.dispose()); ownedGeometry.forEach((geometry) => geometry.dispose()); mask.geometry.dispose(); maskMaterial.dispose(); assets.dispose(); renderer.dispose(); host.dataset.scene = 'poster';
   } };
 }
