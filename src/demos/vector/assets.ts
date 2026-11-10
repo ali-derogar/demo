@@ -30,7 +30,7 @@ export class ReferenceAssets implements AssetProvider {
   }
   texture(path: string, srgb = true) {
     return this.cached(path + ':' + srgb, async () => {
-      const texture = await new TextureLoader().loadAsync(this.root + path);
+      const texture: Texture = await new TextureLoader().loadAsync(this.root + path);
       texture.flipY = false; if (srgb) texture.colorSpace = SRGBColorSpace; texture.anisotropy = 4;
       const image = texture.image as HTMLImageElement, limit = window.innerWidth < 768 ? 2048 : 4096;
       if (Math.max(image.width, image.height) > limit && !this.disposed) {

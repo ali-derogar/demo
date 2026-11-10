@@ -1,3 +1,4 @@
+import { mountSoundtrack } from './sound.js?v=vector-3';
 import { products, categories, sizes, featuredIds, byId, money, selectProducts, cleanCart, addToCart, cartLines, variantFor, orderErrors } from './products.js';
 const icon = (name) => `<svg class="icon" aria-hidden="true"><use href="#i-${name}"/></svg>`;
 const price = (amount) => `${money(amount)} <small>تومان</small>`;
@@ -8,7 +9,7 @@ const posters = {
   gray: ['./assets/img/room-gray.webp', './assets/img/detail-gray.webp', './assets/img/film-gray.webp'],
 };
 
-export function mountStore({ scene = true } = {}) {
+export function mountStore({ scene = true, sound = scene } = {}) {
   const $ = (selector) => document.querySelector(selector), $$ = (selector) => [...document.querySelectorAll(selector)];
   const read = (key, fallback) => { try { return JSON.parse(localStorage.getItem(key)) ?? fallback; } catch { return fallback; } };
   const write = (key, value) => { try { localStorage.setItem(key, JSON.stringify(value)); } catch { /* Selection stays usable with storage disabled. */ } };
@@ -20,6 +21,7 @@ export function mountStore({ scene = true } = {}) {
   let selectedHero = null, selectedId = '', selectedColor = '', selectedSize = '', view = '', orderData = {}, opener = null, oldOverflow = '';
   let showroom = null, disposed = false, pageHidden = false, toastTimer, scenePending = false, menuOpen = false, mobileIndex = 1, productReady = false, scrollFrame = 0, posterTimer, catalogOpener = null, catalogOverflow = '';
   const dialog = $('#shop-dialog'), host = $('#showroom'), catalog = $('#catalog-dialog');
+  const soundtrack = sound ? mountSoundtrack($('#studio-audio'), $('#sound-toggle')) : null;
   const lines = () => cartLines(cart), count = () => lines().reduce((sum, line) => sum + line.qty, 0);
   const total = () => lines().reduce((sum, line) => sum + line.qty * line.product.price, 0);
   const reduced = matchMedia('(prefers-reduced-motion: reduce)');
@@ -272,7 +274,7 @@ export function mountStore({ scene = true } = {}) {
   if (/^#studio\//.test(location.hash)) routeChanged(); startScene();
   posterTimer = setTimeout(() => { if (!$('#load-state').hidden) $('#poster-entry').hidden = false; }, 7000);
   return { getState: () => ({ cart: { ...cart }, favorites: [...favorites], ...state, selectedId, selectedColor, selectedSize, selectedHero, heroColors: { ...heroColors }, view }), dispose() {
-    if (disposed) return; disposed = true; clearTimeout(toastTimer); clearTimeout(posterTimer); cancelAnimationFrame(scrollFrame); revealObserver?.disconnect(); showroom?.dispose();
+    if (disposed) return; disposed = true; soundtrack?.dispose(); clearTimeout(toastTimer); clearTimeout(posterTimer); cancelAnimationFrame(scrollFrame); revealObserver?.disconnect(); showroom?.dispose();
     if (dialog.open) { dialog.close(); document.documentElement.style.overflow = oldOverflow; }
     if (catalog.open) catalog.close(); catalog.removeEventListener('close', catalogClosed);
     document.removeEventListener('click', click); document.removeEventListener('submit', submit); document.removeEventListener('keydown', keyboard); dialog.removeEventListener('close', dialogClosed); dialog.removeEventListener('click', outside);
