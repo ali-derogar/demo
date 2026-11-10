@@ -88,7 +88,16 @@ export function mountShowroom(host: HTMLElement, options: ShowroomOptions) {
   let down: { x: number; y: number; id: number; dragging: boolean } | null = null;
   function remember(group: Group) { group.traverse((o) => { if (o instanceof Mesh) (Array.isArray(o.material) ? o.material : [o.material]).forEach((m) => resources.add(m)); }); }
   function releaseFilm() { video?.pause(); if (video) { video.removeAttribute('src'); video.load(); } videoTexture?.dispose(); mirror?.getRenderTarget().dispose(); mirror = null; video = null; videoTexture = null; }
-  function removeProduct() { if (room) scene.remove(room.world); if (detail) scene.remove(detail.world); if (film) scene.remove(film); releaseFilm(); room = null; detail = null; film = null; }
+  function removeProduct() {
+    for (const group of [room?.world, detail?.world, film]) if (group) {
+      scene.remove(group); group.traverse((object) => {
+        if (!(object instanceof Mesh)) return;
+        (Array.isArray(object.material) ? object.material : [object.material]).forEach((material) => { if (resources.delete(material)) material.dispose(); });
+        if (ownedGeometry.delete(object.geometry as PlaneGeometry)) object.geometry.dispose();
+      });
+    }
+    releaseFilm(); room = null; detail = null; film = null;
+  }
   function canRun() { return !disposed && !lost && visible && !document.hidden && !overlay; }
   function pause() { cancelAnimationFrame(frame); frame = 0; last = 0; video?.pause(); }
   function wake() { if (!frame && canRun()) frame = requestAnimationFrame(tick); }
@@ -168,6 +177,7 @@ export function mountShowroom(host: HTMLElement, options: ShowroomOptions) {
       detail = buildDetail(capsule.theme, detailNodes, detailTextures); remember(detail.world); scene.add(detail.world); wake();
       const [floorNormal, overlayTexture, cube, still] = await Promise.all([assets.texture('textures/FloorNormal.png', false), assets.texture('textures/SmudgesOverlay.jpg'), assets.cube(`textures/${capsule.theme}/third/`), assets.texture(`../img/film-${capsule.theme}.webp`)]);
       if (disposed || generation !== token) return;
+      still.flipY = true; still.needsUpdate = true;
       film = new Group(); const wall = new Mesh(new PlaneGeometry(10, 10), new MeshBasicMaterial({ color: capsule.theme === 'white' ? '#fff' : capsule.theme === 'sport' ? '#2b0000' : '#252525', map: overlayTexture })); wall.position.set(0, 5, -1.3); film.add(wall); ownedGeometry.add(wall.geometry);
       mirror = new Reflector(new PlaneGeometry(10, 3), { color: capsule.theme === 'white' ? '#bababa' : '#595959', textureWidth: compact ? 512 : 1024, textureHeight: compact ? 512 : 1024, clipBias: .003 }); mirror.rotation.x = -Math.PI / 2; mirror.position.y = .199; mirror.renderOrder = 1; film.add(mirror); ownedGeometry.add(mirror.geometry as PlaneGeometry);
       const floor = new Mesh(new PlaneGeometry(10, 3), new MeshStandardMaterial({ envMap: cube, normalMap: floorNormal, map: overlayTexture, transparent: true, opacity: .40, roughness: .8 })); floor.rotation.x = -Math.PI / 2; floor.position.y = .20; film.add(floor); ownedGeometry.add(floor.geometry);

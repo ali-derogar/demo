@@ -1,6 +1,12 @@
 import { products, categories, sizes, featuredIds, byId, money, selectProducts, cleanCart, addToCart, cartLines, variantFor, orderErrors } from './products.js';
 const icon = (name) => `<svg class="icon" aria-hidden="true"><use href="#i-${name}"/></svg>`;
 const price = (amount) => `${money(amount)} <small>تومان</small>`;
+const capsules = [{ id: 'tee-02', theme: 'white', label: 'WHITE' }, { id: 'tee-03', theme: 'sport', label: 'SPORT' }, { id: 'tee-01', theme: 'gray', label: 'GRAY' }];
+const posters = {
+  white: ['./assets/img/room-white.webp', './assets/img/detail-white.webp', './assets/img/film-white.webp'],
+  sport: ['./assets/img/room-sport.webp', './assets/img/detail-sport.webp', './assets/img/film-sport.webp'],
+  gray: ['./assets/img/room-gray.webp', './assets/img/detail-gray.webp', './assets/img/film-gray.webp'],
+};
 
 export function mountStore({ scene = true } = {}) {
   const $ = (selector) => document.querySelector(selector), $$ = (selector) => [...document.querySelectorAll(selector)];
@@ -12,13 +18,13 @@ export function mountStore({ scene = true } = {}) {
   const state = { query: '', category: 'all', size: 'all', sort: 'newest', favoritesOnly: false };
   const heroColors = Object.fromEntries(featuredIds.map((id) => [id, byId(id).colors[0].id]));
   let selectedHero = null, selectedId = '', selectedColor = '', selectedSize = '', view = '', orderData = {}, opener = null, oldOverflow = '';
-  let showroom = null, disposed = false, pageHidden = false, toastTimer, scenePending = false, menuOpen = false;
-  const dialog = $('#shop-dialog'), host = $('#showroom');
+  let showroom = null, disposed = false, pageHidden = false, toastTimer, scenePending = false, menuOpen = false, mobileIndex = 1, productReady = false, scrollFrame = 0, posterTimer, catalogOpener = null, catalogOverflow = '';
+  const dialog = $('#shop-dialog'), host = $('#showroom'), catalog = $('#catalog-dialog');
   const lines = () => cartLines(cart), count = () => lines().reduce((sum, line) => sum + line.qty, 0);
   const total = () => lines().reduce((sum, line) => sum + line.qty * line.product.price, 0);
   const reduced = matchMedia('(prefers-reduced-motion: reduce)');
-  const scrollTo = (selector) => $(selector)?.scrollIntoView({ behavior: reduced.matches ? 'auto' : 'smooth', block: 'start' });
-  function notify(message) { clearTimeout(toastTimer); $('#toast').textContent = message; $('#toast').classList.add('is-visible'); toastTimer = setTimeout(() => $('#toast').classList.remove('is-visible'), 2700); }
+  const scrollTo = (selector) => { if (selector !== '#home' && !catalog.open) setMenu(true); $(selector)?.scrollIntoView({ behavior: reduced.matches ? 'auto' : 'smooth', block: 'start' }); };
+  function notify(message) { clearTimeout(toastTimer); (dialog.open ? dialog : catalog.open ? catalog : document.body).append($('#toast')); $('#toast').textContent = message; $('#toast').classList.add('is-visible'); toastTimer = setTimeout(() => $('#toast').classList.remove('is-visible'), 2700); }
   function updateBadges() {
     $$('.cart-count').forEach((el) => { el.textContent = money(count()); });
     $$('[data-action="cart"]').forEach((el) => el.setAttribute('aria-label', `سبد خرید، ${money(count())} کالا`));
@@ -42,7 +48,20 @@ export function mountStore({ scene = true } = {}) {
     notify(favorites.includes(id) ? 'در علاقه‌مندی‌های شما ماند.' : 'از علاقه‌مندی‌ها برداشته شد.');
   }
   function overlayChanged() { document.dispatchEvent(new CustomEvent('vector:overlay', { detail: { open: dialog.open || menuOpen } })); }
-  function setMenu(open) { menuOpen = open; $('.main-nav').classList.toggle('is-open', open); $('.menu-toggle').setAttribute('aria-expanded', String(open)); $('.menu-toggle').setAttribute('aria-label', open ? 'بستن منو' : 'بازکردن منو'); overlayChanged(); }
+  function catalogClosed() {
+    menuOpen = false; $('.menu-toggle').setAttribute('aria-expanded', 'false');
+    document.documentElement.style.overflow = catalogOverflow; overlayChanged();
+    if (catalogOpener?.isConnected) catalogOpener.focus({ preventScroll: true });
+    document.body.append($('#toast'));
+  }
+  function setMenu(open) {
+    if (open === catalog.open) return;
+    menuOpen = open; $('.menu-toggle').setAttribute('aria-expanded', String(open));
+    if (open) { catalogOpener = document.activeElement; catalogOverflow = document.documentElement.style.overflow; document.documentElement.style.overflow = 'hidden'; catalog.showModal(); $('[data-action="close-catalog"]').focus({ preventScroll: true }); }
+    else catalog.close();
+    overlayChanged();
+  }
+  catalog.addEventListener('close', catalogClosed);
   function show(html, nextView) {
     if (!dialog.open) { opener = document.activeElement; oldOverflow = document.documentElement.style.overflow; document.documentElement.style.overflow = 'hidden'; }
     view = nextView; $('#dialog-content').innerHTML = html;
@@ -51,32 +70,59 @@ export function mountStore({ scene = true } = {}) {
   }
   const close = () => dialog.close();
   function dialogClosed() {
-    view = ''; orderData = {}; document.documentElement.style.overflow = oldOverflow; overlayChanged();
+    view = ''; orderData = {}; document.documentElement.style.overflow = oldOverflow; (catalog.open ? catalog : document.body).append($('#toast')); overlayChanged();
     const focus = opener?.isConnected ? opener : opener?.dataset.product ? $(`[data-product="${opener.dataset.product}"]`) : $('[data-action="cart"]'); focus?.focus({ preventScroll: true });
   }
   dialog.addEventListener('close', dialogClosed);
   function colorButtons(p, color, attribute = 'data-color') {
     return p.colors.map((c) => `<button ${attribute}="${c.id}" aria-label="رنگ ${c.name}" aria-pressed="${color === c.id}" title="${c.name}"><i style="background:${c.hex}"></i></button>`).join('');
   }
-  function selectHero(id) {
-    const p = byId(id); if (id && !p?.featured) return;
-    selectedHero = id; $('.hero').classList.toggle('is-focused', !!id);
-    $$('[data-scene-product]').forEach((el) => el.setAttribute('aria-pressed', String(el.dataset.sceneProduct === id)));
-    $('#scene-options').hidden = !id;
-    if (p) {
-      const color = p.colors.find((c) => c.id === heroColors[id]);
-      $('#hero-title').textContent = p.name; $('#hero-description').textContent = `${p.fabric} · ${p.fit}`;
-      $('.hero-actions').innerHTML = `<button class="btn" data-product="${p.id}" data-from-studio="true">انتخاب سایز و خرید ${icon('arrow')}</button> <span class="hero-price">${price(p.price)}</span>`;
-      $('#studio-caption').textContent = `${p.name} / ${color.name}`; $('#scene-colors').innerHTML = colorButtons(p, color.id, 'data-scene-color');
-      $('#studio-hint').textContent = host.dataset.scene === 'fallback' ? 'نمای ثابت؛ انتخاب رنگ، سایز و خرید در دسترس است.' : 'برای چرخاندن، افقی بکشید؛ یا از دکمه‌ها استفاده کنید.';
-      showroom?.setColor(id, color.hex);
-    } else {
-      $('#hero-title').innerHTML = 'قواعد خودت را <em>بپوش.</em>'; $('#hero-description').textContent = 'برای مسیرهایی که خودت می‌سازی.';
-      $('.hero-actions').innerHTML = `<a class="btn" href="#shop">کالکشن را کشف کن ${icon('arrow')}</a>`;
-      $('#studio-caption').textContent = 'یک لباس انتخاب کنید.'; $('#studio-hint').textContent = 'انتخاب کنید، بچرخانید، از نزدیک ببینید.';
-    }
-    showroom?.select(id);
+  function updateStoryScroll() {
+    scrollFrame = 0; if (!selectedHero) return;
+    const track = $('#story-track'), top = track.getBoundingClientRect().top + window.scrollY;
+    const progress = Math.max(0, Math.min(1, (window.scrollY - top) / Math.max(1, track.offsetHeight - window.innerHeight)));
+    showroom?.setProgress(progress);
+    const phase = progress < .24 ? 0 : progress < .77 ? 1 : 2;
+    $('#story-step').textContent = ['01 / THE STUDIO', '02 / EVERY ANGLE', '03 / THE FILM'][phase];
+    $('#story-progress-bar').style.transform = `scaleX(${progress})`;
+    $$('[data-story-step]').forEach((el, index) => { if (index === phase) el.setAttribute('aria-current', 'step'); else el.removeAttribute('aria-current'); });
+    $('#story-offer').hidden = progress < .86; $('#scroll-hint').hidden = progress > .97;
+    const capsule = capsules.find((c) => c.id === selectedHero);
+    const image = posters[capsule.theme][phase]; if ($('.showroom-poster').getAttribute('src') !== image) $('.showroom-poster').src = image;
   }
+  function scrollChanged() { if (!scrollFrame) scrollFrame = requestAnimationFrame(updateStoryScroll); }
+  function selectHero(id, updateHistory = true) {
+    const capsule = capsules.find((c) => c.id === id); if (id && !capsule) return;
+    selectedHero = id; productReady = false; document.body.classList.toggle('story-active', !!id);
+    document.body.dataset.studioTheme = capsule?.theme || 'home';
+    $('#home-ui').hidden = !!id; $('#story-track').hidden = !id; $('#story-ui').hidden = !id;
+    $$('[data-scene-product]').forEach((el) => el.setAttribute('aria-pressed', String(el.dataset.sceneProduct === id)));
+    if (capsule) {
+      $('#story-name').textContent = `ORIGINALS / ${capsule.label}`; $('#story-buy').dataset.product = id;
+      $('#offer-copy').textContent = byId(id).name; $('.showroom-poster').src = posters[capsule.theme][0];
+      host.classList.add('is-static'); window.scrollTo({ top: 0, behavior: 'instant' });
+      showroom?.select(id); updateStoryScroll();
+    } else {
+      $('.showroom-poster').src = './assets/img/hero-01.webp'; host.classList.remove('is-static');
+      $('#load-state').hidden = true; showroom?.select(null); window.scrollTo({ top: 0, behavior: 'instant' });
+    }
+    if (updateHistory) {
+      const hash = capsule ? '#studio/' + capsule.theme : '#home';
+      if (location.hash !== hash) history.pushState({ vectorStudio: capsule?.theme || null }, '', hash);
+    }
+  }
+  function sceneStatus(status) {
+    if (disposed) return;
+    if (status === 'loading-product') { $('#load-state').hidden = false; $('#load-state').classList.add('is-product'); $('#load-label').textContent = 'در حال آماده‌سازی کالکشن'; }
+    if (status === 'product-ready') { productReady = true; host.classList.remove('is-static'); $('#load-state').hidden = true; updateStoryScroll(); }
+    if (status === 'ready' && (!selectedHero || productReady)) { host.classList.remove('is-static'); $('#load-state').hidden = true; }
+    if (['fallback', 'context-lost', 'partial', 'product-error'].includes(status)) {
+      host.classList.add('is-static'); $('#load-state').hidden = false; $('#load-state').classList.toggle('is-product', !!selectedHero);
+      $('#load-label').textContent = 'نمای ثابت در دسترس است.'; $('#poster-entry').hidden = false;
+      $('#studio-hint').textContent = 'یک کالکشن انتخاب کنید؛ فروشگاه در دسترس است.';
+    }
+  }
+  function routeChanged() { const match = /^#studio\/(white|sport|gray)$/.exec(location.hash); selectHero(match ? capsules.find((c) => c.theme === match[1]).id : null, false); }
   function syncProductOptions() {
     const p = byId(selectedId); if (!p || view !== 'product') return;
     const color = p.colors.find((c) => c.id === selectedColor), variant = variantFor(p.id, selectedColor, selectedSize);
@@ -96,7 +142,7 @@ export function mountStore({ scene = true } = {}) {
   function openProduct(id, fromStudio = false, retain = false) {
     const p = byId(id); if (!p) return;
     if (!retain) { selectedId = id; selectedColor = fromStudio ? heroColors[id] || '' : ''; selectedSize = ''; }
-    show(`<div class="product-detail"><div class="detail-image"><img src="${p.image}" width="900" height="900" alt="${p.name}، رنگ ${p.imageColor}"><span class="image-caption">تصویر محصول در رنگ ${p.imageColor}</span></div><div><p class="detail-code" dir="ltr">${p.code} — VECTOR ORIGINALS</p><h2 id="dialog-title">${p.name}</h2><p class="detail-description">${p.detail}</p><div class="detail-specs"><span>جنس<strong>${p.fabric}</strong></span><span>فرم<strong>${p.fit}</strong></span></div><span class="detail-price">${price(p.price)}</span><p class="option-label">رنگ: <strong id="selected-color">انتخاب کنید</strong></p><div class="color-options" role="group" aria-label="انتخاب رنگ">${colorButtons(p, selectedColor)}</div><div class="option-label"><span>سایز</span><button data-action="size-guide">راهنمای سایز ↙</button></div><div class="size-options" role="group" aria-label="انتخاب سایز">${sizes.map((size) => `<button data-size="${size}" aria-pressed="false">${size}</button>`).join('')}</div><p class="variant-status" id="variant-status" aria-live="polite"></p><p class="selection-error" id="selection-error" role="alert"></p><div class="detail-actions"><button class="btn" id="detail-add" data-add="${p.id}">افزودن به سبد ${icon('plus')}</button><button class="favorite-button" data-favorite="${p.id}" aria-label="علاقه‌مندی: ${p.name}" aria-pressed="${favorites.includes(p.id)}">${icon('heart')}</button></div>${p.featured ? '<button class="scene-detail-link" data-action="view-studio">دیدن در استودیو ↗</button>' : ''}</div></div>`, 'product'); syncProductOptions();
+    show(`<div class="product-detail"><div class="detail-image"><img src="${p.image}" width="900" height="900" alt="${p.name}، رنگ ${p.imageColor}"><span class="image-caption">تصویر محصول در رنگ ${p.imageColor}</span></div><div><p class="detail-code" dir="ltr">${p.code} — VECTOR ORIGINALS</p><h2 id="dialog-title">${p.name}</h2><p class="detail-description">${p.detail}</p><div class="detail-specs"><span>جنس<strong>${p.fabric}</strong></span><span>فرم<strong>${p.fit}</strong></span></div><span class="detail-price">${price(p.price)}</span><p class="option-label">رنگ: <strong id="selected-color">انتخاب کنید</strong></p><div class="color-options" role="group" aria-label="انتخاب رنگ">${colorButtons(p, selectedColor)}</div><div class="option-label"><span>سایز</span><button data-action="size-guide">راهنمای سایز ↙</button></div><div class="size-options" role="group" aria-label="انتخاب سایز">${sizes.map((size) => `<button data-size="${size}" aria-pressed="false">${size}</button>`).join('')}</div><p class="variant-status" id="variant-status" aria-live="polite"></p><p class="selection-error" id="selection-error" role="alert"></p><div class="detail-actions"><button class="btn" id="detail-add" data-add="${p.id}">افزودن به سبد ${icon('plus')}</button><button class="favorite-button" data-favorite="${p.id}" aria-label="علاقه‌مندی: ${p.name}" aria-pressed="${favorites.includes(p.id)}">${icon('heart')}</button></div><button class="scene-detail-link" data-action="cart">دیدن سبد خرید ↗</button>${p.featured ? '<button class="scene-detail-link" data-action="view-studio">دیدن در استودیو ↗</button>' : ''}</div></div>`, 'product'); syncProductOptions();
   }
   function openCart(focusKey) {
     const items = lines();
@@ -125,23 +171,27 @@ export function mountStore({ scene = true } = {}) {
   function resetFilters() { Object.assign(state, { query: '', category: 'all', size: 'all', sort: 'newest', favoritesOnly: false }); $('#search').value = ''; $('#size-filter').value = 'all'; $('#sort').value = 'newest'; renderProducts(); }
   function click(event) {
     const button = event.target.closest('button,a');
-    if (menuOpen && !event.target.closest('.site-header')) setMenu(false);
+    if (menuOpen && event.target === catalog) return;
     if (!button || button.disabled) return;
     const d = button.dataset;
-    if (button.closest('.main-nav') || button.matches('.brand')) setMenu(false);
+    if (button.matches('.brand')) setMenu(false);
     if (d.sceneProduct) return selectHero(d.sceneProduct);
-    if (d.sceneColor && selectedHero) {
-      const c = byId(selectedHero).colors.find((color) => color.id === d.sceneColor); if (!c) return;
-      heroColors[selectedHero] = c.id; selectHero(selectedHero); return;
-    }
     if (d.sceneAction) {
       if (d.sceneAction === 'reset') return selectHero(null);
-      if (host.dataset.scene === 'fallback' || !showroom) return notify('نمای ثابت فعال است؛ می‌توانید رنگ، سایز و خرید را انتخاب کنید.');
+      if (d.sceneAction === 'prev' || d.sceneAction === 'next') {
+        mobileIndex = Math.max(0, Math.min(2, mobileIndex + (d.sceneAction === 'next' ? 1 : -1)));
+        showroom?.focus(mobileIndex); $('#studio-hint').textContent = `ORIGINALS / ${capsules[mobileIndex].label} — برای ورود انتخاب کنید.`; return;
+      }
+      if (!showroom || host.dataset.scene !== 'ready') return notify('نمای ثابت فعال است؛ انتخاب سایز و خرید در دسترس است.');
       if (d.sceneAction === 'left') showroom.rotate(-Math.PI / 4);
       if (d.sceneAction === 'right') showroom.rotate(Math.PI / 4);
-      if (d.sceneAction === 'in') showroom.zoom(.35);
-      if (d.sceneAction === 'out') showroom.zoom(-.35);
+      if (d.sceneAction === 'in') showroom.zoom(.15);
+      if (d.sceneAction === 'out') showroom.zoom(-.15);
       return;
+    }
+    if (d.storyStep !== undefined && selectedHero) {
+      const track = $('#story-track'), top = track.getBoundingClientRect().top + window.scrollY;
+      window.scrollTo({ top: top + Number(d.storyStep) * Math.max(1, track.offsetHeight - window.innerHeight), behavior: reduced.matches ? 'auto' : 'smooth' }); return;
     }
     if (d.product) return openProduct(d.product, d.fromStudio === 'true');
     if (d.favorite) return toggleFavorite(d.favorite);
@@ -149,7 +199,7 @@ export function mountStore({ scene = true } = {}) {
       if (!byId(selectedId).colors.some((c) => c.id === d.color)) return;
       selectedColor = d.color;
       if (selectedSize && !variantFor(selectedId, selectedColor, selectedSize)?.stock) selectedSize = '';
-      if (byId(selectedId).featured) { heroColors[selectedId] = selectedColor; showroom?.setColor(selectedId, byId(selectedId).colors.find((c) => c.id === selectedColor).hex); if (selectedHero === selectedId) selectHero(selectedId); }
+      if (byId(selectedId).featured) heroColors[selectedId] = selectedColor;
       syncProductOptions(); return;
     }
     if (d.size && view === 'product') { selectedSize = d.size; syncProductOptions(); return; }
@@ -165,7 +215,7 @@ export function mountStore({ scene = true } = {}) {
       const quantity = Math.min(line.stock, line.qty + (direction === 'plus' ? 1 : -1)); if (quantity) cart[key] = quantity; else delete cart[key]; persistCart(); openCart(d.quantity);
     }
     if (d.remove) { delete cart[d.remove]; persistCart(); openCart(); }
-    if (d.action === 'cart') { setMenu(false); openCart(); }
+    if (d.action === 'cart') openCart();
     if (d.action === 'close') close();
     if (d.action === 'browse') { close(); scrollTo('#shop'); }
     if (d.action === 'checkout' || d.action === 'edit-order') checkout();
@@ -178,20 +228,30 @@ export function mountStore({ scene = true } = {}) {
     if (d.action === 'search') { scrollTo('#shop'); $('#search').focus({ preventScroll: true }); }
     if (d.action === 'size-guide') sizeGuide();
     if (d.action === 'back-product') openProduct(selectedId, false, true);
-    if (d.action === 'view-studio') { const id = selectedId; close(); selectHero(id); scrollTo('#home'); }
+    if (d.action === 'view-studio') { const id = selectedId; close(); setMenu(false); selectHero(id); }
     if (d.action === 'menu') setMenu(!menuOpen);
+    if (d.action === 'catalog') { setMenu(true); }
+    if (d.action === 'close-catalog') setMenu(false);
+    if (d.action === 'home') { event.preventDefault(); if (dialog.open) close(); setMenu(false); selectHero(null); }
+    if (d.action === 'poster') { $('#load-state').hidden = true; }
+    if (d.action === 'credits') show('<h2 id="dialog-title">دربارهٔ این تجربه</h2><p class="credits-copy">این نمونه‌کار، بازآفرینی مفهومی یک تجربهٔ تعاملی پوشاک است. مدل‌ها و تکسچرهای کالکشن اوریجینال از تجربهٔ مرجع با ثبت منبع نگهداری شده‌اند. نشان‌های تجاری متعلق به صاحبان آن‌ها هستند.</p><p class="credits-copy"><a href="https://adidas-modern-webiste.vercel.app/" target="_blank" rel="noopener noreferrer">دیدن تجربهٔ مرجع ↗</a></p>', 'credits');
     if (button.id === 'clear-search') { state.query = ''; $('#search').value = ''; renderProducts(); $('#search').focus(); }
   }
   const searchInput = () => { state.query = $('#search').value; renderProducts(); };
   const sortInput = () => { state.sort = $('#sort').value; renderProducts(); };
   const sizeInput = () => { state.size = $('#size-filter').value; renderProducts(); };
   const outside = (event) => { const r = dialog.getBoundingClientRect(); if (event.target === dialog && (event.clientX < r.left || event.clientX > r.right || event.clientY < r.top || event.clientY > r.bottom)) close(); };
-  const keyboard = (event) => { if (event.key === 'Escape' && menuOpen) { setMenu(false); $('.menu-toggle').focus(); } else if (event.key === 'Escape' && !dialog.open && selectedHero) selectHero(null); };
-  const resize = () => { if (window.innerWidth > 760 && menuOpen) setMenu(false); };
+  const keyboard = (event) => {
+    if (event.key !== 'Escape' || dialog.open) return;
+    if (catalog.open) { event.preventDefault(); setMenu(false); }
+    else if (selectedHero) selectHero(null);
+  };
+  const resize = () => { if (selectedHero) updateStoryScroll(); };
   document.addEventListener('click', click); document.addEventListener('submit', submit); document.addEventListener('keydown', keyboard);
   dialog.addEventListener('click', outside); $('#search').addEventListener('input', searchInput); $('#sort').addEventListener('change', sortInput); $('#size-filter').addEventListener('change', sizeInput); window.addEventListener('resize', resize);
   renderProducts(); document.documentElement.classList.add('js');
-  if (window.innerWidth <= 760) selectHero('hoodie-01');
+  $('#catalog-count').textContent = money(products.length);
+  if (!scene) { host.classList.add('is-static'); $('#load-state').hidden = true; }
   let revealObserver;
   if ('IntersectionObserver' in window) { revealObserver = new IntersectionObserver((entries) => entries.forEach((entry) => { if (entry.isIntersecting) { entry.target.classList.add('is-visible'); revealObserver.unobserve(entry.target); } }), { threshold: .08 }); $$('.reveal').forEach((el) => revealObserver.observe(el)); }
   else $$('.reveal').forEach((el) => el.classList.add('is-visible'));
@@ -200,21 +260,23 @@ export function mountStore({ scene = true } = {}) {
     scenePending = true;
     try {
       const { mountShowroom } = await import('./scene.js'); if (disposed || pageHidden) return;
-      showroom = mountShowroom(host, { onProductSelect: selectHero });
-      for (const id of featuredIds) showroom.setColor(id, byId(id).colors.find((c) => c.id === heroColors[id]).hex);
-      showroom.select(selectedHero); overlayChanged();
-      if (host.dataset.scene === 'fallback') $('#studio-hint').textContent = 'نمای ثابت؛ انتخاب رنگ، سایز و خرید در دسترس است.';
-    } catch { host.dataset.scene = 'fallback'; }
+      showroom = mountShowroom(host, { onProductSelect: selectHero, onShop: () => setMenu(true), onStatus: sceneStatus, onProgress: (value) => { $('#load-progress').style.transform = `scaleX(${value})`; } });
+      showroom.focus(mobileIndex); if (selectedHero) showroom.select(selectedHero); overlayChanged();
+    } catch { host.dataset.scene = 'fallback'; sceneStatus('fallback'); }
     finally { scenePending = false; }
   }
   const pageHide = () => { pageHidden = true; showroom?.dispose(); showroom = null; };
   const pageShow = () => { pageHidden = false; if (!disposed) startScene(); };
-  window.addEventListener('pagehide', pageHide); window.addEventListener('pageshow', pageShow); startScene();
+  window.addEventListener('pagehide', pageHide); window.addEventListener('pageshow', pageShow);
+  window.addEventListener('scroll', scrollChanged, { passive: true }); window.addEventListener('popstate', routeChanged); window.addEventListener('hashchange', routeChanged);
+  if (/^#studio\//.test(location.hash)) routeChanged(); startScene();
+  posterTimer = setTimeout(() => { if (!$('#load-state').hidden) $('#poster-entry').hidden = false; }, 7000);
   return { getState: () => ({ cart: { ...cart }, favorites: [...favorites], ...state, selectedId, selectedColor, selectedSize, selectedHero, heroColors: { ...heroColors }, view }), dispose() {
-    if (disposed) return; disposed = true; clearTimeout(toastTimer); revealObserver?.disconnect(); showroom?.dispose();
+    if (disposed) return; disposed = true; clearTimeout(toastTimer); clearTimeout(posterTimer); cancelAnimationFrame(scrollFrame); revealObserver?.disconnect(); showroom?.dispose();
     if (dialog.open) { dialog.close(); document.documentElement.style.overflow = oldOverflow; }
+    if (catalog.open) catalog.close(); catalog.removeEventListener('close', catalogClosed);
     document.removeEventListener('click', click); document.removeEventListener('submit', submit); document.removeEventListener('keydown', keyboard); dialog.removeEventListener('close', dialogClosed); dialog.removeEventListener('click', outside);
-    $('#search').removeEventListener('input', searchInput); $('#sort').removeEventListener('change', sortInput); $('#size-filter').removeEventListener('change', sizeInput); window.removeEventListener('resize', resize); window.removeEventListener('pagehide', pageHide); window.removeEventListener('pageshow', pageShow);
+    $('#search').removeEventListener('input', searchInput); $('#sort').removeEventListener('change', sortInput); $('#size-filter').removeEventListener('change', sizeInput); window.removeEventListener('resize', resize); window.removeEventListener('pagehide', pageHide); window.removeEventListener('pageshow', pageShow); window.removeEventListener('scroll', scrollChanged); window.removeEventListener('popstate', routeChanged); window.removeEventListener('hashchange', routeChanged);
   } };
 }
 if (typeof document !== 'undefined' && document.body?.dataset.demo === 'vector' && !globalThis.__VECTOR_NO_AUTOBOOT__) mountStore();

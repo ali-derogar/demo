@@ -78,7 +78,7 @@ for (const theme of ['white', 'sport', 'gray']) {
   const detail = buildDetail(theme, detailNodes, await mapsFor(detailMaps[theme])); detail.world.position.y = .7; detail.world.rotation.y = -Math.PI / 6;
   await save('detail-' + theme, await render(detail.world, camera, 1440, 960, [50, 50, 50]), ['models/ShirtScrolling.glb', ...Object.values(detailMaps[theme])]);
   const ffmpeg = process.env.VECTOR_FFMPEG_BIN || 'ffmpeg';
-  const result = spawnSync(ffmpeg, ['-v', 'error', '-ss', '.5', '-i', join(ref, `textures/${theme}/third/adidas.mp4`), '-frames:v', '1', '-f', 'image2pipe', '-vcodec', 'png', '-'], { maxBuffer: 8 * 1024 * 1024 });
+  const result = spawnSync(ffmpeg, ['-v', 'error', '-ss', '0.5', '-i', join(ref, `textures/${theme}/third/adidas.mp4`), '-frames:v', '1', '-f', 'image2pipe', '-vcodec', 'png', '-'], { maxBuffer: 8 * 1024 * 1024 });
   if (result.status !== 0) throw new Error('Film poster needs ffmpeg: ' + (result.error?.message || result.stderr?.toString()));
   await save('film-' + theme, await sharp(result.stdout).resize(1200).webp({ quality: 85 }).toBuffer(), [`textures/${theme}/third/adidas.mp4`]);
 }
