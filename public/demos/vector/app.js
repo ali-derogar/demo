@@ -2,7 +2,7 @@ import { mountSoundtrack } from './sound.js?v=vector-3';
 import { products, categories, sizes, featuredIds, byId, money, selectProducts, cleanCart, addToCart, cartLines, variantFor, orderErrors } from './products.js';
 const icon = (name) => `<svg class="icon" aria-hidden="true"><use href="#i-${name}"/></svg>`;
 const price = (amount) => `${money(amount)} <small>تومان</small>`;
-const capsules = [{ id: 'hoodie-03', theme: 'core', label: 'CORE' }, { id: 'hoodie-01', theme: 'drift', label: 'DRIFT' }, { id: 'jacket-01', theme: 'shell', label: 'SHELL' }];
+const capsules = [{ id: 'hoodie-03', theme: 'core', label: 'CORE' }, { id: 'jacket-01', theme: 'shell', label: 'SHELL' }, { id: 'hoodie-01', theme: 'drift', label: 'DRIFT' }];
 const posters = Object.fromEntries(capsules.map(({theme}) => [theme, ['room', 'detail', 'film'].map((phase) => './assets/img/' + phase + '-' + theme + '.webp')]));
 
 export function mountStore({ scene = true, sound = scene } = {}) {
@@ -257,7 +257,7 @@ export function mountStore({ scene = true, sound = scene } = {}) {
     if (!scene || showroom || disposed || pageHidden || scenePending) return;
     scenePending = true;
     try {
-      const { mountShowroom } = await import('./scene.js?v=collection-5'); if (disposed || pageHidden) return;
+      const { mountShowroom } = await import('./scene.js?v=collection-6'); if (disposed || pageHidden) return;
       showroom = mountShowroom(host, { onProductSelect: selectHero, onShop: () => setMenu(true), onStatus: sceneStatus, onProgress: (value) => { $('#load-progress').style.transform = `scaleX(${value})`; } });
       showroom.focus(mobileIndex); if (selectedHero) showroom.select(selectedHero); overlayChanged();
     } catch { host.dataset.scene = 'fallback'; sceneStatus('fallback'); }

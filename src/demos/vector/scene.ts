@@ -1,5 +1,5 @@
 import {
-  ACESFilmicToneMapping, AlwaysStencilFunc, Color, DoubleSide, EqualStencilFunc, Group, KeepStencilOp, Mesh,
+  NeutralToneMapping, AlwaysStencilFunc, Color, DoubleSide, EqualStencilFunc, Group, KeepStencilOp, Mesh,
   MeshBasicMaterial, NotEqualStencilFunc, PerspectiveCamera, PlaneGeometry, Raycaster, ReplaceStencilOp,
   Scene, SRGBColorSpace, Vector2, Vector3, WebGLRenderer, HemisphereLight, DirectionalLight, PCFSoftShadowMap,
   PMREMGenerator, type Material, type BufferGeometry, type WebGLRenderTarget,
@@ -35,21 +35,21 @@ export function mountShowroom(host: HTMLElement, options: ShowroomOptions) {
     host.dataset.scene = 'fallback'; options.onStatus?.('fallback');
     return { ready: Promise.resolve(), select: async (_id: string | null) => {}, hover(_id: string | null) {}, focus(_index: number) {}, setProgress(_progress: number) {}, rotate(_angle: number) {}, zoom(_delta: number) {}, dispose() {} };
   }
-  renderer.outputColorSpace = SRGBColorSpace; renderer.toneMapping = ACESFilmicToneMapping;
+  renderer.outputColorSpace = SRGBColorSpace; renderer.toneMapping = NeutralToneMapping;
   const assets = options.assets ?? new StudioAssets(), scene = new Scene(), camera = new PerspectiveCamera(30, 1, .01, 100);
   scene.background = new Color('#30382f');
   let environmentTarget: WebGLRenderTarget | null = null;
   if (renderer.capabilities) {
     const pmrem = new PMREMGenerator(renderer), roomEnvironment = new RoomEnvironment();
-    environmentTarget = pmrem.fromScene(roomEnvironment, .04); scene.environment = environmentTarget.texture; scene.environmentIntensity = .55;
+    environmentTarget = pmrem.fromScene(roomEnvironment, .04); scene.environment = environmentTarget.texture; scene.environmentIntensity = .35;
     roomEnvironment.dispose(); pmrem.dispose();
   }
-  const key = new DirectionalLight('#fff4df', 2.7); key.position.set(-2, 3, 3); key.castShadow = true;
+  const key = new DirectionalLight('#ffffff', 2.4); key.position.set(-2, 3, 3); key.castShadow = true;
   key.shadow.mapSize.set(2048, 2048); key.shadow.camera.left = key.shadow.camera.bottom = -2; key.shadow.camera.right = key.shadow.camera.top = 2; key.shadow.bias = -.0003;
-  scene.add(key, new HemisphereLight('#e9ece8', '#302b23', .7));
-  const rim = new DirectionalLight('#cad8ed', 1.7); rim.position.set(2, 2, -1); scene.add(rim);
+  scene.add(key, new HemisphereLight('#f2f2f2', '#302b23', .18));
+  const rim = new DirectionalLight('#e5ebf3', 1.1); rim.position.set(2, 2, -1); scene.add(rim);
   if (renderer.shadowMap) { renderer.shadowMap.enabled = true; renderer.shadowMap.type = PCFSoftShadowMap; }
-  renderer.toneMappingExposure = .95; camera.position.set(0, .7, 3); camera.lookAt(0, .7, 0);
+  renderer.toneMappingExposure = 1; camera.position.set(0, .7, 3); camera.lookAt(0, .7, 0);
   const maskMaterial = new MeshBasicMaterial({ colorWrite: false, depthWrite: false, depthTest: false, stencilWrite: true, stencilRef: 1, stencilFunc: AlwaysStencilFunc, stencilFail: ReplaceStencilOp, stencilZFail: ReplaceStencilOp, stencilZPass: ReplaceStencilOp, side: DoubleSide });
   const mask = new Mesh(new PlaneGeometry(1, 1), maskMaterial); mask.renderOrder = 0; mask.visible = false; scene.add(mask);
   const reduced = window.matchMedia('(prefers-reduced-motion: reduce)'), pointer = new Vector2(), raycaster = new Raycaster();
@@ -95,7 +95,7 @@ export function mountShowroom(host: HTMLElement, options: ShowroomOptions) {
     const active = compact ? capsules[mobileIndex].product : hoverId;
     scene.background = new Color(active ? studioPalette[capsuleFor(active)!.theme] : '#30382f');
     overview.shirts.forEach((shirt, index) => {
-      const capsule = capsules[index], focused = active === capsule.product, shift = compact ? (mobileIndex - 1) * .7 : 0;
+      const capsule = capsules[index], focused = active === capsule.product, shift = compact ? -capsules[mobileIndex].position[0] : 0;
       const yaw = focused ? 0 : capsule.yaw * (4 - spread * 3), alpha = reduced.matches ? 1 : 1 - Math.exp(-dt * 5);
       shirt.rotation.y += (yaw - shirt.rotation.y) * alpha;
       const targetPosition = new Vector3(capsule.position[0] * (2 - spread) + shift, .76, compact && focused ? 0 : capsule.position[2]);

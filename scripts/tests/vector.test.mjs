@@ -80,6 +80,7 @@ test('Vector actual option controls enforce color/size, preserve selections thro
 
 test('Vector supplied clothing capsules enter their own story and connect the exact product to the persistent shopping flow', (t) => {
   const { click, q, app, w } = store(t);
+  assert.deepEqual([...w.document.querySelectorAll('[data-scene-product]')].map((button) => button.dataset.sceneProduct), ['hoodie-03', 'jacket-01', 'hoodie-01']);
   click('[data-scene-product="hoodie-03"]'); assert.equal(app.getState().selectedHero, 'hoodie-03');
   assert.equal(w.location.hash, '#studio/core'); assert.equal(q('#home-ui').hidden, true); assert.equal(q('#story-ui').hidden, false);
   assert.equal(q('.showroom-poster').getAttribute('src'), './assets/img/room-core.webp');

@@ -18,7 +18,18 @@ for path in [RENDERS, OUT, NATIVE.parent]: path.mkdir(parents=True, exist_ok=Tru
 
 def export_web(garments):
     # Keep the 4K source maps for Cycles, while bounding browser texture memory.
-    copies, swaps = {}, []
+    copies, swaps, sheen_swaps = {}, [], []
+    materials = {material for obj in garments.values() for material in obj.data.materials if material and material.use_nodes}
+    for material in materials:
+        bsdf = material.node_tree.nodes.get('Principled BSDF')
+        if not bsdf: continue
+        weight, tint = bsdf.inputs['Sheen Weight'], bsdf.inputs['Sheen Tint']
+        # Blender 4.5 exports Tint but ignores Weight in KHR_materials_sheen.
+        # Fold the weight into the linear RGB factor for glTF, then restore Cycles.
+        if not tint.is_linked and not weight.is_linked and weight.default_value > 0:
+            original = tuple(tint.default_value)
+            sheen_swaps.append((tint, original))
+            tint.default_value = (*(channel * weight.default_value for channel in original[:3]), original[3])
     for obj in garments.values():
         for material in obj.data.materials:
             for node in material.node_tree.nodes if material.use_nodes else []:
@@ -39,6 +50,7 @@ def export_web(garments):
     for obj in garments.values(): obj.select_set(True)
     bpy.context.view_layer.objects.active = garments['CORE']
     bpy.ops.export_scene.gltf(filepath=str(OUT/'collection.glb'), export_format='GLB', use_selection=True, export_yup=True, export_materials='EXPORT', export_extras=True, export_image_format='AUTO')
+    for tint, original in sheen_swaps: tint.default_value = original
     for node, original in swaps: node.image = original
     for image in copies.values(): bpy.data.images.remove(image)
 
@@ -184,13 +196,13 @@ def area(name, location, power, size, color):
     obj = bpy.data.objects.new(name, data); bpy.context.collection.objects.link(obj); obj.location = location; aim(obj, (0,0,.2))
     return obj
 
-lights = [area('Large diffused key', (-1.8,-2.6,2.4), 210, 2.1, (1,.96,.90)), area('Soft fill', (1.8,-1.5,.7), 70, 2, (.92,.96,1)), area('Fabric rim', (.5,1.5,2), 240, 1.6, (1,1,1))]
+lights = [area('Large diffused key', (-1.8,-2.6,2.4), 210, 2.1, (1,1,1)), area('Soft fill', (1.8,-1.5,.7), 45, 2, (1,1,1)), area('Fabric rim', (.5,1.5,2), 180, 1.6, (1,1,1))]
 scene.world.use_nodes = True
 scene.world.node_tree.nodes['Background'].inputs[0].default_value = (.25,.25,.25,1)
 scene.world.node_tree.nodes['Background'].inputs[1].default_value = .30
 scene.render.engine = 'CYCLES'; scene.cycles.use_denoising = True; scene.cycles.max_bounces = 6
 scene.cycles.diffuse_bounces = 3; scene.cycles.glossy_bounces = 3; scene.cycles.adaptive_threshold = .02
-scene.render.image_settings.file_format = 'PNG'; scene.view_settings.view_transform = 'AgX'
+scene.render.image_settings.file_format = 'PNG'; scene.view_settings.view_transform = 'Khronos PBR Neutral'
 data = bpy.data.cameras.new('85 mm product camera'); camera = bpy.data.objects.new('85 mm product camera', data)
 bpy.context.collection.objects.link(camera); scene.camera = camera; data.lens = 85
 path = [(-5,-.47),(1,-.47)] + [(1+math.sin(t), .53-math.cos(t)) for t in [i*math.pi/2/32 for i in range(1,33)]] + [(2,4)]
@@ -228,7 +240,7 @@ environment = [block('Stone floor',(0,0,-.025),(12,8,.05),stone), block('Basalt 
 for index,x in enumerate([.7,0,-.7]):
     environment.append(block('Plinth '+str(index),(x,.1 if x else 0,.16),(.57,.54,.32),basalt))
     environment.append(block('Signal inlay '+str(index),(x,-.172 if x else -.272,.29),(.4,.003,.003),orange))
-for kind,x,yaw in [('CORE',.7,-.12),('DRIFT',0,0),('SHELL',-.7,.12)]:
+for kind,x,yaw in [('CORE',-.7,.12),('SHELL',0,0),('DRIFT',.7,-.12)]:
     obj = garments[kind]; obj.hide_render = False; obj.location = (x,.1 if x else 0,.76); obj.rotation_euler.z = yaw
 data.lens = 55; camera.location = (.06,-4.4,1.45); aim(camera,(0,0,.84)); render('hero-01',1536,1024)
 camera.location = (.30,-4.35,1.45); aim(camera,(0,0,.85)); render('campaign',1600,1067)

@@ -44,13 +44,17 @@ test('Vector ships the supplied clothing and two hoodie colorways and independen
   const nodes = { ...await model('collection.glb'), ...await model('lettering.glb') };
   const overview = buildOverview(nodes), counts = [];
   assert.equal(overview.world.children.length, 4);
+  assert.deepEqual(overview.shirts.map((shirt) => shirt.name), ['CORE', 'SHELL', 'DRIFT']);
+  assert.ok(overview.shirts[0].position.x < 0 && overview.shirts[2].position.x > 0);
+  assert.equal(overview.shirts[1].position.x, 0, 'The distinct zipped garment belongs between the matching hoodies');
   for (const [i, garment] of overview.shirts.entries()) {
     let count = 0, triangles = 0, fabric = false;
     garment.traverse((object) => { if (object instanceof Mesh) { count += object.geometry.attributes.position.count; triangles += object.geometry.index.count / 3; assert.ok(object.material instanceof MeshStandardMaterial); fabric ||= !!object.material.normalMap; } });
     assert.ok(count > 10000); assert.ok(fabric); counts.push(count);
-    assert.equal(garment.userData.sourceArchive, i < 2 ? 'models/Blender.zip' : 'models/Jacket+70_obj.zip');
-    assert.equal(garment.userData.sourceModel, i < 2 ? 'DG100024' : 'W-Jacket 70');
-    if (i < 2) assert.equal(triangles, 430254, 'The supplied hoodie surface must retain its original triangles');
+    const hoodie = garment.name !== 'SHELL';
+    assert.equal(garment.userData.sourceArchive, hoodie ? 'models/Blender.zip' : 'models/Jacket+70_obj.zip');
+    assert.equal(garment.userData.sourceModel, hoodie ? 'DG100024' : 'W-Jacket 70');
+    assert.equal(triangles, hoodie ? 430254 : 171830, 'The supplied garment surface must retain its original triangles');
     assert.deepEqual(garment.position.toArray(), capsules[i].position);
     const bounds = new Box3().setFromObject(garment).getSize(new Vector3()); assert.ok(bounds.x > .6 && bounds.y > .5 && bounds.z > .1);
     const room = buildRoom(capsules[i].theme, nodes); assert.ok(room.world.getObjectByName('VECTOR original architecture'));
@@ -62,17 +66,29 @@ test('Vector ships the supplied clothing and two hoodie colorways and independen
   }
 });
 
+test('Vector exported fabric sheen preserves its subtle weight instead of becoming a full white layer', async () => {
+  const bytes = await readFile(new URL('collection.glb', root));
+  const gltf = JSON.parse(bytes.toString('utf8', 20, 20 + bytes.readUInt32LE(12)));
+  const fabric = gltf.materials.filter((material) => material.normalTexture);
+  assert.equal(fabric.length, 7);
+  for (const material of fabric) {
+    const factor = material.extensions.KHR_materials_sheen.sheenColorFactor;
+    assert.ok(factor.every((channel) => channel > 0 && channel <= .15), material.name + ' must not have full-strength white sheen');
+    assert.ok(material.pbrMetallicRoughness.baseColorTexture, 'Keep the supplied color map');
+  }
+});
+
 test('Vector supplied garments are pickable and each mobile capsule moves to the center', async (t) => {
   const { env, host, mount } = await fixture(t, { width: 390, height: 844, reduced: true });
   const selections = [], app = mount({ onProductSelect: (id) => selections.push(id) }); await app.ready;
   for (const index of [0, 1, 2]) {
-    app.focus(index); await env.advance(48); const renderer = renderers.at(-1), shirt = renderer.scene.getObjectByName(['CORE', 'DRIFT', 'SHELL'][index]);
+    app.focus(index); await env.advance(48); const renderer = renderers.at(-1), shirt = renderer.scene.getObjectByName(['CORE', 'SHELL', 'DRIFT'][index]);
     const center = new Vector3(0, .04, 0); shirt.localToWorld(center); center.project(renderer.camera); assert.ok(Math.abs(center.x) < .05);
     const caster = new Raycaster(); caster.setFromCamera(new Vector2(center.x, center.y), renderer.camera); assert.ok(caster.intersectObject(shirt, true).length > 0);
     const bounds = host.querySelector('canvas').getBoundingClientRect(), x = bounds.left + (center.x * .5 + .5) * bounds.width, y = bounds.top + (.5 - center.y * .5) * bounds.height;
     for (const type of ['pointerdown', 'pointerup']) { const event = new Event(type); Object.defineProperties(event, { clientX: { value: x }, clientY: { value: y }, pointerId: { value: 1 } }); host.querySelector('canvas').dispatchEvent(event); }
   }
-  assert.deepEqual(selections, ['hoodie-03', 'hoodie-01', 'jacket-01']); assert.equal(host.dataset.scene, 'ready');
+  assert.deepEqual(selections, ['hoodie-03', 'jacket-01', 'hoodie-01']); assert.equal(host.dataset.scene, 'ready');
 });
 
 test('Vector product rooms, rotating detail and original collection installation load on demand and scroll choreography is reversible', async (t) => {

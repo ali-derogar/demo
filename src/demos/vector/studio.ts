@@ -1,9 +1,9 @@
 export type StudioTheme = 'core' | 'drift' | 'shell';
 export const studioThemes: StudioTheme[] = ['core', 'drift', 'shell'];
 export const capsules = [
-  { theme: 'core' as const, product: 'hoodie-03', node: 'CORE', label: 'CORE', position: [.7, .76, -.10], yaw: -.12 },
-  { theme: 'drift' as const, product: 'hoodie-01', node: 'DRIFT', label: 'DRIFT', position: [0, .76, 0], yaw: 0 },
-  { theme: 'shell' as const, product: 'jacket-01', node: 'SHELL', label: 'SHELL', position: [-.7, .76, -.10], yaw: .12 },
+  { theme: 'core' as const, product: 'hoodie-03', node: 'CORE', label: 'CORE', position: [-.7, .76, -.10], yaw: .12 },
+  { theme: 'shell' as const, product: 'jacket-01', node: 'SHELL', label: 'SHELL', position: [0, .76, 0], yaw: 0 },
+  { theme: 'drift' as const, product: 'hoodie-01', node: 'DRIFT', label: 'DRIFT', position: [.7, .76, -.10], yaw: -.12 },
 ];
 export const studioPalette = { core: '#34382f', drift: '#33252b', shell: '#232e30' };
 export function capsuleFor(id: string | null) { return capsules.find((c) => c.product === id); }
