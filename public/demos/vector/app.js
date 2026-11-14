@@ -1,5 +1,5 @@
 import { mountSoundtrack } from './sound.js?v=vector-3';
-import { mountRack } from './rack.js?v=rail-purchase-3';
+import { mountRack } from './rack.js?v=rail-purchase-4';
 import { products, categories, sizes, featuredIds, byId, money, selectProducts, cleanCart, addToCart, cartLines, variantFor, orderErrors } from './products.js';
 const icon = (name) => `<svg class="icon" aria-hidden="true"><use href="#i-${name}"/></svg>`;
 const price = (amount) => `${money(amount)} <small>تومان</small>`;

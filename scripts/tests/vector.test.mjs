@@ -138,7 +138,7 @@ test('Vector nested catalog/product/cart dialogs preserve focus and release the 
   click('[data-action="close-catalog"]'); assert.equal(w.document.documentElement.style.overflow, ''); assert.equal(w.document.activeElement, opener);
 });
 
-test('Clicking each rail garment opens its color/size dialog and adds the exact product without losing the existing cart or focus', (t) => {
+test('Rail garments first open on the rail, then a second click opens their color/size dialog and preserves cart and focus', (t) => {
   const { click, q, app, w } = store(t, { 'vector-cart-v1': '{"tee-01~charcoal~M":1}' });
   assert.equal(w.document.querySelectorAll('.rail-item').length, 6);
   for (const [index, item] of rackItems.entries()) {
@@ -146,7 +146,9 @@ test('Clicking each rail garment opens its color/size dialog and adds the exact 
     assert.equal(q(`[data-rail-index="${index}"]`).getAttribute('aria-pressed'), 'true');
     assert.equal(opener.getAttribute('aria-haspopup'), 'dialog');
     assert.equal(q('#rail-buy').dataset.product, item.id);
-    assert.equal(q('#shop-dialog').open, true, 'The garment click itself must open shopping options');
+    assert.equal(q('#shop-dialog').open, false, 'The first click on a closed garment must only open it on the rail');
+    click(`[data-rail-index="${index}"]`);
+    assert.equal(q('#shop-dialog').open, true, 'A second click on the selected garment opens shopping options');
     assert.equal(app.getState().selectedId, item.id);
     assert.equal(q('[data-action="view-studio"]'), null);
     const product = products.find((p) => p.id === item.id);
@@ -198,8 +200,10 @@ test('Vector rail supports keyboard navigation, reset, horizontal touch and leav
   assert.equal(w.document.activeElement, q('[data-rail-index="2"]'));
 });
 
-test('Rail photo, label and purchase button all open the matching product', (t) => {
+test('Rail photo, label and purchase button open the matching product after choosing a garment', (t) => {
   const { click, q, app, w } = store(t);
+  click('[data-rail-index="3"]');
+  assert.equal(q('#shop-dialog').open, false);
   for (const child of ['.rail-image--side', '.rail-image--front', '.rail-label', '.rail-hanger']) {
     q(`[data-rail-index="3"] ${child}`).dispatchEvent(new w.MouseEvent('click', { bubbles: true }));
     assert.equal(q('#shop-dialog').open, true);
@@ -209,6 +213,23 @@ test('Rail photo, label and purchase button all open the matching product', (t) 
   }
   click('#rail-buy'); assert.equal(q('#shop-dialog').open, true);
   assert.equal(app.getState().selectedId, rackItems[3].id);
+});
+
+test('Hover and focus never skip the first click, and switching or resetting garments requires choosing them again', (t) => {
+  const { click, q, app, w } = store(t);
+  const first = q('[data-rail-index="0"]');
+  first.dispatchEvent(new w.MouseEvent('pointerover', { bubbles: true })); first.focus();
+  assert.equal(app.getState().rack.active, 0);
+  assert.equal(app.getState().rack.selected, -1);
+  click('[data-rail-index="0"]'); assert.equal(q('#shop-dialog').open, false);
+  click('[data-rail-index="1"]'); assert.equal(q('#shop-dialog').open, false);
+  click('[data-rail-index="0"]'); assert.equal(q('#shop-dialog').open, false);
+  click('[data-rail-index="0"]'); assert.equal(q('#shop-dialog').open, true);
+  assert.equal(app.getState().selectedId, rackItems[0].id);
+  click('[data-action="close"]');
+  first.dispatchEvent(new w.KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
+  click('[data-rail-index="0"]'); assert.equal(q('#shop-dialog').open, false);
+  click('#rail-buy'); assert.equal(q('#shop-dialog').open, true);
 });
 
 test('Vector rail loads images only near the viewport and pauses while hidden, backgrounded or covered by a dialog', (t) => {

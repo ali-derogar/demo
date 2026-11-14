@@ -25,6 +25,9 @@ export function mountRack(root, { onProductOpen } = {}) {
       button.style.zIndex = String(i === active ? 30 : 10 + i);
       button.dataset.active = String(i === active);
       button.setAttribute('aria-pressed', String(i === selected));
+      button.setAttribute('aria-label', `${i === selected ? 'انتخاب رنگ، سایز و خرید' : 'بازکردن'} ${byId(rackItems[i].id).name}`);
+      if (i === selected) button.setAttribute('aria-haspopup', 'dialog');
+      else button.removeAttribute('aria-haspopup');
       button.tabIndex = i === (active >= 0 ? active : 0) ? 0 : -1;
     });
     const index = active >= 0 ? active : 0, item = rackItems[index], product = byId(item.id);
@@ -70,8 +73,9 @@ export function mountRack(root, { onProductOpen } = {}) {
     if (item && suppressClick) { event.preventDefault(); event.stopPropagation(); suppressClick = false; return; }
     if (item) {
       const index = Number(item.dataset.railIndex);
+      const alreadySelected = selected === index;
       choose(index, true);
-      onProductOpen?.(rackItems[index].id);
+      if (alreadySelected) onProductOpen?.(rackItems[index].id);
       return;
     }
     const direction = event.target.closest('[data-rail-step]');
