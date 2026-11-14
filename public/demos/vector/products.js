@@ -8,6 +8,11 @@ const palette = {
   grey: { id: 'grey', name: 'خاکستری', hex: '#6d6c70' },
   sand: { id: 'sand', name: 'شنی', hex: '#bca98c' },
   indigo: { id: 'indigo', name: 'نیلی', hex: '#536e86' },
+  petrol: { id: 'petrol', name: 'آبی نفتی', hex: '#234c59' },
+  silver: { id: 'silver', name: 'نقره‌ای', hex: '#b9bec2' },
+  brick: { id: 'brick', name: 'آجری', hex: '#a34e39' },
+  denim: { id: 'denim', name: 'دنیم تیره', hex: '#253b55' },
+  sage: { id: 'sage', name: 'زیتونی روشن', hex: '#a9b292' },
 };
 const rows = [
   ['tee-01', 'tee', 'تیشرت زغالی FORM', 'FORM / 03', 890000, 'charcoal', 'پنبهٔ سنگین، سرشانهٔ افتاده و یقهٔ کش‌باف؛ با فرم ساده و دوخت ظریف.', '۱۰۰٪ پنبه', 'آزاد / اورسایز', 'انتخاب استودیو'],
@@ -25,17 +30,34 @@ const rows = [
   ['pants-01', 'pants', 'شلوار کارگو UTILITY', 'UTILITY / 13', 2490000, 'charcoal', 'شلوار کارگو با پاچهٔ آزاد، کمر کشی و جیب‌های بزرگ کنار پا. مناسب پوشیدن با تیشرت و هودی.', 'پارچهٔ تکنیکال', 'راسته / آزاد', ''],
   ['pants-02', 'pants', 'شلوار پلیسه WIDE', 'WIDE / 14', 2290000, 'cream', 'شلوار پنبه‌ای با پلیسهٔ جلو و پاچهٔ گشاد. هم با پیراهن جور است، هم با یک تیشرت ساده.', 'پنبهٔ توییل', 'واید', ''],
   ['pants-03', 'pants', 'جین راسته EVERYDAY', 'EVERYDAY / 15', 2690000, 'indigo', 'جین آبی شسته با پنج جیب و پاچهٔ راسته. برش ساده‌ای دارد و با بیشتر لباس‌های روزمره ست می‌شود.', 'دنیم پنبه‌ای', 'راسته / آزاد', ''],
+  ['hoodie-04', 'hoodie', 'هودی باکسی PULSE', 'PULSE / 16', 2350000, 'cream', 'هودی استخوانی با سرشانهٔ افتاده، کلاه حجم‌دار، جیب کانگورویی و لبه‌های کش‌باف پهن؛ یک لیبل قرمز کوچک کنار لبهٔ لباس.', 'دورس پنبه‌ای سنگین', 'باکسی / اورسایز', 'روی رگال'],
+  ['hoodie-05', 'hoodie', 'هودی زیپ‌دار COVE', 'COVE / 17', 2650000, 'petrol', 'هودی آبی نفتی با زیپ فلزی برس‌خورده، جیب‌های مورب و کلاه خوش‌فرم. دورس نرم و برش آزاد برای پوشیدن روی تیشرت.', 'دورس پنبه‌ای', 'آزاد', 'روی رگال'],
+  ['jacket-04', 'jacket', 'کاپشن تکنیکال NOMAD', 'NOMAD / 18', 4450000, 'silver', 'کاپشن نقره‌ای مات با یقهٔ ایستاده، برش‌های هندسی روی سینه و جیب‌های زیپ‌دار مشکی؛ سبک، کاربردی و قابل تنظیم در پایین لباس.', 'نایلون تکنیکال', 'آزاد', 'روی رگال'],
+  ['jacket-05', 'jacket', 'کاپشن بامبر VOLT', 'VOLT / 19', 4150000, 'brick', 'بامبر آجری با حجم نرم، یقه و سرآستین کش‌باف، زیپ فلزی تیره و جیب کوچک روی آستین؛ با آستر سبک و دو جیب در جلو.', 'نایلون مات آستردار', 'بامبر / آزاد', 'روی رگال'],
+  ['shirt-04', 'shirt', 'اورشرت دنیم GRID', 'GRID / 20', 2450000, 'denim', 'اورشرت دنیم تیره با دو جیب دردار روی سینه، دکمه‌های فلزی و دوخت دوبل نخودی؛ برش باکسی برای پوشیدن روی تیشرت.', 'دنیم پنبه‌ای', 'باکسی / اورشرت', 'روی رگال'],
+  ['shirt-05', 'shirt', 'اورشرت کاربردی DUNE', 'DUNE / 21', 2250000, 'sage', 'اورشرت زیتونی روشن با بافت توییل، جیب‌های بزرگ دردار، دکمه‌های هم‌رنگ و لبهٔ صاف؛ یک لایهٔ سبک با فرم آزاد.', 'پنبهٔ توییل', 'آزاد / اورشرت', 'روی رگال'],
 ];
 const imageDimensions = { 'hoodie-01': [1200, 1400], 'hoodie-03': [1200, 1400], 'jacket-01': [1200, 1400] };
 export const featuredIds = ['hoodie-03', 'hoodie-01', 'jacket-01'];
+export const rackIds = ['hoodie-04', 'jacket-05', 'shirt-04', 'hoodie-05', 'jacket-04', 'shirt-05'];
+const rackSideImages = {
+  'hoodie-04': './assets/img/hoodie-04-side.webp', 'hoodie-05': './assets/img/hoodie-05-side.webp',
+  'jacket-04': './assets/img/jacket-04-side.webp', 'jacket-05': './assets/img/jacket-05-side.webp',
+  'shirt-04': './assets/img/shirt-04-side.webp', 'shirt-05': './assets/img/shirt-05-side.webp',
+};
 export const products = rows.map(([id, cat, name, code, price, base, detail, fabric, fit, badge], index) => {
-  const colorIds = cat === 'tee' ? [base] : [...new Set([base, 'charcoal', 'cream', 'wine'])].slice(0, 3);
+  const onRack = rackIds.includes(id);
+  const colorIds = cat === 'tee' || onRack ? [base] : [...new Set([base, 'charcoal', 'cream', 'wine'])].slice(0, 3);
   const colors = colorIds.map((color) => palette[color]);
-  const [imageWidth, imageHeight] = imageDimensions[id] || [900, 900];
+  const [imageWidth, imageHeight] = imageDimensions[id] || (onRack ? [1024, 1280] : [900, 900]);
   return { id, cat, name, code, price, detail, fabric, fit, badge: featuredIds.includes(id) ? 'ORIGINALS' : badge === 'انتخاب استودیو' ? '' : badge, colors, sizes, imageColor: palette[base].name,
-    image: './assets/img/' + id + '.webp', imageWidth, imageHeight, added: rows.length - index, featured: featuredIds.includes(id),
+    image: './assets/img/' + id + '.webp', imageWidth, imageHeight, added: onRack ? 30 - rackIds.indexOf(id) : 15 - index, featured: featuredIds.includes(id), onRack,
     variants: colors.flatMap((color, c) => sizes.map((size, s) => ({ color: color.id, size, stock: s === 4 && (index % 4 === 0 || (index + c) % 3 === 0) ? 0 : 3 + (index + s + c) % 5 }))),
   };
+});
+export const rackItems = rackIds.map((id) => {
+  const product = products.find((p) => p.id === id);
+  return { id, label: product.code.split(' / ')[0], front: product.image, side: rackSideImages[id], accent: product.colors[0].hex };
 });
 export const byId = (id) => products.find((p) => p.id === id);
 export const money = (value) => new Intl.NumberFormat('fa-IR').format(value);

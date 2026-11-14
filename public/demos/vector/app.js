@@ -1,4 +1,5 @@
 import { mountSoundtrack } from './sound.js?v=vector-3';
+import { mountRack } from './rack.js';
 import { products, categories, sizes, featuredIds, byId, money, selectProducts, cleanCart, addToCart, cartLines, variantFor, orderErrors } from './products.js';
 const icon = (name) => `<svg class="icon" aria-hidden="true"><use href="#i-${name}"/></svg>`;
 const price = (amount) => `${money(amount)} <small>تومان</small>`;
@@ -17,6 +18,8 @@ export function mountStore({ scene = true, sound = scene } = {}) {
   let selectedHero = null, selectedId = '', selectedColor = '', selectedSize = '', view = '', orderData = {}, opener = null, oldOverflow = '';
   let showroom = null, disposed = false, pageHidden = false, toastTimer, scenePending = false, menuOpen = false, mobileIndex = 1, productReady = false, scrollFrame = 0, posterTimer, catalogOpener = null, catalogOverflow = '';
   const dialog = $('#shop-dialog'), host = $('#showroom'), catalog = $('#catalog-dialog');
+  $('#rail').hidden = /^#studio\//.test(location.hash);
+  const rack = mountRack($('#rail'));
   const soundtrack = sound ? mountSoundtrack($('#studio-audio'), $('#sound-toggle')) : null;
   const lines = () => cartLines(cart), count = () => lines().reduce((sum, line) => sum + line.qty, 0);
   const total = () => lines().reduce((sum, line) => sum + line.qty * line.product.price, 0);
@@ -92,6 +95,7 @@ export function mountStore({ scene = true, sound = scene } = {}) {
   function selectHero(id, updateHistory = true) {
     const capsule = capsules.find((c) => c.id === id); if (id && !capsule) return;
     selectedHero = id; productReady = false; document.body.classList.toggle('story-active', !!id);
+    $('#rail').hidden = !!id; rack.refresh();
     document.body.dataset.studioTheme = capsule?.theme || 'home';
     $('#home-ui').hidden = !!id; $('#story-track').hidden = !id; $('#story-ui').hidden = !id;
     $$('[data-scene-product]').forEach((el) => el.setAttribute('aria-pressed', String(el.dataset.sceneProduct === id)));
@@ -120,7 +124,11 @@ export function mountStore({ scene = true, sound = scene } = {}) {
       $('#studio-hint').textContent = 'برای دیدن جزئیات، یک لباس انتخاب کنید.';
     }
   }
-  function routeChanged() { const match = /^#studio\/(core|drift|shell|white|sport|gray)$/.exec(location.hash); const aliases = { white: 'core', sport: 'drift', gray: 'shell' }; selectHero(match ? capsules.find((c) => c.theme === (aliases[match[1]] || match[1])).id : null, false); }
+  function routeChanged() {
+    if (location.hash === '#rail') { if (selectedHero) selectHero(null, false); $('#rail').scrollIntoView({ behavior: reduced.matches ? 'auto' : 'smooth', block: 'start' }); return; }
+    const match = /^#studio\/(core|drift|shell|white|sport|gray)$/.exec(location.hash); const aliases = { white: 'core', sport: 'drift', gray: 'shell' };
+    selectHero(match ? capsules.find((c) => c.theme === (aliases[match[1]] || match[1])).id : null, false);
+  }
   function syncProductOptions() {
     const p = byId(selectedId); if (!p || view !== 'product') return;
     const color = p.colors.find((c) => c.id === selectedColor), variant = variantFor(p.id, selectedColor, selectedSize);
@@ -140,7 +148,7 @@ export function mountStore({ scene = true, sound = scene } = {}) {
   function openProduct(id, fromStudio = false, retain = false) {
     const p = byId(id); if (!p) return;
     if (!retain) { selectedId = id; selectedColor = fromStudio ? heroColors[id] || '' : ''; selectedSize = ''; }
-    show(`<div class="product-detail"><div class="detail-image"><img src="${p.image}" width="${p.imageWidth}" height="${p.imageHeight}" alt="${p.name}، رنگ ${p.imageColor}"><span class="image-caption">تصویر محصول در رنگ ${p.imageColor}</span></div><div><p class="detail-code" dir="ltr">${p.code} — VECTOR ORIGINALS</p><h2 id="dialog-title">${p.name}</h2><p class="detail-description">${p.detail}</p><div class="detail-specs"><span>جنس<strong>${p.fabric}</strong></span><span>فرم<strong>${p.fit}</strong></span></div><span class="detail-price">${price(p.price)}</span><p class="option-label">رنگ: <strong id="selected-color">انتخاب کنید</strong></p><div class="color-options" role="group" aria-label="انتخاب رنگ">${colorButtons(p, selectedColor)}</div><div class="option-label"><span>سایز</span><button data-action="size-guide">راهنمای سایز ↙</button></div><div class="size-options" role="group" aria-label="انتخاب سایز">${sizes.map((size) => `<button data-size="${size}" aria-pressed="false">${size}</button>`).join('')}</div><p class="variant-status" id="variant-status" aria-live="polite"></p><p class="selection-error" id="selection-error" role="alert"></p><div class="detail-actions"><button class="btn" id="detail-add" data-add="${p.id}">افزودن به سبد ${icon('plus')}</button><button class="favorite-button" data-favorite="${p.id}" aria-label="علاقه‌مندی: ${p.name}" aria-pressed="${favorites.includes(p.id)}">${icon('heart')}</button></div><button class="scene-detail-link" data-action="cart">دیدن سبد خرید ↗</button>${p.featured ? '<button class="scene-detail-link" data-action="view-studio">دیدن در استودیو ↗</button>' : ''}</div></div>`, 'product'); syncProductOptions();
+    show(`<div class="product-detail"><div class="detail-image" data-transparent="${p.onRack}"><img src="${p.image}" width="${p.imageWidth}" height="${p.imageHeight}" alt="${p.name}، رنگ ${p.imageColor}"><span class="image-caption">تصویر محصول در رنگ ${p.imageColor}</span></div><div><p class="detail-code" dir="ltr">${p.code} — VECTOR ORIGINALS</p><h2 id="dialog-title">${p.name}</h2><p class="detail-description">${p.detail}</p><div class="detail-specs"><span>جنس<strong>${p.fabric}</strong></span><span>فرم<strong>${p.fit}</strong></span></div><span class="detail-price">${price(p.price)}</span><p class="option-label">رنگ: <strong id="selected-color">انتخاب کنید</strong></p><div class="color-options" role="group" aria-label="انتخاب رنگ">${colorButtons(p, selectedColor)}</div><div class="option-label"><span>سایز</span><button data-action="size-guide">راهنمای سایز ↙</button></div><div class="size-options" role="group" aria-label="انتخاب سایز">${sizes.map((size) => `<button data-size="${size}" aria-pressed="false">${size}</button>`).join('')}</div><p class="variant-status" id="variant-status" aria-live="polite"></p><p class="selection-error" id="selection-error" role="alert"></p><div class="detail-actions"><button class="btn" id="detail-add" data-add="${p.id}">افزودن به سبد ${icon('plus')}</button><button class="favorite-button" data-favorite="${p.id}" aria-label="علاقه‌مندی: ${p.name}" aria-pressed="${favorites.includes(p.id)}">${icon('heart')}</button></div><button class="scene-detail-link" data-action="cart">دیدن سبد خرید ↗</button>${p.featured ? '<button class="scene-detail-link" data-action="view-studio">دیدن در استودیو ↗</button>' : ''}</div></div>`, 'product'); syncProductOptions();
   }
   function openCart(focusKey) {
     const items = lines();
@@ -232,7 +240,7 @@ export function mountStore({ scene = true, sound = scene } = {}) {
     if (d.action === 'close-catalog') setMenu(false);
     if (d.action === 'home') { event.preventDefault(); if (dialog.open) close(); setMenu(false); selectHero(null); }
     if (d.action === 'poster') { $('#load-state').hidden = true; }
-    if (d.action === 'credits') show('<h2 id="dialog-title">دربارهٔ وکتور</h2><p class="credits-copy">وکتور یک نمونه‌کار فروشگاه لباس است. در صفحهٔ اول می‌توانید دو هودی و یک کاپشن را بچرخانید و از نزدیک ببینید. در فروشگاه هم تیشرت، پیراهن و شلوار هست؛ هر مدل را که پسندیدید، رنگ و سایزش را انتخاب کنید.</p>', 'credits');
+    if (d.action === 'credits') show('<h2 id="dialog-title">دربارهٔ وکتور</h2><p class="credits-copy">وکتور یک نمونه‌کار فروشگاه لباس است. در استودیو می‌توانید سه لباس اصلی را از نزدیک ببینید و در پایین صفحه، شش لباس تازه را روی رگال مرور کنید. هر مدل را که پسندیدید، رنگ و سایزش را انتخاب کنید. سفارش و پرداخت نمایشی‌اند.</p>', 'credits');
     if (button.id === 'clear-search') { state.query = ''; $('#search').value = ''; renderProducts(); $('#search').focus(); }
   }
   const searchInput = () => { state.query = $('#search').value; renderProducts(); };
@@ -267,10 +275,10 @@ export function mountStore({ scene = true, sound = scene } = {}) {
   const pageShow = () => { pageHidden = false; if (!disposed) startScene(); };
   window.addEventListener('pagehide', pageHide); window.addEventListener('pageshow', pageShow);
   window.addEventListener('scroll', scrollChanged, { passive: true }); window.addEventListener('popstate', routeChanged); window.addEventListener('hashchange', routeChanged);
-  if (/^#studio\//.test(location.hash)) routeChanged(); startScene();
+  if (/^#studio\//.test(location.hash) || location.hash === '#rail') routeChanged(); startScene();
   posterTimer = setTimeout(() => { if (!$('#load-state').hidden) $('#poster-entry').hidden = false; }, 7000);
-  return { getState: () => ({ cart: { ...cart }, favorites: [...favorites], ...state, selectedId, selectedColor, selectedSize, selectedHero, heroColors: { ...heroColors }, view }), dispose() {
-    if (disposed) return; disposed = true; soundtrack?.dispose(); clearTimeout(toastTimer); clearTimeout(posterTimer); cancelAnimationFrame(scrollFrame); revealObserver?.disconnect(); showroom?.dispose();
+  return { getState: () => ({ cart: { ...cart }, favorites: [...favorites], ...state, selectedId, selectedColor, selectedSize, selectedHero, heroColors: { ...heroColors }, view, rack: rack.getState() }), dispose() {
+    if (disposed) return; disposed = true; rack.dispose(); soundtrack?.dispose(); clearTimeout(toastTimer); clearTimeout(posterTimer); cancelAnimationFrame(scrollFrame); revealObserver?.disconnect(); showroom?.dispose();
     if (dialog.open) { dialog.close(); document.documentElement.style.overflow = oldOverflow; }
     if (catalog.open) catalog.close(); catalog.removeEventListener('close', catalogClosed);
     document.removeEventListener('click', click); document.removeEventListener('submit', submit); document.removeEventListener('keydown', keyboard); dialog.removeEventListener('close', dialogClosed); dialog.removeEventListener('click', outside);

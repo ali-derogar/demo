@@ -3,35 +3,41 @@ import test from 'node:test';
 import { readFile } from 'node:fs/promises';
 import { build } from 'esbuild';
 import { JSDOM, VirtualConsole } from 'jsdom';
-import { products, selectProducts, cleanCart, addToCart, variantKey, variantFor, orderErrors } from '../../public/demos/vector/products.js';
+import { products, rackItems, selectProducts, cleanCart, addToCart, variantKey, variantFor, orderErrors } from '../../public/demos/vector/products.js';
 import { source } from './helpers.mjs';
 
 const html = await readFile(new URL('../../public/demos/vector/index.html', import.meta.url), 'utf8');
 const script = await build({ entryPoints: [new URL('../../public/demos/vector/app.js', import.meta.url).pathname], bundle: true, write: false, format: 'iife', globalName: 'VectorStore', platform: 'browser', external: ['./scene.js*'] });
-function store(t, saved = {}) {
+function store(t, saved = {}, { lazy = false, reduced = true } = {}) {
   const errors = [], vc = new VirtualConsole(); vc.on('jsdomError', (e) => errors.push(e));
   const dom = new JSDOM(html, { url: 'http://localhost/demos/vector/', runScripts: 'outside-only', pretendToBeVisual: true, virtualConsole: vc });
   const w = dom.window;
-  w.__VECTOR_NO_AUTOBOOT__ = true; w.matchMedia = () => ({ matches: true, addEventListener() {}, removeEventListener() {} });
+  w.__VECTOR_NO_AUTOBOOT__ = true; w.matchMedia = () => ({ matches: reduced, addEventListener() {}, removeEventListener() {} });
   w.HTMLElement.prototype.scrollIntoView = function () {}; w.scrollTo = () => {};
   w.HTMLDialogElement.prototype.showModal = function () { this.setAttribute('open', ''); };
   w.HTMLDialogElement.prototype.close = function () { this.removeAttribute('open'); this.dispatchEvent(new w.Event('close')); };
+  const observations = [];
+  if (lazy) w.IntersectionObserver = class {
+    constructor(callback, options) { this.callback = callback; this.options = options; }
+    observe(target) { observations.push({ target, callback: this.callback, options: this.options }); }
+    unobserve() {} disconnect() {}
+  };
   for (const [key, value] of Object.entries(saved)) w.localStorage.setItem(key, value);
   w.eval(script.outputFiles[0].text); const app = w.VectorStore.mountStore({ scene: false });
   const q = (selector) => w.document.querySelector(selector);
   const click = (selector) => { const el = q(selector); assert.ok(el, selector); el.focus(); el.click(); return el; };
   const input = (selector, value, type = 'input') => { q(selector).value = value; q(selector).dispatchEvent(new w.Event(type, { bubbles: true })); };
   t.after(() => { app.dispose(); assert.deepEqual(errors, []); w.close(); });
-  return { w, q, click, input, app };
+  return { w, q, click, input, app, observations };
 }
 
-test('Vector is first, Roban moves to second, and all 15 products have local assets and variant-aware size filtering', async () => {
+test('Vector is first, Roban moves to second, and all 21 products have local assets and variant-aware size filtering', async () => {
   const { projects } = await source('src/data/projects.ts');
   assert.equal(projects[0].id, 'vector'); assert.equal(projects[1].id, 'roban');
   assert.equal(projects[0].url, '/demos/vector/'); assert.equal(projects[0].visual.layout, 'streetwear');
-  assert.equal(products.length, 15); assert.equal(new Set(products.map((p) => p.cat)).size, 5);
+  assert.equal(products.length, 21); assert.equal(new Set(products.map((p) => p.cat)).size, 5);
   assert.equal(selectProducts({ query: 'كاپشن پلار' })[0].id, 'jacket-01');
-  assert.equal(selectProducts({ category: 'hoodie' }).length, 3);
+  assert.equal(selectProducts({ category: 'hoodie' }).length, 5);
   assert.ok(selectProducts({ size: 'XXL' }).length < products.length);
   assert.equal(selectProducts({ category: 'tee', size: 'XXL' }).some((p) => p.id === 'tee-01'), false);
   const cheap = selectProducts({ sort: 'low' }); assert.ok(cheap.every((p, i) => !i || cheap[i - 1].price <= p.price));
@@ -55,10 +61,10 @@ test('Vector cart requires explicit options, separates colors/sizes, rejects for
 
 test('Vector catalog controls combine search, categories, sizes, sorting and favorites and recover from empty results', (t) => {
   const { q, click, input, w } = store(t);
-  assert.equal(q('#product-grid').children.length, 15);
+  assert.equal(q('#product-grid').children.length, 21);
   input('#search', 'كاپشن پلار'); assert.equal(q('#product-grid').children.length, 1);
   click('[data-filter="tee"]'); assert.equal(q('#empty-state').hidden, false);
-  click('[data-action="reset"]'); input('#size-filter', 'XXL', 'change'); assert.ok(q('#product-grid').children.length < 15);
+  click('[data-action="reset"]'); input('#size-filter', 'XXL', 'change'); assert.ok(q('#product-grid').children.length < 21);
   click('[data-action="reset"]'); click('[data-favorite="hoodie-01"]'); click('.favorites-filter');
   assert.equal(q('#product-grid').children.length, 1); assert.ok(w.localStorage.getItem('vector-favorites-v1').includes('hoodie-01'));
   click('[data-favorite="hoodie-01"]'); assert.equal(q('#empty-state').hidden, false);
@@ -130,4 +136,77 @@ test('Vector nested catalog/product/cart dialogs preserve focus and release the 
   click('#shop-dialog [data-action="cart"]'); assert.equal(q('#catalog-dialog').open, true); assert.equal(q('#shop-dialog').open, true);
   click('[data-action="close"]'); assert.equal(w.document.documentElement.style.overflow, 'hidden');
   click('[data-action="close-catalog"]'); assert.equal(w.document.documentElement.style.overflow, ''); assert.equal(w.document.activeElement, opener);
+});
+
+test('Vector rail selects all six new garments and buys the matching product without losing the existing cart or focus', (t) => {
+  const { click, q, app, w } = store(t, { 'vector-cart-v1': '{"tee-01~charcoal~M":1}' });
+  assert.equal(w.document.querySelectorAll('.rail-item').length, 6);
+  for (const [index, item] of rackItems.entries()) {
+    click(`[data-rail-index="${index}"]`);
+    assert.equal(q(`[data-rail-index="${index}"]`).getAttribute('aria-pressed'), 'true');
+    assert.equal(q('#rail-buy').dataset.product, item.id);
+    const opener = click('#rail-buy');
+    assert.equal(app.getState().selectedId, item.id);
+    assert.equal(q('[data-action="view-studio"]'), null);
+    const product = products.find((p) => p.id === item.id);
+    assert.equal(product.colors.length, 1, 'Only the pictured color is offered for the new collection');
+    click(`[data-color="${product.colors[0].id}"]`); click('[data-size="M"]'); click(`[data-add="${item.id}"]`);
+    click('[data-action="close"]');
+    assert.equal(w.document.activeElement, opener);
+    assert.equal(q('#rail').hidden, false);
+  }
+  assert.equal(Object.keys(app.getState().cart).length, 7);
+  assert.equal(app.getState().cart['tee-01~charcoal~M'], 1);
+  click('[data-scene-product="hoodie-03"]'); assert.equal(q('#rail').hidden, true);
+  click('[data-scene-action="reset"]'); assert.equal(q('#rail').hidden, false);
+  assert.equal(app.getState().rack.selected, 5);
+});
+
+test('Vector rail supports keyboard navigation, reset, horizontal touch and leaves vertical touch scrolling free', (t) => {
+  const { click, q, app, w } = store(t);
+  click('[data-rail-index="0"]');
+  const key = (value) => w.document.activeElement.dispatchEvent(new w.KeyboardEvent('keydown', { key: value, bubbles: true, cancelable: true }));
+  key('ArrowRight'); assert.equal(app.getState().rack.selected, 1);
+  assert.equal(w.document.activeElement, q('[data-rail-index="1"]'));
+  key('End'); assert.equal(app.getState().rack.selected, 5);
+  key('Home'); assert.equal(app.getState().rack.selected, 0);
+  key('Escape'); assert.equal(app.getState().rack.selected, -1);
+  click('[data-rail-step="-1"]'); assert.equal(app.getState().rack.selected, 5);
+  click('[data-rail-index="0"]'); key('Escape');
+  const pointer = (type, x, y) => {
+    const event = new w.Event(type, { bubbles: true, cancelable: true });
+    Object.defineProperties(event, { pointerId: { value: 1 }, pointerType: { value: 'touch' }, clientX: { value: x }, clientY: { value: y } });
+    q('.rail-stage').dispatchEvent(event); return event;
+  };
+  pointer('pointerdown', 200, 100);
+  assert.equal(pointer('pointermove', 198, 190).defaultPrevented, false);
+  pointer('pointerup', 198, 190); assert.equal(app.getState().rack.selected, -1);
+  pointer('pointerdown', 230, 120);
+  assert.equal(pointer('pointermove', 140, 125).defaultPrevented, true);
+  pointer('pointerup', 140, 125); assert.equal(app.getState().rack.selected, 1);
+  click('[data-rail-step="1"]'); assert.equal(app.getState().rack.selected, 2);
+});
+
+test('Vector rail loads images only near the viewport and pauses while hidden, backgrounded or covered by a dialog', (t) => {
+  const { click, q, app, w, observations } = store(t, {}, { lazy: true, reduced: false });
+  assert.equal(app.getState().rack.loaded, false);
+  assert.equal(q('.rail-image').hasAttribute('src'), false);
+  const preload = observations.find((o) => o.target === q('#rail') && o.options?.rootMargin);
+  const observer = observations.find((o) => o.target === q('#rail') && !o.options?.rootMargin);
+  preload.callback([{ isIntersecting: true }]);
+  assert.equal(app.getState().rack.loaded, true);
+  assert.equal(q('#rail').dataset.paused, 'true', 'Preloading near the viewport must not start motion offscreen');
+  observer.callback([{ isIntersecting: true }]);
+  assert.equal(app.getState().rack.loaded, true);
+  assert.equal(q('#rail').dataset.paused, 'false');
+  assert.ok(q('.rail-image').getAttribute('src').endsWith('-side.webp'));
+  click('[data-action="catalog"]'); assert.equal(q('#rail').dataset.paused, 'true');
+  click('[data-action="close-catalog"]');
+  assert.equal(q('#rail').dataset.paused, 'false');
+  Object.defineProperty(w.document, 'hidden', { configurable: true, value: true });
+  w.document.dispatchEvent(new w.Event('visibilitychange')); assert.equal(q('#rail').dataset.paused, 'true');
+  Object.defineProperty(w.document, 'hidden', { configurable: true, value: false });
+  w.document.dispatchEvent(new w.Event('visibilitychange'));
+  assert.equal(q('#rail').dataset.paused, 'false');
+  observer.callback([{ isIntersecting: false }]); assert.equal(q('#rail').dataset.paused, 'true');
 });
