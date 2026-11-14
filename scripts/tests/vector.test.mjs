@@ -138,18 +138,20 @@ test('Vector nested catalog/product/cart dialogs preserve focus and release the 
   click('[data-action="close-catalog"]'); assert.equal(w.document.documentElement.style.overflow, ''); assert.equal(w.document.activeElement, opener);
 });
 
-test('Vector rail selects all six new garments and buys the matching product without losing the existing cart or focus', (t) => {
+test('Clicking each rail garment opens its color/size dialog and adds the exact product without losing the existing cart or focus', (t) => {
   const { click, q, app, w } = store(t, { 'vector-cart-v1': '{"tee-01~charcoal~M":1}' });
   assert.equal(w.document.querySelectorAll('.rail-item').length, 6);
   for (const [index, item] of rackItems.entries()) {
-    click(`[data-rail-index="${index}"]`);
+    const opener = click(`[data-rail-index="${index}"]`);
     assert.equal(q(`[data-rail-index="${index}"]`).getAttribute('aria-pressed'), 'true');
+    assert.equal(opener.getAttribute('aria-haspopup'), 'dialog');
     assert.equal(q('#rail-buy').dataset.product, item.id);
-    const opener = click('#rail-buy');
+    assert.equal(q('#shop-dialog').open, true, 'The garment click itself must open shopping options');
     assert.equal(app.getState().selectedId, item.id);
     assert.equal(q('[data-action="view-studio"]'), null);
     const product = products.find((p) => p.id === item.id);
     assert.equal(product.colors.length, 1, 'Only the pictured color is offered for the new collection');
+    click(`[data-add="${item.id}"]`); assert.ok(q('#selection-error').textContent);
     click(`[data-color="${product.colors[0].id}"]`); click('[data-size="M"]'); click(`[data-add="${item.id}"]`);
     click('[data-action="close"]');
     assert.equal(w.document.activeElement, opener);
@@ -164,7 +166,7 @@ test('Vector rail selects all six new garments and buys the matching product wit
 
 test('Vector rail supports keyboard navigation, reset, horizontal touch and leaves vertical touch scrolling free', (t) => {
   const { click, q, app, w } = store(t);
-  click('[data-rail-index="0"]');
+  q('[data-rail-index="0"]').focus();
   const key = (value) => w.document.activeElement.dispatchEvent(new w.KeyboardEvent('keydown', { key: value, bubbles: true, cancelable: true }));
   key('ArrowRight'); assert.equal(app.getState().rack.selected, 1);
   assert.equal(w.document.activeElement, q('[data-rail-index="1"]'));
@@ -172,7 +174,8 @@ test('Vector rail supports keyboard navigation, reset, horizontal touch and leav
   key('Home'); assert.equal(app.getState().rack.selected, 0);
   key('Escape'); assert.equal(app.getState().rack.selected, -1);
   click('[data-rail-step="-1"]'); assert.equal(app.getState().rack.selected, 5);
-  click('[data-rail-index="0"]'); key('Escape');
+  q('[data-rail-index="0"]').focus(); key('Escape');
+  assert.equal(q('#shop-dialog').open, false, 'Browsing and focusing must not open a purchase dialog');
   const pointer = (type, x, y) => {
     const event = new w.Event(type, { bubbles: true, cancelable: true });
     Object.defineProperties(event, { pointerId: { value: 1 }, pointerType: { value: 'touch' }, clientX: { value: x }, clientY: { value: y } });
@@ -184,7 +187,28 @@ test('Vector rail supports keyboard navigation, reset, horizontal touch and leav
   pointer('pointerdown', 230, 120);
   assert.equal(pointer('pointermove', 140, 125).defaultPrevented, true);
   pointer('pointerup', 140, 125); assert.equal(app.getState().rack.selected, 1);
+  q('[data-rail-index="1"]').click();
+  assert.equal(q('#shop-dialog').open, false, 'The synthetic click after a swipe must not buy a garment');
   click('[data-rail-step="1"]'); assert.equal(app.getState().rack.selected, 2);
+  pointer('pointerdown', 150, 150); pointer('pointerup', 150, 150);
+  q('[data-rail-index="2"] .rail-image--front').click();
+  assert.equal(q('#shop-dialog').open, true, 'A tap after swiping must still open the selected garment');
+  assert.equal(app.getState().selectedId, rackItems[2].id);
+  click('[data-action="close"]');
+  assert.equal(w.document.activeElement, q('[data-rail-index="2"]'));
+});
+
+test('Rail photo, label and purchase button all open the matching product', (t) => {
+  const { click, q, app, w } = store(t);
+  for (const child of ['.rail-image--side', '.rail-image--front', '.rail-label', '.rail-hanger']) {
+    q(`[data-rail-index="3"] ${child}`).dispatchEvent(new w.MouseEvent('click', { bubbles: true }));
+    assert.equal(q('#shop-dialog').open, true);
+    assert.equal(app.getState().selectedId, rackItems[3].id);
+    click('[data-action="close"]');
+    assert.equal(w.document.activeElement, q('[data-rail-index="3"]'));
+  }
+  click('#rail-buy'); assert.equal(q('#shop-dialog').open, true);
+  assert.equal(app.getState().selectedId, rackItems[3].id);
 });
 
 test('Vector rail loads images only near the viewport and pauses while hidden, backgrounded or covered by a dialog', (t) => {

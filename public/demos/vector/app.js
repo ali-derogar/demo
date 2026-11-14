@@ -1,5 +1,5 @@
 import { mountSoundtrack } from './sound.js?v=vector-3';
-import { mountRack } from './rack.js';
+import { mountRack } from './rack.js?v=rail-purchase-3';
 import { products, categories, sizes, featuredIds, byId, money, selectProducts, cleanCart, addToCart, cartLines, variantFor, orderErrors } from './products.js';
 const icon = (name) => `<svg class="icon" aria-hidden="true"><use href="#i-${name}"/></svg>`;
 const price = (amount) => `${money(amount)} <small>تومان</small>`;
@@ -19,7 +19,7 @@ export function mountStore({ scene = true, sound = scene } = {}) {
   let showroom = null, disposed = false, pageHidden = false, toastTimer, scenePending = false, menuOpen = false, mobileIndex = 1, productReady = false, scrollFrame = 0, posterTimer, catalogOpener = null, catalogOverflow = '';
   const dialog = $('#shop-dialog'), host = $('#showroom'), catalog = $('#catalog-dialog');
   $('#rail').hidden = /^#studio\//.test(location.hash);
-  const rack = mountRack($('#rail'));
+  const rack = mountRack($('#rail'), { onProductOpen: openProduct });
   const soundtrack = sound ? mountSoundtrack($('#studio-audio'), $('#sound-toggle')) : null;
   const lines = () => cartLines(cart), count = () => lines().reduce((sum, line) => sum + line.qty, 0);
   const total = () => lines().reduce((sum, line) => sum + line.qty * line.product.price, 0);

@@ -3,14 +3,14 @@ import { rackItems, byId, money } from './products.js';
 const hanger = `<svg class="rail-hanger" viewBox="0 0 240 105" aria-hidden="true"><path class="rail-hook" d="M120 34V22c0-13 20-13 20-2 0 8-11 10-20 14"/><path class="rail-shoulders" d="m120 34 101 52c5 3 3 8-3 8H22c-6 0-8-5-3-8Z"/></svg>`;
 
 /** A photographic rail: product data and shopping remain owned by the store. */
-export function mountRack(root) {
+export function mountRack(root, { onProductOpen } = {}) {
   if (!root) return { dispose() {}, refresh() {}, getState: () => ({}) };
   const q = (selector) => root.querySelector(selector);
   const stage = q('.rail-stage'), slots = q('.rail-items'), status = q('#rail-status');
   const reduced = matchMedia('(prefers-reduced-motion: reduce)');
   let selected = -1, hovered = -1, focused = -1, loaded = false, disposed = false, gesture = null, suppressClick = false;
   let visible = false, overlay = false;
-  slots.innerHTML = rackItems.map((item, i) => `<button type="button" class="rail-item" data-rail-index="${i}" aria-label="${byId(item.id).name}؛ انتخاب روی رگال" aria-pressed="false" tabindex="${i === 0 ? 0 : -1}" style="--item-color:${item.accent}"><span class="rail-swing"><span class="rail-garment">${hanger}<img class="rail-image rail-image--side" data-src="${item.side}" width="1024" height="1280" alt="" decoding="async" draggable="false"><img class="rail-image rail-image--front" data-src="${item.front}" width="1024" height="1280" alt="" decoding="async" draggable="false"></span></span><span class="rail-label" dir="ltr"><small>0${i + 1}</small>${item.label}</span></button>`).join('');
+  slots.innerHTML = rackItems.map((item, i) => `<button type="button" class="rail-item" data-rail-index="${i}" aria-label="انتخاب رنگ، سایز و خرید ${byId(item.id).name}" aria-haspopup="dialog" aria-pressed="false" tabindex="${i === 0 ? 0 : -1}" style="--item-color:${item.accent}"><span class="rail-swing"><span class="rail-garment">${hanger}<img class="rail-image rail-image--side" data-src="${item.side}" width="1024" height="1280" alt="" decoding="async" draggable="false"><img class="rail-image rail-image--front" data-src="${item.front}" width="1024" height="1280" alt="" decoding="async" draggable="false"></span></span><span class="rail-label" dir="ltr"><small>0${i + 1}</small>${item.label}</span></button>`).join('');
   const buttons = [...slots.querySelectorAll('.rail-item')];
   const images = [...slots.querySelectorAll('img')];
   const activeIndex = () => hovered >= 0 ? hovered : focused >= 0 ? focused : selected;
@@ -68,7 +68,12 @@ export function mountRack(root) {
   function click(event) {
     const item = event.target.closest('[data-rail-index]');
     if (item && suppressClick) { event.preventDefault(); event.stopPropagation(); suppressClick = false; return; }
-    if (item) choose(Number(item.dataset.railIndex));
+    if (item) {
+      const index = Number(item.dataset.railIndex);
+      choose(index, true);
+      onProductOpen?.(rackItems[index].id);
+      return;
+    }
     const direction = event.target.closest('[data-rail-step]');
     if (direction) {
       const step = Number(direction.dataset.railStep), current = activeIndex();
@@ -101,8 +106,8 @@ export function mountRack(root) {
     if (event.key === 'Escape') { selected = hovered = focused = -1; render(); status.textContent = 'نمای کلی رگال'; }
   }
   function pointerDown(event) {
-    if (event.pointerType === 'mouse' || event.isPrimary === false || event.button > 0) return;
     suppressClick = false;
+    if (event.pointerType === 'mouse' || event.isPrimary === false || event.button > 0) return;
     gesture = { id: event.pointerId, x: event.clientX, y: event.clientY, horizontal: false, vertical: false };
   }
   function pointerMove(event) {
