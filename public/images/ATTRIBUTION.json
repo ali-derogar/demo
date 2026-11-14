@@ -2167,6 +2167,21 @@
     "format": "webp"
   },
   {
+    "out": "public/demos/vector/assets/img/core-catalog.webp",
+    "file": "core-catalog.webp",
+    "demo": "vector",
+    "title": "VECTOR CORE / normalized catalog cutout",
+    "artist": "VECTOR supplied garment render; background edited with image_gen",
+    "origin": "generated",
+    "generator": "image_gen",
+    "prompt": "Use case: background-extraction. Asset type: transparent e-commerce catalog product cutout. Input image 1 is the EDIT TARGET, the existing CORE garment render. Remove only the complete warm cream background, the floor and the detached cast shadow below the garment. Return precisely this same garment isolated on a genuinely transparent alpha background. Preserve every original garment pixel as closely as possible: bone ivory pullover hoodie, dark VECTOR lettering across chest, cream drawstrings, original hood silhouette, bent forward left sleeve and original folds. Keep exact garment color, proportions, pose, viewing angle, materials, textile texture, shading, details, cuffs, hem and lettering. Do not redesign, beautify, relight, recolor, reshape or replace the garment. Do not add anything. Keep the entire garment including dangling cords with a small transparent border. No floor, no background, no cast shadow, no person, no mannequin, no new text or watermark.",
+    "source": "",
+    "width": 900,
+    "height": 900,
+    "bytes": 69046,
+    "format": "webp"
+  },
+  {
     "out": "public/demos/vector/assets/img/core-closeup.webp",
     "file": "core-closeup.webp",
     "demo": "vector",
@@ -2256,6 +2271,21 @@
     "width": 1440,
     "height": 960,
     "bytes": 130338,
+    "format": "webp"
+  },
+  {
+    "out": "public/demos/vector/assets/img/drift-catalog.webp",
+    "file": "drift-catalog.webp",
+    "demo": "vector",
+    "title": "VECTOR DRIFT / normalized catalog cutout",
+    "artist": "VECTOR supplied garment render; background edited with image_gen",
+    "origin": "generated",
+    "generator": "image_gen",
+    "prompt": "Use case: background-extraction. Asset type: transparent e-commerce catalog product cutout. Input image 1 is the EDIT TARGET, the existing DRIFT garment render. Remove only the complete warm cream background, the floor and the detached cast shadow below the garment. Return precisely this same garment isolated on a genuinely transparent alpha background. Preserve every original garment pixel as closely as possible: deep wine burgundy pullover hoodie, cream VECTOR lettering across chest, cream drawstrings, original hood silhouette, bent forward left sleeve and original folds. Keep exact garment color, proportions, pose, viewing angle, materials, textile texture, shading, details, cuffs, hem and lettering. Do not redesign, beautify, relight, recolor, reshape or replace the garment. Do not add anything. Keep the entire garment including dangling cords with a small transparent border. No floor, no background, no cast shadow, no person, no mannequin, no new text or watermark.",
+    "source": "",
+    "width": 900,
+    "height": 900,
+    "bytes": 59990,
     "format": "webp"
   },
   {
@@ -2719,6 +2749,21 @@
     "width": 1440,
     "height": 960,
     "bytes": 89200,
+    "format": "webp"
+  },
+  {
+    "out": "public/demos/vector/assets/img/shell-catalog.webp",
+    "file": "shell-catalog.webp",
+    "demo": "vector",
+    "title": "VECTOR SHELL / normalized catalog cutout",
+    "artist": "VECTOR supplied garment render; background edited with image_gen",
+    "origin": "generated",
+    "generator": "image_gen",
+    "prompt": "Use case: background-extraction. Asset type: transparent e-commerce catalog product cutout. Input image 1 is the EDIT TARGET, the existing SHELL garment render. Remove only the complete warm cream background, the floor and the detached cast shadow below the garment. Return precisely this same garment isolated on a genuinely transparent alpha background. Preserve every original garment pixel as closely as possible: charcoal textured fleece jacket, original stand collar, pale contrasting seam piping, full front zipper, hem toggles and original relaxed sleeves. Keep exact garment color, proportions, pose, viewing angle, materials, textile texture, shading, details, cuffs, hem and lettering. Do not redesign, beautify, relight, recolor, reshape or replace the garment. Do not add anything. Keep the entire garment including dangling cords with a small transparent border. No floor, no background, no cast shadow, no person, no mannequin, no new text or watermark.",
+    "source": "",
+    "width": 900,
+    "height": 900,
+    "bytes": 109734,
     "format": "webp"
   },
   {

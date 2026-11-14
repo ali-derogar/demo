@@ -488,5 +488,41 @@
     "origin": "generated",
     "generator": "image_gen",
     "prompt": "Use case: product-mockup. Asset type: isolated SIDE VIEW photographic asset for the same interactive clothing rail. Input image 1 is the exact front garment reference; preserve this garment's identity, color, material, collar or hood, all seams, fasteners, pockets and proportions. DUNE: pale sage olive cotton twill utility overshirt, wide boxy cut, classic point collar, two large patch chest pockets with squared flaps, matching matte buttons, long sleeves with cuffs, straight hem and restrained functional seams. Change only camera angle: rotate the SAME hanging garment 75 degrees around its vertical axis toward camera right, nearly in profile; show the realistic narrow side silhouette with sleeve draping vertically and slight visible front, do not produce another front view and do not flatten or stretch the photo. Maintain same soft neutral studio lighting and detailed fabric. Entire garment fully visible, vertically centered, portrait 4:5 canvas, garment neckline centered horizontally, no horizontal tilt. True transparent alpha background. No human, mannequin, hanger, floor, baked shadow, logo, text, watermark or props."
+  },
+  {
+    "file": "img/core-catalog.webp",
+    "title": "VECTOR CORE / normalized catalog cutout",
+    "artist": "VECTOR supplied garment render; background edited with image_gen",
+    "origin": "generated",
+    "generator": "image_gen",
+    "prompt": "Use case: background-extraction. Asset type: transparent e-commerce catalog product cutout. Input image 1 is the EDIT TARGET, the existing CORE garment render. Remove only the complete warm cream background, the floor and the detached cast shadow below the garment. Return precisely this same garment isolated on a genuinely transparent alpha background. Preserve every original garment pixel as closely as possible: bone ivory pullover hoodie, dark VECTOR lettering across chest, cream drawstrings, original hood silhouette, bent forward left sleeve and original folds. Keep exact garment color, proportions, pose, viewing angle, materials, textile texture, shading, details, cuffs, hem and lettering. Do not redesign, beautify, relight, recolor, reshape or replace the garment. Do not add anything. Keep the entire garment including dangling cords with a small transparent border. No floor, no background, no cast shadow, no person, no mannequin, no new text or watermark.",
+    "derivedFrom": [
+      "img/hoodie-03.webp"
+    ],
+    "processing": "Transparent cutout centered in a 900x900 canvas; maximum garment extent 756px (84%)"
+  },
+  {
+    "file": "img/drift-catalog.webp",
+    "title": "VECTOR DRIFT / normalized catalog cutout",
+    "artist": "VECTOR supplied garment render; background edited with image_gen",
+    "origin": "generated",
+    "generator": "image_gen",
+    "prompt": "Use case: background-extraction. Asset type: transparent e-commerce catalog product cutout. Input image 1 is the EDIT TARGET, the existing DRIFT garment render. Remove only the complete warm cream background, the floor and the detached cast shadow below the garment. Return precisely this same garment isolated on a genuinely transparent alpha background. Preserve every original garment pixel as closely as possible: deep wine burgundy pullover hoodie, cream VECTOR lettering across chest, cream drawstrings, original hood silhouette, bent forward left sleeve and original folds. Keep exact garment color, proportions, pose, viewing angle, materials, textile texture, shading, details, cuffs, hem and lettering. Do not redesign, beautify, relight, recolor, reshape or replace the garment. Do not add anything. Keep the entire garment including dangling cords with a small transparent border. No floor, no background, no cast shadow, no person, no mannequin, no new text or watermark.",
+    "derivedFrom": [
+      "img/hoodie-01.webp"
+    ],
+    "processing": "Transparent cutout centered in a 900x900 canvas; maximum garment extent 756px (84%)"
+  },
+  {
+    "file": "img/shell-catalog.webp",
+    "title": "VECTOR SHELL / normalized catalog cutout",
+    "artist": "VECTOR supplied garment render; background edited with image_gen",
+    "origin": "generated",
+    "generator": "image_gen",
+    "prompt": "Use case: background-extraction. Asset type: transparent e-commerce catalog product cutout. Input image 1 is the EDIT TARGET, the existing SHELL garment render. Remove only the complete warm cream background, the floor and the detached cast shadow below the garment. Return precisely this same garment isolated on a genuinely transparent alpha background. Preserve every original garment pixel as closely as possible: charcoal textured fleece jacket, original stand collar, pale contrasting seam piping, full front zipper, hem toggles and original relaxed sleeves. Keep exact garment color, proportions, pose, viewing angle, materials, textile texture, shading, details, cuffs, hem and lettering. Do not redesign, beautify, relight, recolor, reshape or replace the garment. Do not add anything. Keep the entire garment including dangling cords with a small transparent border. No floor, no background, no cast shadow, no person, no mannequin, no new text or watermark.",
+    "derivedFrom": [
+      "img/jacket-01.webp"
+    ],
+    "processing": "Transparent cutout centered in a 900x900 canvas; maximum garment extent 756px (84%)"
   }
 ]

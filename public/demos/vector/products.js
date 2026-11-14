@@ -37,7 +37,12 @@ const rows = [
   ['shirt-04', 'shirt', 'اورشرت دنیم GRID', 'GRID / 20', 2450000, 'denim', 'اورشرت دنیم تیره با دو جیب دردار روی سینه، دکمه‌های فلزی و دوخت دوبل نخودی؛ برش باکسی برای پوشیدن روی تیشرت.', 'دنیم پنبه‌ای', 'باکسی / اورشرت', 'روی رگال'],
   ['shirt-05', 'shirt', 'اورشرت کاربردی DUNE', 'DUNE / 21', 2250000, 'sage', 'اورشرت زیتونی روشن با بافت توییل، جیب‌های بزرگ دردار، دکمه‌های هم‌رنگ و لبهٔ صاف؛ یک لایهٔ سبک با فرم آزاد.', 'پنبهٔ توییل', 'آزاد / اورشرت', 'روی رگال'],
 ];
-const imageDimensions = { 'hoodie-01': [1200, 1400], 'hoodie-03': [1200, 1400], 'jacket-01': [1200, 1400] };
+const imageDimensions = { 'hoodie-01': [900, 900], 'hoodie-03': [900, 900], 'jacket-01': [900, 900] };
+const catalogImages = {
+  'hoodie-03': './assets/img/core-catalog.webp',
+  'hoodie-01': './assets/img/drift-catalog.webp',
+  'jacket-01': './assets/img/shell-catalog.webp',
+};
 export const featuredIds = ['hoodie-03', 'hoodie-01', 'jacket-01'];
 export const rackIds = ['hoodie-04', 'jacket-05', 'shirt-04', 'hoodie-05', 'jacket-04', 'shirt-05'];
 const rackSideImages = {
@@ -51,7 +56,7 @@ export const products = rows.map(([id, cat, name, code, price, base, detail, fab
   const colors = colorIds.map((color) => palette[color]);
   const [imageWidth, imageHeight] = imageDimensions[id] || (onRack ? [1024, 1280] : [900, 900]);
   return { id, cat, name, code, price, detail, fabric, fit, badge: featuredIds.includes(id) ? 'ORIGINALS' : badge === 'انتخاب استودیو' ? '' : badge, colors, sizes, imageColor: palette[base].name,
-    image: './assets/img/' + id + '.webp', imageWidth, imageHeight, added: onRack ? 30 - rackIds.indexOf(id) : 15 - index, featured: featuredIds.includes(id), onRack,
+    image: catalogImages[id] || './assets/img/' + id + '.webp', imageWidth, imageHeight, imageHasAlpha: onRack || featuredIds.includes(id), added: onRack ? 30 - rackIds.indexOf(id) : 15 - index, featured: featuredIds.includes(id), onRack,
     variants: colors.flatMap((color, c) => sizes.map((size, s) => ({ color: color.id, size, stock: s === 4 && (index % 4 === 0 || (index + c) % 3 === 0) ? 0 : 3 + (index + s + c) % 5 }))),
   };
 });
